@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การออกแบบและเขียนโปรแกรมอย่างง่าย — ป.6 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .block-demo{ background:#282A36; border-radius:14px; padding:26px 16px 34px; margin:16px 0; }
+  .code-block{
+    position:relative; display:flex; align-items:center; gap:8px;
+    color:#fff; padding:9px 14px 9px 32px; font-size:.85rem; font-weight:700;
+    border-radius:4px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.15), inset 0 2px 0 rgba(255,255,255,.15);
+  }
+  /* รอยบาก (notch) มุมบนซ้าย และ ปุ่มต่อ (tab) มุมล่างซ้าย ให้ดูเหมือนบล็อกปริศนาต่อกันแบบ Scratch จริง */
+  .code-block::before{
+    content:""; position:absolute; top:-7px; left:16px; width:18px; height:8px;
+    background:inherit; border-radius:5px 5px 0 0;
+  }
+  .code-block::after{
+    content:""; position:absolute; bottom:-7px; left:16px; width:18px; height:8px;
+    background:inherit; border-radius:0 0 5px 5px;
+  }
+  .code-block .emoji{ flex:none; font-size:1rem; }
+  .blk-move{ background:#4C97FF; }
+  .blk-look{ background:#9966FF; }
+  .blk-sound{ background:#CF63CF; }
+  .blk-control{ background:#FFAB19; color:#3f2a00; }
+  .blk-sense{ background:#4CBFE6; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 2</h1>
+    <p>การออกแบบและเขียนโปรแกรมอย่างง่าย · ป.6 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p6/cs/1/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายโครงสร้างการควบคุมแบบลำดับ การเลือกทำ และการทำซ้ำได้</li>
+      <li>ออกแบบโปรแกรมอย่างง่ายด้วยผังงานหรือรหัสจำลองได้</li>
+      <li>เขียนโปรแกรมแบบบล็อกคำสั่ง (เช่น Scratch) เพื่อสั่งงานตัวละครได้</li>
+      <li>ตรวจสอบและแก้ไขข้อผิดพลาดของโปรแกรม (Debug) เบื้องต้นได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> โครงสร้างการควบคุมโปรแกรม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p>การออกแบบโปรแกรมทุกโปรแกรม สร้างขึ้นจาก <b>โครงสร้างการควบคุม 3 แบบ</b> ดังนี้</p>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <span class="icon">➡️</span>
+        <div><h3>ลำดับ (Sequence)</h3><p>คำสั่งทำงาน <b>ทีละขั้นตอนตามลำดับ</b> จากบนลงล่าง</p></div>
+      </div>
+      <div class="concept-card">
+        <span class="icon">🔀</span>
+        <div><h3>การเลือกทำ (Selection)</h3><p>ใช้เงื่อนไข <b>"ถ้า...แล้ว...ไม่เช่นนั้น..."</b> เลือกทำอย่างใดอย่างหนึ่ง</p></div>
+      </div>
+      <div class="concept-card">
+        <span class="icon">🔁</span>
+        <div><h3>การทำซ้ำ (Repetition)</h3><p>ทำคำสั่งเดิม <b>ซ้ำหลายรอบ</b> จนกว่าจะครบเงื่อนไขที่กำหนด</p></div>
+      </div>
+    </div>
+    <div class="info-box">
+      💡 <b>ตัวอย่าง:</b> "ทำซ้ำ 5 ครั้ง: ให้ตัวละครเดินไป 10 ก้าว" เป็นการใช้โครงสร้าง <b>การทำซ้ำ</b> เพื่อให้ตัวละครเดินทั้งหมด 50 ก้าว โดยไม่ต้องเขียนคำสั่ง "เดิน 10 ก้าว" ซ้ำ 5 รอบ
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การเขียนโปรแกรมแบบบล็อกคำสั่ง
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p>โปรแกรมแบบบล็อกคำสั่ง (เช่น Scratch) ทำให้เราเขียนโปรแกรมได้ง่าย โดย <b>ลากบล็อกคำสั่งมาต่อกัน</b> แทนการพิมพ์โค้ด บล็อกคำสั่งแบ่งเป็นหมวดหมู่ตามสี ดังนี้</p>
+
+    <div class="block-demo">
+      <span class="code-block blk-move"><span class="emoji">🏃</span> เคลื่อนที่ — สั่งให้ตัวละครเดิน หมุน หรือเปลี่ยนตำแหน่ง</span>
+      <span class="code-block blk-look"><span class="emoji">👀</span> ท่าทาง — สั่งให้ตัวละครพูด เปลี่ยนรูป หรือเปลี่ยนขนาด</span>
+      <span class="code-block blk-sound"><span class="emoji">🔊</span> เสียง — สั่งให้เล่นเสียงหรือเพลง</span>
+      <span class="code-block blk-control"><span class="emoji">🎛️</span> ควบคุม — บล็อก "ทำซ้ำ" และ "ถ้า...แล้ว..."</span>
+      <span class="code-block blk-sense"><span class="emoji">🔍</span> การรับรู้ — ตรวจจับการชนกัน หรือการกดปุ่ม</span>
+    </div>
+
+    <p style="font-weight:700; font-size:.9rem; margin:18px 0 8px">ขั้นตอนการเขียนโปรแกรมอย่างง่าย</p>
+    <ol class="steps">
+      <li>วิเคราะห์ปัญหา และออกแบบขั้นตอนด้วยผังงานก่อน</li>
+      <li>เลือกบล็อกคำสั่งที่ตรงกับขั้นตอนที่ออกแบบไว้</li>
+      <li>ลากบล็อกมาวางต่อกันตามลำดับที่ถูกต้อง</li>
+      <li>กดรันโปรแกรม และสังเกตผลลัพธ์ที่ได้</li>
+      <li>ถ้าผลลัพธ์ผิดพลาด ให้ตรวจสอบและแก้ไข (Debug) จนกว่าจะถูกต้อง</li>
+    </ol>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> การ <b>Debug</b> คือการตรวจหาและแก้ไขข้อผิดพลาดในโปรแกรม เป็นขั้นตอนปกติที่นักเขียนโปรแกรมทุกคนต้องทำ ไม่ใช่เรื่องน่าอาย
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤔</span>
+    <div><b>รู้หรือไม่?</b> Scratch พัฒนาโดยทีม MIT Media Lab เพื่อให้เด็กทั่วโลกเรียนเขียนโปรแกรมได้ง่ายๆ โดยไม่ต้องพิมพ์โค้ดเลยสักบรรทัด!</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>โครงสร้างการควบคุมมี 3 แบบ: ลำดับ, การเลือกทำ (เงื่อนไข), การทำซ้ำ</li>
+      <li>โปรแกรมแบบบล็อกคำสั่งใช้การลากบล็อกสีต่างๆ มาต่อกันแทนการพิมพ์โค้ด</li>
+      <li>ขั้นตอนเขียนโปรแกรม: วิเคราะห์ → ออกแบบ → เลือกบล็อก → รัน → ตรวจสอบ/แก้ไข</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p6/cs/1/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

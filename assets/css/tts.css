@@ -1,0 +1,18 @@
+/* tts.css — สไตล์ปุ่มฟังเสียง ใช้ร่วมกับ tts.js ในทุกหน้าเนื้อหา */
+
+.tts-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#EEF1FB; color:#3B82F6; border:none; border-radius:999px;
+  padding:7px 16px; font-size:.82rem; font-weight:700; cursor:pointer;
+  font-family:inherit; white-space:nowrap;
+}
+.tts-btn:hover{ background:#E0E7FF; }
+.tts-btn.speaking{ background:#3B82F6; color:#fff; animation:tts-pulse 1s ease-in-out infinite; }
+.tts-btn .tts-icon{ font-size:.95rem; }
+
+@keyframes tts-pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.65; } }
+
+.tts-btn.tts-large{ padding:10px 22px; font-size:.9rem; }
+.tts-btn.tts-ghost{ background:rgba(255,255,255,.22); color:#fff; }
+.tts-btn.tts-ghost:hover{ background:rgba(255,255,255,.34); }
+.tts-btn.tts-ghost.speaking{ background:#fff; color:#3B82F6; }

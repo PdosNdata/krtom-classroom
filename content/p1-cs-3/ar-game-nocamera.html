@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกม AR: จัดหมวดหมู่ ทำถูก/ทำไม่ถูก (ไม่ใช้กล้อง)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; }
+  header{
+    background:linear-gradient(135deg,#8B5CF6,#EC4899);
+    color:#fff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:42px; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:7px 14px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+  p.desc{ max-width:640px; margin:14px auto 0; padding:0 20px; font-size:.9rem; color:#555; text-align:center; }
+
+  #hud{ max-width:900px; margin:12px auto 0; padding:0 20px; display:flex; justify-content:center; gap:10px; }
+  #hud .pill{ background:#fff; border:1px solid #E6E8F0; border-radius:999px; padding:7px 16px; font-weight:700; font-size:.9rem; box-shadow:0 4px 10px rgba(0,0,0,.06); }
+
+  #scene{
+    max-width:900px; margin:18px auto; padding:0 20px;
+    display:grid; grid-template-columns:1fr 1fr; gap:18px;
+  }
+  @media (max-width:600px){ #scene{ grid-template-columns:1fr; } }
+  .bin{
+    border-radius:20px; padding:16px; min-height:220px; border:3px dashed;
+    display:flex; flex-direction:column; gap:10px; transition:background .15s;
+  }
+  .bin.correct-bin{ border-color:#10B981; background:#F0FBF6; }
+  .bin.wrong-bin{ border-color:#EF4444; background:#FEF2F2; }
+  .bin h3{ margin:0; text-align:center; font-size:1.05rem; }
+  .bin .items{ display:flex; flex-wrap:wrap; gap:8px; align-content:flex-start; min-height:40px; }
+  .placed-item{
+    background:#fff; border-radius:12px; padding:8px 12px; font-size:.8rem; font-weight:700;
+    box-shadow:0 3px 8px rgba(0,0,0,.08); display:flex; align-items:center; gap:6px;
+  }
+  .placed-item svg{ width:20px; height:20px; }
+  .bin.flash{ background:#FEE2E2 !important; }
+
+  #tray{ max-width:900px; margin:18px auto 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; padding:0 20px; }
+  .label-chip{
+    display:flex; align-items:center; gap:8px;
+    font-size:.82rem; font-weight:700; background:#fff; border:2px solid #E6E8F0; border-radius:999px;
+    padding:10px 16px; cursor:grab; box-shadow:0 4px 10px rgba(0,0,0,.08); touch-action:none; user-select:none;
+    max-width:220px;
+  }
+  .label-chip svg{ width:26px; height:26px; flex:none; }
+  .label-chip.placed{ display:none; }
+
+  .hint{ text-align:center; color:#888; font-size:.82rem; margin:14px 0; }
+
+  #finish{
+    position:fixed; inset:0; background:rgba(20,10,30,.55); z-index:40;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #finish .card{ background:#fff; border-radius:22px; padding:32px 24px; text-align:center; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  #finish .card h2{ margin:10px 0 6px; font-size:42px; }
+  #finish button{ margin-top:14px; padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🕶️ เกม AR: จัดหมวดหมู่ ทำถูก/ทำไม่ถูก (ไม่ใช้กล้อง)</h1>
+  <a href="../../index.html#/unit/p1/cs/3/ar">← กลับหน้าหน่วย</a>
+</header>
+
+<p class="desc">หน่วยที่ 4 การใช้เทคโนโลยีสารสนเทศ (ป.1) — ลากการ์ดพฤติกรรมไปใส่ในช่องที่ถูกต้อง: ทำถูก ✅ หรือ ทำไม่ถูก ❌</p>
+
+<div id="hud"><span class="pill">⭐ คะแนน: <span id="score">0</span>/6</span></div>
+
+<div id="scene">
+  <div class="bin correct-bin" data-category="correct">
+    <h3>✅ ทำถูกต้อง</h3>
+    <div class="items"></div>
+  </div>
+  <div class="bin wrong-bin" data-category="wrong">
+    <h3>❌ ทำไม่ถูกต้อง</h3>
+    <div class="items"></div>
+  </div>
+</div>
+
+<p class="hint">👆 ลาก/แตะการ์ดด้านล่างไปใส่ในช่องที่ถูกต้อง</p>
+
+<div id="tray">
+  <div class="label-chip" data-category="correct">
+    <svg viewBox="0 0 60 60"><path d="M14 30 Q10 20 16 16 Q22 12 26 18 L28 30" fill="#93C5FD"/><path d="M28 18 Q30 10 36 12 Q40 14 38 22 L36 30" fill="#60A5FA"/><circle cx="46" cy="14" r="3" fill="#3B82F6"/><circle cx="50" cy="22" r="2.5" fill="#93C5FD"/></svg>
+    ล้างมือก่อนใช้คอมพิวเตอร์
+  </div>
+  <div class="label-chip" data-category="correct">
+    <svg viewBox="0 0 60 60"><circle cx="30" cy="32" r="18" fill="none" stroke="#10B981" stroke-width="5"/><line x1="30" y1="10" x2="30" y2="26" stroke="#10B981" stroke-width="5" stroke-linecap="round"/></svg>
+    ปิดเครื่องให้เรียบร้อยหลังใช้งาน
+  </div>
+  <div class="label-chip" data-category="correct">
+    <svg viewBox="0 0 60 60"><rect x="10" y="24" width="40" height="26" rx="4" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/><rect x="16" y="30" width="10" height="14" rx="2" fill="#F59E0B"/><rect x="30" y="30" width="10" height="14" rx="2" fill="#F59E0B"/><path d="M10 24 L18 12 L42 12 L50 24" fill="none" stroke="#F59E0B" stroke-width="2"/></svg>
+    เก็บอุปกรณ์เข้าที่ให้เรียบร้อย
+  </div>
+  <div class="label-chip" data-category="wrong">
+    <svg viewBox="0 0 60 60"><rect x="10" y="10" width="40" height="26" rx="3" fill="#1F2430"/><rect x="14" y="14" width="32" height="18" fill="#60A5FA"/><path d="M20 40 Q30 34 40 40 L38 52 L22 52 Z" fill="#93C5FD"/><circle cx="46" cy="44" r="6" fill="#FCA5A5"/></svg>
+    กินขนม/ดื่มน้ำใกล้คอมพิวเตอร์
+  </div>
+  <div class="label-chip" data-category="wrong">
+    <svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="14" ry="20" fill="#E7EAF5" stroke="#9AA5C0" stroke-width="2"/><path d="M8 20 L20 30" stroke="#FCA5A5" stroke-width="5" stroke-linecap="round"/><path d="M52 20 L40 30" stroke="#93C5FD" stroke-width="5" stroke-linecap="round"/></svg>
+    แย่งเมาส์กับเพื่อน
+  </div>
+</div>
+
+<div id="finish">
+  <div class="card">
+    <div style="font-size:2.6rem">🎉</div>
+    <h2>เก่งมาก! จัดหมวดหมู่ถูกต้องครบ</h2>
+    <p style="color:#666;font-size:.9rem">การใช้คอมพิวเตอร์ร่วมกันต้องดูแลรักษาอุปกรณ์ ปฏิบัติตามข้อตกลง และใช้งานอย่างปลอดภัยเหมาะสม เพื่อให้ทุกคนใช้งานได้อย่างมีความสุข</p>
+    <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  </div>
+</div>
+
+<script>
+let score = 0;
+const total = document.querySelectorAll("#tray .label-chip").length;
+document.getElementById("hud").querySelector(".pill").innerHTML = `⭐ คะแนน: <span id="score">0</span>/${total}`;
+const scoreEl = document.getElementById("score");
+
+function makeDraggable(chip){
+  chip.addEventListener("pointerdown", (e) => {
+    if(chip.classList.contains("placed")) return;
+    const category = chip.dataset.category;
+    const ghost = chip.cloneNode(true);
+    ghost.style.position = "fixed";
+    ghost.style.pointerEvents = "none";
+    ghost.style.zIndex = 999;
+    ghost.style.left = e.clientX + "px";
+    ghost.style.top = e.clientY + "px";
+    ghost.style.transform = "translate(-50%,-50%)";
+    document.body.appendChild(ghost);
+
+    let overBin = null;
+
+    const onMove = (ev) => {
+      ghost.style.left = ev.clientX + "px";
+      ghost.style.top = ev.clientY + "px";
+      overBin = null;
+      document.querySelectorAll(".bin").forEach(b => {
+        const r = b.getBoundingClientRect();
+        const inside = ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom;
+        if(inside) overBin = b;
+      });
+    };
+
+    const onUp = () => {
+      ghost.remove();
+      if(overBin){
+        if(overBin.dataset.category === category){
+          const badge = document.createElement("div");
+          badge.className = "placed-item";
+          badge.innerHTML = chip.innerHTML;
+          overBin.querySelector(".items").appendChild(badge);
+          chip.classList.add("placed");
+          score++;
+          scoreEl.textContent = score;
+          if(score >= total){
+            setTimeout(() => { document.getElementById("finish").style.display = "flex"; }, 400);
+          }
+        } else {
+          overBin.classList.add("flash");
+          setTimeout(() => overBin.classList.remove("flash"), 400);
+        }
+      }
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp);
+  });
+}
+
+document.querySelectorAll("#tray .label-chip").forEach(makeDraggable);
+</script>
+</body>
+</html>

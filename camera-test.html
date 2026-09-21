@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทดสอบกล้อง (ไม่มี AR.js)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html{ font-size:24px; } /* ป.1-3: ใหญ่กว่าปกติ 1.5 เท่า */
+  body{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; background:#111; color:#fff; text-align:center; padding:20px; }
+  video{ width:100%; max-width:480px; border-radius:12px; background:#333; }
+  #log{ text-align:left; max-width:480px; margin:16px auto; background:#000; padding:12px; border-radius:8px; font-family:monospace; font-size:.8rem; white-space:pre-wrap; }
+  button{ padding:12px 24px; border:none; border-radius:999px; background:#3B82F6; color:#fff; font-weight:700; font-size:1rem; margin:10px; cursor:pointer; }
+</style>
+</head>
+<body>
+  <h1>🎥 ทดสอบกล้อง (ไม่ใช้ AR.js)</h1>
+  <p>ถ้าเห็นภาพตัวเองในกรอบด้านล่าง = กล้อง/เบราว์เซอร์ใช้ได้ปกติ ปัญหาอยู่ที่ AR.js<br>
+     ถ้ากดแล้วไม่เห็นภาพ/ขึ้น error = ปัญหาอยู่ที่สิทธิ์กล้องของ Windows/เบราว์เซอร์</p>
+  <button onclick="startCam()">📷 เปิดกล้องทดสอบ</button>
+  <br>
+  <video id="v" autoplay playsinline></video>
+  <div id="log">รอผลการทดสอบ...</div>
+
+<script>
+async function startCam(){
+  const log = document.getElementById('log');
+  log.textContent = "กำลังขอสิทธิ์กล้อง...";
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    document.getElementById('v').srcObject = stream;
+    const track = stream.getVideoTracks()[0];
+    log.textContent = "✅ สำเร็จ! กล้องที่ใช้: " + (track.label || "(ไม่ทราบชื่อ)") +
+      "\nขนาดภาพ: " + JSON.stringify(track.getSettings());
+  } catch (err) {
+    log.textContent = "❌ ล้มเหลว\nชื่อ error: " + err.name + "\nข้อความ: " + err.message;
+  }
+}
+</script>
+</body>
+</html>

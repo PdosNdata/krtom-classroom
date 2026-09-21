@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกม: แตะเลือกคำตอบ (ไม่ใช้กล้อง) — ป.6 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:linear-gradient(160deg,#1e1b4b,#312e81 45%,#4c1d95); color:#fff; min-height:100vh; }
+
+  header{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; }
+  header a{ color:#fff; background:rgba(255,255,255,.15); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+  #hud{ background:linear-gradient(135deg,#F59E0B,#F97316); padding:8px 16px; border-radius:999px; font-weight:800; font-size:.85rem; box-shadow:0 4px 12px rgba(249,115,22,.5); transition:transform .2s; }
+  #hud.pop{ transform:scale(1.2); }
+
+  main{ max-width:640px; margin:0 auto; padding:0 20px 40px; text-align:center; }
+  #q-box{
+    background:linear-gradient(135deg, rgba(59,130,246,.85), rgba(139,92,246,.85));
+    padding:16px 20px; border-radius:18px; box-shadow:0 6px 18px rgba(0,0,0,.35);
+    font-weight:700; font-size:1rem; margin-bottom:24px;
+    display:flex; align-items:center; gap:10px; justify-content:center;
+  }
+  #q-replay{
+    flex:none; width:30px; height:30px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.25); color:#fff; font-size:.9rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #q-replay.speaking{ background:#FBBF24; color:#111; }
+
+  #zones{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px; }
+  .zone{
+    background:rgba(255,255,255,.94); border-radius:18px; padding:18px 12px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    cursor:pointer; border:4px solid rgba(255,255,255,.3); transition:transform .15s, border-color .15s;
+    min-height:150px;
+  }
+  .zone:hover{ transform:translateY(-4px); border-color:#FBBF24; }
+  .zone .ic{ width:70%; max-height:56px; display:flex; align-items:center; justify-content:center; }
+  .zone .ic svg{ max-width:100%; max-height:56px; }
+  .zone .ic.emoji{ font-size:2.3rem; }
+  .zone .txt{ color:#1F2430; font-weight:800; font-size:.88rem; text-align:center; }
+
+  .zone.correct{ animation:correct-pop .5s ease; border-color:#10B981; background:#ECFDF5; }
+  @keyframes correct-pop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.1); } 100%{ transform:scale(1); } }
+  .zone.wrong{ animation:shake .5s; border-color:#EF4444; background:#FEF2F2; }
+  @keyframes shake{ 0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-8px); } 40%{ transform:translateX(8px); } 60%{ transform:translateX(-6px); } 80%{ transform:translateX(6px); } }
+
+  #feedback{
+    position:fixed; top:44%; left:50%; transform:translate(-50%,-50%) scale(0.5);
+    font-size:1.8rem; font-weight:800; z-index:25; opacity:0; pointer-events:none;
+    transition:transform .25s, opacity .25s; text-shadow:0 4px 14px rgba(0,0,0,.6);
+  }
+  #feedback.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+  .confetti{ position:fixed; font-size:1.4rem; z-index:26; pointer-events:none; animation:confetti-fall 1.1s ease-out forwards; }
+  @keyframes confetti-fall{ 0%{ transform:translate(0,0) rotate(0deg) scale(1); opacity:1; } 100%{ transform:translate(var(--dx), 160px) rotate(var(--rot)); opacity:0; } }
+
+  #finish{
+    position:fixed; inset:0; background:linear-gradient(160deg,#052e2b,#064e3b 60%,#0f766e); z-index:35;
+    display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; padding:24px;
+  }
+  #finish .big{ font-size:3.2rem; }
+  #finish h1{ font-size:1.5rem; margin:0; background:linear-gradient(90deg,#FBBF24,#34D399); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #finish button{
+    padding:13px 28px; border:none; border-radius:999px; background:linear-gradient(135deg,#10B981,#059669); color:#fff;
+    font-weight:700; font-size:1rem; cursor:pointer; box-shadow:0 8px 22px rgba(16,185,129,.5);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../../index.html#/unit/p6/cs/0/game">← กลับหน้าหน่วย</a>
+  <div id="hud">⭐ คะแนน: <span id="score">0</span>/11</div>
+</header>
+
+<main>
+  <div id="q-box">
+    <span id="q-text"></span>
+    <button id="q-replay" onclick="replayQuestion()"><span id="q-replay-icon">🔊</span></button>
+  </div>
+  <div id="zones"></div>
+</main>
+
+<div id="feedback"></div>
+
+<div id="finish">
+  <div class="big">🎉🏆</div>
+  <h1>เก่งมาก! ตอบครบ 11 ข้อ!</h1>
+  <p style="color:#d1fae5;max-width:380px;font-size:.85rem">เหตุผลเชิงตรรกะและผังงานช่วยให้เราคิดแก้ปัญหาอย่างเป็นขั้นตอน สัญลักษณ์แต่ละรูปในผังงานมีความหมายเฉพาะที่ช่วยให้สื่อสารขั้นตอนการทำงานได้ชัดเจน</p>
+  <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  <a href="../../index.html#/unit/p6/cs/0/game" style="color:#6ee7b7;font-size:.85rem">กลับหน้าหน่วย</a>
+</div>
+
+<script>
+const SVG = {
+  oval: '<svg viewBox="0 0 140 80"><rect x="10" y="20" width="120" height="40" rx="20" fill="#DBEAFE" stroke="#3B82F6" stroke-width="5"/></svg>',
+  rect: '<svg viewBox="0 0 140 80"><rect x="10" y="10" width="120" height="60" rx="6" fill="#F0FBF6" stroke="#10B981" stroke-width="5"/></svg>',
+  manualinput: '<svg viewBox="0 0 140 80"><polygon points="15,30 125,15 125,65 15,65" fill="#FEE2E2" stroke="#EF4444" stroke-width="5"/></svg>',
+  para: '<svg viewBox="0 0 140 80"><polygon points="26,10 134,10 114,70 6,70" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="5"/></svg>',
+  display: '<svg viewBox="0 0 140 80"><polygon points="35,15 125,15 125,65 35,65 10,40" fill="#CFFAFE" stroke="#06B6D4" stroke-width="5"/></svg>',
+  diamond: '<svg viewBox="0 0 140 80"><polygon points="70,6 134,40 70,74 6,40" fill="#FEF3C7" stroke="#F59E0B" stroke-width="5"/></svg>',
+  flowline: '<svg viewBox="0 0 140 80"><line x1="15" y1="40" x2="105" y2="40" stroke="#1F2430" stroke-width="6" stroke-linecap="round"/><polygon points="105,26 132,40 105,54" fill="#1F2430"/></svg>',
+  connector: '<svg viewBox="0 0 140 80"><circle cx="70" cy="40" r="30" fill="#FEF3C7" stroke="#F59E0B" stroke-width="5"/></svg>',
+  offpage: '<svg viewBox="0 0 140 80"><polygon points="20,15 120,15 120,50 70,72 20,50" fill="#DBEAFE" stroke="#3B82F6" stroke-width="5"/></svg>',
+  predefined: '<svg viewBox="0 0 140 80"><rect x="15" y="15" width="110" height="50" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="5"/><line x1="35" y1="15" x2="35" y2="65" stroke="#8B5CF6" stroke-width="5"/><line x1="105" y1="15" x2="105" y2="65" stroke="#8B5CF6" stroke-width="5"/></svg>',
+  document: '<svg viewBox="0 0 140 80"><path d="M15,15 H125 V50 Q100,65 70,52 Q40,40 15,55 Z" fill="#FCE7F3" stroke="#EC4899" stroke-width="5"/></svg>'
+};
+
+const QUESTIONS = [
+  { audio:"audio/handpoint-q1.mp3", text:"ข้อที่ 1: สัญลักษณ์รูปสี่เหลี่ยมขอบมน ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"จุดเริ่มต้น/สิ้นสุด", svg:SVG.oval },
+      { label:"การตัดสินใจ", svg:SVG.diamond },
+      { label:"การประมวลผล", svg:SVG.rect }
+    ], correct:0 },
+  { audio:"audio/handpoint-q2.mp3", text:"ข้อที่ 2: สัญลักษณ์รูปสี่เหลี่ยมผืนผ้า ในผังงาน ใช้แสดงอะไร?",
+    choices:[
+      { label:"รับข้อมูล/แสดงผล", svg:SVG.para },
+      { label:"จุดเริ่มต้น/สิ้นสุด", svg:SVG.oval },
+      { label:"การประมวลผล", svg:SVG.rect }
+    ], correct:2 },
+  { audio:"audio/handpoint-q3.mp3", text:"ข้อที่ 3: สัญลักษณ์รูปสี่เหลี่ยมขอบเอียง ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"นำเข้าข้อมูลทางแป้นพิมพ์", svg:SVG.manualinput },
+      { label:"การประมวลผล", svg:SVG.rect },
+      { label:"รับข้อมูล/แสดงผล", svg:SVG.para }
+    ], correct:0 },
+  { audio:"audio/handpoint-q4.mp3", text:"ข้อที่ 4: สัญลักษณ์รูปสี่เหลี่ยมด้านขนาน ในผังงาน ใช้แสดงอะไร?",
+    choices:[
+      { label:"การประมวลผล", svg:SVG.rect },
+      { label:"รับข้อมูล/แสดงผล", svg:SVG.para },
+      { label:"การตัดสินใจ", svg:SVG.diamond }
+    ], correct:1 },
+  { audio:"audio/handpoint-q5.mp3", text:"ข้อที่ 5: สัญลักษณ์รูปจอแสดงผล ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"รับข้อมูล/แสดงผล", svg:SVG.para },
+      { label:"จุดเริ่มต้น/สิ้นสุด", svg:SVG.oval },
+      { label:"แสดงผลลัพธ์บนหน้าจอ", svg:SVG.display }
+    ], correct:2 },
+  { audio:"audio/handpoint-q6.mp3", text:"ข้อที่ 6: สัญลักษณ์รูปสี่เหลี่ยมขนมเปียกปูน ใช้แสดงอะไร?",
+    choices:[
+      { label:"การประมวลผล", svg:SVG.rect },
+      { label:"การตัดสินใจ", svg:SVG.diamond },
+      { label:"รับข้อมูล/แสดงผล", svg:SVG.para }
+    ], correct:1 },
+  { audio:"audio/handpoint-q7.mp3", text:"ข้อที่ 7: สัญลักษณ์ลูกศร ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"จุดเชื่อมต่อ", svg:SVG.connector },
+      { label:"ทิศทางการไหลของงาน", svg:SVG.flowline },
+      { label:"การตัดสินใจ", svg:SVG.diamond }
+    ], correct:1 },
+  { audio:"audio/handpoint-q8.mp3", text:"ข้อที่ 8: สัญลักษณ์รูปวงกลม ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"จุดเชื่อมต่อไปหน้าถัดไป", svg:SVG.offpage },
+      { label:"จุดเริ่มต้น/สิ้นสุด", svg:SVG.oval },
+      { label:"จุดเชื่อมต่อในหน้าเดียวกัน", svg:SVG.connector }
+    ], correct:2 },
+  { audio:"audio/handpoint-q9.mp3", text:"ข้อที่ 9: สัญลักษณ์รูปห้าเหลี่ยม ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"จุดเชื่อมต่อไปหน้าถัดไป", svg:SVG.offpage },
+      { label:"จุดเชื่อมต่อในหน้าเดียวกัน", svg:SVG.connector },
+      { label:"การประมวลผล", svg:SVG.rect }
+    ], correct:0 },
+  { audio:"audio/handpoint-q10.mp3", text:"ข้อที่ 10: สัญลักษณ์รูปสี่เหลี่ยมขอบคู่ ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"การประมวลผล", svg:SVG.rect },
+      { label:"เอกสาร", svg:SVG.document },
+      { label:"การทำงานที่กำหนดไว้แล้ว", svg:SVG.predefined }
+    ], correct:2 },
+  { audio:"audio/handpoint-q11.mp3", text:"ข้อที่ 11: สัญลักษณ์รูปสี่เหลี่ยมขอบหยัก ในผังงาน หมายถึงอะไร?",
+    choices:[
+      { label:"กระบวนการย่อย", svg:SVG.predefined },
+      { label:"รับข้อมูล/แสดงผล", svg:SVG.para },
+      { label:"ข้อมูลรูปแบบเอกสาร", svg:SVG.document }
+    ], correct:2 }
+];
+
+let qIndex = 0;
+let score = 0;
+let locked = false;
+let currentCorrectIndex = 0;
+
+const zonesEl = document.getElementById("zones");
+const qTextEl = document.getElementById("q-text");
+const scoreEl = document.getElementById("score");
+const hudEl = document.getElementById("hud");
+const feedbackEl = document.getElementById("feedback");
+
+function shuffledOrder(n){
+  const arr = Array.from({length:n}, (_, i) => i);
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+let currentAudio = null;
+function playAudio(src, onEnd){
+  if(currentAudio){ currentAudio.pause(); }
+  currentAudio = new Audio(src);
+  currentAudio.play().catch(()=>{});
+  if(onEnd) currentAudio.onended = onEnd;
+  return currentAudio;
+}
+window.replayQuestion = function(){
+  const icon = document.getElementById("q-replay-icon");
+  const btn = document.getElementById("q-replay");
+  btn.classList.add("speaking");
+  icon.textContent = "⏸";
+  const a = playAudio(QUESTIONS[qIndex].audio);
+  a.onended = () => { btn.classList.remove("speaking"); icon.textContent = "🔊"; };
+};
+
+function renderQuestion(){
+  const q = QUESTIONS[qIndex];
+  qTextEl.textContent = q.text;
+  zonesEl.innerHTML = "";
+
+  const order = shuffledOrder(q.choices.length);
+  order.forEach((origIdx, i) => {
+    const choice = q.choices[origIdx];
+    if(origIdx === q.correct) currentCorrectIndex = i;
+    const el = document.createElement("div");
+    el.className = "zone";
+    el.dataset.c = i;
+    const icHtml = choice.svg
+      ? `<span class="ic">${choice.svg}</span>`
+      : `<span class="ic emoji">${choice.emoji}</span>`;
+    el.innerHTML = `${icHtml}<span class="txt">${choice.label}</span>`;
+    el.addEventListener("click", () => selectAnswer(i, el));
+    zonesEl.appendChild(el);
+  });
+  locked = false;
+
+  setTimeout(() => window.replayQuestion(), 350);
+}
+
+function burstConfetti(x, y){
+  const icons = ["🎉","⭐","✨","🌟","💫"];
+  for(let i=0;i<14;i++){
+    const el = document.createElement("div");
+    el.className = "confetti";
+    el.textContent = icons[Math.floor(Math.random()*icons.length)];
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.style.setProperty("--dx", (Math.random()*220-110) + "px");
+    el.style.setProperty("--rot", (Math.random()*360) + "deg");
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+  }
+}
+
+function bumpScore(){
+  hudEl.classList.add("pop");
+  setTimeout(() => hudEl.classList.remove("pop"), 250);
+}
+
+function flashFeedback(text, color){
+  feedbackEl.textContent = text;
+  feedbackEl.style.color = color;
+  feedbackEl.classList.add("show");
+  setTimeout(() => feedbackEl.classList.remove("show"), 700);
+}
+
+function selectAnswer(idx, el){
+  if(locked) return;
+  locked = true;
+  const r = el.getBoundingClientRect();
+
+  if(idx === currentCorrectIndex){
+    el.classList.add("correct");
+    score++;
+    scoreEl.textContent = score;
+    bumpScore();
+    flashFeedback("✅ ถูกต้อง!", "#10B981");
+    burstConfetti(r.left + r.width/2, r.top + r.height/2);
+    playAudio("audio/handpoint-correct.mp3");
+    setTimeout(() => {
+      qIndex++;
+      if(qIndex >= QUESTIONS.length){
+        playAudio("audio/handpoint-finish.mp3");
+        document.getElementById("finish").style.display = "flex";
+      } else {
+        renderQuestion();
+      }
+    }, 1300);
+  } else {
+    el.classList.add("wrong");
+    flashFeedback("❌ ลองใหม่", "#EF4444");
+    playAudio("audio/handpoint-wrong.mp3");
+    setTimeout(() => {
+      el.classList.remove("wrong");
+      locked = false;
+    }, 900);
+  }
+}
+
+renderQuestion();
+</script>
+
+</body>
+</html>

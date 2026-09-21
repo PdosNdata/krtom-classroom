@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย — ป.6 หน่วย 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#7C3AED,#EF4444); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:9px 18px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#fff; border:1px solid #E6E8F0; border-left:6px solid #7C3AED; border-radius:14px; padding:18px 20px; margin-bottom:22px; box-shadow:0 4px 10px rgba(0,0,0,.04); }
+  .obj-box h2{ margin:0 0 8px; font-size:1rem; color:#6D28D9; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+
+  #master-listen{ display:block; width:100%; margin-bottom:26px; padding:14px; border:none; border-radius:14px; background:linear-gradient(135deg,#7C3AED,#EF4444); color:#fff; font-weight:700; font-size:1rem; cursor:pointer; box-shadow:0 6px 16px rgba(124,58,237,.3); }
+
+  section.topic{ margin-bottom:30px; }
+  .topic-head{ display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,#7C3AED,#5B21B6); color:#fff; padding:12px 18px; border-radius:12px; margin-bottom:14px; }
+  .topic-head .num{ background:rgba(255,255,255,.25); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+  .topic-head h3{ margin:0; font-size:1rem; }
+
+  .tts-btn{ margin-bottom:12px; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:16px 0; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:16px 14px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,.05); }
+  .concept-card .ic{ font-size:1.9rem; margin-bottom:6px; }
+  .concept-card b{ display:block; font-size:.86rem; margin-bottom:4px; color:#6D28D9; }
+  .concept-card span{ font-size:.78rem; color:#555; }
+
+  .check-list{ background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:18px; margin:16px 0; }
+  .check-item{ display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px dashed #E6E8F0; font-size:.88rem; }
+  .check-item:last-child{ border-bottom:none; }
+  .check-item .ic{ font-size:1.3rem; flex-shrink:0; }
+
+  .danger-box{ background:#FEF2F2; border:1px solid #FCA5A5; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .danger-box b{ color:#DC2626; }
+  .info-box{ background:#F0FBF6; border:1px solid #BBF7D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#059669; }
+  .fun-fact{ background:#FFFBEB; border:2px dashed #FBBF24; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .summary-box{ background:linear-gradient(135deg,#7C3AED,#EF4444); color:#fff; border-radius:16px; padding:20px; margin-top:26px; }
+  .summary-box h3{ margin:0 0 10px; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้</h1>
+    <p>การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย · ป.6 หน่วยที่ 4</p>
+  </div>
+  <a href="../../index.html#/unit/p6/cs/3/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>บอกวิธีการใช้เทคโนโลยีสารสนเทศและอินเทอร์เน็ตอย่างปลอดภัยได้</li>
+      <li>ระบุภัยคุกคามทางไซเบอร์ที่พบบ่อย และแนวทางป้องกันตนเองได้</li>
+    </ul>
+  </div>
+
+  <button id="master-listen" class="tts-btn" data-audio-src="audio/know-full.mp3">
+    <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+  </button>
+
+  <div id="full-text">
+
+  <section class="topic">
+    <div class="topic-head"><span class="num">1</span><h3>ภัยคุกคามทางไซเบอร์ที่พบบ่อย</h3></div>
+    <button class="tts-btn" data-audio-src="audio/know-topic1.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังหัวข้อนี้</span>
+    </button>
+    <p>การใช้อินเทอร์เน็ตมีความเสี่ยงหลายรูปแบบ นักเรียนควรรู้จักภัยคุกคามเหล่านี้เพื่อป้องกันตนเอง</p>
+
+    <div class="concept-grid">
+      <div class="concept-card"><div class="ic">🎣</div><b>ฟิชชิง (Phishing)</b><span>หลอกให้กรอกรหัสผ่านหรือข้อมูลส่วนตัวผ่านลิงก์ปลอม</span></div>
+      <div class="concept-card"><div class="ic">🦠</div><b>มัลแวร์ (Malware)</b><span>โปรแกรมอันตรายที่แฝงมากับไฟล์หรือลิงก์ ทำลายข้อมูล</span></div>
+      <div class="concept-card"><div class="ic">😡</div><b>ไซเบอร์บูลลี่</b><span>การกลั่นแกล้ง ล้อเลียน หรือคุกคามผู้อื่นผ่านโลกออนไลน์</span></div>
+      <div class="concept-card"><div class="ic">👤</div><b>คนแปลกหน้าออนไลน์</b><span>บุคคลที่แอบอ้างตัวตนเพื่อหลอกลวงหรือทำอันตราย</span></div>
+    </div>
+
+    <div class="danger-box"><b>⚠️ ข้อควรระวัง:</b> อย่าคลิกลิงก์หรือเปิดไฟล์แนบจากอีเมลหรือข้อความที่ไม่รู้จัก แม้จะดูเหมือนมาจากคนคุ้นเคยก็ตาม</div>
+  </section>
+
+  <section class="topic">
+    <div class="topic-head"><span class="num">2</span><h3>แนวทางการป้องกันตนเองให้ปลอดภัย</h3></div>
+    <button class="tts-btn" data-audio-src="audio/know-topic2.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังหัวข้อนี้</span>
+    </button>
+    <p>การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย เริ่มต้นจากพฤติกรรมที่ดีของตัวเราเอง</p>
+
+    <div class="check-list">
+      <div class="check-item"><span class="ic">🔒</span><span><b>ตั้งรหัสผ่านที่คาดเดายาก</b> — ผสมตัวอักษร ตัวเลข และสัญลักษณ์ ไม่ใช้ซ้ำในทุกบัญชี</span></div>
+      <div class="check-item"><span class="ic">🙈</span><span><b>ไม่เปิดเผยข้อมูลส่วนตัว</b> — เช่น ที่อยู่ เบอร์โทร รหัสผ่าน กับคนที่ไม่รู้จัก</span></div>
+      <div class="check-item"><span class="ic">👨‍👩‍👧</span><span><b>ปรึกษาผู้ปกครองหรือครู</b> — เมื่อพบสิ่งผิดปกติหรือถูกคุกคามทางออนไลน์</span></div>
+      <div class="check-item"><span class="ic">🛡️</span><span><b>ตั้งค่าความเป็นส่วนตัว</b> — จำกัดผู้ที่มองเห็นโพสต์และข้อมูลในโซเชียลมีเดีย</span></div>
+    </div>
+
+    <div class="info-box"><b>ควรรู้:</b> ถ้าถูกกลั่นแกล้งทางออนไลน์ (Cyberbullying) ให้เก็บหลักฐาน (แคปหน้าจอ) แล้วแจ้งผู้ปกครองหรือครูทันที ไม่ควรตอบโต้ด้วยความรุนแรง</div>
+  </section>
+
+  <div class="fun-fact"><b>🤔 รู้หรือไม่?</b> รหัสผ่านที่ดีควรมีความยาวอย่างน้อย 8 ตัวอักษรขึ้นไป และไม่ควรใช้ข้อมูลที่เดาง่าย เช่น วันเกิดหรือชื่อตัวเอง เพราะแฮกเกอร์สามารถเดาได้ง่ายมาก</div>
+
+  <div class="summary-box">
+    <h3>📝 สรุปท้ายหน่วย</h3>
+    <ul>
+      <li>รู้จักภัยคุกคามทางไซเบอร์ เช่น ฟิชชิง มัลแวร์ และไซเบอร์บูลลี่</li>
+      <li>ป้องกันตนเองด้วยการตั้งรหัสผ่านที่ดี ไม่เปิดเผยข้อมูลส่วนตัว และปรึกษาผู้ใหญ่เมื่อพบปัญหา</li>
+    </ul>
+  </div>
+
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

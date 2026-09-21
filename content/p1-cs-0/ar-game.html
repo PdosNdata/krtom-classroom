@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>เกม AR: ล่าอุปกรณ์คอมพิวเตอร์ — ป.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html{ font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; background:#111; color:#fff; overflow:hidden; }
+
+  #intro{
+    position:fixed; inset:0; background:#111; z-index:30;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:22px; text-align:center; gap:12px;
+  }
+  #intro h1{ font-size:42px; margin:0; }
+  #intro p{ max-width:440px; color:#ddd; font-size:.9rem; line-height:1.7; margin:0; }
+  .marker-preview{ display:flex; gap:16px; }
+  .marker-preview figure{ margin:0; }
+  .marker-preview img{ width:110px; border-radius:10px; border:4px solid #fff; background:#fff; }
+  .marker-preview figcaption{ font-size:.75rem; color:#bbb; margin-top:4px; }
+  #intro a.dl{ color:#7dd3fc; font-size:.82rem; }
+  #intro button{
+    margin-top:8px; padding:13px 30px; border:none; border-radius:999px;
+    background:#3B82F6; color:#fff; font-weight:700; font-size:1rem; cursor:pointer;
+  }
+
+  #back{
+    position:fixed; top:14px; left:14px; z-index:40;
+    background:rgba(0,0,0,.55); color:#fff; text-decoration:none;
+    padding:8px 14px; border-radius:999px; font-size:.85rem;
+  }
+  #hud{
+    position:fixed; top:14px; right:14px; z-index:20;
+    background:rgba(0,0,0,.6); padding:10px 16px; border-radius:999px;
+    font-weight:700; font-size:.95rem;
+  }
+
+  /* กล่องคำถามลอยด้านล่าง เมื่อเจอมาร์กเกอร์ */
+  #quiz{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
+    width:min(92vw, 380px); background:#fff; color:#1F2430; border-radius:18px;
+    padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.35); z-index:20; display:none;
+  }
+  #quiz .q-title{ font-weight:700; font-size:.95rem; margin-bottom:10px; text-align:center; }
+  #quiz .choices{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  #quiz button.choice{
+    flex:1 1 auto; min-width:90px; padding:10px 8px; border-radius:12px; border:2px solid #E6E8F0;
+    background:#F7F8FC; font-weight:600; font-size:.85rem; cursor:pointer;
+  }
+  #quiz button.choice.correct{ background:#E7F9F1; border-color:#10B981; }
+  #quiz button.choice.wrong{ background:#FDECEC; border-color:#EF4444; }
+
+  #feedback{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.5);
+    font-size:2.2rem; font-weight:800; z-index:25; opacity:0; pointer-events:none;
+    transition:transform .25s, opacity .25s; text-shadow:0 4px 14px rgba(0,0,0,.5);
+  }
+  #feedback.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+  #finish{
+    position:fixed; inset:0; background:rgba(10,10,20,.92); z-index:35;
+    display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; padding:24px;
+  }
+  #finish h1{ font-size:42px; margin:0; }
+  #finish button{
+    padding:12px 26px; border:none; border-radius:999px; background:#10B981; color:#fff;
+    font-weight:700; font-size:1rem; cursor:pointer;
+  }
+
+  #hint{
+    position:fixed; bottom:210px; left:50%; transform:translateX(-50%);
+    background:rgba(0,0,0,.55); padding:8px 16px; border-radius:999px; font-size:.78rem; z-index:15;
+  }
+</style>
+</head>
+<body>
+
+<a id="back" href="../../index.html#/unit/p1/cs/0/ar">← กลับหน้าหน่วย</a>
+<div id="hud">⭐ คะแนน: <span id="score">0</span>/5</div>
+<div id="hint">👀 ส่องกล้องไปที่มาร์กเกอร์ให้เห็นเต็มภาพ</div>
+<div id="feedback"></div>
+
+<div id="quiz">
+  <div class="q-title" id="q-title">นี่คืออุปกรณ์อะไร?</div>
+  <div class="choices" id="q-choices"></div>
+</div>
+
+<div id="finish">
+  <div style="font-size:3rem">🎉</div>
+  <h1>เก่งมาก! รู้จักอุปกรณ์คอมพิวเตอร์ครบแล้ว</h1>
+  <p style="color:#ccc;max-width:380px">หน่วยที่ 1 การใช้งานเทคโนโลยีเบื้องต้น — เมาส์และคีย์บอร์ดเป็นอุปกรณ์รับข้อมูล (Input), ซีพียูประมวลผลข้อมูล (Process) ส่วนจอมอนิเตอร์และลำโพงเป็นอุปกรณ์แสดงผล (Output)</p>
+  <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  <a href="../../index.html#/unit/p1/cs/0/ar" style="color:#7dd3fc;font-size:.85rem">กลับหน้าหน่วย</a>
+</div>
+
+<div id="intro">
+  <h1>🕶️ เกม AR: ล่าอุปกรณ์คอมพิวเตอร์</h1>
+  <p>หน่วยที่ 1 การใช้งานเทคโนโลยีเบื้องต้น (ป.1) — พิมพ์มาร์กเกอร์ 2 ใบด้านล่าง แล้วส่องกล้องไปที่ทีละใบ
+     จะเห็นโมเดลอุปกรณ์ลอยขึ้นมา ตอบคำถามให้ถูกเพื่อเก็บดาว! (มาร์กเกอร์ Hiro จะถาม 3 คำถามติดกัน มาร์กเกอร์ Kanji จะถาม 2 คำถามติดกัน)</p>
+  <div class="marker-preview">
+    <figure>
+      <img src="https://raw.githack.com/AR-js-org/AR.js/master/data/images/hiro.png" alt="มาร์กเกอร์ Hiro">
+      <figcaption>มาร์กเกอร์ที่ 1 (Hiro)</figcaption>
+    </figure>
+    <figure>
+      <img src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/examples/marker-training/examples/pattern-images/pattern-kanji.png" alt="มาร์กเกอร์ Kanji">
+      <figcaption>มาร์กเกอร์ที่ 2 (Kanji)</figcaption>
+    </figure>
+  </div>
+  <p><a class="dl" href="https://raw.githack.com/AR-js-org/AR.js/master/data/images/hiro.png">ดาวน์โหลด Hiro</a> ·
+     <a class="dl" href="https://raw.githack.com/AR-js-org/AR.js/master/three.js/examples/marker-training/examples/pattern-images/pattern-kanji.png">ดาวน์โหลด Kanji</a></p>
+  <button onclick="document.getElementById('intro').style.display='none'">📷 เริ่มเปิดกล้อง</button>
+  <p style="font-size:.75rem;color:#999">* ต้องเปิดผ่าน https หรือ localhost เบราว์เซอร์ถึงจะอนุญาตใช้กล้อง</p>
+</div>
+
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+
+<a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+
+  <a-marker preset="hiro" id="marker-hiro">
+    <a-entity id="obj-mouse" visible="true" position="0 0.4 0">
+      <a-sphere radius="0.35" scale="1 0.6 1.4" color="#EC4899"></a-sphere>
+      <a-box position="0.2 0.28 0.5" width="0.06" height="0.05" depth="0.3" color="#fff"></a-box>
+      <a-text value="เมาส์ (Mouse)" align="center" position="0 1 0" color="#111" scale="1.6 1.6 1.6"
+              animation="property: position; to: 0 1.15 0; dir: alternate; loop: true; dur: 900"></a-text>
+    </a-entity>
+    <a-entity id="obj-monitor" visible="false" position="0 0.5 0">
+      <a-box width="1" height="0.7" depth="0.08" color="#1F2430"></a-box>
+      <a-plane width="0.86" height="0.56" color="#3B82F6" position="0 0 0.05"></a-plane>
+      <a-box position="0 -0.5 0" width="0.1" height="0.3" depth="0.08" color="#4B5566"></a-box>
+      <a-text value="จอมอนิเตอร์ (Monitor)" align="center" position="0 1.1 0" color="#111" scale="1.6 1.6 1.6"
+              animation="property: position; to: 0 1.25 0; dir: alternate; loop: true; dur: 900"></a-text>
+    </a-entity>
+    <a-entity id="obj-cpu" visible="false" position="0 0.35 0">
+      <a-box width="0.4" height="0.7" depth="0.35" color="#374151"></a-box>
+      <a-box position="0 0.15 0.18" width="0.3" height="0.3" depth="0.02" color="#4B5566"></a-box>
+      <a-circle position="0 0 0.19" radius="0.05" color="#60A5FA"></a-circle>
+      <a-text value="ซีพียู (CPU)" align="center" position="0 0.85 0" color="#111" scale="1.6 1.6 1.6"
+              animation="property: position; to: 0 1 0; dir: alternate; loop: true; dur: 900"></a-text>
+    </a-entity>
+  </a-marker>
+
+  <a-marker preset="kanji" id="marker-keyboard">
+    <a-entity id="obj-keyboard" visible="true" position="0 0.15 0">
+      <a-box width="1.2" height="0.12" depth="0.5" color="#3B82F6"></a-box>
+      <a-text value="คีย์บอร์ด (Keyboard)" align="center" position="0 0.9 0" color="#111" scale="1.5 1.5 1.5"
+              animation="property: position; to: 0 1.05 0; dir: alternate; loop: true; dur: 900"></a-text>
+    </a-entity>
+    <a-entity id="obj-speaker" visible="false" position="0 0.35 0">
+      <a-box width="0.4" height="0.6" depth="0.3" color="#374151"></a-box>
+      <a-circle position="0 0.12 0.16" radius="0.13" color="#1F2430"></a-circle>
+      <a-circle position="0 -0.12 0.16" radius="0.09" color="#1F2430"></a-circle>
+      <a-text value="ลำโพง (Speaker)" align="center" position="0 0.75 0" color="#111" scale="1.6 1.6 1.6"
+              animation="property: position; to: 0 0.9 0; dir: alternate; loop: true; dur: 900"></a-text>
+    </a-entity>
+  </a-marker>
+
+  <a-entity camera></a-entity>
+</a-scene>
+
+<script>
+let score = 0;
+const TOTAL = 5;
+const answered = { mouse:false, monitor:false, cpu:false, keyboard:false, speaker:false };
+
+const QUESTIONS = {
+  mouse:    { title:"นี่คืออุปกรณ์อะไร?", choices:["เมาส์","คีย์บอร์ด","จอภาพ"], correct:"เมาส์" },
+  monitor:  { title:"นี่คืออุปกรณ์อะไร?", choices:["จอมอนิเตอร์","เมาส์","ลำโพง"], correct:"จอมอนิเตอร์" },
+  cpu:      { title:"นี่คืออุปกรณ์อะไร?", choices:["ซีพียู","เมาส์","จอภาพ"], correct:"ซีพียู" },
+  keyboard: { title:"นี่คืออุปกรณ์อะไร?", choices:["จอภาพ","คีย์บอร์ด","ลำโพง"], correct:"คีย์บอร์ด" },
+  speaker:  { title:"นี่คืออุปกรณ์อะไร?", choices:["ลำโพง","คีย์บอร์ด","ซีพียู"], correct:"ลำโพง" }
+};
+
+const quizEl = document.getElementById("quiz");
+const titleEl = document.getElementById("q-title");
+const choicesEl = document.getElementById("q-choices");
+const feedbackEl = document.getElementById("feedback");
+const scoreEl = document.getElementById("score");
+const objMouse = document.getElementById("obj-mouse");
+const objMonitor = document.getElementById("obj-monitor");
+const objCpu = document.getElementById("obj-cpu");
+const objKeyboard = document.getElementById("obj-keyboard");
+const objSpeaker = document.getElementById("obj-speaker");
+
+// มาร์กเกอร์ Hiro ใช้ถาม 3 ข้อติดกัน: เมาส์ → จอมอนิเตอร์ → ซีพียู
+// hiroStage: 0=ถามเมาส์, 1=ถามจอมอนิเตอร์, 2=ถามซีพียู, 3=ถามครบแล้ว
+let hiroStage = 0;
+let hiroVisible = false;
+
+// มาร์กเกอร์ Kanji ใช้ถาม 2 ข้อติดกัน: คีย์บอร์ด → ลำโพง
+// kanjiStage: 0=ถามคีย์บอร์ด, 1=ถามลำโพง, 2=ถามครบแล้ว
+let kanjiStage = 0;
+let kanjiVisible = false;
+
+function showQuiz(key){
+  if(answered[key]) return; // เก็บคะแนนแล้วไม่ถามซ้ำ
+  const q = QUESTIONS[key];
+  titleEl.textContent = q.title;
+  choicesEl.innerHTML = "";
+  q.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choice;
+    btn.onclick = () => handleAnswer(key, choice, btn, q.correct);
+    choicesEl.appendChild(btn);
+  });
+  quizEl.style.display = "block";
+}
+
+function hideQuiz(){ quizEl.style.display = "none"; }
+
+function handleHiroMarker(){
+  if(!hiroVisible) return;
+  if(hiroStage === 0 && !answered.mouse){
+    objMouse.setAttribute("visible", "true");
+    objMonitor.setAttribute("visible", "false");
+    objCpu.setAttribute("visible", "false");
+    showQuiz("mouse");
+  } else if(hiroStage === 1 && !answered.monitor){
+    objMouse.setAttribute("visible", "false");
+    objMonitor.setAttribute("visible", "true");
+    objCpu.setAttribute("visible", "false");
+    showQuiz("monitor");
+  } else if(hiroStage === 2 && !answered.cpu){
+    objMouse.setAttribute("visible", "false");
+    objMonitor.setAttribute("visible", "false");
+    objCpu.setAttribute("visible", "true");
+    showQuiz("cpu");
+  }
+}
+
+function handleKanjiMarker(){
+  if(!kanjiVisible) return;
+  if(kanjiStage === 0 && !answered.keyboard){
+    objKeyboard.setAttribute("visible", "true");
+    objSpeaker.setAttribute("visible", "false");
+    showQuiz("keyboard");
+  } else if(kanjiStage === 1 && !answered.speaker){
+    objKeyboard.setAttribute("visible", "false");
+    objSpeaker.setAttribute("visible", "true");
+    showQuiz("speaker");
+  }
+}
+
+function handleAnswer(key, choice, btn, correct){
+  if(answered[key]) return;
+  if(choice === correct){
+    answered[key] = true;
+    score++;
+    scoreEl.textContent = score;
+    btn.classList.add("correct");
+    flashFeedback("✅ ถูกต้อง!", "#10B981");
+    setTimeout(hideQuiz, 700);
+
+    if(key === "mouse"){
+      hiroStage = 1;
+      // ถ้ามาร์กเกอร์ Hiro ยังอยู่ในกล้อง ให้ถามคำถามถัดไปต่อทันทีโดยไม่ต้องส่องใหม่
+      setTimeout(() => handleHiroMarker(), 900);
+    } else if(key === "monitor"){
+      hiroStage = 2;
+      setTimeout(() => handleHiroMarker(), 900);
+    } else if(key === "cpu"){
+      hiroStage = 3;
+    } else if(key === "keyboard"){
+      kanjiStage = 1;
+      setTimeout(() => handleKanjiMarker(), 900);
+    } else if(key === "speaker"){
+      kanjiStage = 2;
+    }
+
+    if(score >= TOTAL){
+      setTimeout(() => { document.getElementById("finish").style.display = "flex"; }, 1000);
+    }
+  } else {
+    btn.classList.add("wrong");
+    flashFeedback("❌ ลองอีกครั้ง", "#EF4444");
+    setTimeout(() => btn.classList.remove("wrong"), 500);
+  }
+}
+
+function flashFeedback(text, color){
+  feedbackEl.textContent = text;
+  feedbackEl.style.color = color;
+  feedbackEl.classList.add("show");
+  setTimeout(() => feedbackEl.classList.remove("show"), 700);
+}
+
+document.getElementById("marker-hiro").addEventListener("markerFound", () => {
+  hiroVisible = true;
+  handleHiroMarker();
+});
+document.getElementById("marker-hiro").addEventListener("markerLost", () => {
+  hiroVisible = false;
+  hideQuiz();
+});
+document.getElementById("marker-keyboard").addEventListener("markerFound", () => {
+  kanjiVisible = true;
+  handleKanjiMarker();
+});
+document.getElementById("marker-keyboard").addEventListener("markerLost", () => {
+  kanjiVisible = false;
+  hideQuiz();
+});
+</script>
+
+</body>
+</html>

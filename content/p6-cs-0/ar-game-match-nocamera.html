@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกม: จับคู่สัญลักษณ์ผังงาน (ไม่ใช้กล้อง) — ป.6 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.1rem; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+
+  main{ max-width:900px; margin:0 auto; padding:20px 20px 60px; }
+  p.desc{ text-align:center; font-size:.9rem; color:#555; margin:0 0 12px; }
+
+  #hud{ display:flex; justify-content:center; gap:10px; margin-bottom:16px; }
+  #hud .pill{ background:#fff; border:1px solid #E6E8F0; border-radius:999px; padding:7px 16px; font-weight:700; font-size:.88rem; box-shadow:0 4px 10px rgba(0,0,0,.06); }
+
+  #board{ display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  @media (max-width:560px){ #board{ grid-template-columns:1fr; } }
+  .col h2{ font-size:.9rem; text-align:center; margin:0 0 10px; color:#666; }
+
+  .sym-card{
+    background:#fff; border:4px dashed #C9D0E5; border-radius:20px;
+    display:flex; align-items:center; gap:18px; padding:18px 20px; margin-bottom:20px;
+    transition:border-color .15s, background .15s;
+  }
+  .sym-card .icon{ flex:none; width:180px; height:108px; }
+  .sym-card .icon svg{ width:100%; height:100%; }
+  .sym-card .slot{ flex:1; min-height:40px; border-radius:12px; background:#F0F2FA; display:flex; align-items:center; justify-content:center; font-size:2.1rem; font-weight:800; color:#9AA1B5; text-align:center; padding:10px 12px; }
+  .sym-card.correct{ border-color:#10B981; background:#F0FBF6; }
+  .sym-card.correct .slot{ background:#10B981; color:#fff; }
+  .sym-card.wrong-flash{ border-color:#EF4444; }
+
+  .label-chip{
+    font-size:2rem; font-weight:800; background:#fff; border:3px solid #E6E8F0; border-radius:999px;
+    padding:20px 26px; margin-bottom:20px; cursor:grab; box-shadow:0 3px 8px rgba(0,0,0,.08);
+    touch-action:none; user-select:none; text-align:center;
+  }
+  .label-chip.placed{ visibility:hidden; }
+  #page-note{ text-align:center; font-size:.85rem; color:#8B5CF6; font-weight:700; margin-bottom:10px; }
+
+  #finish{
+    position:fixed; inset:0; background:rgba(20,10,30,.6); z-index:40;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #finish .card{ background:#fff; border-radius:22px; padding:32px 24px; text-align:center; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  #finish button{ margin-top:14px; padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧩 เกม: จับคู่สัญลักษณ์ผังงาน (ไม่ใช้กล้อง)</h1>
+  <a href="../../index.html#/unit/p6/cs/0/game">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <p class="desc">หน่วยที่ 1 การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ (ป.6) — ลากป้ายความหมายด้านขวา ไปวางให้ตรงกับสัญลักษณ์ด้านซ้ายให้ครบทุกอัน</p>
+  <div style="text-align:center; margin-bottom:14px">
+    <button class="tts-btn" data-audio-src="audio/ws-instruction.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำสั่ง</span>
+    </button>
+  </div>
+
+  <div id="hud">
+    <span class="pill">🔁 ลากไปแล้ว: <span id="moves">0</span> ครั้ง</span>
+    <span class="pill">⭐ จับคู่ได้: <span id="matches">0</span>/11</span>
+  </div>
+  <p id="page-note"></p>
+
+  <div id="board">
+    <div class="col">
+      <h2>สัญลักษณ์</h2>
+      <div id="symbols"></div>
+    </div>
+    <div class="col">
+      <h2>ความหมาย (ลากไปวาง)</h2>
+      <div id="tray"></div>
+    </div>
+  </div>
+</main>
+
+<div id="finish">
+  <div class="card">
+    <div style="font-size:2.6rem">🎉</div>
+    <h2>เก่งมาก! จับคู่ครบทุกสัญลักษณ์แล้ว</h2>
+    <p style="color:#666;font-size:.9rem" id="finish-msg"></p>
+    <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  </div>
+</div>
+
+<script src="../../assets/js/tts.js"></script>
+<script>
+const ITEMS = [
+  { id:"startend", name:"สี่เหลี่ยมขอบมน", meaning:"จุดเริ่มต้น / สิ้นสุด", audioSym:"audio/sym-oval.mp3", audioLabel:"audio/label-startend.mp3", svg:'<svg viewBox="0 0 140 80"><rect x="10" y="20" width="120" height="40" rx="20" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/></svg>' },
+  { id:"process", name:"สี่เหลี่ยมผืนผ้า", meaning:"ขั้นตอนการประมวลผล", audioSym:"audio/sym-rect.mp3", audioLabel:"audio/label-process.mp3", svg:'<svg viewBox="0 0 140 80"><rect x="10" y="10" width="120" height="60" rx="6" fill="#F0FBF6" stroke="#10B981" stroke-width="4"/></svg>' },
+  { id:"manualinput", name:"สี่เหลี่ยมขอบเอียง", meaning:"นำเข้าข้อมูลทางแป้นพิมพ์", audioSym:"audio/sym-manualinput.mp3", audioLabel:"audio/label-manualinput.mp3", svg:'<svg viewBox="0 0 140 80"><polygon points="15,30 125,15 125,65 15,65" fill="#FEE2E2" stroke="#EF4444" stroke-width="4"/></svg>' },
+  { id:"io", name:"สี่เหลี่ยมด้านขนาน", meaning:"รับข้อมูล / แสดงผล", audioSym:"audio/sym-para.mp3", audioLabel:"audio/label-io.mp3", svg:'<svg viewBox="0 0 140 80"><polygon points="26,10 134,10 114,70 6,70" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/></svg>' },
+  { id:"display", name:"จอแสดงผล", meaning:"แสดงผลลัพธ์บนหน้าจอ", audioSym:"audio/sym-display.mp3", audioLabel:"audio/label-display.mp3", svg:'<svg viewBox="0 0 140 80"><polygon points="35,15 125,15 125,65 35,65 10,40" fill="#CFFAFE" stroke="#06B6D4" stroke-width="4"/></svg>' },
+  { id:"decision", name:"สี่เหลี่ยมขนมเปียกปูน", meaning:"จุดตัดสินใจ", audioSym:"audio/sym-diamond.mp3", audioLabel:"audio/label-decision.mp3", svg:'<svg viewBox="0 0 140 80"><polygon points="70,6 134,40 70,74 6,40" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/></svg>' },
+  { id:"flowline", name:"เส้นทางการไหล", meaning:"ทิศทางการไหลของงาน", audioSym:"audio/sym-flowline.mp3", audioLabel:"audio/label-flowline.mp3", svg:'<svg viewBox="0 0 140 80"><line x1="15" y1="40" x2="105" y2="40" stroke="#1F2430" stroke-width="5" stroke-linecap="round"/><polygon points="105,26 132,40 105,54" fill="#1F2430"/></svg>' },
+  { id:"connector", name:"จุดเชื่อมต่อ", meaning:"เชื่อมต่อในหน้าเดียวกัน", audioSym:"audio/sym-connector.mp3", audioLabel:"audio/label-connector.mp3", svg:'<svg viewBox="0 0 140 80"><circle cx="70" cy="40" r="30" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/></svg>' },
+  { id:"offpage", name:"จุดเชื่อมต่อไปหน้าถัดไป", meaning:"เชื่อมต่อไปหน้าอื่น", audioSym:"audio/sym-offpage.mp3", audioLabel:"audio/label-offpage.mp3", svg:'<svg viewBox="0 0 140 80"><polygon points="20,15 120,15 120,50 70,72 20,50" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/></svg>' },
+  { id:"predefined", name:"กระบวนการย่อย", meaning:"การทำงานที่กำหนดไว้แล้ว", audioSym:"audio/sym-predefined.mp3", audioLabel:"audio/label-predefined.mp3", svg:'<svg viewBox="0 0 140 80"><rect x="15" y="15" width="110" height="50" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/><line x1="35" y1="15" x2="35" y2="65" stroke="#8B5CF6" stroke-width="4"/><line x1="105" y1="15" x2="105" y2="65" stroke="#8B5CF6" stroke-width="4"/></svg>' },
+  { id:"document", name:"เอกสาร", meaning:"ข้อมูลรูปแบบเอกสาร", audioSym:"audio/sym-document.mp3", audioLabel:"audio/label-document.mp3", svg:'<svg viewBox="0 0 140 80"><path d="M15,15 H125 V50 Q100,65 70,52 Q40,40 15,55 Z" fill="#FCE7F3" stroke="#EC4899" stroke-width="4"/></svg>' }
+];
+
+const symbolsEl = document.getElementById("symbols");
+const trayEl = document.getElementById("tray");
+const pageNoteEl = document.getElementById("page-note");
+
+const CHUNK_SIZE = 4;
+const PAGES = [];
+for(let i = 0; i < ITEMS.length; i += CHUNK_SIZE){ PAGES.push(ITEMS.slice(i, i + CHUNK_SIZE)); }
+let pageIndex = 0;
+let matchedInPage = 0;
+
+let moves = 0;
+let matches = 0;
+
+function renderPage(idx){
+  symbolsEl.innerHTML = "";
+  trayEl.innerHTML = "";
+  matchedInPage = 0;
+  pageNoteEl.textContent = `หน้า ${idx + 1} / ${PAGES.length}`;
+
+  const pageItems = PAGES[idx];
+  pageItems.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "sym-card";
+    card.dataset.answer = item.id;
+    card.innerHTML = `
+      <span class="icon">${item.svg}</span>
+      <span class="slot">${item.name}</span>
+      <button class="icon-listen-btn tts-btn" data-audio-src="${item.audioSym}" aria-label="ฟัง" style="border:none;background:#EEF1FB;color:#3B82F6;width:40px;height:40px;border-radius:50%;font-size:1.1rem;cursor:pointer;flex:none">🔊</button>
+    `;
+    symbolsEl.appendChild(card);
+  });
+
+  const shuffled = [...pageItems].sort(() => Math.random() - 0.5);
+  shuffled.forEach(item => {
+    const chip = document.createElement("div");
+    chip.className = "label-chip";
+    chip.dataset.name = item.id;
+    chip.dataset.hoverAudio = item.audioLabel;
+    chip.textContent = item.meaning;
+    trayEl.appendChild(chip);
+  });
+
+  document.querySelectorAll(".label-chip").forEach(makeDraggable);
+  document.querySelectorAll(".label-chip[data-hover-audio]").forEach(chip => {
+    chip.addEventListener("mouseenter", () => {
+      if(chip.classList.contains("placed")) return;
+      playAudio(chip.dataset.hoverAudio, chip);
+    });
+    chip.addEventListener("mouseleave", () => {
+      stopSpeaking();
+    });
+  });
+}
+
+function makeDraggable(chip){
+  chip.addEventListener("pointerdown", (e) => {
+    if(chip.classList.contains("placed")) return;
+    const name = chip.dataset.name;
+    const ghost = chip.cloneNode(true);
+    ghost.style.position = "fixed";
+    ghost.style.pointerEvents = "none";
+    ghost.style.zIndex = 999;
+    ghost.style.left = e.clientX + "px";
+    ghost.style.top = e.clientY + "px";
+    ghost.style.transform = "translate(-50%,-50%)";
+    document.body.appendChild(ghost);
+
+    let overZone = null;
+    const onMove = (ev) => {
+      ghost.style.left = ev.clientX + "px";
+      ghost.style.top = ev.clientY + "px";
+      overZone = null;
+      document.querySelectorAll(".sym-card").forEach(z => {
+        const r = z.getBoundingClientRect();
+        const inside = ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom;
+        z.style.background = inside && !z.classList.contains("correct") ? "#EEF1FB" : "";
+        if(inside) overZone = z;
+      });
+    };
+    const onUp = () => {
+      ghost.remove();
+      document.querySelectorAll(".sym-card").forEach(z => { if(!z.classList.contains("correct")) z.style.background = ""; });
+      if(overZone){
+        moves++;
+        document.getElementById("moves").textContent = moves;
+        if(overZone.dataset.answer === name && !overZone.classList.contains("correct")){
+          overZone.classList.add("correct");
+          chip.classList.add("placed");
+          matches++;
+          matchedInPage++;
+          document.getElementById("matches").textContent = matches;
+          if(matchedInPage >= PAGES[pageIndex].length){
+            if(pageIndex + 1 < PAGES.length){
+              setTimeout(() => {
+                pageIndex++;
+                renderPage(pageIndex);
+              }, 700);
+            } else {
+              setTimeout(() => {
+                document.getElementById("finish-msg").textContent = `ใช้ไป ${moves} ครั้ง — เก่งมากที่จำสัญลักษณ์ผังงานได้ครบ!`;
+                document.getElementById("finish").style.display = "flex";
+              }, 400);
+            }
+          }
+        } else if(overZone.dataset.answer !== name){
+          overZone.classList.add("wrong-flash");
+          setTimeout(() => overZone.classList.remove("wrong-flash"), 400);
+        }
+      }
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp);
+  });
+}
+
+renderPage(pageIndex);
+</script>
+
+</body>
+</html>

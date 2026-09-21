@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) วิทยาการคำนวณ ป.1–ม.3 โดยนายไชยภัทร ฉลูทอง</title>
+<meta name="description" content="บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) วิชาวิทยาการคำนวณ ป.1–ม.3 โดยนายไชยภัทร ฉลูทอง ครบทุกหน่วย พร้อมใบความรู้ ใบงาน เกม และเกม AR">
+<link rel="icon" href="assets/images/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16.png?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png?v=2">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=62">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+</head>
+<body>
+
+<div id="login-gate">
+  <div class="login-gate-inner">
+    <img class="login-gate-full-img" src="assets/images/login-banner.png" alt=""
+         onload="this.closest('.login-gate-inner').classList.add('has-banner');"
+         onerror="this.style.display='none';">
+
+    <div class="login-gate-left">
+      <div class="login-gate-left-coded">
+        <div class="login-gate-title">📚 บทเรียนคอมพิวเตอร์ช่วยสอน (CAI)<br><span>วิทยาการคำนวณ ป.1–ม.3</span></div>
+        <p class="login-gate-desc">
+          เลือกระดับชั้นด้านล่าง แต่ละหน่วยมีใบความรู้ ใบงาน เกม ครบ (ระดับ ป.1–ป.3 มีเกม AR เพิ่มพิเศษ)
+          เข้าถึงได้ทุกที่ทุกเวลาผ่านมือถือหรือคอมพิวเตอร์
+        </p>
+        <p class="login-gate-credit">โดย นายไชยภัทร ฉลูทอง ครูโรงเรียนบ้านค้อดอนแคน สพป.อด.3</p>
+      </div>
+    </div>
+    <div class="login-gate-card">
+      <div class="login-gate-card-title">🔒 เข้าสู่ระบบ</div>
+      <div class="login-gate-card-sub">ยินดีต้อนรับสู่ระบบการเรียนรู้</div>
+      <label class="login-field" id="field-id">
+        <span>👤 ชื่อ/รหัสนักเรียน</span>
+        <img class="field-bg-img" src="assets/images/login-field-id.png" alt=""
+             onload="this.closest('.login-field').classList.add('has-fieldimg');" onerror="this.style.display='none';">
+        <input type="text" id="login-id" placeholder="กรอกชื่อหรือรหัสนักเรียน" autocomplete="username">
+      </label>
+      <label class="login-field" id="field-pw">
+        <span>🔒 รหัสผ่าน</span>
+        <img class="field-bg-img" src="assets/images/login-field-pw.png" alt=""
+             onload="this.closest('.login-field').classList.add('has-fieldimg');" onerror="this.style.display='none';">
+        <div class="login-pw-wrap">
+          <input type="password" id="login-pw" placeholder="กรอกรหัสผ่าน" autocomplete="current-password">
+        </div>
+        <button type="button" class="login-pw-toggle" onclick="toggleLoginPw(this)" aria-label="แสดง/ซ่อนรหัสผ่าน">👁</button>
+      </label>
+      <div class="login-role-label">เข้าสู่ระบบในสถานะ</div>
+      <div class="login-role-row">
+        <label class="login-role-btn role-teacher">
+          <input type="radio" name="login-role" value="teacher" checked>
+          <img class="role-btn-img" src="assets/images/login-btn-teacher.png" alt="ครู"
+               onload="this.style.display='block';" onerror="this.style.display='none';">
+          <span>👨‍🏫 ครู</span>
+        </label>
+        <label class="login-role-btn role-student">
+          <input type="radio" name="login-role" value="student">
+          <img class="role-btn-img" src="assets/images/login-btn-student.png" alt="นักเรียน"
+               onload="this.style.display='block';" onerror="this.style.display='none';">
+          <span>🧑‍🎓 นักเรียน</span>
+        </label>
+      </div>
+      <div class="login-error" id="login-error"></div>
+      <button type="button" class="login-submit" onclick="submitLogin()">
+        <img class="submit-btn-img" src="assets/images/login-btn-submit.png" alt="ตกลง"
+             onload="this.style.display='block';" onerror="this.style.display='none';">
+        <span class="submit-btn-coded">➡️ ตกลง</span>
+      </button>
+      <p class="login-quote">“เรียนรู้วันนี้ สร้างอนาคตที่ดีกว่า”</p>
+    </div>
+  </div>
+</div>
+
+<img id="site-bg-img" src="assets/images/home-bg.png" alt="" onerror="this.style.display='none';">
+
+<header class="site-header">
+  <div class="header-banner-wrap">
+    <img class="header-banner-img" src="assets/images/home-school.png?v=2" alt="บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) วิทยาการคำนวณ ป.1–ม.3">
+    <a class="banner-link link-home" href="#/" aria-label="หน้าแรก"></a>
+    <a class="banner-link link-ar" href="#/ar-games" aria-label="รวมเกม AR"></a>
+    <button class="banner-link link-login" id="banner-login-btn" onclick="onHeaderLoginClick(event)" aria-label="เข้าสู่ระบบ">
+      <span class="banner-login-name" id="banner-login-name"></span>
+    </button>
+  </div>
+  <div class="header-compact">
+    <a class="brand" href="#/">
+      <span class="logo">📚</span>
+      <span>บทเรียนคอมพิวเตอร์ช่วยสอน (CAI)
+        <small>วิทยาการคำนวณ ป.1 – ม.3 · โดยนายไชยภัทร ฉลูทอง</small>
+      </span>
+    </a>
+    <nav class="header-links">
+      <a class="nav-pill pill-yellow" href="#/">🏠 หน้าแรก</a>
+      <a class="nav-pill pill-purple" href="#/ar-games">🎮 รวมเกม AR</a>
+      <button class="nav-pill pill-pink" id="compact-login-btn" onclick="onHeaderLoginClick(event)">👤 เข้าสู่ระบบ</button>
+    </nav>
+  </div>
+</header>
+
+<button type="button" class="fixed-user-badge" id="fixed-user-badge" onclick="onHeaderLoginClick(event)" style="display:none;">
+  👤 <span id="fixed-user-name"></span>
+</button>
+
+<div class="user-menu-dropdown" id="user-menu-dropdown">
+  <button type="button" onclick="onUserSettingsClick()">⚙️ ตั้งค่า</button>
+  <button type="button" onclick="onUserLogoutClick()">🚪 ออกจากระบบ</button>
+</div>
+
+<div class="breadcrumb" id="breadcrumb"></div>
+
+<main class="container" id="app"></main>
+
+<footer>
+  บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) จัดทำโดย นายไชยภัทร ฉลูทอง ครูโรงเรียนบ้านค้อดอนแคน ตำบลค้อใหญ่ อำเภอกู่แก้ว จังหวัดอุดรธานี สังกัด สพป.อด.3
+</footer>
+
+<div class="modal-overlay" id="login-modal" onclick="if(event.target===this) closeLoginModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeLoginModal()" aria-label="ปิด">✕</button>
+    <div class="modal-icon">👤</div>
+    <h2>เข้าสู่ระบบ</h2>
+    <p class="modal-status">🚧 ระบบสมาชิกกำลังพัฒนา เร็วๆ นี้</p>
+    <form onsubmit="event.preventDefault()">
+      <label>ชื่อผู้ใช้ / รหัสนักเรียน
+        <input type="text" placeholder="กรอกชื่อผู้ใช้" disabled>
+      </label>
+      <label>รหัสผ่าน
+        <input type="password" placeholder="กรอกรหัสผ่าน" disabled>
+      </label>
+      <button type="submit" class="btn" disabled style="width:100%;opacity:.5;cursor:not-allowed">เข้าสู่ระบบ (ยังใช้งานไม่ได้)</button>
+    </form>
+    <p class="modal-note">เมื่อพร้อมใช้งาน ครูและนักเรียนจะสามารถเข้าระบบเพื่อบันทึกความคืบหน้า คะแนนแบบทดสอบ และผลงานได้</p>
+  </div>
+</div>
+
+<script src="assets/js/data.js?v=14"></script>
+<script src="assets/js/app.js?v=29"></script>
+<script>
+  function openLoginModal(){ document.getElementById("login-modal").classList.add("show"); }
+  function closeLoginModal(){ document.getElementById("login-modal").classList.remove("show"); }
+  document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeLoginModal(); });
+
+  // ===== หน้าเข้าสู่ระบบ (login-gate) =====
+  // ตอนนี้ยังไม่มีฐานข้อมูล/เซิร์ฟเวอร์จริง จึงใช้ "บัญชีตัวอย่าง" (mock) ไว้ทดสอบก่อน
+  // ทดแทนด้วยการเรียก API จริงภายหลังได้ที่ฟังก์ชัน submitLogin() ด้านล่าง
+  const MOCK_ACCOUNTS = {
+    teacher: [
+      { id:"ครู01", password:"1234", name:"คุณครูตัวอย่าง" },
+      { id:"teacher", password:"1234", name:"คุณครูตัวอย่าง" }
+    ],
+    student: [
+      { id:"นักเรียน01", password:"1234", name:"นักเรียนตัวอย่าง" },
+      { id:"student", password:"1234", name:"นักเรียนตัวอย่าง" }
+    ]
+  };
+
+  function toggleLoginPw(btn){
+    const input = document.getElementById("login-pw");
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    btn.textContent = show ? "🙈" : "👁";
+  }
+
+  function submitLogin(){
+    const id = document.getElementById("login-id").value.trim();
+    const pw = document.getElementById("login-pw").value;
+    const role = document.querySelector('input[name="login-role"]:checked').value;
+    const errorBox = document.getElementById("login-error");
+
+    if(!id || !pw){
+      errorBox.textContent = "กรุณากรอกชื่อ/รหัสนักเรียน และรหัสผ่านให้ครบ";
+      return;
+    }
+    const account = MOCK_ACCOUNTS[role].find(a => a.id === id && a.password === pw);
+    if(!account){
+      errorBox.textContent = "ชื่อ/รหัสนักเรียน หรือรหัสผ่านไม่ถูกต้อง (ลองใช้บัญชีตัวอย่าง: teacher/1234 หรือ student/1234)";
+      return;
+    }
+    errorBox.textContent = "";
+    try{ sessionStorage.setItem("loggedInUserName", account.name); }catch(e){}
+    setHeaderLoggedInUser(account.name);
+    document.getElementById("login-gate").classList.add("logged-in");
+  }
+
+  // ===== แสดงชื่อผู้เข้าระบบที่มุมขวาบน แทนคำว่า "เข้าสู่ระบบ" หลังล็อกอินสำเร็จ
+  //       คลิกชื่อแล้วเปิดเมนู "ตั้งค่า" / "ออกจากระบบ" =====
+  let currentLoggedInUser = null;
+  function setHeaderLoggedInUser(name){
+    currentLoggedInUser = name;
+    document.getElementById("fixed-user-name").textContent = name;
+    document.getElementById("fixed-user-badge").style.display = "flex";
+    document.getElementById("banner-login-btn").style.display = "none";
+    document.getElementById("compact-login-btn").style.display = "none";
+  }
+  function onHeaderLoginClick(ev){
+    if(currentLoggedInUser){
+      toggleUserMenu(ev.currentTarget);
+    } else {
+      openLoginModal();
+    }
+  }
+  function toggleUserMenu(anchorEl){
+    const menu = document.getElementById("user-menu-dropdown");
+    const isOpen = menu.classList.contains("show");
+    if(isOpen){ closeUserMenu(); return; }
+    menu.classList.add("show");
+    const rect = anchorEl.getBoundingClientRect();
+    const menuWidth = menu.offsetWidth;
+    let left = rect.right + window.scrollX - menuWidth;
+    left = Math.min(left, window.innerWidth - menuWidth - 8);
+    left = Math.max(8, left);
+    menu.style.top = (rect.bottom + window.scrollY + 6) + "px";
+    menu.style.left = left + "px";
+  }
+  function closeUserMenu(){ document.getElementById("user-menu-dropdown").classList.remove("show"); }
+  document.addEventListener("click", (e) => {
+    const menu = document.getElementById("user-menu-dropdown");
+    if(!menu.classList.contains("show")) return;
+    if(menu.contains(e.target) || e.target.closest("#banner-login-btn, #compact-login-btn, #fixed-user-badge")) return;
+    closeUserMenu();
+  });
+  function onUserSettingsClick(){
+    closeUserMenu();
+    Swal.fire({
+      icon: "info",
+      title: "⚙️ หน้าตั้งค่า",
+      text: "กำลังพัฒนา เร็วๆ นี้",
+      confirmButtonText: "ตกลง",
+      confirmButtonColor: "#3B82F6"
+    });
+  }
+  function onUserLogoutClick(){
+    closeUserMenu();
+    Swal.fire({
+      icon: "question",
+      title: "ต้องการออกจากระบบหรือไม่?",
+      showCancelButton: true,
+      confirmButtonText: "ออกจากระบบ",
+      cancelButtonText: "ยกเลิก",
+      confirmButtonColor: "#EF4444",
+      cancelButtonColor: "#9CA3AF"
+    }).then((result) => {
+      if(result.isConfirmed){
+        try{ sessionStorage.removeItem("loggedInUserName"); }catch(e){}
+        location.reload();
+      }
+    });
+  }
+
+  document.getElementById("login-id").addEventListener("keydown", e => { if(e.key === "Enter") submitLogin(); });
+  document.getElementById("login-pw").addEventListener("keydown", e => { if(e.key === "Enter") submitLogin(); });
+
+  // ถ้าล็อกอินไว้แล้วในเซสชันนี้ (เช่น กดลิงก์ "กลับหน้าหน่วย" จากหน้าเนื้อหา ทำให้หน้านี้โหลดใหม่)
+  // ไม่ต้องให้เห็นหน้าเข้าสู่ระบบซ้ำ — แต่ถ้าปิดแท็บ/เบราว์เซอร์แล้วเปิดใหม่ (เซสชันใหม่) ยังต้องล็อกอินใหม่เหมือนเดิม
+  (function restoreSessionLogin(){
+    let savedName = null;
+    try{ savedName = sessionStorage.getItem("loggedInUserName"); }catch(e){}
+    if(savedName){
+      setHeaderLoggedInUser(savedName);
+      document.getElementById("login-gate").classList.add("logged-in");
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ — ป.6 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{
+    background:linear-gradient(135deg,#3B82F6,#8B5CF6);
+    color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{
+    display:flex; align-items:center; gap:10px; font-size:1.2rem;
+    background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff;
+    padding:10px 18px; border-radius:14px; margin-bottom:16px;
+  }
+  section.topic > h2 .num{
+    background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none;
+  }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{
+    background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px;
+    display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05);
+  }
+  .concept-card .icon{ flex:none; width:56px; height:56px; display:flex; align-items:center; justify-content:center; }
+  .concept-card .icon svg{ max-width:100%; max-height:100%; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .flow-demo{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:20px; margin:16px 0; }
+  .flow-demo .steps2{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .flow-node{ padding:10px 18px; font-size:.88rem; font-weight:700; text-align:center; min-width:180px; }
+  .flow-oval{ border-radius:999px; background:#DBEAFE; color:#1D4ED8; border:2px solid #93C5FD; }
+  .flow-rect{ background:#F0FBF6; color:#047857; border:2px solid #A7F3D0; }
+  .flow-diamond{ padding:0; display:flex; align-items:center; justify-content:center; }
+  .flow-diamond svg{ display:block; max-width:100%; }
+  .flow-arrow{ color:#9AA1B5; font-size:.85rem; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .flow-arrow .arrow-glyph{ font-size:2.2rem; font-weight:800; color:#64748B; line-height:1; }
+
+  .flow-branch-row{ display:flex; gap:28px; justify-content:center; align-items:flex-start; margin:2px 0; }
+  .flow-branch-col{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .flow-branch-label{ background:#E0F2FE; color:#0369A1; font-weight:800; font-size:.8rem; padding:3px 14px; border-radius:999px; border:2px solid #7DD3FC; margin-bottom:2px; }
+  .flow-branch-col .flow-node{ min-width:130px; font-size:.82rem; }
+  .flow-branch-col .flow-arrow .arrow-glyph{ font-size:1.7rem; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .symbol-list{ display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+  .symbol-row{ background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:12px 16px; display:flex; gap:14px; align-items:center; box-shadow:0 3px 8px rgba(0,0,0,.05); }
+  .symbol-row .sicon{ flex:none; width:74px; height:46px; }
+  .symbol-row .sicon svg{ width:100%; height:100%; }
+  .symbol-row .sinfo{ flex:1; min-width:0; }
+  .symbol-row .sname{ font-weight:700; font-size:.9rem; margin-bottom:2px; }
+  .symbol-row .sname .en{ font-weight:400; color:#888; font-size:.78rem; }
+  .symbol-row .smeaning{ font-size:.82rem; color:#555; }
+  .symbol-row .sexample{ font-size:.76rem; color:#8B5CF6; font-weight:600; margin-top:4px; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ · ป.6 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p6/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายความหมายของเหตุผลเชิงตรรกะได้</li>
+      <li>ใช้เหตุผลเชิงตรรกะในการแก้ปัญหาอย่างง่ายได้</li>
+      <li>เขียนลำดับขั้นตอนการแก้ปัญหา (อัลกอริทึม) ได้อย่างเป็นระบบ</li>
+      <li>ใช้สัญลักษณ์ผังงาน (Flowchart) เบื้องต้นในการนำเสนอขั้นตอนได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> เหตุผลเชิงตรรกะ
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>เหตุผลเชิงตรรกะ (Logical Reasoning)</b> คือการใช้เหตุผลและกฎเกณฑ์อย่างเป็นระบบ เพื่อวิเคราะห์และตัดสินใจแก้ปัญหา โดยพิจารณาจาก <b>ข้อเท็จจริง</b> ที่มีอยู่ แล้วสรุปผลอย่างสมเหตุสมผล</p>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <span class="icon"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/><path d="M32 50 L44 62 L70 36" fill="none" stroke="#1D4ED8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><h3>✅ จริง (True)</h3><p>ข้อความหรือเงื่อนไขที่ <b>เป็นจริง</b> ตามข้อเท็จจริง</p></div>
+      </div>
+      <div class="concept-card">
+        <span class="icon"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#FEE2E2" stroke="#EF4444" stroke-width="4"/><line x1="34" y1="34" x2="66" y2="66" stroke="#B91C1C" stroke-width="7" stroke-linecap="round"/><line x1="66" y1="34" x2="34" y2="66" stroke="#B91C1C" stroke-width="7" stroke-linecap="round"/></svg></span>
+        <div><h3>❌ เท็จ (False)</h3><p>ข้อความหรือเงื่อนไขที่ <b>ไม่เป็นจริง</b> ตามข้อเท็จจริง</p></div>
+      </div>
+      <div class="concept-card">
+        <span class="icon"><svg viewBox="0 0 100 100"><rect x="10" y="35" width="80" height="30" rx="8" fill="#FEF3C7" stroke="#F59E0B" stroke-width="3"/><text x="50" y="55" font-size="22" text-anchor="middle" fill="#92400E" font-weight="700">ถ้า...</text></svg></span>
+        <div><h3>🔀 เงื่อนไข</h3><p>ประโยค <b>"ถ้า...แล้ว..."</b> ใช้ตัดสินใจว่าจะทำอะไรต่อ ขึ้นอยู่กับว่าเงื่อนไขเป็นจริงหรือเท็จ</p></div>
+      </div>
+      <div class="concept-card">
+        <span class="icon"><svg viewBox="0 0 100 100"><text x="50" y="65" font-size="46" text-anchor="middle" fill="#8B5CF6" font-weight="700">&gt;=</text></svg></span>
+        <div><h3>⚖️ การเปรียบเทียบ</h3><p>ใช้สัญลักษณ์ <b>มากกว่า น้อยกว่า เท่ากับ</b> เพื่อเปรียบเทียบค่าสองค่า</p></div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      💡 <b>ตัวอย่าง:</b> "ถ้าฝนตก แล้วฉันจะพกร่ม" — เป็นการใช้เหตุผลเชิงตรรกะแบบเงื่อนไข โดยเงื่อนไขคือ <b>"ฝนตก"</b> ถ้าเป็นจริง จะนำไปสู่การกระทำ <b>"พกร่ม"</b>
+    </div>
+    </div><!-- /topic1-text -->
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> อัลกอริทึมและผังงาน
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p><b>อัลกอริทึม (Algorithm)</b> คือ ลำดับขั้นตอนการแก้ปัญหาที่ชัดเจน เรียงตามลำดับ และทำตามได้จริง ส่วน <b>ผังงาน (Flowchart)</b> คือ การเขียนอัลกอริทึมด้วย <b>สัญลักษณ์รูปภาพ</b> เพื่อให้เข้าใจง่ายและเห็นภาพรวมของขั้นตอน</p>
+
+    <div class="flow-demo">
+      <p style="margin:0 0 12px; font-weight:700; font-size:.9rem">🔖 ตัวอย่างผังงาน: การตื่นนอนไปโรงเรียน</p>
+      <div class="steps2">
+        <div class="flow-node flow-oval">เริ่มต้น</div>
+        <div class="flow-arrow"><span class="arrow-glyph">↓</span></div>
+        <div class="flow-node flow-rect">ตื่นนอน แปรงฟัน อาบน้ำ</div>
+        <div class="flow-arrow"><span class="arrow-glyph">↓</span></div>
+        <div class="flow-node flow-diamond">
+          <svg viewBox="0 0 360 170" width="360" height="170">
+            <polygon points="180,6 284,45 180,84 76,45" fill="#FEF3C7" stroke="#FCD34D" stroke-width="3"/>
+            <text x="180" y="50" text-anchor="middle" font-size="16" font-weight="700" fill="#92400E" font-family="Sarabun, 'TH Sarabun New', sans-serif">ฝนตกไหม?</text>
+            <path d="M76,45 L30,45 L30,140" fill="none" stroke="#64748B" stroke-width="3"/>
+            <polygon points="21,140 39,140 30,155" fill="#64748B"/>
+            <rect x="14" y="24" width="42" height="24" rx="12" fill="#E0F2FE" stroke="#7DD3FC" stroke-width="2"/>
+            <text x="35" y="41" text-anchor="middle" font-size="13" font-weight="800" fill="#0369A1" font-family="Sarabun, 'TH Sarabun New', sans-serif">ใช่</text>
+            <path d="M284,45 L330,45 L330,140" fill="none" stroke="#64748B" stroke-width="3"/>
+            <polygon points="321,140 339,140 330,155" fill="#64748B"/>
+            <rect x="300" y="24" width="60" height="24" rx="12" fill="#E0F2FE" stroke="#7DD3FC" stroke-width="2"/>
+            <text x="330" y="41" text-anchor="middle" font-size="13" font-weight="800" fill="#0369A1" font-family="Sarabun, 'TH Sarabun New', sans-serif">ไม่ใช่</text>
+          </svg>
+        </div>
+        <div class="flow-branch-row">
+          <div class="flow-branch-col">
+            <div class="flow-node flow-rect">พกร่ม</div>
+          </div>
+          <div class="flow-branch-col">
+            <div class="flow-node flow-rect">ไม่พกร่ม</div>
+          </div>
+        </div>
+        <div class="flow-arrow"><span class="arrow-glyph">↓</span></div>
+        <div class="flow-node flow-rect">แต่งตัว ใส่รองเท้า ไปโรงเรียน</div>
+        <div class="flow-arrow"><span class="arrow-glyph">↓</span></div>
+        <div class="flow-node flow-oval">สิ้นสุด</div>
+      </div>
+    </div>
+
+    <p style="font-weight:700; font-size:.9rem; margin:18px 0 8px">สัญลักษณ์ผังงานพร้อมความหมาย</p>
+    <div class="symbol-list">
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><rect x="10" y="20" width="120" height="40" rx="20" fill="#FCE7F3" stroke="#EC4899" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">จุดเริ่มต้น/จุดสิ้นสุด <span class="en">(Terminator)</span></div>
+          <div class="smeaning">ใช้แสดงจุดเริ่มต้นหรือจุดสิ้นสุดของผังงาน</div>
+          <div class="sexample">เช่น "เริ่มต้น"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><rect x="10" y="15" width="120" height="50" rx="4" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">การประมวลผล <span class="en">(Process)</span></div>
+          <div class="smeaning">ใช้แสดงการทำงานหรือการประมวลผล</div>
+          <div class="sexample">เช่น "คำนวณคะแนน"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><polygon points="15,30 125,15 125,65 15,65" fill="#FEE2E2" stroke="#EF4444" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">สี่เหลี่ยมขอบเอียง <span class="en">(Manual Input)</span></div>
+          <div class="smeaning">ใช้แสดงการนำเข้าข้อมูลด้วยการป้อนค่าทางแป้นพิมพ์</div>
+          <div class="sexample">เช่น "พิมพ์ชื่อผู้ใช้"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><polygon points="30,15 130,15 110,65 10,65" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">รับข้อมูล/แสดงผล <span class="en">(Input/Output)</span></div>
+          <div class="smeaning">ใช้แสดงการรับข้อมูลเข้าหรือการแสดงผลลัพธ์</div>
+          <div class="sexample">เช่น "รับค่า A, B"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><polygon points="35,15 125,15 125,65 35,65 10,40" fill="#CFFAFE" stroke="#06B6D4" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">จอแสดงผล <span class="en">(Display)</span></div>
+          <div class="smeaning">ใช้แสดงผลลัพธ์บนหน้าจอ</div>
+          <div class="sexample">เช่น "แสดงคะแนนรวม"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><polygon points="70,6 134,40 70,74 6,40" fill="#DCFCE7" stroke="#22C55E" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">การตัดสินใจ <span class="en">(Decision)</span></div>
+          <div class="smeaning">ใช้แสดงการตรวจสอบเงื่อนไข เพื่อเลือกเส้นทางการทำงาน</div>
+          <div class="sexample">เช่น "A &gt; B ? ใช่/ไม่ใช่"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><line x1="15" y1="40" x2="105" y2="40" stroke="#1F2430" stroke-width="5" stroke-linecap="round"/><polygon points="105,26 132,40 105,54" fill="#1F2430"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">เส้นทางการไหล <span class="en">(Flowline)</span></div>
+          <div class="smeaning">ใช้แสดงทิศทางการไหลของขั้นตอนการทำงาน</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><circle cx="70" cy="40" r="30" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">จุดเชื่อมต่อ <span class="en">(Connector)</span></div>
+          <div class="smeaning">ใช้เชื่อมต่อเส้นทางการไหลภายในหน้ากระดาษเดียวกัน</div>
+          <div class="sexample">เช่น "A"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><polygon points="20,15 120,15 120,50 70,72 20,50" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">จุดเชื่อมต่อไปหน้าถัดไป <span class="en">(Off-page Connector)</span></div>
+          <div class="smeaning">ใช้เชื่อมต่อเส้นทางการไหลไปยังหน้ากระดาษอื่น</div>
+          <div class="sexample">เช่น "B"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><rect x="15" y="15" width="110" height="50" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/><line x1="35" y1="15" x2="35" y2="65" stroke="#8B5CF6" stroke-width="4"/><line x1="105" y1="15" x2="105" y2="65" stroke="#8B5CF6" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">กระบวนการย่อย <span class="en">(Predefined Process)</span></div>
+          <div class="smeaning">ใช้แสดงการทำงานที่กำหนดไว้แล้ว (โปรแกรมย่อย)</div>
+          <div class="sexample">เช่น "เรียกฟังก์ชันคำนวณผลรวม"</div>
+        </div>
+      </div>
+      <div class="symbol-row">
+        <span class="sicon"><svg viewBox="0 0 140 80"><path d="M15,15 H125 V50 Q100,65 70,52 Q40,40 15,55 Z" fill="#FCE7F3" stroke="#EC4899" stroke-width="4"/></svg></span>
+        <div class="sinfo">
+          <div class="sname">เอกสาร <span class="en">(Document)</span></div>
+          <div class="smeaning">ใช้แสดงข้อมูลในรูปแบบเอกสาร เช่น รายงาน</div>
+          <div class="sexample">เช่น "พิมพ์รายงาน"</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> การเขียนผังงานก่อนลงมือเขียนโปรแกรมจริง จะช่วยให้เรา <b>วางแผนและตรวจสอบขั้นตอนได้ก่อนที่จะเกิดข้อผิดพลาด</b>
+    </div>
+    </div><!-- /topic2-text -->
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤔</span>
+    <div><b>รู้หรือไม่?</b> เหตุผลเชิงตรรกะและอัลกอริทึมไม่ได้ใช้แค่ในคอมพิวเตอร์เท่านั้น แต่เราใช้ในชีวิตประจำวันตลอดเวลา เช่น การวางแผนเดินทาง การทำอาหารตามสูตร หรือแม้แต่การตัดสินใจเลือกเสื้อผ้าตามสภาพอากาศ!</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>เหตุผลเชิงตรรกะ คือการใช้ข้อเท็จจริง (จริง/เท็จ) และเงื่อนไข "ถ้า...แล้ว..." ในการตัดสินใจ</li>
+      <li>อัลกอริทึม คือลำดับขั้นตอนการแก้ปัญหาที่ชัดเจนและทำตามได้</li>
+      <li>ผังงานใช้สัญลักษณ์หลัก 11 แบบ ได้แก่ จุดเริ่มต้น/สิ้นสุด, การประมวลผล, สี่เหลี่ยมขอบเอียง, รับข้อมูล/แสดงผล, จอแสดงผล, การตัดสินใจ, เส้นทางการไหล, จุดเชื่อมต่อ, จุดเชื่อมต่อไปหน้าถัดไป, กระบวนการย่อย และเอกสาร</li>
+    </ul>
+  </div>
+  </div><!-- /full-text -->
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p6/cs/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

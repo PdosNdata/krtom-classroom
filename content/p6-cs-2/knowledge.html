@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การใช้อินเทอร์เน็ตค้นหาข้อมูล — ป.6 หน่วย 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#0EA5E9,#22C55E); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:9px 18px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#fff; border:1px solid #E6E8F0; border-left:6px solid #0EA5E9; border-radius:14px; padding:18px 20px; margin-bottom:22px; box-shadow:0 4px 10px rgba(0,0,0,.04); }
+  .obj-box h2{ margin:0 0 8px; font-size:1rem; color:#0369A1; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+
+  #master-listen{ display:block; width:100%; margin-bottom:26px; padding:14px; border:none; border-radius:14px; background:linear-gradient(135deg,#0EA5E9,#22C55E); color:#fff; font-weight:700; font-size:1rem; cursor:pointer; box-shadow:0 6px 16px rgba(14,165,233,.3); }
+
+  section.topic{ margin-bottom:30px; }
+  .topic-head{ display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,#0EA5E9,#0369A1); color:#fff; padding:12px 18px; border-radius:12px; margin-bottom:14px; }
+  .topic-head .num{ background:rgba(255,255,255,.25); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+  .topic-head h3{ margin:0; font-size:1rem; }
+
+  .tts-btn{ margin-bottom:12px; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:16px 0; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:16px 14px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,.05); }
+  .concept-card .ic{ font-size:1.9rem; margin-bottom:6px; }
+  .concept-card b{ display:block; font-size:.86rem; margin-bottom:4px; color:#0369A1; }
+  .concept-card span{ font-size:.78rem; color:#555; }
+
+  .search-demo{ background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:18px; margin:16px 0; }
+  .search-bar{ display:flex; align-items:center; gap:8px; background:#F1F5F9; border:2px solid #CBD5E1; border-radius:999px; padding:10px 16px; font-size:.9rem; color:#334155; margin-bottom:12px; }
+  .op-table{ width:100%; border-collapse:collapse; font-size:.84rem; }
+  .op-table th, .op-table td{ border:1px solid #E6E8F0; padding:8px 10px; text-align:left; }
+  .op-table th{ background:#F0F9FF; color:#0369A1; }
+  .op-table code{ background:#F1F5F9; padding:2px 6px; border-radius:6px; font-weight:700; }
+
+  .check-list{ background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:18px; margin:16px 0; }
+  .check-item{ display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px dashed #E6E8F0; font-size:.88rem; }
+  .check-item:last-child{ border-bottom:none; }
+  .check-item .ic{ font-size:1.3rem; flex-shrink:0; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #BBF7D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#059669; }
+  .fun-fact{ background:#FFFBEB; border:2px dashed #FBBF24; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .summary-box{ background:linear-gradient(135deg,#0EA5E9,#22C55E); color:#fff; border-radius:16px; padding:20px; margin-top:26px; }
+  .summary-box h3{ margin:0 0 10px; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้</h1>
+    <p>การใช้อินเทอร์เน็ตค้นหาข้อมูล · ป.6 หน่วยที่ 3</p>
+  </div>
+  <a href="../../index.html#/unit/p6/cs/2/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>ใช้เว็บเบราว์เซอร์และคำสั่งค้นหาขั้นสูงเพื่อสืบค้นข้อมูลได้อย่างมีประสิทธิภาพ</li>
+      <li>ประเมินความน่าเชื่อถือของข้อมูลบนอินเทอร์เน็ตก่อนนำไปใช้ได้</li>
+    </ul>
+  </div>
+
+  <button id="master-listen" class="tts-btn" data-audio-src="audio/know-full.mp3">
+    <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+  </button>
+
+  <div id="full-text">
+
+  <section class="topic">
+    <div class="topic-head"><span class="num">1</span><h3>การสืบค้นข้อมูลด้วยเว็บเบราว์เซอร์</h3></div>
+    <button class="tts-btn" data-audio-src="audio/know-topic1.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังหัวข้อนี้</span>
+    </button>
+    <p>การค้นหาข้อมูลให้ได้ผลลัพธ์ที่ตรงกับสิ่งที่ต้องการ ควรเลือกใช้ <b>คำสำคัญ (Keyword)</b> ที่ชัดเจน กระชับ และใช้เทคนิคการค้นหาขั้นสูงช่วยกรองผลลัพธ์</p>
+
+    <div class="search-demo">
+      <div class="search-bar">🔍 &nbsp; "ผังงาน" site:go.th</div>
+      <table class="op-table">
+        <tr><th>คำสั่ง</th><th>ความหมาย</th><th>ตัวอย่าง</th></tr>
+        <tr><td><code>"..."</code></td><td>ค้นหาคำที่ตรงกันทุกตัวอักษร</td><td><code>"วันเด็กแห่งชาติ"</code></td></tr>
+        <tr><td><code>site:</code></td><td>ค้นเฉพาะในเว็บไซต์ที่ระบุ</td><td><code>โควิด site:moph.go.th</code></td></tr>
+        <tr><td><code>-</code></td><td>ไม่เอาคำที่ระบุ</td><td><code>แมว -การ์ตูน</code></td></tr>
+        <tr><td><code>filetype:</code></td><td>ค้นเฉพาะชนิดไฟล์</td><td><code>ผังงาน filetype:pdf</code></td></tr>
+      </table>
+    </div>
+
+    <div class="concept-grid">
+      <div class="concept-card"><div class="ic">🔑</div><b>คำสำคัญ</b><span>เลือกคำเฉพาะเจาะจง ไม่ใช่ประโยคยาว</span></div>
+      <div class="concept-card"><div class="ic">🧭</div><b>เมนูค้นหาขั้นสูง</b><span>กรองตามวันที่ ภาษา ประเภทไฟล์</span></div>
+      <div class="concept-card"><div class="ic">📑</div><b>อ่านหัวข้อผลลัพธ์</b><span>ดูชื่อเรื่องและคำอธิบายก่อนคลิก</span></div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <div class="topic-head"><span class="num">2</span><h3>การประเมินความน่าเชื่อถือของข้อมูล</h3></div>
+    <button class="tts-btn" data-audio-src="audio/know-topic2.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังหัวข้อนี้</span>
+    </button>
+    <p>ข้อมูลบนอินเทอร์เน็ตมีทั้งจริงและเท็จปะปนกัน ก่อนนำข้อมูลไปใช้หรือแชร์ต่อ ควรตรวจสอบด้วยหลักการต่อไปนี้</p>
+
+    <div class="check-list">
+      <div class="check-item"><span class="ic">👤</span><span><b>ผู้เขียน/แหล่งที่มา</b> — เป็นหน่วยงานหรือบุคคลที่น่าเชื่อถือหรือไม่</span></div>
+      <div class="check-item"><span class="ic">📅</span><span><b>วันที่เผยแพร่</b> — ข้อมูลเป็นปัจจุบันหรือล้าสมัยไปแล้ว</span></div>
+      <div class="check-item"><span class="ic">🔗</span><span><b>เปรียบเทียบหลายแหล่ง</b> — ตรวจสอบว่าเว็บอื่นรายงานตรงกันหรือไม่</span></div>
+      <div class="check-item"><span class="ic">🌐</span><span><b>ประเภทเว็บไซต์</b> — เว็บราชการ (.go.th) หรือสถาบันการศึกษา (.ac.th) มักน่าเชื่อถือกว่าเว็บทั่วไป</span></div>
+    </div>
+
+    <div class="info-box"><b>ควรรู้:</b> ข่าวปลอม (Fake News) มักใช้พาดหัวเกินจริงเพื่อเรียกยอดคลิก ควรอ่านเนื้อหาทั้งหมดก่อนเชื่อหรือแชร์ต่อ</div>
+  </section>
+
+  <div class="fun-fact"><b>🤔 รู้หรือไม่?</b> การค้นหาด้วยเครื่องหมายคำพูด <code>"..."</code> ครอบคำ จะทำให้เครื่องมือค้นหาแสดงเฉพาะหน้าที่มีคำนั้นเรียงติดกันทุกตัวอักษร ช่วยให้ผลลัพธ์ตรงกับสิ่งที่ต้องการมากขึ้น</div>
+
+  <div class="summary-box">
+    <h3>📝 สรุปท้ายหน่วย</h3>
+    <ul>
+      <li>ใช้คำสำคัญที่ชัดเจนและคำสั่งค้นหาขั้นสูง เช่น "..." site: -  filetype: เพื่อกรองผลลัพธ์</li>
+      <li>ก่อนเชื่อหรือแชร์ข้อมูล ต้องตรวจสอบผู้เขียน วันที่ และเปรียบเทียบกับแหล่งอื่น</li>
+    </ul>
+  </div>
+
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

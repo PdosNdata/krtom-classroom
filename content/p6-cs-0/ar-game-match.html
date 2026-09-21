@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>เกม AR: จับคู่สัญลักษณ์ผังงาน — ป.6 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html{ font-size:16px; }
+  html,body{ margin:0; padding:0; font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; background:#111; color:#fff; overflow:hidden; height:100%; }
+  #stage{ position:fixed; inset:0; overflow:hidden; }
+  #video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scaleX(-1); }
+  #overlay{ position:absolute; inset:0; }
+
+  .sparkle{ position:absolute; pointer-events:none; font-size:1.2rem; opacity:.55; animation:sparkle-float 4s ease-in-out infinite; }
+  @keyframes sparkle-float{ 0%,100%{ transform:translateY(0) rotate(0deg); } 50%{ transform:translateY(-14px) rotate(15deg); } }
+
+  #intro{
+    position:fixed; inset:0; background:linear-gradient(160deg,#1e1b4b,#4c1d95 45%,#831843); z-index:30;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:22px; text-align:center; gap:12px;
+  }
+  #intro h1{ font-size:1.5rem; margin:0; background:linear-gradient(90deg,#FBBF24,#F97316); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #intro p{ max-width:440px; color:#e9d5ff; font-size:.85rem; line-height:1.7; margin:0; }
+  #intro .demo{ font-size:3.2rem; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); animation:bob 1.6s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-10px); } }
+  #intro button{
+    margin-top:8px; padding:14px 32px; border:none; border-radius:999px;
+    background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; font-weight:700; font-size:1rem; cursor:pointer;
+    box-shadow:0 8px 22px rgba(139,92,246,.5);
+  }
+  #loading{ font-size:.8rem; color:#7dd3fc; }
+
+  #back{
+    position:fixed; top:10px; left:10px; z-index:40;
+    background:rgba(0,0,0,.55); color:#fff; text-decoration:none;
+    padding:6px 12px; border-radius:999px; font-size:.68rem; max-width:38vw;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  #hud{
+    position:fixed; top:10px; right:10px; z-index:20;
+    background:linear-gradient(135deg,#F59E0B,#F97316); padding:7px 14px; border-radius:999px;
+    font-weight:800; font-size:.72rem; white-space:nowrap; box-shadow:0 4px 12px rgba(249,115,22,.5);
+    transition:transform .2s;
+  }
+  #hud.pop{ transform:scale(1.2); }
+
+  #hint{
+    position:fixed; bottom:8px; left:50%; transform:translateX(-50%);
+    background:rgba(0,0,0,.6); padding:6px 14px; border-radius:999px; font-size:.64rem; z-index:15;
+    text-align:center; width:94vw; max-width:440px; line-height:1.4;
+  }
+
+  #board{ position:absolute; top:64px; bottom:52px; left:0; right:0; display:flex; justify-content:space-between; padding:0 2%; gap:3%; }
+  .col{
+    width:48%; display:flex; flex-direction:column; justify-content:center; gap:14px; padding:4px 2px;
+  }
+  .col-title{ text-align:center; font-size:1rem; font-weight:800; color:#FBBF24; margin-bottom:2px; }
+
+  .zone{
+    position:relative; border-radius:18px; background:rgba(255,255,255,.94); color:#1F2430;
+    display:flex; align-items:center; gap:14px; padding:14px 18px; flex:none;
+    border:4px solid rgba(139,92,246,.4); transition:border-color .15s, transform .15s, opacity .15s;
+  }
+  .zone.hover{ border-color:#FBBF24; box-shadow:0 0 18px rgba(251,191,36,.7); transform:scale(1.04); }
+  .zone.picked{ opacity:.35; }
+  .zone.matched{ border-color:#10B981; background:#ECFDF5; opacity:.55; }
+  .zone.wrong{ animation:shake .5s; border-color:#EF4444; }
+  @keyframes shake{ 0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-6px); } 40%{ transform:translateX(6px); } 60%{ transform:translateX(-4px); } 80%{ transform:translateX(4px); } }
+
+  .zone.sym .icon{ flex:none; width:132px; height:84px; }
+  .zone.sym .icon svg{ width:100%; height:100%; }
+  .zone.sym .txt, .zone.meaning .txt{ font-size:1.9rem; font-weight:800; line-height:1.3; }
+
+  #fingertip{
+    position:absolute; width:34px; height:34px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #FDE68A, #F59E0B 60%, #EA580C);
+    border:3px solid #fff; box-shadow:0 0 18px rgba(245,158,11,.9);
+    transform:translate(-50%,-50%); z-index:25; display:none; pointer-events:none;
+    transition:background .1s, box-shadow .1s, width .1s, height .1s;
+  }
+  #fingertip::after{ content:"👉"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  #fingertip.pinch{ width:44px; height:44px; background:radial-gradient(circle at 35% 30%, #86EFAC, #10B981 60%, #047857); box-shadow:0 0 24px rgba(16,185,129,1); }
+  #fingertip.pinch::after{ content:"🤏"; font-size:1.3rem; }
+  #carry-label{
+    position:absolute; z-index:24; background:rgba(16,185,129,.95); color:#fff; font-weight:800; font-size:.62rem;
+    padding:4px 10px; border-radius:999px; white-space:nowrap; transform:translate(-50%,-140%); display:none; pointer-events:none;
+  }
+
+  .confetti{ position:fixed; font-size:1.4rem; z-index:26; pointer-events:none; animation:confetti-fall 1.1s ease-out forwards; }
+  @keyframes confetti-fall{ 0%{ transform:translate(0,0) rotate(0deg) scale(1); opacity:1; } 100%{ transform:translate(var(--dx), 160px) rotate(var(--rot)); opacity:0; } }
+
+  #feedback{
+    position:fixed; top:44%; left:50%; transform:translate(-50%,-50%) scale(0.5);
+    font-size:1.8rem; font-weight:800; z-index:27; opacity:0; pointer-events:none;
+    transition:transform .25s, opacity .25s; text-shadow:0 4px 14px rgba(0,0,0,.6);
+  }
+  #feedback.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+  #finish{
+    position:fixed; inset:0; background:linear-gradient(160deg,#052e2b,#064e3b 60%,#0f766e); z-index:35;
+    display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; text-align:center; padding:24px;
+  }
+  #finish .big{ font-size:3.2rem; }
+  #finish h1{ font-size:1.4rem; margin:0; background:linear-gradient(90deg,#FBBF24,#34D399); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #finish button{
+    padding:13px 28px; border:none; border-radius:999px; background:linear-gradient(135deg,#10B981,#059669); color:#fff;
+    font-weight:700; font-size:1rem; cursor:pointer; box-shadow:0 8px 22px rgba(16,185,129,.5);
+  }
+</style>
+</head>
+<body>
+
+<a id="back" href="../../index.html#/unit/p6/cs/0/ar">← กลับหน้าหน่วย</a>
+<div id="hud">⭐ จับคู่ได้: <span id="score">0</span>/11</div>
+
+<div id="stage">
+  <video id="video" autoplay playsinline muted></video>
+  <div id="overlay">
+    <div id="board">
+      <div class="col" id="col-left"><div class="col-title">🔶 สัญลักษณ์</div></div>
+      <div class="col" id="col-right"><div class="col-title">📖 ความหมาย</div></div>
+    </div>
+    <div id="carry-label"></div>
+    <div id="fingertip"></div>
+  </div>
+</div>
+
+<div id="feedback"></div>
+<div id="hint">🤏 จีบนิ้วที่<b>สัญลักษณ์</b>ด้านซ้ายเพื่อ "หยิบ" แล้วเลื่อนมือไปปล่อยจีบที่<b>ความหมาย</b>ที่ตรงกันด้านขวา</div>
+
+<div id="finish">
+  <div class="big">🎉🏆</div>
+  <h1>เก่งมาก! จับคู่ครบ 11 สัญลักษณ์แล้ว!</h1>
+  <p style="color:#d1fae5;max-width:380px;font-size:.85rem">สัญลักษณ์ผังงานแต่ละรูปมีความหมายเฉพาะ ช่วยให้เราสื่อสารขั้นตอนการทำงานของอัลกอริทึมได้ชัดเจนขึ้น</p>
+  <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  <a href="../../index.html#/unit/p6/cs/0/ar" style="color:#6ee7b7;font-size:.85rem">กลับหน้าหน่วย</a>
+</div>
+
+<div id="intro">
+  <div class="demo">🤏🧩✨</div>
+  <h1>🖐️ เกม AR: จับคู่สัญลักษณ์ผังงาน</h1>
+  <p>หน่วยที่ 1 การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ (ป.6) — เปิดกล้องแล้ว<b style="color:#FBBF24">จีบนิ้ว</b>ที่สัญลักษณ์ด้านซ้ายเพื่อหยิบ
+     จากนั้นเลื่อนมือไปปล่อยจีบที่<b style="color:#FBBF24">ความหมาย</b>ที่ตรงกันด้านขวา ให้ครบทั้ง 11 คู่!</p>
+  <p id="loading">⏳ กำลังโหลดระบบตรวจจับมือ...</p>
+  <button id="start-btn" onclick="startCamera()" disabled>📷 เริ่มเปิดกล้อง</button>
+  <p style="font-size:.72rem;color:#c4b5fd">* ต้องเปิดผ่าน https หรือ localhost เบราว์เซอร์ถึงจะอนุญาตใช้กล้อง</p>
+</div>
+
+<script type="module">
+import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+
+document.getElementById("intro").insertAdjacentHTML("beforeend",
+  Array.from({length:10}).map(() => {
+    const left = Math.random()*100, top = Math.random()*100, delay = Math.random()*3;
+    const icons = ["✨","⭐","🌟"];
+    const icon = icons[Math.floor(Math.random()*icons.length)];
+    return `<span class="sparkle" style="left:${left}%; top:${top}%; animation-delay:${delay}s;">${icon}</span>`;
+  }).join("")
+);
+
+const ITEMS = [
+  { id:"startend", name:"สี่เหลี่ยมขอบมน", meaning:"จุดเริ่มต้น / สิ้นสุด", svg:'<svg viewBox="0 0 140 80"><rect x="10" y="20" width="120" height="40" rx="20" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/></svg>' },
+  { id:"process", name:"สี่เหลี่ยมผืนผ้า", meaning:"ขั้นตอนการประมวลผล", svg:'<svg viewBox="0 0 140 80"><rect x="10" y="10" width="120" height="60" rx="6" fill="#F0FBF6" stroke="#10B981" stroke-width="4"/></svg>' },
+  { id:"manualinput", name:"สี่เหลี่ยมขอบเอียง", meaning:"นำเข้าข้อมูลทางแป้นพิมพ์", svg:'<svg viewBox="0 0 140 80"><polygon points="15,30 125,15 125,65 15,65" fill="#FEE2E2" stroke="#EF4444" stroke-width="4"/></svg>' },
+  { id:"io", name:"สี่เหลี่ยมด้านขนาน", meaning:"รับข้อมูล / แสดงผล", svg:'<svg viewBox="0 0 140 80"><polygon points="26,10 134,10 114,70 6,70" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/></svg>' },
+  { id:"display", name:"จอแสดงผล", meaning:"แสดงผลลัพธ์บนหน้าจอ", svg:'<svg viewBox="0 0 140 80"><polygon points="35,15 125,15 125,65 35,65 10,40" fill="#CFFAFE" stroke="#06B6D4" stroke-width="4"/></svg>' },
+  { id:"decision", name:"สี่เหลี่ยมขนมเปียกปูน", meaning:"จุดตัดสินใจ", svg:'<svg viewBox="0 0 140 80"><polygon points="70,6 134,40 70,74 6,40" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/></svg>' },
+  { id:"flowline", name:"เส้นทางการไหล", meaning:"ทิศทางการไหลของงาน", svg:'<svg viewBox="0 0 140 80"><line x1="15" y1="40" x2="105" y2="40" stroke="#1F2430" stroke-width="5" stroke-linecap="round"/><polygon points="105,26 132,40 105,54" fill="#1F2430"/></svg>' },
+  { id:"connector", name:"จุดเชื่อมต่อ", meaning:"เชื่อมต่อในหน้าเดียวกัน", svg:'<svg viewBox="0 0 140 80"><circle cx="70" cy="40" r="30" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/></svg>' },
+  { id:"offpage", name:"จุดเชื่อมต่อไปหน้าถัดไป", meaning:"เชื่อมต่อไปหน้าอื่น", svg:'<svg viewBox="0 0 140 80"><polygon points="20,15 120,15 120,50 70,72 20,50" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/></svg>' },
+  { id:"predefined", name:"กระบวนการย่อย", meaning:"การทำงานที่กำหนดไว้แล้ว", svg:'<svg viewBox="0 0 140 80"><rect x="15" y="15" width="110" height="50" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/><line x1="35" y1="15" x2="35" y2="65" stroke="#8B5CF6" stroke-width="4"/><line x1="105" y1="15" x2="105" y2="65" stroke="#8B5CF6" stroke-width="4"/></svg>' },
+  { id:"document", name:"เอกสาร", meaning:"ข้อมูลรูปแบบเอกสาร", svg:'<svg viewBox="0 0 140 80"><path d="M15,15 H125 V50 Q100,65 70,52 Q40,40 15,55 Z" fill="#FCE7F3" stroke="#EC4899" stroke-width="4"/></svg>' }
+];
+
+let handLandmarker = null;
+let video = document.getElementById("video");
+let overlay = document.getElementById("overlay");
+let fingertip = document.getElementById("fingertip");
+let carryLabel = document.getElementById("carry-label");
+let scoreEl = document.getElementById("score");
+let hudEl = document.getElementById("hud");
+let feedbackEl = document.getElementById("feedback");
+
+let leftZones = [];
+let rightZones = [];
+let hoverZone = null;
+let wasPinching = false;
+let dragging = null; // { id, name, el }
+let matchedCount = 0;
+let matchedInPage = 0;
+
+const CHUNK_SIZE = 4;
+const PAGES = [];
+for(let i = 0; i < ITEMS.length; i += CHUNK_SIZE){ PAGES.push(ITEMS.slice(i, i + CHUNK_SIZE)); }
+let pageIndex = 0;
+
+function dist2D(a, b){ return Math.hypot(a.x - b.x, a.y - b.y); }
+
+function shuffledCopy(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const colLeft = document.getElementById("col-left");
+const colRight = document.getElementById("col-right");
+
+function renderPage(idx){
+  colLeft.innerHTML = `<div class="col-title">🔶 สัญลักษณ์</div>`;
+  colRight.innerHTML = `<div class="col-title">📖 ความหมาย</div>`;
+  leftZones = [];
+  rightZones = [];
+  dragging = null;
+  hoverZone = null;
+  matchedInPage = 0;
+
+  const pageItems = PAGES[idx];
+  pageItems.forEach(item => {
+    const el = document.createElement("div");
+    el.className = "zone sym";
+    el.dataset.id = item.id;
+    el.innerHTML = `<span class="icon">${item.svg}</span><span class="txt">${item.name}</span>`;
+    colLeft.appendChild(el);
+    leftZones.push({ el, id:item.id });
+  });
+
+  shuffledCopy(pageItems).forEach(item => {
+    const el = document.createElement("div");
+    el.className = "zone meaning";
+    el.dataset.id = item.id;
+    el.innerHTML = `<span class="txt">${item.meaning}</span>`;
+    colRight.appendChild(el);
+    rightZones.push({ el, id:item.id });
+  });
+}
+renderPage(pageIndex);
+
+async function init(){
+  const fileset = await FilesetResolver.forVisionTasks(
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+  );
+  handLandmarker = await HandLandmarker.createFromOptions(fileset, {
+    baseOptions: {
+      modelAssetPath: "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+      delegate: "GPU"
+    },
+    runningMode: "VIDEO",
+    numHands: 1
+  });
+  document.getElementById("loading").textContent = "✅ ระบบพร้อมแล้ว!";
+  document.getElementById("start-btn").disabled = false;
+}
+init().catch(err => {
+  document.getElementById("loading").textContent = "⚠️ โหลดระบบตรวจจับมือไม่สำเร็จ: " + err.message;
+});
+
+window.startCamera = async function(){
+  document.getElementById("intro").style.display = "none";
+  const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+  video.srcObject = stream;
+  await new Promise(r => video.onloadedmetadata = r);
+  video.play();
+  requestAnimationFrame(loop);
+};
+
+const PINCH_RATIO_THRESHOLD = 0.45;
+
+function mapToScreen(nx, ny){
+  const mx = 1 - nx;
+  const vw = video.videoWidth, vh = video.videoHeight;
+  const cw = window.innerWidth, ch = window.innerHeight;
+  const videoAspect = vw / vh, containerAspect = cw / ch;
+  let scale, offsetX = 0, offsetY = 0;
+  if(containerAspect > videoAspect){
+    scale = cw / vw;
+    offsetY = (ch - vh * scale) / 2;
+  } else {
+    scale = ch / vh;
+    offsetX = (cw - vw * scale) / 2;
+  }
+  return { x: mx * vw * scale + offsetX, y: ny * vh * scale + offsetY };
+}
+
+function loop(){
+  if(video.readyState >= 2 && handLandmarker){
+    const now = performance.now();
+    const result = handLandmarker.detectForVideo(video, now);
+
+    if(result.landmarks && result.landmarks.length > 0){
+      const lm = result.landmarks[0];
+      const thumbTip = lm[4], indexTip = lm[8], wrist = lm[0], middleMcp = lm[9];
+
+      const cursorNorm = { x:(thumbTip.x + indexTip.x)/2, y:(thumbTip.y + indexTip.y)/2 };
+      const pos = mapToScreen(cursorNorm.x, cursorNorm.y);
+      fingertip.style.left = pos.x + "px";
+      fingertip.style.top = pos.y + "px";
+      fingertip.style.display = "block";
+
+      if(dragging){
+        carryLabel.style.left = pos.x + "px";
+        carryLabel.style.top = pos.y + "px";
+      }
+
+      const handScale = dist2D(wrist, middleMcp) || 1;
+      const pinchRatio = dist2D(thumbTip, indexTip) / handScale;
+      const isPinching = pinchRatio < PINCH_RATIO_THRESHOLD;
+      fingertip.classList.toggle("pinch", isPinching);
+
+      const zone = zoneAt(pos.x, pos.y);
+      handleHover(zone);
+
+      if(isPinching && !wasPinching){
+        onPinchStart(zone);
+      }
+      if(!isPinching && wasPinching){
+        onPinchEnd(zone);
+      }
+      wasPinching = isPinching;
+    } else {
+      fingertip.style.display = "none";
+      fingertip.classList.remove("pinch");
+      wasPinching = false;
+      handleHover(null);
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+function allZones(){ return [...leftZones, ...rightZones]; }
+
+function zoneAt(x, y){
+  for(const z of allZones()){
+    if(z.el.classList.contains("matched")) continue;
+    const r = z.el.getBoundingClientRect();
+    if(x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return z;
+  }
+  return null;
+}
+
+function handleHover(zone){
+  if(zone !== hoverZone){
+    if(hoverZone) hoverZone.el.classList.remove("hover");
+    hoverZone = zone;
+    if(hoverZone) hoverZone.el.classList.add("hover");
+  }
+}
+
+function onPinchStart(zone){
+  if(dragging || !zone) return;
+  const isLeft = leftZones.includes(zone);
+  if(!isLeft) return; // เริ่มหยิบได้เฉพาะฝั่งสัญลักษณ์ (ซ้าย)
+  dragging = { id:zone.id, el:zone.el };
+  zone.el.classList.add("picked");
+  const item = ITEMS.find(it => it.id === zone.id);
+  carryLabel.textContent = "🤏 " + item.name;
+  carryLabel.style.display = "block";
+}
+
+function onPinchEnd(zone){
+  if(!dragging) return;
+  const dropZone = zone && rightZones.includes(zone) ? zone : null;
+  dragging.el.classList.remove("picked");
+
+  if(dropZone){
+    if(dropZone.id === dragging.id){
+      dragging.el.classList.add("matched");
+      dropZone.el.classList.add("matched");
+      matchedCount++;
+      scoreEl.textContent = matchedCount;
+      bumpScore();
+      flashFeedback("✅ จับคู่ถูกต้อง!", "#10B981");
+      const r = dropZone.el.getBoundingClientRect();
+      burstConfetti(r.left + r.width/2, r.top + r.height/2);
+      matchedInPage++;
+      if(matchedInPage >= PAGES[pageIndex].length){
+        if(pageIndex + 1 < PAGES.length){
+          setTimeout(() => {
+            pageIndex++;
+            renderPage(pageIndex);
+          }, 900);
+        } else {
+          setTimeout(() => {
+            document.getElementById("finish").style.display = "flex";
+          }, 700);
+        }
+      }
+    } else {
+      dragging.el.classList.add("wrong");
+      dropZone.el.classList.add("wrong");
+      flashFeedback("❌ ไม่ตรงกัน ลองใหม่", "#EF4444");
+      setTimeout(() => {
+        dragging.el.classList.remove("wrong");
+        dropZone.el.classList.remove("wrong");
+      }, 500);
+    }
+  }
+
+  dragging = null;
+  carryLabel.style.display = "none";
+}
+
+function burstConfetti(x, y){
+  const icons = ["🎉","⭐","✨","🌟","💫"];
+  for(let i=0;i<12;i++){
+    const el = document.createElement("div");
+    el.className = "confetti";
+    el.textContent = icons[Math.floor(Math.random()*icons.length)];
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.style.setProperty("--dx", (Math.random()*200-100) + "px");
+    el.style.setProperty("--rot", (Math.random()*360) + "deg");
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+  }
+}
+
+function bumpScore(){
+  hudEl.classList.add("pop");
+  setTimeout(() => hudEl.classList.remove("pop"), 250);
+}
+
+function flashFeedback(text, color){
+  feedbackEl.textContent = text;
+  feedbackEl.style.color = color;
+  feedbackEl.classList.add("show");
+  setTimeout(() => feedbackEl.classList.remove("show"), 650);
+}
+</script>
+
+</body>
+</html>
