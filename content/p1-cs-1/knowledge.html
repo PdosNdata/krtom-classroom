@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การแก้ปัญหาอย่างเป็นขั้นตอน — ป.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{
+    background:linear-gradient(135deg,#3B82F6,#8B5CF6);
+    color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:42px; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{
+    background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px;
+  }
+  .obj-box h2{ margin:0 0 10px; font-size:42px; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{
+    display:flex; align-items:center; gap:10px; font-size:42px;
+    background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff;
+    padding:10px 18px; border-radius:14px; margin-bottom:16px;
+  }
+  section.topic > h2 .num{
+    background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none;
+  }
+
+  .info-box{
+    background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0;
+    font-size:.9rem;
+  }
+  .info-box b{ color:#047857; }
+
+  .fun-fact{
+    background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{
+    counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px;
+    background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem;
+  }
+  .steps li::before{
+    content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%);
+    width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem;
+  }
+
+  .wrong-vs-right{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:16px 0; }
+  .wv-card{ border-radius:16px; padding:14px 16px; font-size:.88rem; }
+  .wv-card.right{ background:#F0FBF6; border:2px solid #10B981; }
+  .wv-card.wrong{ background:#FEF2F2; border:2px solid #EF4444; }
+  .wv-card .tag{ font-weight:800; margin-bottom:6px; display:block; }
+  .wv-card.right .tag{ color:#047857; }
+  .wv-card.wrong .tag{ color:#B91C1C; }
+
+  .example-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin:16px 0; }
+  .example-card{
+    background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:14px;
+    text-align:center; box-shadow:0 4px 10px rgba(0,0,0,.05);
+  }
+  .example-card .icon{ font-size:2rem; margin-bottom:6px; }
+  .example-card p{ margin:0; font-size:.86rem; font-weight:600; }
+
+  .summary-box{
+    background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px;
+    padding:20px 22px; margin-top:32px;
+  }
+  .summary-box h2{ margin:0 0 10px; font-size:42px; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{
+    background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 2</h1>
+    <p>การแก้ปัญหาอย่างเป็นขั้นตอน · ป.1 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p1/cs/1/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>บอกความหมายของการแก้ปัญหาอย่างเป็นขั้นตอนได้</li>
+      <li>เรียงลำดับขั้นตอนการแก้ปัญหาในชีวิตประจำวันได้อย่างถูกต้อง</li>
+      <li>อธิบายได้ว่าทำไมการทำตามลำดับขั้นตอนจึงสำคัญ</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> การแก้ปัญหาอย่างเป็นขั้นตอนคืออะไร
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>การแก้ปัญหาอย่างเป็นขั้นตอน</b> คือการคิดแบ่งงานใหญ่ ๆ ออกเป็น <b>งานย่อย ๆ</b> แล้วทำ <b>ทีละขั้นตอนตามลำดับ</b> ไม่ข้ามขั้นตอน และไม่สลับก่อน-หลัง จนกว่างานจะสำเร็จ</p>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> ถ้าเราทำสลับลำดับขั้นตอนผิด งานอาจ <b>ไม่สำเร็จ</b> หรือผิดพลาดได้ เหมือนตัวอย่างด้านล่างนี้
+    </div>
+
+    <div class="wrong-vs-right">
+      <div class="wv-card right">
+        <span class="tag">✅ ทำถูกลำดับ</span>
+        ใส่ถุงเท้าก่อน แล้วจึงใส่รองเท้า
+      </div>
+      <div class="wv-card wrong">
+        <span class="tag">❌ ทำผิดลำดับ</span>
+        ใส่รองเท้าก่อน แล้วจึงใส่ถุงเท้า (ใส่ถุงเท้าไม่ได้แล้ว!)
+      </div>
+    </div>
+
+    <p>เวลาจะแก้ปัญหาอะไรสักอย่าง เราทำตามขั้นตอนง่าย ๆ 4 ขั้นได้ดังนี้</p>
+    <ol class="steps">
+      <li>คิดว่า <b>ปัญหา</b>คืออะไร</li>
+      <li>คิด <b>วิธีแก้ปัญหา</b>ออกมาเป็นขั้น ๆ</li>
+      <li>ลงมือ <b>ทำตามขั้นตอน</b> ที่คิดไว้ ทีละขั้น</li>
+      <li>ตรวจดูว่า <b>สำเร็จหรือไม่</b> ถ้ายังไม่สำเร็จให้กลับไปแก้ไข</li>
+    </ol>
+    </div><!-- /topic1-text -->
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> ตัวอย่างในชีวิตประจำวัน
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p>กิจกรรมหลายอย่างในชีวิตประจำวันของเรา ต้องทำ <b>ตามลำดับขั้นตอน</b> เช่น</p>
+
+    <div class="example-grid">
+      <div class="example-card"><div class="icon">🦷</div><p>แปรงฟัน</p></div>
+      <div class="example-card"><div class="icon">🧼</div><p>ล้างมือ</p></div>
+      <div class="example-card"><div class="icon">👟</div><p>ผูกเชือกรองเท้า</p></div>
+      <div class="example-card"><div class="icon">🎒</div><p>เตรียมตัวไปโรงเรียน</p></div>
+    </div>
+
+    <p>ตัวอย่างขั้นตอน <b>การล้างมือให้สะอาด</b> มี 4 ขั้นตอน ดังนี้</p>
+    <ol class="steps">
+      <li>เปิดน้ำ</li>
+      <li>ฟอกสบู่ให้ทั่วมือ</li>
+      <li>ล้างสบู่ออกด้วยน้ำสะอาด</li>
+      <li>เช็ดมือให้แห้ง</li>
+    </ol>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> ถ้าล้างมือสลับขั้นตอน เช่น เช็ดมือให้แห้งก่อนฟอกสบู่ มือของเราก็จะยัง <b>ไม่สะอาด</b> เหมือนเดิม
+    </div>
+    </div><!-- /topic2-text -->
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤖</span>
+    <div><b>รู้หรือไม่?</b> เวลาเราเขียนโปรแกรมสั่งให้คอมพิวเตอร์ทำงาน เราก็ต้องบอกขั้นตอนให้คอมพิวเตอร์ทำ <b>ทีละอย่างตามลำดับ</b> เหมือนกัน ชุดคำสั่งที่เรียงเป็นขั้นตอนแบบนี้เรียกว่า <b>"อัลกอริทึม" (Algorithm)</b></div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>การแก้ปัญหาอย่างเป็นขั้นตอน คือการทำงานทีละขั้นตอนตามลำดับ ไม่ข้าม ไม่สลับ</li>
+      <li>ขั้นตอนแก้ปัญหา 4 ขั้น คือ คิดปัญหา → คิดวิธีแก้เป็นขั้น ๆ → ลงมือทำ → ตรวจดูผล</li>
+      <li>ตัวอย่างในชีวิตประจำวัน เช่น แปรงฟัน ล้างมือ ผูกเชือกรองเท้า</li>
+      <li>ถ้าทำสลับลำดับขั้นตอนผิด งานอาจไม่สำเร็จหรือผิดพลาด</li>
+    </ul>
+  </div>
+  </div><!-- /full-text -->
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p1/cs/1/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

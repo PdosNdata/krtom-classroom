@@ -126,7 +126,13 @@ const READY_CONTENT = {
       ]
     }
   },
-  "p1/cs/1": { ar: { href:"content/p1-cs-1/ar-game-nocamera.html", title:"เรียงลำดับขั้นตอนแปรงฟัน" } },
+  "p1/cs/1": {
+    knowledge: { href:"content/p1-cs-1/knowledge.html", title:"การแก้ปัญหาอย่างเป็นขั้นตอน" },
+    worksheet: { href:"content/p1-cs-1/worksheet.html", title:"ใบงานที่ 2.1 เรียงลำดับขั้นตอนการล้างมือ" },
+    quiz:      { href:"content/p1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" },
+    ar: { href:"content/p1-cs-1/ar-game-nocamera.html", title:"เรียงลำดับขั้นตอนแปรงฟัน" }
+  },
   "p1/cs/2": { ar: { href:"content/p1-cs-2/ar-game-nocamera.html", title:"เขียนโปรแกรมพาแมวไปหาปลา" } },
   "p1/cs/3": { ar: { href:"content/p1-cs-3/ar-game-nocamera.html", title:"จัดหมวดหมู่ ทำถูก/ทำไม่ถูก" } },
   "p6/cs/0": {
