@@ -20,7 +20,7 @@
 
 <div id="login-gate">
   <div class="login-gate-inner">
-    <img class="login-gate-full-img" src="assets/images/login-banner.png" alt=""
+    <img class="login-gate-full-img" src="assets/images/login-banner.webp" alt=""
          onload="this.closest('.login-gate-inner').classList.add('has-banner');"
          onerror="this.style.display='none'; this.closest('.login-gate-inner').classList.add('img-failed');">
 
@@ -39,13 +39,13 @@
       <div class="login-gate-card-sub">ยินดีต้อนรับสู่ระบบการเรียนรู้</div>
       <label class="login-field" id="field-id">
         <span>👤 ชื่อ/รหัสนักเรียน</span>
-        <img class="field-bg-img" src="assets/images/login-field-id.png" alt=""
+        <img class="field-bg-img" src="assets/images/login-field-id.webp" alt=""
              onload="this.closest('.login-field').classList.add('has-fieldimg');" onerror="this.style.display='none';">
         <input type="text" id="login-id" placeholder="กรอกชื่อหรือรหัสนักเรียน" autocomplete="username">
       </label>
       <label class="login-field" id="field-pw">
         <span>🔒 รหัสผ่าน</span>
-        <img class="field-bg-img" src="assets/images/login-field-pw.png" alt=""
+        <img class="field-bg-img" src="assets/images/login-field-pw.webp" alt=""
              onload="this.closest('.login-field').classList.add('has-fieldimg');" onerror="this.style.display='none';">
         <div class="login-pw-wrap">
           <input type="password" id="login-pw" placeholder="กรอกรหัสผ่าน" autocomplete="current-password">
@@ -56,20 +56,20 @@
       <div class="login-role-row">
         <label class="login-role-btn role-teacher">
           <input type="radio" name="login-role" value="teacher" checked>
-          <img class="role-btn-img" src="assets/images/login-btn-teacher.png" alt="ครู"
+          <img class="role-btn-img" src="assets/images/login-btn-teacher.webp" alt="ครู"
                onload="this.style.display='block';" onerror="this.style.display='none';">
           <span>👨‍🏫 ครู</span>
         </label>
         <label class="login-role-btn role-student">
           <input type="radio" name="login-role" value="student">
-          <img class="role-btn-img" src="assets/images/login-btn-student.png" alt="นักเรียน"
+          <img class="role-btn-img" src="assets/images/login-btn-student.webp" alt="นักเรียน"
                onload="this.style.display='block';" onerror="this.style.display='none';">
           <span>🧑‍🎓 นักเรียน</span>
         </label>
       </div>
       <div class="login-error" id="login-error"></div>
       <button type="button" class="login-submit" onclick="submitLogin()">
-        <img class="submit-btn-img" src="assets/images/login-btn-submit.png" alt="ตกลง"
+        <img class="submit-btn-img" src="assets/images/login-btn-submit.webp" alt="ตกลง"
              onload="this.style.display='block';" onerror="this.style.display='none';">
         <span class="submit-btn-coded">➡️ ตกลง</span>
       </button>
