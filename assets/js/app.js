@@ -14,25 +14,25 @@ const GROUP_ICON = { "ประถมต้น":"⭐", "ประถมปลา
 // รูปตัวการ์ตูนเด็ก: แยก layout ทีละชั้นชัดเจน (9 ชั้น) — ถ้ายังไม่มีไฟล์เฉพาะของชั้นนั้น
 // จะไล่ fallback ไปใช้ภาพระดับช่วงชั้น แล้วจึงไปภาพเริ่มต้นสุดท้าย โดยอัตโนมัติ ไม่มีวันเห็นไอคอนรูปพัง
 const GRADE_KID_IMG = {
-  p1:"assets/images/home-kid-p1.png", p2:"assets/images/home-kid-p2.png", p3:"assets/images/home-kid-p3.png",
-  p4:"assets/images/home-kid-p4.png", p5:"assets/images/home-kid-p5.png", p6:"assets/images/home-kid-p6.png",
-  m1:"assets/images/home-kid-m1.png", m2:"assets/images/home-kid-m2.png", m3:"assets/images/home-kid-m3.png"
+  p1:"assets/images/home-kid-p1.webp", p2:"assets/images/home-kid-p2.webp", p3:"assets/images/home-kid-p3.webp",
+  p4:"assets/images/home-kid-p4.webp", p5:"assets/images/home-kid-p5.webp", p6:"assets/images/home-kid-p6.webp",
+  m1:"assets/images/home-kid-m1.webp", m2:"assets/images/home-kid-m2.webp", m3:"assets/images/home-kid-m3.webp"
 };
 const GROUP_KID_IMG = {
   "ประถมต้น":  { boy:"assets/images/home-boy-primary.png",   girl:"assets/images/home-girl-primary.png" },
   "ประถมปลาย": { boy:"assets/images/home-boy-upper.png",     girl:"assets/images/home-girl-upper.png" },
   "มัธยมต้น":  { boy:"assets/images/home-boy-secondary.png", girl:"assets/images/home-girl-secondary.png" }
 };
-const KID_FALLBACK = { boy:"assets/images/home-boy.png", girl:"assets/images/home-girl.png" };
+const KID_FALLBACK = { boy:"assets/images/home-boy.webp", girl:"assets/images/home-girl.webp" };
 
 // ปุ่มแท็บ (ใบความรู้/ใบงาน/แบบทดสอบ/เกม/เกม AR) — แยก layout ให้แต่ละปุ่มมีรูปเฉพาะของตัวเอง
 // ใช้รูปเดียวกันทุกหน่วย/ทุกชั้น (ไม่ผูกกับหน่วยใดหน่วยหนึ่ง) ถ้ายังไม่มีไฟล์จะใช้ปุ่มโค้ดแบบเดิมแทน
 const TAB_IMG = {
-  knowledge:"assets/images/home-tab-knowledge.png",
-  worksheet:"assets/images/home-tab-worksheet.png",
-  quiz:"assets/images/home-tab-quiz.png",
-  game:"assets/images/home-tab-game.png",
-  ar:"assets/images/home-tab-ar.png"
+  knowledge:"assets/images/home-tab-knowledge.webp",
+  worksheet:"assets/images/home-tab-worksheet.webp",
+  quiz:"assets/images/home-tab-quiz.webp",
+  game:"assets/images/home-tab-game.webp",
+  ar:"assets/images/home-tab-ar.webp"
 };
 
 // รูปตัวการ์ตูนเด็กในกล่องต้อนรับหน้าแรก — เป็นคนละ layout แยกจากรูปในการ์ดชั้นเรียนโดยเฉพาะ
@@ -41,12 +41,12 @@ const HERO_KID_IMG = { boy:"assets/images/home-hero-boy.png", girl:"assets/image
 // ปุ่มเล่นเนื้อหา (เล่นเกมนี้เลย / เวอร์ชันทางเลือกของเกม AR) — แยก layout ให้แต่ละปุ่มมีรูปเฉพาะของตัวเอง
 // ใช้รูปเดียวกันทุกหน่วย/ทุกชั้น (ไม่ผูกกับหน่วยใดหน่วยหนึ่ง) ถ้ายังไม่มีไฟล์จะใช้ปุ่มโค้ดแบบเดิมแทน
 const ACTION_BTN_IMG = {
-  play: "assets/images/btn-play.png",
-  handpoint: "assets/images/btn-ar-handpoint.png",
-  nocamera: "assets/images/btn-ar-nocamera.png",
-  "match-ar": "assets/images/btn-ar-match.png",
-  "quiz-nocamera": "assets/images/btn-quiz-nocamera.png",
-  "match-nocamera": "assets/images/btn-match-nocamera.png"
+  play: "assets/images/btn-play.webp",
+  handpoint: "assets/images/btn-ar-handpoint.webp",
+  nocamera: "assets/images/btn-ar-nocamera.webp",
+  "match-ar": "assets/images/btn-ar-match.webp",
+  "quiz-nocamera": "assets/images/btn-quiz-nocamera.webp",
+  "match-nocamera": "assets/images/btn-match-nocamera.webp"
 };
 
 // เรียงรูปไล่ลำดับสำรอง: ถ้าโหลดรูปแรกไม่ได้ (404) จะลองรูปถัดไปในลิสต์ให้อัตโนมัติ ไม่มีวันเห็นไอคอนรูปพัง
@@ -268,7 +268,7 @@ function renderHome(){
   app.innerHTML = `
     <div class="home-page">
     <div class="hero welcome-hero">
-      <img class="welcome-banner-img" src="assets/images/home-welcome-banner.png"
+      <img class="welcome-banner-img" src="assets/images/home-welcome-banner.webp"
            alt="ยินดีต้อนรับสู่บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) วิทยาการคำนวณ"
            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
       <div class="bubble-fallback">
@@ -416,7 +416,7 @@ function renderUnitList(grade, subject){
   // การ์ดหน่วยเต็ม (ถ้าครูออกแบบภาพของหน่วยนั้นไว้เอง): ถ้าโหลดได้จะแทนที่การ์ดโค้ดทั้งหมด ถ้าไม่มีไฟล์จะใช้การ์ดโค้ดสำรองแทน
   const cards = subject.units.map((u,i) => `
     <a class="card unit-card" href="#/unit/${grade.id}/${subject.id}/${i}">
-      <img class="u-fullcard-img" src="assets/images/home-unit-${grade.id}-${subject.id}-${i}.png" alt="${u.name}"
+      <img class="u-fullcard-img" src="assets/images/home-unit-${grade.id}-${subject.id}-${i}.webp" alt="${u.name}"
            onload="this.closest('.unit-card').classList.add('has-fullcard'); this.style.display='block'; this.nextElementSibling.style.display='none';"
            onerror="this.style.display='none';">
       <div class="u-coded-fallback">
