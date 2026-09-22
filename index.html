@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=62">
+<link rel="stylesheet" href="assets/css/style.css?v=63">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 </head>
 <body>
@@ -22,7 +22,7 @@
   <div class="login-gate-inner">
     <img class="login-gate-full-img" src="assets/images/login-banner.png" alt=""
          onload="this.closest('.login-gate-inner').classList.add('has-banner');"
-         onerror="this.style.display='none';">
+         onerror="this.style.display='none'; this.closest('.login-gate-inner').classList.add('img-failed');">
 
     <div class="login-gate-left">
       <div class="login-gate-left-coded">

@@ -46,7 +46,11 @@ html,body{ margin:0; padding:0; overflow-x:hidden; }
   background:rgba(255,255,255,.14); border-radius:28px; overflow:hidden;
   box-shadow:0 20px 50px rgba(0,0,0,.2);
   position:relative;
+  opacity:0; transition:opacity .2s ease;
 }
+/* กันไม่ให้เห็นแว๊บของเลย์เอาต์สำรอง (โค้ดล้วน) ก่อนภาพพื้นหลังโหลดเสร็จ —
+   ซ่อนไว้จนกว่าจะรู้แน่ว่าจะโชว์แบบไหน (.has-banner = โหลดภาพสำเร็จ, .img-failed = โหลดภาพไม่สำเร็จ) */
+.login-gate-inner.has-banner, .login-gate-inner.img-failed{ opacity:1; }
 .login-gate-full-img{ display:none; width:100%; height:auto; }
 
 /* เมื่อโหลดภาพเต็ม (login-banner.png) สำเร็จ: ให้ภาพเต็มจอเท่าที่เป็นไปได้โดยไม่ครอปภาพ (คงสัดส่วนเดิมไว้
