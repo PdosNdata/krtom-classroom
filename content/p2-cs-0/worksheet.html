@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ใบงานที่ 2.1: เรียงลำดับขั้นตอนการล้างมือ — ป.1 หน่วย 2</title>
+<title>ใบงานที่ 1.1: จับคู่สัญลักษณ์ทิศทาง — ป.2 หน่วย 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
   .part h2{ margin:0 0 6px; font-size:42px; display:flex; align-items:center; gap:8px; }
   .part .instruction{ color:#666; font-size:.88rem; margin-bottom:16px; }
 
-  /* --- ตอนที่ 1: เรียงลำดับ --- */
+  /* --- ตอนที่ 1: จับคู่ --- */
   #scene{
     position:relative; border-radius:16px; overflow:hidden;
     background:linear-gradient(to bottom, #DCEBFF 0%, #F3F8FF 100%);
@@ -38,10 +38,6 @@
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
     padding:16px 10px; min-height:150px; transition:border-color .15s, background .15s;
   }
-  .dropzone .step-num{
-    width:32px; height:32px; border-radius:50%; background:#F97316; color:#fff;
-    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem;
-  }
   .dropzone .icon{ font-size:2.2rem; }
   .dropzone .slot{ min-width:100px; min-height:26px; border-radius:8px; background:#F0F2FA; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; color:#9AA1B5; text-align:center; padding:3px 6px; }
   .dropzone.correct{ border-color:#10B981; background:#F0FBF6; }
@@ -50,16 +46,11 @@
 
   #tray{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
   .label-chip{
-    display:flex; align-items:center; gap:8px;
     font-size:.8rem; font-weight:700; background:#fff; border:2px solid #E6E8F0; border-radius:999px;
     padding:9px 16px; cursor:grab; box-shadow:0 3px 8px rgba(0,0,0,.08); touch-action:none; user-select:none;
   }
   .label-chip.placed{ visibility:hidden; }
   .label-chip.hover-speaking{ border-color:#3B82F6; background:#EEF1FB; }
-  .icon-listen-btn{
-    border:none; background:#EEF1FB; color:#3B82F6; width:26px; height:26px; border-radius:50%;
-    font-size:.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; flex:none;
-  }
   .part-score{ text-align:center; font-weight:700; margin-top:10px; font-size:.88rem; color:#10B981; }
 
   /* --- ตอนที่ 2: ปรนัย --- */
@@ -91,40 +82,36 @@
 
 <header>
   <div>
-    <h1>📝 ใบงานที่ 2.1</h1>
-    <p>เรื่อง เรียงลำดับขั้นตอนการล้างมือ · ป.1 หน่วยที่ 2</p>
+    <h1>📝 ใบงานที่ 1.1</h1>
+    <p>เรื่อง จับคู่สัญลักษณ์ทิศทาง · ป.2 หน่วยที่ 1</p>
   </div>
-  <a href="../../index.html#/unit/p1/cs/1/worksheet">← กลับหน้าหน่วย</a>
+  <a href="../../index.html#/unit/p2/cs/0/worksheet">← กลับหน้าหน่วย</a>
 </header>
 
 <main>
 
   <div class="part">
-    <h2>🧩 ตอนที่ 1: เรียงลำดับขั้นตอนการล้างมือ</h2>
-    <p class="instruction" id="p1-instruction">ลาก/แตะป้ายขั้นตอนด้านล่าง ไปวางให้ตรงกับลำดับที่ 1-4</p>
+    <h2>🧩 ตอนที่ 1: จับคู่สัญลักษณ์กับความหมาย</h2>
+    <p class="instruction" id="p1-instruction">ลาก/แตะป้ายความหมายด้านล่าง ไปวางให้ตรงกับสัญลักษณ์แต่ละอัน</p>
     <button class="tts-btn" data-audio-src="audio/ws-instruction.mp3" style="margin-bottom:14px">
       <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำสั่ง</span>
     </button>
 
     <div id="scene">
-      <div class="dropzone" data-answer="เปิดน้ำ">
-        <span class="step-num">1</span>
-        <span class="icon">🚰</span>
+      <div class="dropzone" data-answer="เดินหน้า">
+        <span class="icon">⬆️</span>
         <span class="slot">วางที่นี่</span>
       </div>
-      <div class="dropzone" data-answer="ฟอกสบู่ให้ทั่วมือ">
-        <span class="step-num">2</span>
-        <span class="icon">🧼</span>
+      <div class="dropzone" data-answer="เลี้ยวซ้าย">
+        <span class="icon">⬅️</span>
         <span class="slot">วางที่นี่</span>
       </div>
-      <div class="dropzone" data-answer="ล้างสบู่ออกด้วยน้ำสะอาด">
-        <span class="step-num">3</span>
-        <span class="icon">💦</span>
+      <div class="dropzone" data-answer="เลี้ยวขวา">
+        <span class="icon">➡️</span>
         <span class="slot">วางที่นี่</span>
       </div>
-      <div class="dropzone" data-answer="เช็ดมือให้แห้ง">
-        <span class="step-num">4</span>
-        <span class="icon">🤲</span>
+      <div class="dropzone" data-answer="ถอยหลัง">
+        <span class="icon">⬇️</span>
         <span class="slot">วางที่นี่</span>
       </div>
     </div>
@@ -136,10 +123,10 @@
     </div>
 
     <div id="tray">
-      <div class="label-chip" data-name="เช็ดมือให้แห้ง" data-hover-audio="audio/label-dry.mp3">🤲 เช็ดมือให้แห้ง</div>
-      <div class="label-chip" data-name="เปิดน้ำ" data-hover-audio="audio/label-water.mp3">🚰 เปิดน้ำ</div>
-      <div class="label-chip" data-name="ล้างสบู่ออกด้วยน้ำสะอาด" data-hover-audio="audio/label-rinse.mp3">💦 ล้างสบู่ออกด้วยน้ำสะอาด</div>
-      <div class="label-chip" data-name="ฟอกสบู่ให้ทั่วมือ" data-hover-audio="audio/label-soap.mp3">🧼 ฟอกสบู่ให้ทั่วมือ</div>
+      <div class="label-chip" data-name="ถอยหลัง" data-hover-audio="audio/label-back.mp3">⬇️ ถอยหลัง</div>
+      <div class="label-chip" data-name="เดินหน้า" data-hover-audio="audio/label-forward.mp3">⬆️ เดินหน้า</div>
+      <div class="label-chip" data-name="เลี้ยวขวา" data-hover-audio="audio/label-right.mp3">➡️ เลี้ยวขวา</div>
+      <div class="label-chip" data-name="เลี้ยวซ้าย" data-hover-audio="audio/label-left.mp3">⬅️ เลี้ยวซ้าย</div>
     </div>
     <p class="part-score">คะแนนตอนที่ 1: <span id="p1-score">0</span>/4</p>
   </div>
@@ -159,7 +146,7 @@
 
 <script src="../../assets/js/tts.js"></script>
 <script>
-/* ---------- ตอนที่ 1: เรียงลำดับ ---------- */
+/* ---------- ตอนที่ 1: จับคู่ ---------- */
 let p1score = 0;
 const p1total = document.querySelectorAll(".dropzone").length;
 
@@ -239,11 +226,11 @@ function shuffleChoices(q){
 }
 
 const RAW_MCQ = [
-  { audio:"ws-q1", q:"การแก้ปัญหาอย่างเป็นขั้นตอน หมายความว่าอย่างไร?", choices:["ทำงานให้เสร็จเร็วที่สุดโดยไม่สนลำดับ","ทำทีละขั้นตอนตามลำดับ ไม่ข้ามไม่สลับ","ทำหลายอย่างพร้อมกันในเวลาเดียว"], correct:1 },
-  { audio:"ws-q2", q:"ถ้าใส่รองเท้าก่อนใส่ถุงเท้า จะเกิดอะไรขึ้น?", choices:["ไม่มีผลอะไรเลย","ใส่ถุงเท้าไม่ได้แล้ว เพราะลำดับผิด","รองเท้าจะสวยขึ้น"], correct:1 },
-  { audio:"ws-q3", q:"ขั้นตอนแรกของการล้างมือให้สะอาดคืออะไร?", choices:["เช็ดมือให้แห้ง","ฟอกสบู่","เปิดน้ำ"], correct:2 },
-  { audio:"ws-q4", q:"ขั้นตอนสุดท้ายของการล้างมือให้สะอาดคืออะไร?", choices:["เช็ดมือให้แห้ง","เปิดน้ำ","ฟอกสบู่ให้ทั่วมือ"], correct:0 },
-  { audio:"ws-q5", q:"ชุดคำสั่งที่เรียงเป็นขั้นตอนให้คอมพิวเตอร์ทำงาน เรียกว่าอะไร?", choices:["อัลกอริทึม (Algorithm)","อินเทอร์เน็ต","ซอฟต์แวร์"], correct:0 }
+  { audio:"ws-q1", q:"การแก้ปัญหา คือข้อใด?", choices:["การคิดหาวิธีทำให้ผ่านพ้นอุปสรรค","การนั่งรอให้ปัญหาหายไปเอง","การไม่สนใจปัญหาที่เกิดขึ้น"], correct:0 },
+  { audio:"ws-q2", q:"ขั้นตอนแรกของการแก้ปัญหาคือข้อใด?", choices:["ลงมือแก้ปัญหา","ทำความเข้าใจปัญหา","ตรวจสอบผล"], correct:1 },
+  { audio:"ws-q3", q:"ขั้นตอนสุดท้ายของการแก้ปัญหาคือข้อใด?", choices:["ตรวจสอบผล","วางแผนแก้ปัญหา","ทำความเข้าใจปัญหา"], correct:0 },
+  { audio:"ws-q4", q:"สัญลักษณ์ลูกศรชี้ขึ้น หมายถึงคำสั่งใด?", choices:["เลี้ยวซ้าย","เดินหน้า","ถอยหลัง"], correct:1 },
+  { audio:"ws-q5", q:"ถ้าเรียงสัญลักษณ์ทิศทางผิดลำดับ จะเกิดอะไรขึ้น?", choices:["ไปถึงเป้าหมายเร็วขึ้น","หลงทาง ไปไม่ถึงเป้าหมาย","ไม่มีผลอะไรเลย"], correct:1 }
 ];
 const MCQ = shuffleArray(RAW_MCQ.map(shuffleChoices));
 

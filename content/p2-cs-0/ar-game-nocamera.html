@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เกม AR: เรียงลำดับขั้นตอนแปรงฟัน (ไม่ใช้กล้อง)</title>
+<title>เกม AR: เรียงคำสั่งพาหนูไปหาดาว (ไม่ใช้กล้อง)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,8 +25,11 @@
     font-weight:700; font-size:.9rem; box-shadow:0 4px 10px rgba(0,0,0,.06);
   }
 
+  .maze-preview{ max-width:900px; margin:14px auto 0; padding:0 20px; text-align:center; }
+  .maze-preview svg{ max-width:100%; height:auto; }
+
   #scene{
-    position:relative; max-width:900px; margin:16px auto; min-height:44vh;
+    position:relative; max-width:900px; margin:16px auto; min-height:34vh;
     border-radius:20px; overflow:hidden;
     background:linear-gradient(to bottom, #DCEBFF 0%, #F3F8FF 100%);
     box-shadow:0 10px 30px rgba(0,0,0,.12); touch-action:none; border:1px solid #dfe4ee;
@@ -36,14 +39,13 @@
   .dropzone{
     background:#fff; border:3px dashed #C9D0E5; border-radius:18px;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
-    padding:16px 10px; min-height:150px; transition:border-color .15s, background .15s;
+    padding:16px 10px; min-height:130px; transition:border-color .15s, background .15s;
   }
   .dropzone .step-num{
     width:32px; height:32px; border-radius:50%; background:#8B5CF6; color:#fff;
     display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem;
   }
-  .dropzone .icon{ display:flex; align-items:center; justify-content:center; height:64px; filter:drop-shadow(0 4px 6px rgba(0,0,0,.12)); }
-  .dropzone .icon svg{ max-width:100%; max-height:100%; }
+  .dropzone .icon{ font-size:2rem; }
   .dropzone .slot{
     min-width:100px; min-height:30px; border-radius:10px; background:#F0F2FA;
     display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:#9AA1B5; text-align:center; padding:4px 8px;
@@ -58,7 +60,7 @@
     font-size:.85rem; font-weight:700; background:#fff; border:2px solid #E6E8F0; border-radius:999px;
     padding:10px 18px; cursor:grab; box-shadow:0 4px 10px rgba(0,0,0,.08); touch-action:none; user-select:none;
   }
-  .label-chip svg{ width:26px; height:26px; }
+  .label-chip .em{ font-size:1.3rem; }
   .label-chip.placed{ visibility:hidden; }
 
   .hint{ text-align:center; color:#888; font-size:.82rem; margin:0 0 14px; }
@@ -75,119 +77,76 @@
 <body>
 
 <header>
-  <h1>🕶️ เกม AR: เรียงลำดับขั้นตอนแปรงฟัน (ไม่ใช้กล้อง)</h1>
-  <a href="../../index.html#/unit/p1/cs/1/ar">← กลับหน้าหน่วย</a>
+  <h1>🕶️ เกม AR: เรียงคำสั่งพาหนูไปหาดาว (ไม่ใช้กล้อง)</h1>
+  <a href="../../index.html#/unit/p2/cs/0/ar">← กลับหน้าหน่วย</a>
 </header>
 
-<p class="desc">หน่วยที่ 2 การแก้ปัญหาอย่างเป็นขั้นตอน (ป.1) — ลากภาพขั้นตอนไปวางให้เรียงลำดับถูกต้อง ตั้งแต่ขั้นตอนที่ 1 ถึง 5</p>
+<p class="desc">หน่วยที่ 1 การแก้ปัญหาอย่างง่าย (ป.2) — ลากสัญลักษณ์ทิศทางไปวางให้เรียงลำดับถูกต้อง พาหนูน้อยเดินไปหาดาวให้ถึง ตั้งแต่คำสั่งที่ 1 ถึง 5</p>
 <div style="text-align:center; margin-bottom:6px">
   <button class="tts-btn" data-audio-src="audio/ar-desc.mp3">
     <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span>
   </button>
 </div>
 
-<div id="hud"><span class="pill">⭐ คะแนน: <span id="score">0</span>/4</span></div>
+<div class="maze-preview">
+  <svg viewBox="0 0 300 140" width="280" height="130">
+    <rect x="4" y="4" width="292" height="132" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2"/>
+    <text x="40" y="76" font-size="22" text-anchor="middle">🐭</text>
+    <path d="M60 70 L110 70" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM2)"/>
+    <path d="M130 70 L130 40" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM2)"/>
+    <path d="M130 40 L200 40" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM2)"/>
+    <path d="M220 40 L220 70" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM2)"/>
+    <path d="M220 70 L260 70" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM2)"/>
+    <text x="280" y="76" font-size="24" text-anchor="middle">⭐</text>
+    <defs><marker id="arrM2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3B82F6"/></marker></defs>
+  </svg>
+</div>
+
+<div id="hud"><span class="pill">⭐ คะแนน: <span id="score">0</span>/5</span></div>
 
 <div id="scene">
-  <div class="dropzone" data-answer="หยิบแปรงและยาสีฟัน">
+  <div class="dropzone" data-answer="เดินหน้า">
     <span class="step-num">1</span>
-    <span class="icon">
-      <svg viewBox="0 0 100 80" width="56" height="46">
-        <rect x="6" y="30" width="46" height="10" rx="5" fill="#60A5FA"/>
-        <rect x="46" y="26" width="14" height="18" rx="4" fill="#3B82F6"/>
-        <rect x="60" y="20" width="10" height="30" rx="3" fill="#EC4899"/>
-        <rect x="68" y="14" width="26" height="16" rx="4" fill="#F9A8D4"/>
-        <rect x="90" y="16" width="8" height="12" rx="2" fill="#DB2777"/>
-      </svg>
-    </span>
+    <span class="icon">🐭</span>
     <span class="slot">วางที่นี่</span>
   </div>
-
-  <div class="dropzone" data-answer="บีบยาสีฟันใส่แปรง">
+  <div class="dropzone" data-answer="เลี้ยวขวา">
     <span class="step-num">2</span>
-    <span class="icon">
-      <svg viewBox="0 0 100 80" width="56" height="46">
-        <rect x="10" y="20" width="30" height="16" rx="4" fill="#F9A8D4"/>
-        <rect x="34" y="24" width="14" height="8" rx="2" fill="#DB2777"/>
-        <path d="M48 28 Q62 28 66 32" stroke="#F472B6" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <rect x="60" y="30" width="34" height="9" rx="4.5" fill="#60A5FA"/>
-        <ellipse cx="66" cy="34" rx="5" ry="4" fill="#F472B6"/>
-      </svg>
-    </span>
+    <span class="icon">↪️</span>
     <span class="slot">วางที่นี่</span>
   </div>
-
-  <div class="dropzone" data-answer="แปรงฟันให้ทั่วปาก">
+  <div class="dropzone" data-answer="เดินหน้า">
     <span class="step-num">3</span>
-    <span class="icon">
-      <svg viewBox="0 0 100 90" width="56" height="50">
-        <ellipse cx="50" cy="55" rx="36" ry="24" fill="#FCA5A5"/>
-        <ellipse cx="50" cy="52" rx="28" ry="14" fill="#fff"/>
-        <path d="M30 46 Q50 60 70 46" fill="none" stroke="#DC2626" stroke-width="3"/>
-        <path d="M62 20 Q80 16 82 34" fill="none" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" marker-end="url(#arrH1)"/>
-        <defs><marker id="arrH1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3B82F6"/></marker></defs>
-      </svg>
-    </span>
+    <span class="icon">🐭</span>
     <span class="slot">วางที่นี่</span>
   </div>
-
-  <div class="dropzone" data-answer="บ้วนปากด้วยน้ำสะอาด">
+  <div class="dropzone" data-answer="เลี้ยวขวา">
     <span class="step-num">4</span>
-    <span class="icon">
-      <svg viewBox="0 0 100 90" width="52" height="47">
-        <path d="M28 30 L72 30 L64 78 L36 78 Z" fill="#93C5FD" stroke="#60A5FA" stroke-width="3"/>
-        <path d="M32 38 L68 38" stroke="#3B82F6" stroke-width="3"/>
-        <circle cx="20" cy="20" r="5" fill="#60A5FA"/>
-        <circle cx="80" cy="16" r="4" fill="#60A5FA"/>
-        <circle cx="76" cy="32" r="3" fill="#93C5FD"/>
-      </svg>
-    </span>
+    <span class="icon">↪️</span>
     <span class="slot">วางที่นี่</span>
   </div>
-
-  <div class="dropzone" data-answer="เก็บแปรงสีฟันเข้าที่ให้เรียบร้อย">
+  <div class="dropzone" data-answer="เดินหน้า">
     <span class="step-num">5</span>
-    <span class="icon">
-      <svg viewBox="0 0 100 100" width="50" height="50">
-        <path d="M25 45 L75 45 L68 90 L32 90 Z" fill="#93C5FD" stroke="#60A5FA" stroke-width="3"/>
-        <rect x="44" y="10" width="10" height="45" rx="4" fill="#60A5FA"/>
-        <rect x="40" y="8" width="18" height="14" rx="4" fill="#EC4899"/>
-      </svg>
-    </span>
+    <span class="icon">⭐</span>
     <span class="slot">วางที่นี่</span>
   </div>
 </div>
 
-<p class="hint">👆 ลาก/แตะภาพด้านล่างไปวางให้ตรงกับลำดับขั้นตอน</p>
+<p class="hint">👆 ลาก/แตะสัญลักษณ์ด้านล่างไปวางให้ตรงกับลำดับคำสั่ง (ใช้ซ้ำได้หลายครั้ง)</p>
 
 <div id="tray">
-  <div class="label-chip" data-name="เก็บแปรงสีฟันเข้าที่ให้เรียบร้อย" data-hover-audio="audio/ar-step5.mp3">
-    <svg viewBox="0 0 100 100"><path d="M25 45 L75 45 L68 90 L32 90 Z" fill="#93C5FD"/><rect x="44" y="10" width="10" height="45" rx="4" fill="#60A5FA"/><rect x="40" y="8" width="18" height="14" rx="4" fill="#EC4899"/></svg>
-    เก็บแปรงสีฟันเข้าที่ให้เรียบร้อย
-  </div>
-  <div class="label-chip" data-name="แปรงฟันให้ทั่วปาก" data-hover-audio="audio/ar-step3.mp3">
-    <svg viewBox="0 0 100 90"><ellipse cx="50" cy="55" rx="36" ry="24" fill="#FCA5A5"/><ellipse cx="50" cy="52" rx="28" ry="14" fill="#fff"/></svg>
-    แปรงฟันให้ทั่วปาก
-  </div>
-  <div class="label-chip" data-name="บ้วนปากด้วยน้ำสะอาด" data-hover-audio="audio/ar-step4.mp3">
-    <svg viewBox="0 0 100 90"><path d="M28 30 L72 30 L64 78 L36 78 Z" fill="#93C5FD"/></svg>
-    บ้วนปากด้วยน้ำสะอาด
-  </div>
-  <div class="label-chip" data-name="หยิบแปรงและยาสีฟัน" data-hover-audio="audio/ar-step1.mp3">
-    <svg viewBox="0 0 100 80"><rect x="6" y="30" width="46" height="10" rx="5" fill="#60A5FA"/><rect x="68" y="14" width="26" height="16" rx="4" fill="#F9A8D4"/></svg>
-    หยิบแปรงและยาสีฟัน
-  </div>
-  <div class="label-chip" data-name="บีบยาสีฟันใส่แปรง" data-hover-audio="audio/ar-step2.mp3">
-    <svg viewBox="0 0 100 80"><rect x="10" y="20" width="30" height="16" rx="4" fill="#F9A8D4"/><rect x="60" y="30" width="34" height="9" rx="4.5" fill="#60A5FA"/></svg>
-    บีบยาสีฟันใส่แปรง
-  </div>
+  <div class="label-chip" data-name="เดินหน้า" data-hover-audio="audio/ar-forward.mp3"><span class="em">⬆️</span> เดินหน้า</div>
+  <div class="label-chip" data-name="เดินหน้า" data-hover-audio="audio/ar-forward.mp3"><span class="em">⬆️</span> เดินหน้า</div>
+  <div class="label-chip" data-name="เดินหน้า" data-hover-audio="audio/ar-forward.mp3"><span class="em">⬆️</span> เดินหน้า</div>
+  <div class="label-chip" data-name="เลี้ยวขวา" data-hover-audio="audio/ar-right.mp3"><span class="em">➡️</span> เลี้ยวขวา</div>
+  <div class="label-chip" data-name="เลี้ยวขวา" data-hover-audio="audio/ar-right.mp3"><span class="em">➡️</span> เลี้ยวขวา</div>
 </div>
 
 <div id="finish">
   <div class="card">
     <div style="font-size:2.6rem">🎉</div>
-    <h2>เก่งมาก! เรียงลำดับถูกต้องครบ</h2>
-    <p style="color:#666;font-size:.9rem">การแก้ปัญหาในชีวิตประจำวันต้องทำตามลำดับขั้นตอน ถ้าสลับขั้นตอนผิด งานอาจไม่สำเร็จ เหมือนการแปรงฟันที่ต้องทำตามลำดับ 1-2-3-4-5</p>
+    <h2>เก่งมาก! หนูน้อยเดินถึงดาวแล้ว</h2>
+    <p style="color:#666;font-size:.9rem">การแก้ปัญหาต้องแสดงขั้นตอนให้ถูกลำดับ ถ้าเรียงคำสั่งทิศทางผิด หนูน้อยจะเดินหลงทาง ไปไม่ถึงเป้าหมาย</p>
     <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
   </div>
 </div>
@@ -239,7 +198,7 @@ function makeDraggable(chip){
           if(score >= total){
             setTimeout(() => {
               document.getElementById("finish").style.display = "flex";
-              speakText("เก่งมาก เรียงลำดับถูกต้องครบ การแก้ปัญหาในชีวิตประจำวันต้องทำตามลำดับขั้นตอน ถ้าสลับขั้นตอนผิด งานอาจไม่สำเร็จ เหมือนการแปรงฟันที่ต้องทำตามลำดับ", null);
+              speakText("เก่งมาก หนูน้อยเดินถึงดาวแล้ว การแก้ปัญหาต้องแสดงขั้นตอนให้ถูกลำดับ ถ้าเรียงคำสั่งทิศทางผิด หนูน้อยจะเดินหลงทาง ไปไม่ถึงเป้าหมาย", null);
             }, 400);
           }
         } else if(overZone.dataset.answer !== name){

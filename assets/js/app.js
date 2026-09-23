@@ -135,6 +135,18 @@ const READY_CONTENT = {
   },
   "p1/cs/2": { ar: { href:"content/p1-cs-2/ar-game-nocamera.html", title:"เขียนโปรแกรมพาแมวไปหาปลา" } },
   "p1/cs/3": { ar: { href:"content/p1-cs-3/ar-game-nocamera.html", title:"จัดหมวดหมู่ ทำถูก/ทำไม่ถูก" } },
+  "p2/cs/0": {
+    knowledge: { href:"content/p2-cs-0/knowledge.html", title:"การแก้ปัญหาอย่างง่าย" },
+    worksheet: { href:"content/p2-cs-0/worksheet.html", title:"ใบงานที่ 1.1 จับคู่สัญลักษณ์ทิศทาง" },
+    quiz:      { href:"content/p2-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game: {
+      href:"content/p2-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[
+        { key:"jigsaw-p2-0", href:"content/p2-cs-0/game-jigsaw.html", label:"🧩 เกมต่อจิ๊กซอว์" }
+      ]
+    },
+    ar: { href:"content/p2-cs-0/ar-game-nocamera.html", title:"เรียงคำสั่งพาหนูไปหาดาว" }
+  },
   "p6/cs/0": {
     knowledge: { href:"content/p6-cs-0/knowledge.html", title:"การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ" },
     worksheet: { href:"content/p6-cs-0/worksheet.html", title:"ใบงานที่ 1.1 เหตุผลเชิงตรรกะและผังงาน" },
@@ -194,9 +206,34 @@ function setBreadcrumb(parts){
   }).join("");
 }
 
+// นักเรียนที่ล็อกอินแล้ว ดูได้เฉพาะเนื้อหาชั้นของตัวเองเท่านั้น (ครูไม่ถูกจำกัด)
+function getStudentGradeLock(){
+  let role = null, grade = null;
+  try{
+    role = sessionStorage.getItem("loggedInRole");
+    grade = sessionStorage.getItem("loggedInStudentGrade");
+  }catch(e){}
+  return (role === "student" && grade) ? grade : null;
+}
+
 function render(){
   const hash = location.hash.replace(/^#\/?/, "");
   const parts = hash.split("/").filter(Boolean);
+
+  const lockedGrade = getStudentGradeLock();
+  if(lockedGrade){
+    const isHome = parts.length === 0;
+    const isArGames = parts[0] === "ar-games";
+    const targetGrade = (parts[0] === "grade" || parts[0] === "unit") ? parts[1] : null;
+    const blocked = targetGrade && targetGrade !== lockedGrade;
+    if(isHome || isArGames || blocked){
+      if(blocked && window.Swal){
+        try{ Swal.fire({ icon:"warning", title:"เข้าไม่ได้ครับ/ค่ะ", text:"นักเรียนดูได้เฉพาะเนื้อหาชั้นของตัวเองเท่านั้น", confirmButtonText:"ตกลง", confirmButtonColor:"#3B82F6" }); }catch(e){}
+      }
+      location.hash = "#/grade/" + lockedGrade;
+      return;
+    }
+  }
 
   if(parts[0] === "ar-games") return renderARGamesHub();
 

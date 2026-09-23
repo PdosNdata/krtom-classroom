@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การแก้ปัญหาอย่างง่าย — ป.2 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{
+    background:linear-gradient(135deg,#3B82F6,#8B5CF6);
+    color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:42px; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{
+    background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px;
+  }
+  .obj-box h2{ margin:0 0 10px; font-size:42px; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{
+    display:flex; align-items:center; gap:10px; font-size:42px;
+    background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff;
+    padding:10px 18px; border-radius:14px; margin-bottom:16px;
+  }
+  section.topic > h2 .num{
+    background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none;
+  }
+
+  .info-box{
+    background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0;
+    font-size:.9rem;
+  }
+  .info-box b{ color:#047857; }
+
+  .fun-fact{
+    background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{
+    counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px;
+    background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem;
+  }
+  .steps li::before{
+    content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%);
+    width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem;
+  }
+
+  .dir-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin:16px 0; }
+  .dir-card{
+    background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:14px;
+    text-align:center; box-shadow:0 4px 10px rgba(0,0,0,.05);
+  }
+  .dir-card .icon{ font-size:2.2rem; margin-bottom:6px; }
+  .dir-card p{ margin:0; font-size:.86rem; font-weight:600; }
+
+  .maze-box{
+    background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:18px; margin:16px 0; text-align:center;
+  }
+  .maze-box svg{ max-width:100%; height:auto; }
+  .maze-caption{ font-size:.86rem; color:#555; margin-top:8px; }
+
+  .summary-box{
+    background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px;
+    padding:20px 22px; margin-top:32px;
+  }
+  .summary-box h2{ margin:0 0 10px; font-size:42px; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{
+    background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>การแก้ปัญหาอย่างง่าย · ป.2 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p2/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>บอกขั้นตอนการแก้ปัญหาอย่างง่ายได้</li>
+      <li>แสดงขั้นตอนการแก้ปัญหาด้วยภาพหรือสัญลักษณ์ทิศทางได้</li>
+      <li>นำขั้นตอนการแก้ปัญหาไปใช้แก้สถานการณ์ง่าย ๆ ในชีวิตประจำวันได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> ขั้นตอนการแก้ปัญหา
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>การแก้ปัญหา</b> คือการคิดหาวิธีทำให้ผ่านพ้นอุปสรรค หรือทำสิ่งที่ต้องการให้สำเร็จ ซึ่งมีขั้นตอนหลัก ๆ 4 ขั้น ดังนี้</p>
+
+    <ol class="steps">
+      <li><b>ทำความเข้าใจปัญหา</b> — ปัญหาคืออะไร ต้องการอะไร</li>
+      <li><b>วางแผนแก้ปัญหา</b> — คิดวิธีแก้ไว้ล่วงหน้าเป็นขั้น ๆ</li>
+      <li><b>ลงมือแก้ปัญหา</b> — ทำตามแผนที่วางไว้ ทีละขั้นตอน</li>
+      <li><b>ตรวจสอบผล</b> — ดูว่าปัญหาหมดไปหรือยัง ถ้ายังต้องกลับไปแก้ไขแผน</li>
+    </ol>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> เวลาเจอปัญหา ควร <b>ใจเย็น ๆ คิดเป็นขั้นตอน</b> จะช่วยแก้ปัญหาได้ง่ายกว่าการรีบทำโดยไม่คิด เช่น เวลาหาของหาย ควรค่อย ๆ นึกว่าวางไว้ที่ไหนบ้าง แล้วค่อย ๆ หาไปทีละจุด
+    </div>
+    </div><!-- /topic1-text -->
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การแสดงขั้นตอนการแก้ปัญหาด้วยภาพ
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p>นอกจากพูดหรือเขียนอธิบายขั้นตอนแล้ว เรายังสามารถ <b>ใช้ภาพหรือสัญลักษณ์ทิศทาง</b> แทนขั้นตอนได้ ทำให้เข้าใจง่ายและรวดเร็วขึ้น ตัวอย่างสัญลักษณ์ทิศทางที่ใช้บ่อย มีดังนี้</p>
+
+    <div class="dir-grid">
+      <div class="dir-card"><div class="icon">⬆️</div><p>เดินหน้า</p></div>
+      <div class="dir-card"><div class="icon">⬅️</div><p>เลี้ยวซ้าย</p></div>
+      <div class="dir-card"><div class="icon">➡️</div><p>เลี้ยวขวา</p></div>
+      <div class="dir-card"><div class="icon">⬇️</div><p>ถอยหลัง</p></div>
+    </div>
+
+    <p>ตัวอย่างเช่น การบอกทางให้ตัวละครเดินผ่าน <b>เขาวงกต</b> ไปหาดาว เราสามารถใช้สัญลักษณ์ทิศทางเรียงต่อกันได้ ดังภาพ</p>
+
+    <div class="maze-box">
+      <svg viewBox="0 0 300 140" width="280" height="130">
+        <rect x="4" y="4" width="292" height="132" rx="10" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2"/>
+        <circle cx="40" cy="70" r="16" fill="#60A5FA"/>
+        <text x="40" y="76" font-size="16" text-anchor="middle">🐭</text>
+        <path d="M60 70 L110 70" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM)"/>
+        <path d="M130 70 L130 40" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM)"/>
+        <path d="M130 40 L200 40" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM)"/>
+        <path d="M220 40 L220 70" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM)"/>
+        <path d="M220 70 L260 70" stroke="#3B82F6" stroke-width="4" marker-end="url(#arrM)"/>
+        <text x="280" y="76" font-size="20" text-anchor="middle">⭐</text>
+        <defs><marker id="arrM" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3B82F6"/></marker></defs>
+      </svg>
+      <p class="maze-caption">คำสั่ง: เดินหน้า → เลี้ยวขวา → เดินหน้า → เลี้ยวขวา → เดินหน้า (ถึงดาว 🎉)</p>
+    </div>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> ถ้าเรียงสัญลักษณ์ทิศทางผิดลำดับ ตัวละครอาจ <b>เดินหลงทาง ไปไม่ถึงเป้าหมาย</b> เหมือนการแก้ปัญหาที่ต้องทำถูกลำดับขั้นตอน
+    </div>
+    </div><!-- /topic2-text -->
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤖</span>
+    <div><b>รู้หรือไม่?</b> การเขียนโปรแกรมสั่งหุ่นยนต์หรือเกมให้เดินไปตามเขาวงกต ก็ใช้หลักการเดียวกันนี้เลย คือ เรียงคำสั่งทิศทางเป็นขั้นตอนตามลำดับ ให้คอมพิวเตอร์ทำตามทีละคำสั่ง</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>การแก้ปัญหา มี 4 ขั้นตอน คือ ทำความเข้าใจปัญหา → วางแผน → ลงมือทำ → ตรวจสอบผล</li>
+      <li>สามารถแสดงขั้นตอนการแก้ปัญหาด้วยภาพหรือสัญลักษณ์ทิศทางได้ เช่น เดินหน้า เลี้ยวซ้าย เลี้ยวขวา</li>
+      <li>ถ้าเรียงสัญลักษณ์ทิศทางผิดลำดับ จะไปไม่ถึงเป้าหมายที่ต้องการ</li>
+    </ul>
+  </div>
+  </div><!-- /full-text -->
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p2/cs/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

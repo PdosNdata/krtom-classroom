@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v=63">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
 <body>
 
@@ -55,13 +56,13 @@
       <div class="login-role-label">เข้าสู่ระบบในสถานะ</div>
       <div class="login-role-row">
         <label class="login-role-btn role-teacher">
-          <input type="radio" name="login-role" value="teacher" checked>
+          <input type="radio" name="login-role" value="teacher">
           <img class="role-btn-img" src="assets/images/login-btn-teacher.webp" alt="ครู"
                onload="this.style.display='block';" onerror="this.style.display='none';">
           <span>👨‍🏫 ครู</span>
         </label>
         <label class="login-role-btn role-student">
-          <input type="radio" name="login-role" value="student">
+          <input type="radio" name="login-role" value="student" checked>
           <img class="role-btn-img" src="assets/images/login-btn-student.webp" alt="นักเรียน"
                onload="this.style.display='block';" onerror="this.style.display='none';">
           <span>🧑‍🎓 นักเรียน</span>
@@ -141,25 +142,30 @@
 </div>
 
 <script src="assets/js/data.js?v=14"></script>
-<script src="assets/js/app.js?v=31"></script>
+<script src="assets/js/app.js?v=34"></script>
 <script>
   function openLoginModal(){ document.getElementById("login-modal").classList.add("show"); }
   function closeLoginModal(){ document.getElementById("login-modal").classList.remove("show"); }
   document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeLoginModal(); });
 
   // ===== หน้าเข้าสู่ระบบ (login-gate) =====
-  // ตอนนี้ยังไม่มีฐานข้อมูล/เซิร์ฟเวอร์จริง จึงใช้ "บัญชีตัวอย่าง" (mock) ไว้ทดสอบก่อน
-  // ทดแทนด้วยการเรียก API จริงภายหลังได้ที่ฟังก์ชัน submitLogin() ด้านล่าง
-  const MOCK_ACCOUNTS = {
-    teacher: [
-      { id:"ครู01", password:"1234", name:"คุณครูตัวอย่าง" },
-      { id:"teacher", password:"1234", name:"คุณครูตัวอย่าง" }
-    ],
-    student: [
-      { id:"นักเรียน01", password:"1234", name:"นักเรียนตัวอย่าง" },
-      { id:"student", password:"1234", name:"นักเรียนตัวอย่าง" }
-    ]
-  };
+  // นักเรียน: ตรวจสอบจริงกับฐานข้อมูล Supabase (ตาราง krtom_students ผ่านฟังก์ชัน krtom_verify_student_login)
+  //           รหัสผ่าน = เลขประจำตัวนักเรียน
+  // ครู: ยังไม่มีระบบบัญชีครูจริง จึงใช้ "บัญชีตัวอย่าง" (mock) ไปก่อน
+  const SUPABASE_URL = "https://dhufwdxxfbahovnmjgrc.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
+  let sbClient = null;
+  function getSupabase(){
+    if(!sbClient && window.supabase){
+      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+    return sbClient;
+  }
+
+  const MOCK_TEACHER_ACCOUNTS = [
+    { id:"ครู01", password:"1234", name:"คุณครูตัวอย่าง" },
+    { id:"teacher", password:"1234", name:"คุณครูตัวอย่าง" }
+  ];
 
   function toggleLoginPw(btn){
     const input = document.getElementById("login-pw");
@@ -168,24 +174,63 @@
     btn.textContent = show ? "🙈" : "👁";
   }
 
-  function submitLogin(){
+  async function submitLogin(){
     const id = document.getElementById("login-id").value.trim();
     const pw = document.getElementById("login-pw").value;
     const role = document.querySelector('input[name="login-role"]:checked').value;
     const errorBox = document.getElementById("login-error");
+    const submitBtn = document.querySelector(".login-submit");
 
     if(!id || !pw){
       errorBox.textContent = "กรุณากรอกชื่อ/รหัสนักเรียน และรหัสผ่านให้ครบ";
       return;
     }
-    const account = MOCK_ACCOUNTS[role].find(a => a.id === id && a.password === pw);
-    if(!account){
-      errorBox.textContent = "ชื่อ/รหัสนักเรียน หรือรหัสผ่านไม่ถูกต้อง (ลองใช้บัญชีตัวอย่าง: teacher/1234 หรือ student/1234)";
+    errorBox.textContent = "";
+
+    if(role === "teacher"){
+      const account = MOCK_TEACHER_ACCOUNTS.find(a => a.id === id && a.password === pw);
+      if(!account){
+        errorBox.textContent = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+        return;
+      }
+      try{ sessionStorage.setItem("loggedInRole", "teacher"); sessionStorage.removeItem("loggedInStudentGrade"); }catch(e){}
+      loginSuccess(account.name);
       return;
     }
-    errorBox.textContent = "";
-    try{ sessionStorage.setItem("loggedInUserName", account.name); }catch(e){}
-    setHeaderLoggedInUser(account.name);
+
+    // นักเรียน: เรียกฐานข้อมูลจริง
+    const sb = getSupabase();
+    if(!sb){
+      errorBox.textContent = "ระบบเข้าสู่ระบบยังโหลดไม่เสร็จ กรุณาลองใหม่อีกครั้ง";
+      return;
+    }
+    if(submitBtn) submitBtn.disabled = true;
+    errorBox.textContent = "กำลังตรวจสอบ...";
+    try{
+      const { data, error } = await sb.rpc("krtom_verify_student_login", { p_code: id, p_password: pw });
+      if(error) throw error;
+      const match = Array.isArray(data) ? data[0] : data;
+      if(!match){
+        errorBox.textContent = "เลขประจำตัวหรือรหัสผ่านไม่ถูกต้อง";
+        return;
+      }
+      errorBox.textContent = "";
+      try{
+        sessionStorage.setItem("loggedInRole", "student");
+        sessionStorage.setItem("loggedInStudentGrade", match.grade_id || "");
+      }catch(e){}
+      loginSuccess(match.full_name);
+      if(match.grade_id) location.hash = "#/grade/" + match.grade_id;
+    }catch(e){
+      errorBox.textContent = "เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
+    }finally{
+      if(submitBtn) submitBtn.disabled = false;
+    }
+  }
+
+  function loginSuccess(name){
+    try{ sessionStorage.setItem("loggedInUserName", name); }catch(e){}
+    setHeaderLoggedInUser(name);
     document.getElementById("login-gate").classList.add("logged-in");
   }
 
