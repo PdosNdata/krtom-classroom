@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 3.1: ขั้นตอนการจัดการข้อมูล — ป.5 หน่วย 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,#F97316,#EC4899); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.1rem; }
+  header p{ margin:4px 0 0; font-size:.82rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+
+  main{ max-width:740px; margin:0 auto; padding:22px 20px 60px; }
+
+  .part{ background:#fff; border:1px solid #E6E8F0; border-radius:18px; padding:20px; margin-bottom:22px; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .part h2{ margin:0 0 6px; font-size:1.05rem; display:flex; align-items:center; gap:8px; }
+  .part .instruction{ color:#666; font-size:.88rem; margin-bottom:16px; }
+
+  #scene{ position:relative; border-radius:16px; overflow:hidden; background:linear-gradient(to bottom, #DCEBFF 0%, #F3F8FF 100%); border:1px solid #dfe4ee; touch-action:none; display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:14px; padding:22px; margin-bottom:16px; }
+  .dropzone{ background:#fff; border:3px dashed #C9D0E5; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:16px 10px; min-height:130px; transition:border-color .15s, background .15s; }
+  .dropzone .step-num{ width:32px; height:32px; border-radius:50%; background:#F97316; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; }
+  .dropzone .slot{ min-width:100px; min-height:26px; border-radius:8px; background:#F0F2FA; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; color:#9AA1B5; text-align:center; padding:3px 6px; }
+  .dropzone.correct{ border-color:#10B981; background:#F0FBF6; }
+  .dropzone.correct .slot{ background:#10B981; color:#fff; }
+  .dropzone.wrong-flash{ border-color:#EF4444; }
+
+  #tray{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .label-chip{ font-size:.8rem; font-weight:700; background:#fff; border:2px solid #E6E8F0; border-radius:999px; padding:9px 16px; cursor:grab; box-shadow:0 3px 8px rgba(0,0,0,.08); touch-action:none; user-select:none; }
+  .label-chip.placed{ visibility:hidden; }
+  .label-chip.hover-speaking{ border-color:#3B82F6; background:#EEF1FB; }
+  .part-score{ text-align:center; font-weight:700; margin-top:10px; font-size:.88rem; color:#10B981; }
+
+  .mcq{ margin-bottom:18px; }
+  .mcq p.q{ font-weight:700; margin:0 0 8px; font-size:.92rem; }
+  .mcq .choices{ display:flex; flex-direction:column; gap:8px; }
+  .mcq label{ display:flex; align-items:center; gap:10px; padding:10px 14px; border:2px solid #E6E8F0; border-radius:12px; font-size:.88rem; cursor:pointer; }
+  .mcq label.correct{ border-color:#10B981; background:#F0FBF6; }
+  .mcq label.wrong{ border-color:#EF4444; background:#FEF2F2; }
+  .mcq input{ accent-color:#3B82F6; }
+
+  #check-btn{ display:block; margin:20px auto 0; padding:12px 32px; border:none; border-radius:999px; background:#3B82F6; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+  #result{ text-align:center; margin-top:16px; font-weight:700; font-size:1.05rem; display:none; }
+  #result.show{ display:block; }
+
+  .print-note{ text-align:center; color:#999; font-size:.78rem; margin-top:30px; }
+  @media print{ header a, #check-btn{ display:none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📝 ใบงานที่ 3.1</h1>
+    <p>เรื่อง ขั้นตอนการจัดการข้อมูล · ป.5 หน่วยที่ 3</p>
+  </div>
+  <a href="../../index.html#/unit/p5/cs/2/worksheet">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+
+  <div class="part">
+    <h2>🧩 ตอนที่ 1: เรียงลำดับขั้นตอนการจัดการข้อมูล</h2>
+    <p class="instruction">ลาก/แตะป้ายขั้นตอนด้านล่าง ไปวางให้ตรงกับลำดับที่ 1-4</p>
+    <button class="tts-btn" data-audio-src="audio/ws-instruction.mp3" style="margin-bottom:14px">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำสั่ง</span>
+    </button>
+
+    <div id="scene">
+      <div class="dropzone" data-answer="รวบรวมข้อมูล">
+        <span class="step-num">1</span>
+        <span class="slot">วางที่นี่</span>
+      </div>
+      <div class="dropzone" data-answer="ตรวจสอบความถูกต้อง">
+        <span class="step-num">2</span>
+        <span class="slot">วางที่นี่</span>
+      </div>
+      <div class="dropzone" data-answer="ประมวลผลข้อมูล">
+        <span class="step-num">3</span>
+        <span class="slot">วางที่นี่</span>
+      </div>
+      <div class="dropzone" data-answer="นำเสนอผล">
+        <span class="step-num">4</span>
+        <span class="slot">วางที่นี่</span>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin:6px 0 14px">
+      <button class="tts-btn" data-audio-src="audio/ws-choices.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟังตัวเลือกทั้งหมด</span>
+      </button>
+    </div>
+
+    <div id="tray">
+      <div class="label-chip" data-name="นำเสนอผล" data-hover-audio="audio/label-present.mp3">นำเสนอผล</div>
+      <div class="label-chip" data-name="รวบรวมข้อมูล" data-hover-audio="audio/label-collect.mp3">รวบรวมข้อมูล</div>
+      <div class="label-chip" data-name="ประมวลผลข้อมูล" data-hover-audio="audio/label-process.mp3">ประมวลผลข้อมูล</div>
+      <div class="label-chip" data-name="ตรวจสอบความถูกต้อง" data-hover-audio="audio/label-check.mp3">ตรวจสอบความถูกต้อง</div>
+    </div>
+    <p class="part-score">คะแนนตอนที่ 1: <span id="p1-score">0</span>/4</p>
+  </div>
+
+  <div class="part">
+    <h2>✍️ ตอนที่ 2: เลือกคำตอบที่ถูกต้อง</h2>
+    <p class="instruction">อ่านคำถามแล้วเลือกคำตอบที่ถูกต้องที่สุด จากนั้นกดปุ่ม "ตรวจคำตอบ" ด้านล่าง</p>
+    <div id="mcq-container"></div>
+  </div>
+
+  <button id="check-btn" onclick="checkAnswers()">✅ ตรวจคำตอบตอนที่ 2</button>
+  <div id="result"></div>
+
+  <p class="print-note">🖨️ ต้องการพิมพ์ใบงานนี้เป็นกระดาษ? กด Ctrl+P (Windows) หรือ Cmd+P (Mac)</p>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+<script>
+let p1score = 0;
+
+function makeDraggable(chip){
+  chip.addEventListener("pointerdown", (e) => {
+    if(chip.classList.contains("placed")) return;
+    const name = chip.dataset.name;
+    const ghost = chip.cloneNode(true);
+    ghost.style.position = "fixed";
+    ghost.style.pointerEvents = "none";
+    ghost.style.zIndex = 999;
+    ghost.style.left = e.clientX + "px";
+    ghost.style.top = e.clientY + "px";
+    ghost.style.transform = "translate(-50%,-50%)";
+    document.body.appendChild(ghost);
+
+    let overZone = null;
+    const onMove = (ev) => {
+      ghost.style.left = ev.clientX + "px";
+      ghost.style.top = ev.clientY + "px";
+      overZone = null;
+      document.querySelectorAll(".dropzone").forEach(z => {
+        const r = z.getBoundingClientRect();
+        const inside = ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom;
+        z.style.background = inside && !z.classList.contains("correct") ? "#EEF1FB" : "";
+        if(inside) overZone = z;
+      });
+    };
+    const onUp = () => {
+      ghost.remove();
+      document.querySelectorAll(".dropzone").forEach(z => { if(!z.classList.contains("correct")) z.style.background = ""; });
+      if(overZone){
+        if(overZone.dataset.answer === name && !overZone.classList.contains("correct")){
+          overZone.classList.add("correct");
+          overZone.querySelector(".slot").textContent = name;
+          chip.classList.add("placed");
+          p1score++;
+          document.getElementById("p1-score").textContent = p1score;
+        } else if(overZone.dataset.answer !== name){
+          overZone.classList.add("wrong-flash");
+          setTimeout(() => overZone.classList.remove("wrong-flash"), 400);
+        }
+      }
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp);
+  });
+}
+document.querySelectorAll(".label-chip").forEach(makeDraggable);
+
+document.querySelectorAll(".label-chip[data-hover-audio]").forEach(chip => {
+  chip.addEventListener("mouseenter", () => {
+    if(chip.classList.contains("placed")) return;
+    chip.classList.add("hover-speaking");
+    playAudio(chip.dataset.hoverAudio, chip);
+  });
+  chip.addEventListener("mouseleave", () => {
+    chip.classList.remove("hover-speaking");
+    stopSpeaking();
+  });
+});
+
+function shuffleArray(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function shuffleChoices(q){
+  const idx = shuffleArray(q.choices.map((_, i) => i));
+  return { q:q.q, choices: idx.map(i => q.choices[i]), correct: idx.indexOf(q.correct), audio:q.audio };
+}
+
+const RAW_MCQ = [
+  { audio:"ws-q1", q:"ข้อมูล (Data) หมายถึงข้อใด?", choices:["ข้อเท็จจริงดิบที่ยังไม่ผ่านการประมวลผล","ข้อมูลที่จัดระเบียบแล้วเท่านั้น","กราฟสรุปผล","รายงานฉบับสมบูรณ์"], correct:0 },
+  { audio:"ws-q2", q:"สารสนเทศ (Information) หมายถึงข้อใด?", choices:["ข้อมูลดิบที่ยังไม่ประมวลผล","ข้อมูลที่ผ่านการประมวลผลจนนำไปใช้ประโยชน์ได้","ตัวเลขสุ่ม","ไฟล์ที่ยังไม่เปิดอ่าน"], correct:1 },
+  { audio:"ws-q3", q:"ขั้นตอนแรกของการจัดการข้อมูลให้เป็นสารสนเทศคือข้อใด?", choices:["นำเสนอผล","ประมวลผลข้อมูล","รวบรวมข้อมูล","ตรวจสอบความถูกต้อง"], correct:2 },
+  { audio:"ws-q4", q:"เครื่องมือใดนิยมใช้แสดงสัดส่วนของข้อมูล?", choices:["กราฟวงกลม","แป้นพิมพ์","เมาส์","ลำโพง"], correct:0 },
+  { audio:"ws-q5", q:"ข้อใดคือตัวอย่างของสารสนเทศ?", choices:["คะแนนสอบของนักเรียนแต่ละคน","อุณหภูมิดิบรายชั่วโมง","กราฟแสดงค่าเฉลี่ยคะแนนสอบทั้งห้อง","รายชื่อนักเรียนที่ยังไม่จัดกลุ่ม"], correct:2 }
+];
+const MCQ = shuffleArray(RAW_MCQ.map(shuffleChoices));
+
+const mcqContainer = document.getElementById("mcq-container");
+const mcqLetters = ["ก.","ข.","ค.","ง."];
+MCQ.forEach((item, i) => {
+  const div = document.createElement("div");
+  div.className = "mcq";
+  div.dataset.correct = item.correct;
+  div.innerHTML = `
+    <button class="tts-btn" data-audio-src="audio/${item.audio}.mp3" style="margin-bottom:10px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำถาม</span></button>
+    <p class="q">${i+1}. ${item.q}</p>
+    <div class="choices">
+      ${item.choices.map((c, ci) => `<label><input type="radio" name="wq${i}" value="${ci}"> ${mcqLetters[ci]} ${c}</label>`).join("")}
+    </div>
+  `;
+  mcqContainer.appendChild(div);
+});
+document.querySelectorAll("#mcq-container .tts-btn[data-audio-src]").forEach(btn => {
+  btn.addEventListener("click", () => playAudio(btn.dataset.audioSrc, btn));
+});
+
+function checkAnswers(){
+  let score = 0;
+  const total = document.querySelectorAll(".mcq").length;
+  document.querySelectorAll(".mcq").forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const chosen = q.querySelector("input:checked");
+    q.querySelectorAll("label").forEach(l => l.classList.remove("correct","wrong"));
+    const correctLabel = q.querySelectorAll("label")[correct];
+    if(chosen){
+      const chosenVal = parseInt(chosen.value, 10);
+      if(chosenVal === correct){
+        chosen.closest("label").classList.add("correct");
+        score++;
+      } else {
+        chosen.closest("label").classList.add("wrong");
+        correctLabel.classList.add("correct");
+      }
+    } else {
+      correctLabel.classList.add("correct");
+    }
+  });
+  const result = document.getElementById("result");
+  result.textContent = `🎉 ได้คะแนนตอนที่ 2: ${score}/${total} ข้อ`;
+  result.classList.add("show");
+}
+</script>
+</body>
+</html>

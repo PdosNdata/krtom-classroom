@@ -46,7 +46,12 @@ const ACTION_BTN_IMG = {
   nocamera: "assets/images/btn-ar-nocamera.webp",
   "match-ar": "assets/images/btn-ar-match.webp",
   "quiz-nocamera": "assets/images/btn-quiz-nocamera.webp",
-  "match-nocamera": "assets/images/btn-match-nocamera.webp"
+  "match-nocamera": "assets/images/btn-match-nocamera.webp",
+  "jigsaw-p2-0": "assets/images/btn-jigsaw-p2-0.webp",
+  "sudoku-p5-0": "assets/images/btn-sudoku-p5-0.webp",
+  "tetris-p1-0": "assets/images/btn-tetris.webp",
+  "tetris-p2-0": "assets/images/btn-tetris.webp",
+  "tetris-p3-0": "assets/images/btn-tetris-p3-0.webp"
 };
 
 // เรียงรูปไล่ลำดับสำรอง: ถ้าโหลดรูปแรกไม่ได้ (404) จะลองรูปถัดไปในลิสต์ให้อัตโนมัติ ไม่มีวันเห็นไอคอนรูปพัง
@@ -117,7 +122,12 @@ const READY_CONTENT = {
     knowledge: { href:"content/p1-cs-0/knowledge.html", title:"การใช้งานเทคโนโลยีเบื้องต้น" },
     worksheet: { href:"content/p1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 อุปกรณ์เทคโนโลยี" },
     quiz:      { href:"content/p1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
-    game:      { href:"content/p1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ" },
+    game: {
+      href:"content/p1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[
+        { key:"tetris-p1-0", href:"content/p1-cs-0/game-tetris.html", label:"🧱 เกมเตอติสบวกลบเลข" }
+      ]
+    },
     ar: {
       href:"content/p1-cs-0/ar-game.html", title:"ล่าอุปกรณ์คอมพิวเตอร์ AR (ใช้กล้อง)",
       extraLinks:[
@@ -142,10 +152,54 @@ const READY_CONTENT = {
     game: {
       href:"content/p2-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
-        { key:"jigsaw-p2-0", href:"content/p2-cs-0/game-jigsaw.html", label:"🧩 เกมต่อจิ๊กซอว์" }
+        { key:"jigsaw-p2-0", href:"content/p2-cs-0/game-jigsaw.html", label:"🧩 เกมต่อจิ๊กซอว์" },
+        { key:"tetris-p2-0", href:"content/p2-cs-0/game-tetris.html", label:"🧱 เกมเตอติสบวกลบเลข" }
       ]
     },
     ar: { href:"content/p2-cs-0/ar-game-nocamera.html", title:"เรียงคำสั่งพาหนูไปหาดาว" }
+  },
+  "p3/cs/0": {
+    game: {
+      href:"content/p3-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[
+        { key:"tetris-p3-0", href:"content/p3-cs-0/game-tetris.html", label:"🧱 เกมคูณ–หาร สนุกคิด" }
+      ]
+    }
+  },
+  "m1/prog/0": {
+    knowledge: { href:"content/m1-prog-0/knowledge.html", title:"การออกแบบและเขียนอัลกอริทึม" },
+    worksheet: { href:"content/m1-prog-0/worksheet.html", title:"ใบงานที่ 1.1 สัญลักษณ์ผังงาน" },
+    quiz:      { href:"content/m1-prog-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/m1-prog-0/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "p5/cs/0": {
+    knowledge: { href:"content/p5-cs-0/knowledge.html", title:"เหตุผลเชิงตรรกะกับการแก้ปัญหา" },
+    worksheet: { href:"content/p5-cs-0/worksheet.html", title:"ใบงานที่ 1.1 เหตุผลเชิงตรรกะ" },
+    quiz:      { href:"content/p5-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game: {
+      href:"content/p5-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[
+        { key:"sudoku-p5-0", href:"content/p5-cs-0/game-sudoku.html", label:"🔢 เกมซูโดกุ 4x4" }
+      ]
+    }
+  },
+  "p5/cs/1": {
+    knowledge: { href:"content/p5-cs-1/knowledge.html", title:"เหตุผลเชิงตรรกะกับการเขียนโปรแกรม" },
+    worksheet: { href:"content/p5-cs-1/worksheet.html", title:"ใบงานที่ 2.1 เงื่อนไขในโปรแกรม" },
+    quiz:      { href:"content/p5-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p5-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "p5/cs/2": {
+    knowledge: { href:"content/p5-cs-2/knowledge.html", title:"ข้อมูลและสารสนเทศ" },
+    worksheet: { href:"content/p5-cs-2/worksheet.html", title:"ใบงานที่ 3.1 ขั้นตอนการจัดการข้อมูล" },
+    quiz:      { href:"content/p5-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p5-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "p5/cs/3": {
+    knowledge: { href:"content/p5-cs-3/knowledge.html", title:"การใช้อินเทอร์เน็ตอย่างปลอดภัย" },
+    worksheet: { href:"content/p5-cs-3/worksheet.html", title:"ใบงานที่ 4.1 วิธีป้องกันตนเองทางออนไลน์" },
+    quiz:      { href:"content/p5-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p5-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p6/cs/0": {
     knowledge: { href:"content/p6-cs-0/knowledge.html", title:"การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ" },

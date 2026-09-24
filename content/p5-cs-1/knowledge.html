@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: เหตุผลเชิงตรรกะกับการเขียนโปรแกรม — ป.5 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:800; color:#3B82F6; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .block-demo{ background:#282A36; border-radius:14px; padding:26px 16px 34px; margin:16px 0; }
+  .code-block{ position:relative; display:flex; align-items:center; gap:8px; color:#fff; padding:9px 14px 9px 32px; font-size:.85rem; font-weight:700; border-radius:4px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.15), inset 0 2px 0 rgba(255,255,255,.15); margin-bottom:8px; }
+  .code-block::before{ content:""; position:absolute; top:-7px; left:16px; width:18px; height:8px; background:inherit; border-radius:5px 5px 0 0; }
+  .code-block::after{ content:""; position:absolute; bottom:-7px; left:16px; width:18px; height:8px; background:inherit; border-radius:0 0 5px 5px; }
+  .code-block .emoji{ flex:none; font-size:1rem; }
+  .blk-control{ background:#FFAB19; color:#3f2a00; }
+  .blk-sensing{ background:#4CBFE6; }
+  .blk-op{ background:#59C059; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 2</h1>
+    <p>เหตุผลเชิงตรรกะกับการเขียนโปรแกรม · ป.5 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p5/cs/1/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายตัวดำเนินการเปรียบเทียบที่ใช้ในการเขียนโปรแกรมได้</li>
+      <li>นำตัวดำเนินการทางตรรกะไปใช้ตั้งเงื่อนไขในโปรแกรมได้</li>
+      <li>ออกแบบโปรแกรมแบบบล็อกคำสั่งที่ใช้เหตุผลเชิงตรรกะอย่างง่ายได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> ตัวดำเนินการเปรียบเทียบในการเขียนโปรแกรม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p>เวลาเขียนโปรแกรม เรามักต้อง <b>เปรียบเทียบค่า</b> เพื่อตัดสินใจว่าจะให้โปรแกรมทำอะไรต่อไป โดยใช้ตัวดำเนินการเปรียบเทียบดังนี้</p>
+
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">&gt;</span><div><h3>มากกว่า</h3><p>เช่น คะแนน &gt; 50 หมายถึง คะแนนมากกว่า 50</p></div></div>
+      <div class="concept-card"><span class="icon">&lt;</span><div><h3>น้อยกว่า</h3><p>เช่น อายุ &lt; 10 หมายถึง อายุน้อยกว่า 10 ปี</p></div></div>
+      <div class="concept-card"><span class="icon">=</span><div><h3>เท่ากับ</h3><p>เช่น สี = "แดง" หมายถึง สีเท่ากับสีแดง</p></div></div>
+    </div>
+
+    <p>เมื่อรวมกับตัวดำเนินการทางตรรกะที่เรียนในหน่วยที่ 1 (AND, OR, NOT) เราจะสามารถตั้ง <b>เงื่อนไขที่ซับซ้อนขึ้น</b> ได้ เช่น "ถ้าคะแนน &gt; 80 <b>และ</b> ไม่ขาดเรียน แล้วถือว่าผ่าน"</p>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> ในโปรแกรมแบบบล็อกคำสั่ง เช่น Scratch ตัวดำเนินการเปรียบเทียบและตรรกะ จะอยู่ใน <b>หมวดตัวดำเนินการ (Operators)</b> ซึ่งมีลักษณะเป็นบล็อกรูปหกเหลี่ยม
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การใช้เหตุผลเชิงตรรกะตั้งเงื่อนไขในโปรแกรม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p>โปรแกรมแบบบล็อกคำสั่งใช้บล็อก <b>"ถ้า...แล้ว...ไม่เช่นนั้น..."</b> ร่วมกับตัวดำเนินการทางตรรกะ เพื่อให้ตัวละครตัดสินใจได้ ตัวอย่างเช่น</p>
+
+    <div class="block-demo">
+      <span class="code-block blk-control"><span class="emoji">🎛️</span> ถ้า (คะแนน &gt; 80) และ (ไม่ขาดเรียน) แล้ว</span>
+      <span class="code-block blk-sensing"><span class="emoji">💬</span> &nbsp;&nbsp;พูดว่า "ผ่านเกณฑ์!"</span>
+      <span class="code-block blk-control"><span class="emoji">🎛️</span> ไม่เช่นนั้น</span>
+      <span class="code-block blk-sensing"><span class="emoji">💬</span> &nbsp;&nbsp;พูดว่า "ต้องพยายามอีกนิด"</span>
+    </div>
+
+    <p>ขั้นตอนการออกแบบโปรแกรมที่ใช้เหตุผลเชิงตรรกะ มีดังนี้</p>
+    <ol class="steps">
+      <li>คิดว่า <b>เงื่อนไข</b> ที่ต้องตรวจสอบคืออะไร</li>
+      <li>เลือก <b>ตัวดำเนินการเปรียบเทียบ</b> ที่เหมาะสม (&gt;, &lt;, =)</li>
+      <li>ถ้ามีหลายเงื่อนไข ให้ใช้ <b>AND/OR/NOT</b> รวมเข้าด้วยกัน</li>
+      <li>ใส่เงื่อนไขในบล็อก <b>"ถ้า...แล้ว..."</b> แล้วทดสอบรันโปรแกรม</li>
+    </ol>
+
+    <div class="info-box">
+      💡 <b>ตัวอย่าง:</b> เกมที่ให้ตัวละครกระโดดข้ามสิ่งกีดขวางได้ก็ต่อเมื่อ "กดปุ่ม<b>และ</b>ตัวละครอยู่บนพื้น" เป็นการใช้เหตุผลเชิงตรรกะแบบ AND เพื่อป้องกันการกระโดดซ้ำในอากาศ
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤔</span>
+    <div><b>รู้หรือไม่?</b> เกมคอมพิวเตอร์และแอปพลิเคชันทุกตัวที่เราใช้ ล้วนทำงานด้วยการตรวจสอบเงื่อนไขแบบตรรกะนับล้านๆ ครั้งต่อวินาที เพื่อตัดสินใจว่าจะแสดงผลอะไรให้เราเห็น!</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>ตัวดำเนินการเปรียบเทียบพื้นฐาน คือ มากกว่า (&gt;), น้อยกว่า (&lt;), เท่ากับ (=)</li>
+      <li>ใช้ร่วมกับ AND, OR, NOT เพื่อตั้งเงื่อนไขที่ซับซ้อนขึ้นได้</li>
+      <li>บล็อก "ถ้า...แล้ว...ไม่เช่นนั้น..." ใช้เหตุผลเชิงตรรกะในการตัดสินใจของโปรแกรม</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p5/cs/1/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

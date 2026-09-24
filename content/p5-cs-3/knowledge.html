@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การใช้อินเทอร์เน็ตอย่างปลอดภัย — ป.5 หน่วย 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 4</h1>
+    <p>การใช้อินเทอร์เน็ตอย่างปลอดภัย · ป.5 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p5/cs/3/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>บอกอันตรายจากการใช้อินเทอร์เน็ตที่พบบ่อยได้</li>
+      <li>อธิบายแนวทางการใช้อินเทอร์เน็ตอย่างปลอดภัยได้</li>
+      <li>ปฏิบัติตนอย่างปลอดภัยเมื่อใช้งานอินเทอร์เน็ตได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> อันตรายจากการใช้อินเทอร์เน็ต
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p>การใช้อินเทอร์เน็ตมีความเสี่ยงหลายรูปแบบ นักเรียนควรรู้จักภัยเหล่านี้เพื่อป้องกันตนเอง</p>
+
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🦠</span><div><h3>ไวรัส/มัลแวร์</h3><p>โปรแกรมอันตรายที่แฝงมากับไฟล์หรือลิงก์ ทำลายข้อมูลในเครื่อง</p></div></div>
+      <div class="concept-card"><span class="icon">🎣</span><div><h3>ฟิชชิง</h3><p>การหลอกให้กรอกรหัสผ่านหรือข้อมูลส่วนตัวผ่านลิงก์หรือเว็บปลอม</p></div></div>
+      <div class="concept-card"><span class="icon">😢</span><div><h3>ไซเบอร์บูลลี่</h3><p>การกลั่นแกล้ง ล้อเลียน หรือคุกคามผู้อื่นผ่านโลกออนไลน์</p></div></div>
+      <div class="concept-card"><span class="icon">🕵️</span><div><h3>คนแปลกหน้าออนไลน์</h3><p>บุคคลที่แอบอ้างตัวตนเพื่อหลอกลวงหรือทำอันตราย</p></div></div>
+    </div>
+
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> อย่าคลิกลิงก์หรือเปิดไฟล์แนบจากอีเมลหรือข้อความที่ไม่รู้จัก <b>แม้จะดูเหมือนมาจากคนคุ้นเคย</b> ก็ตาม
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> แนวทางการใช้อินเทอร์เน็ตอย่างปลอดภัย
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p>การใช้อินเทอร์เน็ตอย่างปลอดภัย เริ่มต้นจากพฤติกรรมที่ดีของตัวเราเอง</p>
+    <ol class="steps">
+      <li><b>ตั้งรหัสผ่านที่คาดเดายาก</b> — ผสมตัวอักษร ตัวเลข และสัญลักษณ์ ไม่ใช้ซ้ำในทุกบัญชี</li>
+      <li><b>ไม่เปิดเผยข้อมูลส่วนตัว</b> — เช่น ที่อยู่ เบอร์โทร รหัสผ่าน กับคนที่ไม่รู้จัก</li>
+      <li><b>ตรวจสอบแหล่งที่มาก่อนเชื่อ</b> — อ่านให้ครบก่อนเชื่อหรือแชร์ข้อมูลต่อ</li>
+      <li><b>ปรึกษาผู้ปกครองหรือครู</b> — เมื่อพบสิ่งผิดปกติหรือถูกคุกคามทางออนไลน์</li>
+    </ol>
+
+    <div class="info-box">
+      💡 <b>ควรรู้ไว้:</b> ถ้าถูกกลั่นแกล้งทางออนไลน์ ให้ <b>เก็บหลักฐานแคปหน้าจอ</b> แล้วแจ้งผู้ปกครองหรือครูทันที ไม่ควรตอบโต้ด้วยความรุนแรง
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤔</span>
+    <div><b>รู้หรือไม่?</b> รหัสผ่านที่ดีควรมีความยาวอย่างน้อย 8 ตัวอักษรขึ้นไป และไม่ควรใช้ข้อมูลที่เดาง่าย เช่น วันเกิดหรือชื่อตัวเอง เพราะแฮกเกอร์สามารถเดาได้ง่ายมาก</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>ภัยคุกคามทางไซเบอร์ที่พบบ่อย ได้แก่ ไวรัส/มัลแวร์, ฟิชชิง, ไซเบอร์บูลลี่, คนแปลกหน้าออนไลน์</li>
+      <li>แนวทางป้องกันตนเอง คือ ตั้งรหัสผ่านที่ดี, ไม่เปิดเผยข้อมูลส่วนตัว, ตรวจสอบแหล่งที่มา, ปรึกษาผู้ใหญ่เมื่อพบปัญหา</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p5/cs/3/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

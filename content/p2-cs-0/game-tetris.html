@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บล็อกตก บวก–ลบ — ป.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  html,body{ margin:0; padding:0; background:#F7F8FC; }
+  .top-header{ background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; }
+  .top-header h1{ margin:0; font-size:1.05rem; }
+  .top-header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+  main{ max-width:640px; margin:0 auto; padding:18px 16px 60px; }
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <h1>🧱 บล็อกตก บวก–ลบ</h1>
+  <a href="../../index.html#/unit/p2/cs/0/game">← กลับหน้าหน่วย</a>
+</div>
+
+<main>
+<section id="math-drop" aria-label="เกมบล็อกตกบวกลบ">
+<header><div><small>สวนสนุกตัวเลข</small><h2>บล็อกตก บวก–ลบ</h2></div></header>
+<div class="levels" aria-label="ระดับความยาก"><button data-level="0" aria-pressed="true" class="cursor-interaction">เริ่มต้น</button><button data-level="1" aria-pressed="false" class="cursor-interaction">ปานกลาง</button><button data-level="2" aria-pressed="false" class="cursor-interaction">ยาก</button></div>
+<div class="target"><div class="mascot bear" aria-hidden="true"><i class="ear left-ear"></i><i class="ear right-ear"></i><div class="face"><i class="eye left-eye"></i><i class="eye right-eye"></i><i class="cheek left-cheek"></i><i class="cheek right-cheek"></i><i class="smile"></i></div></div><div class="target-sign"><span>หาให้ได้เท่านี้นะ!</span><strong data-target>9</strong></div><div class="mascot bunny" aria-hidden="true"><i class="ear left-ear"></i><i class="ear right-ear"></i><div class="face"><i class="eye left-eye"></i><i class="eye right-eye"></i><i class="cheek left-cheek"></i><i class="cheek right-cheek"></i><i class="smile"></i></div></div></div>
+<div class="stats"><span>คะแนน <b data-score>0</b></span><span>ผ่าน <b data-round>0 / 10</b></span><span>โอกาส <b data-lives>3</b></span></div>
+<div class="field" aria-label="บล็อกโจทย์ที่กำลังตก"><div class="scenery" aria-hidden="true"><span class="sun">☀</span><span class="cloud cloud-one"></span><span class="cloud cloud-two"></span><div class="hill hill-one"></div><div class="hill hill-two"></div><span class="flowers">✿　✿　✿　✿　✿</span></div><div class="tracks" aria-hidden="true"></div><div class="blocks"></div><div class="overlay"><div class="welcome-art" aria-hidden="true">🌈 🧸 🎈</div><strong data-title>พร้อมฝึกคิดเลขไหม?</strong><p data-sub>แตะบล็อกที่ได้คำตอบตรงกับเลขเป้าหมาย</p><button data-start class="primary cursor-interaction">เริ่มเกม</button></div></div>
+<div class="foot"><button data-pause disabled class="cursor-interaction">พักเกม</button><button data-sound aria-pressed="true" class="cursor-interaction">เสียง: เปิด</button><span>แตะบล็อก หรือกด 1 · 2 · 3 ตามช่อง</span></div><p class="message" aria-live="polite">ตัวอย่าง: เป้าหมาย 9 → เลือก 3 + 6</p>
+</section>
+</main>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap");
+#math-drop{max-width:570px;margin:auto;box-sizing:border-box;padding:22px;border-radius:26px;background:radial-gradient(at top left,#514089,transparent 65%),#18233f;color:#fff;font-family:"TH Sarabun New","TH SarabunPSK",Sarabun,Tahoma,sans-serif;box-shadow:0 7px 0 #0b142b}#math-drop *{box-sizing:border-box}#math-drop header{display:flex;align-items:center;justify-content:space-between;gap:10px}#math-drop small{font-size:11px;letter-spacing:3px;color:#dcc4ff}#math-drop h2{font-size:25px;line-height:1.3;margin:7px 0 18px;color:#fff}#math-drop button{border:0;border-radius:12px;min-height:44px;padding:11px 15px;font:600 14px "TH Sarabun New","TH SarabunPSK",Sarabun,Tahoma,sans-serif;color:#35244f;background:#e8ddff;box-shadow:0 4px 0 #9780b5;touch-action:manipulation}#math-drop button:active{filter:brightness(.92)}#math-drop button:disabled{opacity:.5}#math-drop .levels{display:flex;gap:9px}#math-drop .levels button{flex:1;padding:10px 4px;font-size:13px}#math-drop .levels [aria-pressed="true"]{background:#a4f1d4;box-shadow:0 4px 0 #4b9e86;color:#164234}#math-drop .target{text-align:center;margin:23px 0 12px;color:#e1d9f4;font-size:14px}#math-drop .target strong{display:block;color:#ffe390;font-size:49px;line-height:1.2;text-shadow:0 4px 0 #8d593c;font-weight:800;margin-top:5px}#math-drop .stats{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin:16px 0;color:#d9d4ec}#math-drop b{color:#fff;font-size:17px;margin-left:4px}#math-drop .field{height:330px;position:relative;background:linear-gradient(#0c142c,#202c50);border:5px solid #79689d;border-radius:15px;overflow:hidden;box-shadow:0 5px 0 #45355e}#math-drop .tracks{position:absolute;inset:0;background:linear-gradient(90deg,transparent 33%,#ffffff0d 33%,#ffffff0d 33.5%,transparent 33.5%,transparent 66.5%,#ffffff0d 66.5%,#ffffff0d 67%,transparent 67%);border-bottom:7px solid #b487e8}#math-drop .falling{position:absolute;top:0;width:29%;margin-left:2%;min-height:60px;padding:8px 2px;border-radius:10px;background:linear-gradient(#a5f7ed,#62caba);color:#163c39;box-shadow:inset 0 3px 0 #ffffff80,0 6px 0 #337d7d;font-size:20px;will-change:transform}#math-drop .falling[data-lane="1"]{background:linear-gradient(#ffdea0,#f5b66a);color:#523610;box-shadow:inset 0 3px 0 #ffffff80,0 6px 0 #a67539}#math-drop .falling[data-lane="2"]{background:linear-gradient(#edc7ff,#c49bea);color:#45215b;box-shadow:inset 0 3px 0 #ffffff80,0 6px 0 #8056a3}#math-drop .falling small{display:block;font-size:11px;letter-spacing:0;color:inherit;opacity:.8;margin-top:5px}#math-drop .overlay{position:absolute;inset:0;background:#131d38f5;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:18px;gap:15px}#math-drop .overlay strong{font-size:22px}#math-drop .overlay p{font-size:14px;line-height:1.7;margin:0;color:#ded4ed}#math-drop .primary{background:#a4f1d4;color:#164234;box-shadow:0 4px 0 #4b9e86}#math-drop [hidden],#math-drop[hidden]{display:none}#math-drop .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:21px}#math-drop .foot span{font-size:12px;line-height:1.6;color:#d9d4ec}#math-drop .message{font-size:13px;line-height:1.7;color:#fff0b8;text-align:center;min-height:44px;margin:17px 0 0}@media(max-width:380px){#math-drop{padding:16px 12px}#math-drop h2{font-size:22px}#math-drop .falling{font-size:17px}#math-drop .stats b{font-size:15px}}
+/* Bright toy-garden theme. Decorative scenery stays behind all controls. */
+#math-drop{background:radial-gradient(circle at 8px 8px,#ffffff70 2px,transparent 3px) 0 0/22px 22px,linear-gradient(145deg,#fff1ba,#ffe6df 55%,#dfd5ff);color:#493460;border:3px solid #fff7e8;border-radius:30px;box-shadow:0 8px 0 #c3a0cc,0 15px 26px #87629a29;padding:22px}
+#math-drop small{color:#92531c;font-size:13px;letter-spacing:1px;font-weight:700}
+#math-drop h2{color:#6340a1;font-size:29px;text-shadow:0 2px 0 #fff;letter-spacing:-.5px}
+#math-drop button{border:2px solid #ffffffb3;background:linear-gradient(#fff,#f2e8ff);box-shadow:0 4px 0 #bca3d2;color:#51376e;border-radius:15px}
+#math-drop .levels button{font-size:14px;color:#684278;min-height:48px}
+#math-drop .levels [aria-pressed="true"]{background:linear-gradient(#c4ffd8,#80e1bb);box-shadow:0 4px 0 #4fa985;color:#214a37;border-color:#effff4}
+#math-drop .target{display:flex;align-items:center;justify-content:center;gap:18px;margin:24px 0 10px;min-height:122px}
+#math-drop .target-sign{position:relative;z-index:1;min-width:126px;padding:10px 12px 12px;border:3px solid #fff8d4;border-radius:22px;background:linear-gradient(#fff7cd,#ffe69b);box-shadow:0 6px 0 #d7ad5e;transform:rotate(-2deg);color:#694614}
+#math-drop .target span{font-size:13px;font-weight:700}
+#math-drop .target strong{color:#65429c;font-size:48px;text-shadow:0 3px 0 #fff;line-height:1.05;margin-top:4px}
+#math-drop .mascot{position:relative;width:76px;height:87px;flex-shrink:0;filter:drop-shadow(0 5px 0 #bd8c8933)}
+#math-drop .face{position:absolute;bottom:0;left:0;width:76px;height:67px;border-radius:43% 43% 46% 46%;background:linear-gradient(135deg,#ffe2ab,#e9a65e);box-shadow:inset 0 3px 0 #fff0cd,inset 0 -5px 0 #d79652}
+#math-drop .ear{position:absolute;top:6px;width:27px;height:28px;border:6px solid #edb875;background:#d98c60;border-radius:50%}
+#math-drop .left-ear{left:0;transform:rotate(-15deg)}#math-drop .right-ear{right:0;transform:rotate(15deg)}
+#math-drop .eye{position:absolute;top:24px;width:7px;height:10px;background:#57384a;border-radius:50%;box-shadow:inset 1px 2px 0 #ffffff60}
+#math-drop .left-eye{left:21px}#math-drop .right-eye{right:21px}
+#math-drop .cheek{position:absolute;top:36px;width:15px;height:8px;border-radius:50%;background:#f39493}
+#math-drop .left-cheek{left:8px}#math-drop .right-cheek{right:8px}
+#math-drop .smile{position:absolute;top:35px;left:31px;width:15px;height:11px;border-bottom:3px solid #77465a;border-radius:0 0 50% 50%}
+#math-drop .bunny .face{background:linear-gradient(135deg,#fff9ff,#f4cae8);box-shadow:inset 0 3px 0 #fff,inset 0 -5px 0 #daa6d1}
+#math-drop .bunny .ear{top:-13px;height:47px;width:24px;border:6px solid #ffe9f6;background:#eca8ce;border-radius:50% 50% 30% 30%}
+#math-drop .bunny .left-ear{left:10px}#math-drop .bunny .right-ear{right:10px}
+#math-drop .stats{color:#5f4474;gap:6px;margin:17px 0 15px}
+#math-drop .stats>span{flex:1;padding:8px 4px;text-align:center;border-radius:12px;background:#fff9f0;box-shadow:0 3px 0 #dec7cd;font-size:12px}
+#math-drop b{color:#624090;font-size:18px}
+#math-drop .field{height:350px;background:linear-gradient(#b8ecff,#e2f9ff 75%);border:6px solid #c6b1eb;border-radius:20px;box-shadow:0 6px 0 #9876bd,inset 0 3px 0 #fff}
+#math-drop .scenery{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#math-drop .sun{position:absolute;right:14px;top:32px;font-size:48px;color:#edb337;line-height:1;text-shadow:0 3px 0 #fff3bd}
+#math-drop .cloud{position:absolute;width:100px;height:27px;background:#ffffffd9;border-radius:40px;left:14px;top:95px}
+#math-drop .cloud:before,#math-drop .cloud:after{content:'';position:absolute;background:#fffffff0;border-radius:50%;width:43px;height:43px;left:14px;bottom:0}
+#math-drop .cloud:after{width:53px;height:53px;left:39px}
+#math-drop .cloud-two{left:auto;right:7px;top:195px;transform:scale(.7)}
+#math-drop .hill{position:absolute;width:85%;height:105px;bottom:-40px;border-radius:50% 50% 0 0;background:#9bddaa;box-shadow:inset 0 7px 0 #c3edb2}
+#math-drop .hill-one{left:-20%;transform:rotate(9deg)}#math-drop .hill-two{right:-20%;bottom:-47px;background:#71cda2;transform:rotate(-12deg)}
+#math-drop .flowers{position:absolute;bottom:9px;left:15px;font-size:22px;color:#ae4380;white-space:nowrap}
+#math-drop .tracks{background:linear-gradient(90deg,transparent 33%,#6a91b526 33%,#6a91b526 33.5%,transparent 33.5%,transparent 66.5%,#6a91b526 66.5%,#6a91b526 67%,transparent 67%);border-bottom:7px solid #589b7c;pointer-events:none}
+#math-drop .blocks{position:absolute;inset:0}
+#math-drop .falling{border:2px solid #f2ffed;min-height:64px;background:linear-gradient(135deg,#d7ff9d,#a4e95f);color:#294b1c;border-radius:14px;box-shadow:inset 0 4px 0 #ffffff94,0 6px 0 #65a637,0 9px 8px #384c3e22;font-size:22px;font-weight:800}
+#math-drop .falling[data-lane="1"]{border-color:#fff6d1;background:linear-gradient(135deg,#ffe9a2,#ffbe64);color:#624017;box-shadow:inset 0 4px 0 #ffffff94,0 6px 0 #c98939,0 9px 8px #384c3e22}
+#math-drop .falling[data-lane="2"]{border-color:#ffeaff;background:linear-gradient(135deg,#fbd5fa,#e6a2de);color:#612d68;box-shadow:inset 0 4px 0 #ffffff94,0 6px 0 #b773b0,0 9px 8px #384c3e22}
+#math-drop .falling small{font-size:11px;letter-spacing:0;font-weight:400;color:inherit;opacity:1}
+#math-drop .overlay{background:radial-gradient(ellipse at 50% 20%,#fff8d2,#e1f7ff 75%);color:#63428b;gap:15px}
+#math-drop .welcome-art{font-size:45px;line-height:1.2;filter:drop-shadow(0 4px 0 #c0a0d733)}
+#math-drop .overlay strong{font-size:23px;color:#654391}#math-drop .overlay p{color:#5d5375;font-size:15px;max-width:270px}
+#math-drop .primary{background:linear-gradient(#c5ffb1,#8fe07d);box-shadow:0 5px 0 #559c4e;border:2px solid #f4ffe9;color:#294921;min-width:146px;font-size:18px}
+#math-drop .foot span{color:#614b76;font-size:12px}#math-drop .message{color:#684789;background:#fff8ee;border-radius:14px;padding:10px;margin-bottom:0;box-shadow:0 3px 0 #e2c6cf;font-size:14px}
+@media(max-width:380px){#math-drop{padding:16px 10px}#math-drop h2{font-size:23px}#math-drop .target{gap:9px}#math-drop .mascot{width:57px;transform:scale(.78);transform-origin:center bottom}#math-drop .target-sign{min-width:116px;padding:9px}#math-drop .levels button{font-size:13px}#math-drop .falling{font-size:18px}#math-drop .stats b{display:block;margin:3px 0 0;font-size:18px}#math-drop .field{height:330px}}
+
+#math-drop button{font-size:20px}#math-drop h2{font-size:34px}#math-drop .levels button{font-size:19px}#math-drop .target span,#math-drop .stats>span,#math-drop .foot span,#math-drop .message{font-size:18px}#math-drop .falling{font-size:27px}#math-drop .falling small,#math-drop small{font-size:16px}#math-drop .overlay p{font-size:20px}#math-drop .overlay strong{font-size:28px}#math-drop .falling{min-height:68px}#math-drop .target-sign{min-width:132px}@media(max-width:380px){#math-drop h2{font-size:28px}#math-drop .falling{font-size:22px}#math-drop .levels button{font-size:17px}#math-drop .target span{font-size:16px}#math-drop .target-sign{min-width:116px}}
+#math-drop .foot{flex-wrap:wrap}#math-drop .foot span{flex-basis:100%;text-align:center}#math-drop .falling{font-size:clamp(25px,6.5vw,36px);font-weight:800;line-height:1.1;min-height:72px;padding:6px 1px}#math-drop .falling small{font-size:17px;line-height:1.1;margin-top:3px}#math-drop .target strong{font-size:66px}#math-drop .target span{font-size:21px}#math-drop .target-sign{min-width:150px}#math-drop .levels button,#math-drop button{font-size:22px}#math-drop .stats>span{font-size:20px}#math-drop .stats b{display:block;font-size:27px;line-height:1.15;margin:3px 0 0}#math-drop .message,#math-drop .foot span{font-size:21px;line-height:1.4}#math-drop .overlay strong{font-size:32px}#math-drop .overlay p{font-size:24px;line-height:1.4}#math-drop .primary{font-size:27px}@media(max-width:380px){#math-drop .target{gap:5px}#math-drop .target-sign{min-width:130px}#math-drop .target span{font-size:18px}#math-drop .levels button{font-size:20px}#math-drop .stats>span{font-size:18px}#math-drop .target strong{font-size:60px}#math-drop .falling{font-size:25px}}
+</style>
+<script>
+(()=>{
+const root=document.getElementById('math-drop'),q=s=>root.querySelector(s),settings=[{max:10,seconds:16},{max:30,seconds:12},{max:99,seconds:8}];
+let level=0,target=9,score=0,round=0,lives=3,choices=[],running=false,paused=false,progress=0,last=0;
+const sessionOrigin=Date.now().toString(36)+Math.random().toString(36).slice(2);
+let soundEnabled=true,audioContext=null;
+function sound(correct=true){if(!soundEnabled)return;try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioContext=audioContext||new Audio();audioContext.resume().catch(()=>{});[correct?523:330,correct?659:262,correct?784:220].forEach((frequency,i)=>{const oscillator=audioContext.createOscillator(),gain=audioContext.createGain(),t=audioContext.currentTime+i*.1;oscillator.type='sine';oscillator.frequency.value=frequency;gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(.055,t+.015);gain.gain.exponentialRampToValueAtTime(.001,t+.18);oscillator.connect(gain);gain.connect(audioContext.destination);oscillator.start(t);oscillator.stop(t+.2);});}catch(e){}}
+function speak(message){if(!soundEnabled||!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;try{window.speechSynthesis.cancel();const speech=new window.SpeechSynthesisUtterance(message);speech.lang='th-TH';speech.rate=.85;const voice=window.speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('th'));if(voice)speech.voice=voice;window.speechSynthesis.speak(speech);}catch(e){}}
+q('[data-sound]').onclick=()=>{soundEnabled=!soundEnabled;q('[data-sound]').textContent=soundEnabled?'เสียง: เปิด':'เสียง: ปิด';q('[data-sound]').setAttribute('aria-pressed',String(soundEnabled));if(soundEnabled){sound();speak('เปิดเสียงแล้ว');}else{window.speechSynthesis?.cancel();}};
+root.addEventListener('click',e=>{const button=e.target.closest('button');if(!button)return;if(button.matches('[data-pause]')){window.speechSynthesis?.cancel();return;}if(button.matches('[data-start]')){sound();speak('เริ่มเลย เลือกบล็อกที่มีคำตอบเท่ากับ '+target);}});
+const feedbackObserver=new MutationObserver(()=>{const message=q('.message').textContent;if(message.startsWith('ถูกต้อง!')){sound(true);speak(round===10?'เก่งมาก ผ่านด่านแล้ว':'เก่งมาก ถูกต้องแล้ว ข้อต่อไป หาคำตอบเท่ากับ '+target);}else if(message.includes('ยังไม่ตรง')||message.startsWith('หมดเวลา')){sound(false);speak(lives===0?'ไม่เป็นไร ลองเล่นใหม่ได้นะ':'ลองอีกครั้งนะ ข้อต่อไป หาคำตอบเท่ากับ '+target);}});feedbackObserver.observe(q('.message'),{childList:true,characterData:true,subtree:true});
+const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function expression(value,max){if(Math.random()<.5||value===max){let a=rand(0,value);return{a,b:value-a,op:'+',value};}let b=rand(0,max-value);return{a:value+b,b,op:'−',value};}
+function makeRound(){let max=settings[level].max;target=rand(1,max);let answers=new Set([target]);while(answers.size<3)answers.add(rand(0,max));choices=[...answers].map(v=>expression(v,max));for(let i=choices.length-1;i>0;i--){let j=rand(0,i);[choices[i],choices[j]]=[choices[j],choices[i]];}progress=0;drawChoices();update();}
+function drawChoices(){q('.blocks').replaceChildren();choices.forEach((c,i)=>{let b=document.createElement('button');b.className='falling cursor-interaction';b.dataset.lane=i;b.style.left=(i*33.333)+'%';b.setAttribute('aria-label',`ช่อง ${i+1}: ${c.a} ${c.op==='+'?'บวก':'ลบ'} ${c.b}`);b.append(document.createTextNode(`${c.a} ${c.op} ${c.b}`));let label=document.createElement('small');label.textContent='ช่อง '+(i+1);b.append(label);b.onclick=()=>choose(i);q('.blocks').append(b);});position();}
+function position(){let y=progress*Math.max(0,q('.field').clientHeight-78);q('.blocks').querySelectorAll('button').forEach(b=>b.style.transform=`translateY(${y}px)`);}
+function update(){q('[data-target]').textContent=target;q('[data-score]').textContent=score;q('[data-round]').textContent=round+' / 10';q('[data-lives]').textContent=lives;root.querySelectorAll('[data-level]').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===level)));}
+function save(){try{window.openai?.setWidgetState?.({modelContent:{game:'บล็อกตกบวกลบ',level:['เริ่มต้น','ปานกลาง','ยาก'][level],score,completed:round},privateContent:{v:1,origin:sessionOrigin,level,target,score,round,lives,choices,progress,running}})?.catch(()=>{});}catch(e){}}
+function overlay(title,sub,button){q('[data-title]').textContent=title;q('[data-sub]').textContent=sub;q('[data-start]').textContent=button;q('.overlay').hidden=false;}
+function finish(won){running=false;paused=false;q('[data-pause]').disabled=true;overlay(won?'เยี่ยมมาก! ผ่านครบ 10 ข้อ':'หมดโอกาสแล้ว ลองใหม่ได้',`ได้ ${score} คะแนน · ตอบถูก ${round} ข้อ`, 'เล่นใหม่');save();}
+function choose(i){if(!running||paused||!choices[i])return;const c=choices[i];if(c.value===target){score+=100*(level+1);round++;q('.message').textContent=`ถูกต้อง! ${c.a} ${c.op} ${c.b} = ${target}`;if(round===10){update();finish(true);return;}}else{lives--;q('.message').textContent=`${c.a} ${c.op} ${c.b} = ${c.value} ยังไม่ตรงกับ ${target}`;if(!lives){update();finish(false);return;}}makeRound();save();}
+function start(){if(running&&paused){paused=false;}else{score=0;round=0;lives=3;running=true;paused=false;makeRound();q('.message').textContent='เลือกเพียงหนึ่งบล็อกที่ได้คำตอบตรงกับเป้าหมาย';}q('.overlay').hidden=true;q('[data-pause]').disabled=false;last=performance.now();save();}
+function pause(){if(!running||paused)return;paused=true;q('[data-pause]').disabled=true;overlay('พักเกม','บล็อกจะหยุดรอจนกว่าคุณจะเล่นต่อ','เล่นต่อ');save();}
+q('[data-start]').onclick=start;q('[data-pause]').onclick=pause;
+root.querySelectorAll('[data-level]').forEach((b,i)=>b.onclick=()=>{if(level===i)return;level=i;running=false;paused=false;score=0;round=0;lives=3;q('[data-pause]').disabled=true;makeRound();overlay('ระดับ'+b.textContent,`บวกลบจำนวน 0–${settings[i].max} · ${settings[i].seconds} วินาทีต่อข้อ`,'เริ่มเกม');q('.message').textContent='เปลี่ยนระดับแล้ว กดเริ่มเกมเพื่อเริ่มรอบใหม่';save();});
+root.addEventListener('keydown',e=>{if(['1','2','3'].includes(e.key)&&running&&!paused){e.preventDefault();choose(Number(e.key)-1);}if(e.key==='Escape')pause();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+function restore(s){if(s?.v!==1||![0,1,2].includes(s.level)||!Array.isArray(s.choices)||s.choices.length!==3||!s.choices.every(c=>Number.isInteger(c.a)&&Number.isInteger(c.b)&&c.a>=0&&c.b>=0&&['+','−'].includes(c.op)&&c.value===(c.op==='+'?c.a+c.b:c.a-c.b))||!s.choices.some(c=>c.value===s.target)||!Number.isInteger(s.round)||s.round<0||s.round>10||!Number.isInteger(s.lives)||s.lives<0||s.lives>3)return false;level=s.level;target=s.target;score=Number(s.score)||0;round=s.round;lives=s.lives;choices=s.choices;progress=Math.min(.99,Math.max(0,Number(s.progress)||0));running=!!s.running&&lives>0&&round<10;paused=running;drawChoices();update();if(running)overlay('กลับมาเล่นต่อ','เกมของคุณหยุดรออยู่','เล่นต่อ');else overlay('พร้อมเล่นรอบใหม่ไหม?',`คะแนนครั้งล่าสุด ${score}`,'เริ่มเกม');q('[data-pause]').disabled=true;return true;}
+window.openai={widgetState:null,setWidgetState:async function(s){this.widgetState=s;try{localStorage.setItem("math-drop-state-p2",JSON.stringify(s))}catch(e){}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem("math-drop-state-p2"))}catch(e){}
+if(!restore(window.openai?.widgetState?.privateContent))makeRound();window.addEventListener('openai:set_globals',e=>{const s=e.detail?.globals?.widgetState?.privateContent;if(s&&s.origin!==sessionOrigin)restore(s);});
+function frame(now){if(!root.isConnected)return;if(running&&!paused){progress+=Math.min(now-last,100)/(settings[level].seconds*1000);position();if(progress>=1){lives--;let c=choices.find(c=>c.value===target);q('.message').textContent=`หมดเวลา! คำตอบคือ ${c.a} ${c.op} ${c.b} = ${target}`;if(!lives){update();finish(false);}else{makeRound();save();}}}last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

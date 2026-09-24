@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบ: การออกแบบและเขียนอัลกอริทึม — ม.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,#10B981,#3B82F6); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.1rem; }
+  header p{ margin:4px 0 0; font-size:.82rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+
+  main{ max-width:720px; margin:0 auto; padding:22px 20px 60px; }
+
+  #progress{ position:sticky; top:0; background:#F7F8FC; padding:10px 0; z-index:5; text-align:center; font-weight:700; font-size:.9rem; color:#3B82F6; }
+  #progress-bar{ height:8px; background:#E6E8F0; border-radius:99px; overflow:hidden; margin-top:6px; }
+  #progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,#10B981,#3B82F6); transition:width .3s; }
+
+  .mcq{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:18px 20px; margin-bottom:16px; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .mcq p.q{ font-weight:700; margin:0 0 10px; font-size:.94rem; }
+  .mcq .choices{ display:flex; flex-direction:column; gap:8px; }
+  .mcq label{ display:flex; align-items:center; gap:10px; padding:10px 14px; border:2px solid #E6E8F0; border-radius:12px; font-size:.88rem; cursor:pointer; }
+  .mcq label.correct{ border-color:#10B981; background:#F0FBF6; }
+  .mcq label.wrong{ border-color:#EF4444; background:#FEF2F2; }
+  .mcq input{ accent-color:#3B82F6; }
+
+  #submit-btn{ display:block; width:100%; margin:20px auto 0; padding:14px; border:none; border-radius:999px; background:#3B82F6; color:#fff; font-weight:700; font-size:1.05rem; cursor:pointer; }
+
+  #result-card{ display:none; text-align:center; background:#fff; border-radius:20px; padding:30px 20px; margin-top:10px; box-shadow:0 8px 24px rgba(0,0,0,.1); }
+  #result-card.show{ display:block; }
+  #result-card .big-score{ font-size:2.4rem; font-weight:800; margin:8px 0; }
+  #result-card .msg{ font-size:1rem; color:#555; margin-bottom:14px; }
+  #result-card button{ padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>✅ แบบทดสอบท้ายหน่วย</h1>
+    <p>การออกแบบและเขียนอัลกอริทึม · ม.1 หน่วยที่ 1 · ปรนัย 4 ตัวเลือก 10 ข้อ</p>
+  </div>
+  <a href="../../index.html#/unit/m1/prog/0/quiz">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="progress">
+    ตอบแล้ว <span id="answered-count">0</span>/10 ข้อ
+    <div id="progress-bar"><div id="progress-fill"></div></div>
+  </div>
+
+  <form id="quiz-form"></form>
+
+  <button id="submit-btn" onclick="submitQuiz()">📤 ส่งคำตอบ</button>
+
+  <div id="result-card">
+    <div style="font-size:2.4rem">🎉</div>
+    <div class="big-score" id="score-text">0/10</div>
+    <div class="msg" id="score-msg"></div>
+    <button onclick="location.reload()">🔄 ทำใหม่อีกครั้ง</button>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+<script>
+function shuffleArray(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function shuffleChoices(q){
+  const idx = shuffleArray(q.choices.map((_, i) => i));
+  return { q:q.q, choices: idx.map(i => q.choices[i]), correct: idx.indexOf(q.correct), audio:q.audio };
+}
+
+const RAW_QUESTIONS = [
+  { audio:"quiz-0", q:"แนวคิดเชิงนามธรรมคืออะไร?", choices:["การพิจารณาเฉพาะสาระสำคัญ ตัดรายละเอียดที่ไม่จำเป็นออก", "การจดจำรายละเอียดทุกอย่างให้ครบ", "การวาดภาพให้สวยงาม", "การเขียนโปรแกรมให้ยาวที่สุด"], correct:0 },
+  { audio:"quiz-1", q:"อัลกอริทึมคืออะไร?", choices:["ลำดับขั้นตอนการแก้ปัญหาที่ชัดเจนและทำตามได้", "ชื่อของภาษาโปรแกรม", "อุปกรณ์รับข้อมูลของคอมพิวเตอร์", "ไวรัสคอมพิวเตอร์ชนิดหนึ่ง"], correct:0 },
+  { audio:"quiz-2", q:"ขั้นตอนแรกของการออกแบบอัลกอริทึมคือข้อใด?", choices:["วิเคราะห์ปัญหา", "เขียนผังงาน", "ทดสอบโปรแกรม", "แสดงผลลัพธ์"], correct:0 },
+  { audio:"quiz-3", q:"การกำหนดข้อมูลนำเข้า (Input) หมายถึงอะไร?", choices:["การระบุข้อมูลที่ต้องรับเข้ามาเพื่อประมวลผล", "การแสดงผลลัพธ์ทางหน้าจอ", "การเก็บโปรแกรมไว้ในเครื่อง", "การปิดโปรแกรม"], correct:0 },
+  { audio:"quiz-4", q:"สัญลักษณ์ผังงานรูปวงรี ใช้แทนอะไร?", choices:["เริ่มต้น/สิ้นสุดการทำงาน", "การตัดสินใจ", "การประมวลผล", "การรับข้อมูล"], correct:0 },
+  { audio:"quiz-5", q:"สัญลักษณ์ผังงานรูปสี่เหลี่ยมขนมเปียกปูน ใช้แทนอะไร?", choices:["ทางเลือกเงื่อนไข", "เริ่มต้นการทำงาน", "การแสดงผลทางหน้าจอ", "เส้นทิศทาง"], correct:0 },
+  { audio:"quiz-6", q:"สูตรพื้นที่สี่เหลี่ยมด้านขนาน คือข้อใด?", choices:["ฐาน คูณ สูง", "ครึ่งหนึ่งของ ฐาน คูณ สูง", "กว้าง บวก ยาว", "ด้าน คูณ ด้าน คูณ ด้าน"], correct:0 },
+  { audio:"quiz-7", q:"การเขียนอัลกอริทึมด้วยภาษาธรรมชาติ มีลักษณะอย่างไร?", choices:["เขียนบรรยายขั้นตอนด้วยภาษาที่ใช้พูดกันทั่วไป", "ใช้แต่สัญลักษณ์รูปทรง", "ใช้เฉพาะรหัสตัวเลข", "ใช้ภาพถ่ายอย่างเดียว"], correct:0 },
+  { audio:"quiz-8", q:"จากวัฏจักรน้ำ ข้อใดคือสาระสำคัญของการระเหย?", choices:["น้ำจากแหล่งต่างๆ กลายเป็นไอลอยตัวสูงขึ้น", "ฝนตกลงมาบนภูเขา", "น้ำซึมลงใต้ดิน", "เมฆเปลี่ยนสี"], correct:0 },
+  { audio:"quiz-9", q:"ข้อใดคือข้อดีของการเขียนผังงาน?", choices:["มองเห็นลำดับขั้นตอนได้ชัดเจน เข้าใจง่าย", "ทำให้คอมพิวเตอร์ทำงานเร็วขึ้นเสมอ", "ไม่ต้องคิดขั้นตอนก่อน", "ใช้แทนโปรแกรมได้ทั้งหมด"], correct:0 }
+];
+const QUESTIONS = shuffleArray(RAW_QUESTIONS.map(shuffleChoices));
+
+const form = document.getElementById("quiz-form");
+QUESTIONS.forEach((item, i) => {
+  const div = document.createElement("div");
+  div.className = "mcq";
+  div.dataset.correct = item.correct;
+  const letters = ["ก.","ข.","ค.","ง."];
+  div.innerHTML = `
+    <button type="button" class="tts-btn" style="margin-bottom:10px" data-audio-src="audio/${item.audio}.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำถาม</span>
+    </button>
+    <div id="quiz-content-${i}">
+      <p class="q">${i+1}. ${item.q}</p>
+      <div class="choices">
+        ${item.choices.map((c, ci) => `
+          <label>
+            <input type="radio" name="q${i}" value="${ci}" onchange="updateProgress()">
+            ${letters[ci]} ${c}
+          </label>
+        `).join("")}
+      </div>
+    </div>
+  `;
+  form.appendChild(div);
+});
+
+document.querySelectorAll(".tts-btn[data-audio-src]").forEach(btn => {
+  const label = btn.querySelector(".tts-label");
+  if(label) btn.dataset.ttsLabel = label.textContent;
+  btn.addEventListener("click", () => playAudio(btn.dataset.audioSrc, btn));
+});
+
+function updateProgress(){
+  const answered = document.querySelectorAll('.mcq input:checked').length;
+  document.getElementById("answered-count").textContent = answered;
+  document.getElementById("progress-fill").style.width = (answered / QUESTIONS.length * 100) + "%";
+}
+
+function submitQuiz(){
+  let score = 0;
+  document.querySelectorAll(".mcq").forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10);
+    const chosen = q.querySelector("input:checked");
+    q.querySelectorAll("label").forEach(l => l.classList.remove("correct","wrong"));
+    const correctLabel = q.querySelectorAll("label")[correct];
+    if(chosen){
+      const chosenVal = parseInt(chosen.value, 10);
+      if(chosenVal === correct){
+        chosen.closest("label").classList.add("correct");
+        score++;
+      } else {
+        chosen.closest("label").classList.add("wrong");
+        correctLabel.classList.add("correct");
+      }
+    } else {
+      correctLabel.classList.add("correct");
+    }
+  });
+
+  const pct = Math.round(score / QUESTIONS.length * 100);
+  let msg = "";
+  if(pct === 100) msg = "🌟 ยอดเยี่ยมมาก! ตอบถูกครบทุกข้อ";
+  else if(pct >= 80) msg = "👏 เก่งมาก! เข้าใจเนื้อหาดีมาก";
+  else if(pct >= 60) msg = "😊 ทำได้ดี! ลองทบทวนใบความรู้อีกครั้งนะ";
+  else msg = "💪 ลองกลับไปอ่านใบความรู้แล้วทำใหม่อีกครั้งนะ";
+
+  document.getElementById("score-text").textContent = `${score}/${QUESTIONS.length}`;
+  document.getElementById("score-msg").textContent = msg + ` (${pct}%)`;
+  document.getElementById("result-card").classList.add("show");
+  document.getElementById("result-card").scrollIntoView({behavior:"smooth"});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมพลิกไพ่ความจำ: สัญลักษณ์ผังงาน — ป.3 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; }
+  header{
+    background:linear-gradient(135deg,#EC4899,#F97316);
+    color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:42px; }
+  #finish h2{ margin:8px 0; font-size:42px; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+
+  p.desc{ max-width:600px; margin:14px auto 0; padding:0 20px; font-size:.9rem; color:#555; text-align:center; }
+
+  #hud{ max-width:500px; margin:14px auto 0; padding:0 20px; display:flex; justify-content:center; gap:10px; }
+  #hud .pill{ background:#fff; border:1px solid #E6E8F0; border-radius:999px; padding:7px 16px; font-weight:700; font-size:.88rem; box-shadow:0 4px 10px rgba(0,0,0,.06); }
+
+  #board{
+    max-width:460px; margin:20px auto 40px; padding:0 20px;
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;
+  }
+  @media (max-width:360px){ #board{ grid-template-columns:repeat(2, 1fr); } }
+
+  .card{
+    aspect-ratio:3/4; border-radius:12px; cursor:pointer; position:relative;
+    perspective:600px;
+  }
+  .card-inner{
+    width:100%; height:100%; position:relative; transform-style:preserve-3d;
+    transition:transform .4s;
+  }
+  .card.flipped .card-inner{ transform:rotateY(180deg); }
+  .card-face{
+    position:absolute; inset:0; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    backface-visibility:hidden; box-shadow:0 3px 8px rgba(0,0,0,.12);
+  }
+  .card-back{ background:linear-gradient(135deg,#EC4899,#F97316); font-size:1.6rem; }
+  .card-front{
+    background:#fff; transform:rotateY(180deg); padding:6px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  }
+  .card-front .emoji{ font-size:1.9rem; }
+  .card-front span.name{ font-size:.6rem; font-weight:700; }
+  .card.matched .card-front{ background:#F0FBF6; border:2px solid #10B981; }
+
+  #finish{
+    position:fixed; inset:0; background:rgba(20,10,30,.55); z-index:40;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #finish .card2{ background:#fff; border-radius:22px; padding:32px 24px; text-align:center; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  #finish button{ margin-top:14px; padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎮 เกมพลิกไพ่ความจำ: สัญลักษณ์ผังงาน</h1>
+  <a href="../../index.html#/unit/p3/cs/0/game">← กลับหน้าหน่วย</a>
+</header>
+
+<p class="desc" id="game-desc">หน่วยที่ 1 การแสดงขั้นตอนวิธีการแก้ปัญหา (ป.3) — พลิกไพ่ 2 ใบ หาคู่ที่ตรงกัน (สัญลักษณ์ผังงาน + ความหมาย) ให้ครบทุกคู่ โดยใช้จำนวนครั้งน้อยที่สุด</p>
+<div style="text-align:center; margin-bottom:6px">
+  <button class="tts-btn" data-audio-src="audio/game-desc.mp3">
+    <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span>
+  </button>
+</div>
+
+<div id="hud">
+  <span class="pill">🔁 พลิกไปแล้ว: <span id="moves">0</span> ครั้ง</span>
+  <span class="pill">⭐ จับคู่ได้: <span id="matches">0</span>/<span id="matches-total">5</span></span>
+</div>
+
+<div id="board"></div>
+
+<div id="finish">
+  <div class="card2">
+    <div style="font-size:2.6rem">🎉</div>
+    <h2>เก่งมาก! จับคู่ครบแล้ว</h2>
+    <p style="color:#666;font-size:.9rem" id="finish-msg"></p>
+    <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  </div>
+</div>
+
+<script src="../../assets/js/tts.js"></script>
+<script>
+const STEPS = [
+  { name:"จุดเริ่มต้น/สิ้นสุด", emoji:"🟢" },
+  { name:"ขั้นตอนการทำงาน", emoji:"⬜" },
+  { name:"การตัดสินใจ", emoji:"🔶" },
+  { name:"รับ/แสดงข้อมูล", emoji:"📥" },
+  { name:"ทิศทางการทำงาน", emoji:"➡️" }
+];
+
+// สร้างชุดการ์ด: แต่ละสัญลักษณ์มี 2 ใบ (คู่กัน) แล้วสลับตำแหน่ง
+let cards = [];
+STEPS.forEach((d, i) => { cards.push({ id:i, ...d }); cards.push({ id:i, ...d }); });
+cards = cards.sort(() => Math.random() - 0.5);
+
+let flipped = [];
+let matchesCount = 0;
+let moves = 0;
+let lock = false;
+document.getElementById("matches-total").textContent = STEPS.length;
+
+const board = document.getElementById("board");
+cards.forEach((c, idx) => {
+  const el = document.createElement("div");
+  el.className = "card";
+  el.dataset.id = c.id;
+  el.dataset.idx = idx;
+  el.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-back">❓</div>
+      <div class="card-face card-front">
+        <span class="emoji">${c.emoji}</span>
+        <span class="name">${c.name}</span>
+      </div>
+    </div>
+  `;
+  el.addEventListener("click", () => flipCard(el, c.id));
+  board.appendChild(el);
+});
+
+function flipCard(el, id){
+  if(lock || el.classList.contains("flipped") || el.classList.contains("matched")) return;
+  el.classList.add("flipped");
+  flipped.push({el, id});
+
+  if(flipped.length === 2){
+    moves++;
+    document.getElementById("moves").textContent = moves;
+    lock = true;
+    const [a, b] = flipped;
+    if(a.id === b.id){
+      setTimeout(() => {
+        a.el.classList.add("matched");
+        b.el.classList.add("matched");
+        matchesCount++;
+        document.getElementById("matches").textContent = matchesCount;
+        flipped = [];
+        lock = false;
+        if(matchesCount >= STEPS.length){
+          const msg = moves <= STEPS.length + 1
+            ? "สุดยอด! ความจำดีเยี่ยมมาก 🌟"
+            : "เก่งมาก! ลองเล่นอีกครั้งเพื่อทำสถิติให้ดีขึ้นได้นะ";
+          const finishText = `ใช้ไป ${moves} ครั้ง — ${msg}`;
+          document.getElementById("finish-msg").textContent = finishText;
+          setTimeout(() => {
+            document.getElementById("finish").style.display = "flex";
+            speakText(`เก่งมาก จับคู่ครบแล้ว ${finishText}`, null);
+          }, 500);
+        }
+      }, 400);
+    } else {
+      setTimeout(() => {
+        a.el.classList.remove("flipped");
+        b.el.classList.remove("flipped");
+        flipped = [];
+        lock = false;
+      }, 800);
+    }
+  }
+}
+</script>
+</body>
+</html>

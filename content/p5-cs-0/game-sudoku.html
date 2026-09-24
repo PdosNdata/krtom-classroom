@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมซูโดกุ 4x4: ฝึกเหตุผลเชิงตรรกะ — ป.5 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; }
+  header{ background:linear-gradient(135deg,#8B5CF6,#3B82F6); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.05rem; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+
+  main{ max-width:560px; margin:0 auto; padding:18px 20px 60px; }
+
+  p.desc{ font-size:.9rem; color:#555; text-align:center; margin:6px 0 14px; }
+
+  button{ cursor:pointer; }
+  button:focus-visible{ outline:3px solid #1678cc; outline-offset:4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔢 เกมซูโดกุ 4x4</h1>
+  <a href="../../index.html#/unit/p5/cs/0/game">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <p class="desc" id="game-desc">แตะเลือกช่องว่าง แล้วกดตัวเลข 1-4 ด้านล่างเพื่อกรอกคำตอบ โดยแต่ละแถว แต่ละหลัก และแต่ละกล่อง 2x2 ต้องมีเลข 1-4 ครบไม่ซ้ำกัน — ฝึกเหตุผลเชิงตรรกะในการแก้ปัญหา</p>
+  <div style="text-align:center; margin-bottom:10px">
+    <button class="tts-btn" data-audio-src="audio/sudoku-desc.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span>
+    </button>
+  </div>
+
+<script>window.openai={widgetState:null,setWidgetState:async function(s){this.widgetState=s;try{localStorage.setItem("sudoku-mini-state-p5",JSON.stringify(s))}catch(e){}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem("sudoku-mini-state-p5"))}catch(e){}</script>
+<div id="sudoku-mini">
+ <div class="game-head"><span class="game-tag">✦ MINI BRAIN CLUB</span><h2>Sudoku <span>4 × 4</span></h2><p>เติม 1–4 ให้ไม่ซ้ำในแถว คอลัมน์ และกรอบ 2 × 2</p></div>
+ <div class="play-area"><div class="board" aria-label="กระดานซูโดกุ 4 คูณ 4"></div></div>
+ <div class="number-pad" data-pad><button class="game-button cursor-interaction" data-n="1">1</button><button class="game-button cursor-interaction" data-n="2">2</button><button class="game-button cursor-interaction" data-n="3">3</button><button class="game-button cursor-interaction" data-n="4">4</button><button class="game-button erase cursor-interaction" data-n="0">ลบ</button></div>
+ <div class="game-actions"><button class="game-button check cursor-interaction" data-check>✓ ตรวจคำตอบ</button><button class="game-button cursor-interaction" data-new>↻ เกมใหม่</button></div>
+ <p class="game-message" aria-live="polite" data-message>เลือกช่องว่าง แล้วกดตัวเลขด้านล่าง</p>
+</div>
+<style>
+#sudoku-mini{--game-ink:#302354;--game-purple:#7547d8;box-sizing:border-box;padding:28px 18px 18px;border-radius:28px;background:radial-gradient(ellipse at 0 0,#ffd9ef,transparent 58%),radial-gradient(ellipse at 100% 100%,#b7f5ea,transparent 60%),#eeebff;color:var(--game-ink);font-family:Tahoma,Arial,sans-serif}
+#sudoku-mini *{box-sizing:border-box}
+#sudoku-mini .game-head{text-align:center}
+#sudoku-mini .game-tag{font-size:11px;letter-spacing:2px;color:#7044ac;font-weight:700}
+#sudoku-mini h2{font-size:36px;line-height:1.2;margin:10px 0;font-weight:800;color:#4b298a;text-shadow:0 2px 0 #fff}
+#sudoku-mini h2 span{color:#b3397e}
+#sudoku-mini .game-head p{font-size:13px;line-height:1.7;margin:0}
+#sudoku-mini .play-area{display:flex;justify-content:center;padding:24px 0 30px}
+#sudoku-mini .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;width:min(100%,360px);padding:13px;background:linear-gradient(145deg,#a07ae9,#7652b9);border:2px solid #bfa6ed;border-radius:23px;box-shadow:0 9px 0 #53378c,0 17px 22px #58339433}
+#sudoku-mini .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;min-height:46px;border:0;border-radius:11px;font:700 28px Tahoma,Arial,sans-serif;background:linear-gradient(#fff,#eee7fc);color:#6635bc;box-shadow:0 4px 0 #c0a8e1;transition:transform .12s,box-shadow .12s}
+#sudoku-mini .given{background:linear-gradient(#e1d5f5,#cec0e9);color:#493465;box-shadow:0 3px 0 #a68bc9}
+#sudoku-mini button.cell[aria-pressed="true"]{background:linear-gradient(#fff4ba,#ffdd73);color:#604416;box-shadow:0 4px 0 #c89b32,0 0 0 3px #fff6cc}
+#sudoku-mini .board>*:nth-child(4n+2){margin-right:6px}
+#sudoku-mini .board>*:nth-child(n+5):nth-child(-n+8){margin-bottom:7px}
+#sudoku-mini .cell-wrap{display:grid;min-width:0}
+#sudoku-mini .number-pad,#sudoku-mini .game-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+#sudoku-mini .game-button{border:0;border-radius:13px;padding:12px 17px;background:#fff;color:#493465;box-shadow:0 4px 0 #d1c2e5;font:600 14px Tahoma,Arial,sans-serif;min-height:46px;transition:transform .12s,box-shadow .12s}
+#sudoku-mini [data-n]{min-width:45px;font-size:23px;background:#7547d8;color:#fff;box-shadow:0 4px 0 #4e299c}
+#sudoku-mini [data-n="2"]{background:#a43677;box-shadow:0 4px 0 #742351}
+#sudoku-mini [data-n="3"]{background:#137e7b;box-shadow:0 4px 0 #095c59}
+#sudoku-mini [data-n="4"]{background:#a95817;box-shadow:0 4px 0 #753b0c}
+#sudoku-mini .erase{font-size:14px;background:#fff;color:#493465;box-shadow:0 4px 0 #d1c2e5}
+#sudoku-mini .game-actions{margin-top:22px}
+#sudoku-mini .check{background:#553099;color:#fff;box-shadow:0 4px 0 #36196b}
+#sudoku-mini button:active{transform:translateY(3px);box-shadow:none}
+#sudoku-mini .game-message{text-align:center;min-height:24px;font-size:13px;line-height:1.7;margin:20px 0 0;color:#493465}
+@media(max-width:380px){#sudoku-mini{padding:22px 12px 16px}#sudoku-mini .game-button{padding:11px 13px}#sudoku-mini .board{gap:5px;padding:10px}#sudoku-mini .cell{font-size:25px}}
+@media(prefers-reduced-motion:reduce){#sudoku-mini button{transition:none}}
+</style>
+<script>
+(()=>{
+const root=document.getElementById('sudoku-mini'),board=root.querySelector('.board'),msg=root.querySelector('[data-message]');
+let puzzle=[],values=[],selected=-1;
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+function candidates(a,i){let r=Math.floor(i/4),c=i%4;return [1,2,3,4].filter(n=>!a.some((v,j)=>v===n&&(Math.floor(j/4)===r||j%4===c||(Math.floor(j/8)===Math.floor(r/2)&&Math.floor((j%4)/2)===Math.floor(c/2)))))}
+function count(a){let i=a.indexOf(0);if(i<0)return 1;let total=0;for(const n of candidates(a,i)){a[i]=n;total+=count(a);a[i]=0;if(total>1)break;}return total;}
+function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{game:'Sudoku 4 × 4',filled:values.filter(Boolean).length},privateContent:{puzzle,values,selected}}).catch(()=>{});}
+function draw(){board.replaceChildren();values.forEach((v,i)=>{let wrap=document.createElement('div');wrap.className='cell-wrap';let el=document.createElement(puzzle[i]?'div':'button');el.className=puzzle[i]?'cell given':'cell cursor-interaction';el.textContent=v||'·';el.setAttribute('aria-label',`แถว ${Math.floor(i/4)+1} คอลัมน์ ${i%4+1} ${v||'ว่าง'}${puzzle[i]?' ตัวเลขโจทย์':''}`);if(!puzzle[i]){el.type='button';el.setAttribute('aria-pressed',String(i===selected));el.onclick=()=>{selected=i;msg.textContent='เลือกตัวเลข 1–4 หรือกดลบ';draw();save();};}wrap.append(el);board.append(wrap);});}
+function fresh(){let nums=shuffle([1,2,3,4]),rows=shuffle([0,1]).flatMap(b=>shuffle([b*2,b*2+1])),cols=shuffle([0,1]).flatMap(b=>shuffle([b*2,b*2+1]));puzzle=rows.flatMap(r=>cols.map(c=>nums[(r*2+Math.floor(r/2)+c)%4]));for(const i of shuffle([...Array(16).keys()])){let n=puzzle[i];puzzle[i]=0;if(count([...puzzle])!==1)puzzle[i]=n;if(puzzle.filter(Boolean).length<=7)break;}values=[...puzzle];selected=values.indexOf(0);msg.textContent='เลือกช่องว่าง แล้วกดตัวเลขด้านล่าง';draw();}
+function valid(){return values.every((v,i)=>v&&candidates(values.map((n,j)=>j===i?0:n),i).includes(v));}
+function enter(n){if(selected<0||puzzle[selected]){msg.textContent='เลือกช่องว่างก่อนนะครับ';return;}values[selected]=n;draw();msg.textContent=valid()?'🎉 เก่งมาก! คุณแก้ซูโดกุสำเร็จแล้ว':'บันทึกตัวเลขแล้ว';save();if(valid())speakText('เก่งมาก คุณแก้ซูโดกุสำเร็จแล้ว',null);}
+root.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>enter(Number(b.dataset.n)));
+root.querySelector('[data-check]').onclick=()=>{let bad=values.some((v,i)=>v&&!candidates(values.map((n,j)=>j===i?0:n),i).includes(v));let text=bad?'มีตัวเลขซ้ำ ลองตรวจแถว คอลัมน์ และกรอบ 2 × 2':valid()?'🎉 เก่งมาก! คุณแก้ซูโดกุสำเร็จแล้ว':'ยังไม่พบตัวเลขซ้ำ เติมช่องว่างต่อได้เลย';msg.textContent=text;speakText(text.replace(/[🎉]/g,''),null);};
+root.querySelector('[data-new]').onclick=()=>{fresh();save();};
+root.addEventListener('keydown',e=>{if(/^[1-4]$/.test(e.key)){e.preventDefault();enter(Number(e.key));}else if(e.key==='Backspace'||e.key==='Delete'){e.preventDefault();enter(0);}});
+function restore(s){if(!s||!Array.isArray(s.puzzle)||!Array.isArray(s.values)||s.puzzle.length!==16||s.values.length!==16||![...s.puzzle,...s.values].every(n=>Number.isInteger(n)&&n>=0&&n<=4))return false;puzzle=[...s.puzzle];values=s.values.map((n,i)=>puzzle[i]||n);selected=Number.isInteger(s.selected)&&s.selected>=0&&s.selected<16?s.selected:-1;draw();return true;}
+if(!restore(window.openai?.widgetState?.privateContent))fresh();
+window.addEventListener('openai:set_globals',e=>restore(e.detail?.globals?.widgetState?.privateContent));
+})();
+</script>
+
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>

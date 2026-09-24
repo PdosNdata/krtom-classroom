@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การออกแบบและเขียนอัลกอริทึม — ม.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>การออกแบบและเขียนอัลกอริทึม · ม.1 · การเขียนโปรแกรมเบื้องต้น</p>
+  </div>
+  <a href="../../index.html#/unit/m1/prog/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายแนวคิดเชิงนามธรรมและนำไปใช้พิจารณาสาระสำคัญของปัญหาได้</li>
+      <li>บอกขั้นตอนการออกแบบอัลกอริทึมและสัญลักษณ์ผังงานได้</li>
+      <li>เขียนอัลกอริทึมแก้ปัญหาอย่างง่ายด้วยภาษาธรรมชาติและผังงานได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> แนวคิดเชิงนามธรรม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>แนวคิดเชิงนามธรรม (Abstraction)</b> คือการพิจารณาเฉพาะ <b>สาระสำคัญ</b> ของปัญหา และตัดรายละเอียดที่ไม่จำเป็นออก เพื่อให้เห็นภาพรวมและแก้ปัญหาได้ง่ายขึ้น</p>
+
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">☀️</span><div><h3>การระเหยเป็นไอ</h3><p>น้ำจากแหล่งต่างๆ ระเหยกลายเป็นไอน้ำลอยตัวสูงขึ้น</p></div></div>
+      <div class="concept-card"><span class="icon">🌧️</span><div><h3>หยาดน้ำฟ้า</h3><p>ไอน้ำควบแน่นเป็นเมฆ แล้วตกลงมาเป็นฝน</p></div></div>
+      <div class="concept-card"><span class="icon">💧</span><div><h3>การซึม</h3><p>น้ำซึมลงใต้ดิน ไหลไปรวมกันในแหล่งน้ำ แล้วหมุนเวียนต่อ</p></div></div>
+      <div class="concept-card"><span class="icon">🚇</span><div><h3>แผนที่รถไฟฟ้า</h3><p>แสดงเฉพาะสถานีและเส้นทาง ไม่ต้องวาดถนนหรืออาคารทุกหลัง</p></div></div>
+    </div>
+
+    <div class="info-box">
+      💡 <b>ตัวอย่าง:</b> เมื่ออธิบาย <b>วัฏจักรน้ำ</b> เราเลือกเฉพาะสาระสำคัญ คือ ระเหย → ควบแน่น → ตกเป็นฝน → ซึม โดยไม่ต้องบอกรายละเอียดของภูเขาหรือชนิดของเมฆทุกชนิด
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การออกแบบและเขียนอัลกอริทึม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p><b>อัลกอริทึม</b> คือลำดับขั้นตอนการแก้ปัญหาที่ชัดเจน ทำตามได้ทีละขั้น การออกแบบมี 5 ขั้นตอน</p>
+    <ol class="steps">
+      <li><b>วิเคราะห์ปัญหา</b> — ต้องการหาอะไร เช่น พื้นที่สี่เหลี่ยมด้านขนาน</li>
+      <li><b>กำหนดข้อมูลนำเข้า (Input)</b> — ต้องรับข้อมูลอะไร เช่น ฐาน และความสูง</li>
+      <li><b>กำหนดข้อมูลนำออก (Output)</b> — ต้องการผลลัพธ์อะไร เช่น ค่าพื้นที่</li>
+      <li><b>กำหนดวิธีการประมวลผล</b> — ใช้สูตรอะไร เช่น พื้นที่ = ฐาน × สูง</li>
+      <li><b>เขียนอัลกอริทึม</b> — ด้วยภาษาธรรมชาติ ผังงาน หรือรหัสเทียม</li>
+    </ol>
+
+    <div class="concept-grid" style="margin-top:16px">
+      <div class="concept-card"><span class="icon">🟢</span><div><h3>เริ่มต้น/สิ้นสุด</h3><p>สัญลักษณ์รูปวงรี ใช้บอกจุดเริ่มและจุดจบของผังงาน</p></div></div>
+      <div class="concept-card"><span class="icon">📥</span><div><h3>รับ/แสดงข้อมูล</h3><p>สัญลักษณ์รูปสี่เหลี่ยมด้านขนาน ใช้รับข้อมูลหรือแสดงผล</p></div></div>
+      <div class="concept-card"><span class="icon">⬜</span><div><h3>การประมวลผล</h3><p>สัญลักษณ์รูปสี่เหลี่ยมผืนผ้า ใช้คำนวณหรือกำหนดค่า</p></div></div>
+      <div class="concept-card"><span class="icon">🔶</span><div><h3>ทางเลือกเงื่อนไข</h3><p>สัญลักษณ์รูปสี่เหลี่ยมขนมเปียกปูน ใช้ตัดสินใจ ใช่/ไม่ใช่</p></div></div>
+    </div>
+
+    <div class="info-box">
+      💡 <b>ควรรู้ไว้:</b> ผังงานช่วยให้ <b>มองเห็นลำดับขั้นตอน</b> ได้ชัดเจน ก่อนนำไปเขียนเป็นโปรแกรมคอมพิวเตอร์
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🤔</span>
+    <div><b>รู้หรือไม่?</b> คำว่า "อัลกอริทึม" (Algorithm) มาจากชื่อของนักคณิตศาสตร์ในอดีตชื่อ อัล-ควาริซมี ซึ่งเป็นผู้วางรากฐานวิธีคิดเป็นขั้นตอนในการคำนวณ</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>แนวคิดเชิงนามธรรม คือการพิจารณาเฉพาะสาระสำคัญ ตัดรายละเอียดที่ไม่จำเป็นออก</li>
+      <li>ออกแบบอัลกอริทึม 5 ขั้น: วิเคราะห์ปัญหา, ข้อมูลนำเข้า, ข้อมูลนำออก, วิธีประมวลผล, เขียนอัลกอริทึม</li>
+      <li>ผังงานใช้สัญลักษณ์ เริ่มต้น/สิ้นสุด, รับ/แสดงข้อมูล, ประมวลผล และทางเลือกเงื่อนไข</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m1/prog/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js"></script>
+</body>
+</html>
