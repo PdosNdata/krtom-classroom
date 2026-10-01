@@ -191,7 +191,7 @@ const READY_CONTENT = {
     knowledge: { href:"content/m1-cs-0/knowledge.html", title:"การออกแบบและการเขียนอัลกอริทึม" },
     worksheet: { href:"content/m1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 แนวคิดเชิงนามธรรมและรูปแบบการเขียนอัลกอริทึม" },
     quiz:      { href:"content/m1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
-    game:      { href:"content/m1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ" }
+    game:      { href:"content/m1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ", hideMain:true }   // หน่วยนี้ใช้เกมที่ครูเพิ่มเอง ไม่แสดงปุ่มเกมพลิกไพ่สำเร็จรูป
   },
   "m1/cs/1": {
     knowledge: { href:"content/m1-cs-1/knowledge.html", title:"การออกแบบและการเขียนโปรแกรมเบื้องต้น" },
@@ -843,13 +843,13 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
   const readyHere = READY_CONTENT[unitKey] && READY_CONTENT[unitKey][activeTab];
   if((activeTab === "game" || activeTab === "ar") && readyHere && readyHere.href){
     const isGame = activeTab === "game";
-    const opts = [ isGame
+    const opts = (readyHere.hideMain ? [] : [ isGame
         ? { key:"flipcards", label:"🎮 เกมพลิกไพ่จับคู่", href: readyHere.href }
-        : { key: readyHere.primaryKey || "play", label: readyHere.primaryLabel || "▶ เล่นเกมนี้เลย", href: readyHere.href } ]
+        : { key: readyHere.primaryKey || "play", label: readyHere.primaryLabel || "▶ เล่นเกมนี้เลย", href: readyHere.href } ])
       .concat((readyHere.extraLinks || []).map(l => ({ key:l.key, label:l.label, href:l.href })));
     panelHtml = "";
     extraOpts = { title: isGame ? "🎮 เกมและกิจกรรม" : "🕶️ เกม AR และกิจกรรม",
-      pre: `<div class="btn-row cx-gamebtns" style="justify-content:center; flex-direction:column; align-items:center">${opts.map(o => actionBtn(o.href, o.key, o.label, "")).join("")}</div>` };
+      pre: opts.length === 0 ? "" : `<div class="btn-row cx-gamebtns" style="justify-content:center; flex-direction:column; align-items:center">${opts.map(o => actionBtn(o.href, o.key, o.label, "")).join("")}</div>` };
   }
   const teacherBar = KrtomContent.isTeacher()
     ? `<div class="cx-teacherbar"><button type="button" class="cx-addbtn" onclick="KrtomContent.openAddForm({grade:'${grade.id}',subject:'${subject.id}',unit:${idx},tab:'${activeTab}'})">➕ เพิ่มเนื้อหาในแท็บนี้</button></div>`
@@ -860,7 +860,7 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
     ${flow ? `<div class="cx-teacherbar" style="margin-top:0"><a class="cx-open" href="#/unit/${grade.id}/${subject.id}/${idx}/knowledge">← กลับหน้าขั้นตอนการเรียน</a></div>` : ""}
     ${tabBtns ? `<div class="tabs">${tabBtns}</div>` : ""}
     ${panelHtml ? `<div class="tab-panel" id="tab-panel">${panelHtml}</div>` : ""}
-    ${(extras.length || extraOpts) ? `<div class="tab-panel extra-panel">${KrtomContent.renderItems(extras, extraOpts)}</div>` : ""}
+    ${(extras.length || (extraOpts && extraOpts.pre)) ? `<div class="tab-panel extra-panel">${KrtomContent.renderItems(extras, extraOpts)}</div>` : (extraOpts ? `<div class="tab-panel"><p style="text-align:center;color:#666">ยังไม่มีเกมในหน่วยนี้</p></div>` : "")}
     ${teacherBar}
   `;
 }

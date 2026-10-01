@@ -113,8 +113,8 @@ const KrtomContent = (() => {
   function renderItems(items, opts){
     opts = opts || {};
     if(!items.length && !opts.pre) return "";
-    if(opts.pre){
-      return `<div class="cx-wrap"><div class="cx-title">${opts.title || "🎮 เกมและกิจกรรม"}</div>${opts.pre}${items.length ? `<div class="cx-sec">เพิ่มโดยครู</div><div class="cx-grid">${items.map(renderItem).join("")}</div>` : ""}</div>`;
+    if(opts.pre != null){
+      return `<div class="cx-wrap"><div class="cx-title">${opts.title || "🎮 เกมและกิจกรรม"}</div>${opts.pre}${items.length ? `${opts.pre ? '<div class="cx-sec">เพิ่มโดยครู</div>' : ""}<div class="cx-grid">${items.map(renderItem).join("")}</div>` : ""}</div>`;
     }
     const order = ["article", "cartoon", "main"];
     const groups = order.map(sec => ({ sec, list: items.filter(x => x.section === sec) })).filter(g => g.list.length);
