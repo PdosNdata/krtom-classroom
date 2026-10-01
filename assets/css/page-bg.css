@@ -1,0 +1,8 @@
+/* พื้นหลังเดียวกับหน้าหลัก (home-bg.webp จางลงครึ่งหนึ่ง) ใช้กับทุกหน้าเนื้อหา */
+html{ background:#F7F8FC; }
+body{ background:transparent !important; }
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:url("../images/home-bg.webp") center / cover no-repeat;
+  opacity:.5;
+}

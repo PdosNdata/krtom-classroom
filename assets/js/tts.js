@@ -15,8 +15,14 @@
 
 let ttsCurrentBtn = null;
 let ttsAudioEl = null; // ใช้ <audio> element เดียวเล่นซ้ำ เพื่อให้หยุดของเก่าได้ง่าย
+let ttsLastCall = { btn:null, t:0 };
 
 function playAudio(src, btn){
+  // บางหน้าผูก click ซ้ำ (หน้าเพจ + DOMContentLoaded ด้านล่าง) ถ้าไม่ข้าม ครั้งที่ 2 จะนับเป็น "กดซ้ำ = หยุด"
+  const now = performance.now();
+  if(btn && ttsLastCall.btn === btn && now - ttsLastCall.t < 150) return;
+  ttsLastCall = { btn, t: now };
+
   const clickedWhileSpeaking = ttsCurrentBtn === btn && ttsAudioEl && !ttsAudioEl.paused;
   stopSpeaking();
   if(clickedWhileSpeaking) return; // กดซ้ำปุ่มเดิมตอนกำลังเล่นอยู่ = หยุดเล่น

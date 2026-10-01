@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การ์ตูนเรียนรู้: รู้จักอุปกรณ์คอมพิวเตอร์ — ป.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&family=Mitr:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:.8rem; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.5rem; text-decoration:none; }
+
+  main{ max-width:1100px; margin:0 auto; padding:16px 14px 50px; }
+
+  #stage{ position:relative; aspect-ratio:1789/879; overflow:hidden; border-radius:24px; border:5px solid #0b2a6b; box-shadow:0 8px 0 #0b2a6b33; background:#bfe6ff; }
+  #camera{ position:absolute; inset:0; transform-origin:0 0; transition:transform 1.3s cubic-bezier(.45,.05,.25,1); will-change:transform; }
+  #camera img{ position:absolute; inset:0; width:100%; height:100%; display:block; user-select:none; -webkit-user-drag:none; }
+  #fx{ position:absolute; inset:0; width:100%; height:100%; }
+
+  #spot{ transition:opacity .5s; }
+  .ring{ fill:none; stroke:#FDE047; stroke-width:10; stroke-dasharray:28 16; animation:march 1s linear infinite, glowPulse 1.2s ease-in-out infinite alternate; filter:drop-shadow(0 0 10px #fde047); }
+  @keyframes march{ to{ stroke-dashoffset:-44; } }
+  @keyframes glowPulse{ from{ stroke-opacity:.75; } to{ stroke-opacity:1; } }
+  .arrow{ animation:bounce .55s ease-in-out infinite alternate; }
+  @keyframes bounce{ from{ transform:translateY(0); } to{ transform:translateY(22px); } }
+  .fxgroup{ opacity:0; transition:opacity .45s; }
+  .fxgroup.on{ opacity:1; }
+  .bubble text{ font-family:"Mitr",sans-serif; font-weight:600; }
+  .pop{ transform-box:fill-box; transform-origin:0% 100%; animation:pop .45s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes pop{ from{ transform:scale(.2); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+  #title-card{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(11,42,107,.25); transition:opacity .4s; }
+  #title-card div{ background:#fff; border:5px solid #0b2a6b; border-radius:26px; padding:18px 34px; text-align:center; box-shadow:0 8px 0 #0b2a6b55; }
+  #title-card b{ display:block; font-family:"Mitr",sans-serif; font-size:.95rem; color:#1D4ED8; }
+  #title-card span{ font-size:.6rem; font-weight:700; color:#0b2a6b; }
+
+  #caption{ margin-top:14px; min-height:2.6em; background:#fff; border:3px solid #BFDBFE; border-radius:20px; padding:12px 18px; font-size:.72rem; font-weight:700; line-height:1.45; text-align:center; color:#1D4ED8; box-shadow:0 4px 10px rgba(0,0,0,.05); display:flex; align-items:center; justify-content:center; }
+
+  #controls{ display:flex; justify-content:center; gap:10px; margin-top:14px; flex-wrap:wrap; }
+  #controls button{ font-family:inherit; font-size:.55rem; font-weight:800; border:none; border-radius:999px; padding:10px 22px; cursor:pointer; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.18); }
+  #controls button:active{ transform:translateY(3px); box-shadow:none; }
+  #btn-play{ background:#10B981; }
+  #btn-next{ background:#3B82F6; }
+  #btn-replay{ background:#F97316; }
+  #controls button:disabled{ opacity:.45; cursor:default; }
+
+  #progress{ display:flex; justify-content:center; gap:8px; margin-top:12px; }
+  #progress span{ width:14px; height:14px; border-radius:50%; background:#dbe3f4; transition:all .3s; }
+  #progress span.done{ background:#10B981; }
+  #progress span.now{ background:#F59E0B; transform:scale(1.3); }
+
+  @media (max-width:600px){ :root{ font-size:28px; } }
+  @media (prefers-reduced-motion:reduce){ #camera{ transition:none; } .ring,.arrow{ animation:none; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <h1>🎬 การ์ตูนเรียนรู้: รู้จักอุปกรณ์คอมพิวเตอร์</h1>
+  <a href="../../index.html#/unit/p1/cs/0/knowledge/cartoon">← กลับรายการการ์ตูน</a>
+</header>
+
+<main>
+  <div id="stage">
+    <div id="camera">
+      <img src="../../assets/images/anim-p1-0-devices.webp" alt="เด็กนักเรียนแนะนำอุปกรณ์คอมพิวเตอร์บนโต๊ะ: จอมอนิเตอร์ ซีพียู เมาส์ แป้นพิมพ์ ลำโพง">
+      <svg id="fx" viewBox="0 0 1789 879" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id="spot-mask">
+            <rect width="1789" height="879" fill="#fff"/>
+            <g id="holes" fill="#000"></g>
+          </mask>
+        </defs>
+        <rect id="spot" width="1789" height="879" fill="#0b1a3a" fill-opacity=".55" mask="url(#spot-mask)" opacity="0"/>
+        <g id="rings" class="fxgroup"></g>
+        <g id="arrow-g" class="fxgroup"></g>
+        <g id="bubble-g" class="fxgroup"></g>
+      </svg>
+    </div>
+    <div id="title-card"><div><b>รู้จักอุปกรณ์คอมพิวเตอร์</b><span>กดปุ่ม ▶ เริ่มดู ได้เลย</span></div></div>
+  </div>
+
+  <div id="caption">กดปุ่ม "▶ เริ่มดู" เพื่อชมการ์ตูน 🎬</div>
+
+  <div id="controls">
+    <button id="btn-play">▶ เริ่มดู</button>
+    <button id="btn-next" disabled>⏭ ถัดไป</button>
+    <button id="btn-replay" disabled>🔄 ดูอีกครั้ง</button>
+  </div>
+  <div id="progress"></div>
+</main>
+
+<script>
+const IW = 1789, IH = 879, MAX_ZOOM = 2.6;
+// กรอบของแต่ละอย่างในภาพ (พิกัดพิกเซลของภาพต้นฉบับ) [x1, y1, x2, y2]
+const BOX = {
+  kid:      [15, 245, 380, 820],
+  monitor:  [325, 200, 718, 528],  monitorL:  [383, 576, 668, 652],
+  cpu:      [726, 212, 920, 538],  cpuL:      [724, 576, 900, 652],
+  mouse:    [962, 440, 1060, 538], mouseL:    [953, 576, 1118, 652],
+  keyboard: [1088, 432, 1492, 536],keyboardL: [1173, 576, 1442, 652],
+  speaker:  [1500, 338, 1724, 536],speakerL:  [1493, 576, 1682, 652]
+};
+// เสียงของแต่ละฉากอยู่ที่ audio/anim-N.mp3
+const SCENES = [
+  { focus:"kid",      bubble:"สวัสดีจ้า! 👋", text:"สวัสดีจ้า! วันนี้เราไปรู้จักอุปกรณ์คอมพิวเตอร์กันนะ" },
+  { focus:"monitor",  text:"นี่คือ จอมอนิเตอร์ 🖥️ ทำหน้าที่แสดงผล ให้เราเห็นตัวอักษรและภาพ" },
+  { focus:"cpu",      text:"นี่คือ ซีพียู 💡 เป็นสมองของคอมพิวเตอร์ ทำหน้าที่ประมวลผลข้อมูล" },
+  { focus:"mouse",    text:"นี่คือ เมาส์ 🖱️ ใช้ชี้และคลิกเลือก เพื่อควบคุมคอมพิวเตอร์" },
+  { focus:"keyboard", text:"นี่คือ แป้นพิมพ์ ⌨️ ใช้พิมพ์ตัวอักษร ตัวเลข และสัญลักษณ์" },
+  { focus:"speaker",  text:"นี่คือ ลำโพง 🔊 ทำหน้าที่ส่งเสียงออกมาให้เราได้ยิน" },
+  { focus:null,       bubble:"เก่งมาก! 🎉", text:"เก่งมาก! ตอนนี้เรารู้จักอุปกรณ์คอมพิวเตอร์ครบ 5 อย่างแล้ว 🎉" }
+];
+const CAMERA_MS = 1300;
+
+const camera = document.getElementById("camera");
+const spot = document.getElementById("spot");
+const holes = document.getElementById("holes");
+const rings = document.getElementById("rings");
+const arrowG = document.getElementById("arrow-g");
+const bubbleG = document.getElementById("bubble-g");
+const titleCard = document.getElementById("title-card");
+const caption = document.getElementById("caption");
+const btnPlay = document.getElementById("btn-play");
+const btnNext = document.getElementById("btn-next");
+const btnReplay = document.getElementById("btn-replay");
+const progress = document.getElementById("progress");
+SCENES.forEach(() => progress.appendChild(document.createElement("span")));
+
+let sceneIdx = -1, playing = false, audio = null, timer = null;
+
+function union(...boxes){
+  return [Math.min(...boxes.map(b => b[0])), Math.min(...boxes.map(b => b[1])),
+          Math.max(...boxes.map(b => b[2])), Math.max(...boxes.map(b => b[3]))];
+}
+function regionFor(focus){
+  if(!focus) return null;
+  if(focus === "kid") return union(BOX.kid, [15, 140, 760, 560]);
+  const d = BOX[focus];
+  return union(d, BOX[focus + "L"], [d[0], d[1] - 130, d[2], d[1]]); // เผื่อที่ให้ลูกศรด้านบน
+}
+// เลื่อนกล้องให้กรอบที่ต้องการอยู่กลางจอ (null = ดูทั้งภาพ)
+function moveCamera(r){
+  if(!r){ camera.style.transform = "translate(0,0) scale(1)"; return; }
+  const pad = 40;
+  const w = r[2] - r[0] + pad * 2, h = r[3] - r[1] + pad * 2;
+  const s = Math.max(1, Math.min(IW / w, IH / h, MAX_ZOOM));
+  const cx = (r[0] + r[2]) / 2, cy = (r[1] + r[3]) / 2;
+  const clamp = (v) => Math.min(0, Math.max((1 - s) * 100, v));
+  const tx = clamp((0.5 - cx / IW * s) * 100);
+  const ty = clamp((0.5 - cy / IH * s) * 100);
+  camera.style.transform = `translate(${tx}%, ${ty}%) scale(${s})`;
+}
+function rrect(b, pad, rx, attrs){
+  return `<rect x="${b[0]-pad}" y="${b[1]-pad}" width="${b[2]-b[0]+pad*2}" height="${b[3]-b[1]+pad*2}" rx="${rx}" ${attrs||""}/>`;
+}
+function clearFx(){
+  spot.setAttribute("opacity", "0");
+  [rings, arrowG, bubbleG].forEach(g => { g.classList.remove("on"); });
+}
+function showFx(scene){
+  const f = scene.focus;
+  if(f && f !== "kid"){
+    const dev = BOX[f], lab = BOX[f + "L"];
+    holes.innerHTML = rrect(dev, 18, 26) + rrect(lab, 10, 30);
+    spot.setAttribute("opacity", "1");
+    rings.innerHTML = rrect(dev, 18, 26, 'class="ring"') + rrect(lab, 10, 30, 'class="ring"');
+    const ax = (dev[0] + dev[2]) / 2, ay = dev[1] - 26;
+    arrowG.innerHTML = `<g class="arrow"><path d="M${ax-34},${ay-86} h68 v36 h30 l-64,52 l-64,-52 h30 z" fill="#F97316" stroke="#0b2a6b" stroke-width="8" stroke-linejoin="round"/></g>`;
+    rings.classList.add("on"); arrowG.classList.add("on");
+  } else if(f === "kid"){
+    holes.innerHTML = rrect(BOX.kid, 6, 40);
+    spot.setAttribute("opacity", "1");
+  }
+  if(scene.bubble){
+    const bx = 300, by = 150;
+    bubbleG.innerHTML = `<g class="bubble pop">
+      <rect x="${bx}" y="${by}" width="330" height="96" rx="40" fill="#fff" stroke="#0b2a6b" stroke-width="7"/>
+      <path d="M${bx+40},${by+90} l-34,58 l70,-58 z" fill="#fff" stroke="#0b2a6b" stroke-width="7" stroke-linejoin="round"/>
+      <rect x="${bx+30}" y="${by+80}" width="60" height="14" fill="#fff"/>
+      <text x="${bx+165}" y="${by+64}" text-anchor="middle" font-size="46" fill="#1D4ED8">${scene.bubble}</text></g>`;
+    bubbleG.classList.add("on");
+  }
+}
+function markProgress(){
+  [...progress.children].forEach((s, i) => { s.className = i < sceneIdx ? "done" : (i === sceneIdx ? "now" : ""); });
+}
+function stopAll(){
+  if(timer){ clearTimeout(timer); timer = null; }
+  if(audio){ audio.pause(); audio = null; }
+}
+
+function runScene(i){
+  stopAll();
+  sceneIdx = i;
+  markProgress();
+  titleCard.style.opacity = "0";
+  titleCard.style.pointerEvents = "none";
+  clearFx();
+  const scene = SCENES[i];
+  moveCamera(regionFor(scene.focus));
+  caption.textContent = "🎥 ...";
+  // ใช้ setTimeout รอกล้องเลื่อนเสร็จ ไม่พึ่ง transitionend (กันค้างเมื่อแท็บถูกพัก)
+  timer = setTimeout(() => {
+    showFx(scene);
+    caption.textContent = scene.text;
+    let done = false;
+    const next = () => {
+      if(done || !playing) return; done = true;
+      timer = setTimeout(() => { if(i + 1 < SCENES.length) runScene(i + 1); else finishAll(); }, 900);
+    };
+    audio = new Audio(`audio/anim-${i}.mp3`);
+    audio.addEventListener("ended", next);
+    audio.addEventListener("error", () => { timer = setTimeout(next, 3500); });
+    audio.play().catch(() => { timer = setTimeout(next, 3500); });
+  }, CAMERA_MS);
+}
+
+function finishAll(){
+  playing = false;
+  sceneIdx = SCENES.length;
+  markProgress();
+  btnPlay.textContent = "▶ เริ่มดู";
+  btnPlay.disabled = true;
+  btnNext.disabled = true;
+  btnReplay.disabled = false;
+}
+
+btnPlay.addEventListener("click", () => {
+  if(playing){
+    playing = false;
+    stopAll();
+    btnPlay.textContent = "▶ ดูต่อ";
+    caption.textContent = "⏸ พักไว้ก่อน กด \"▶ ดูต่อ\" เพื่อดูต่อ";
+    return;
+  }
+  playing = true;
+  btnPlay.textContent = "⏸ พัก";
+  btnNext.disabled = false;
+  btnReplay.disabled = false;
+  runScene(Math.max(0, sceneIdx));
+});
+btnNext.addEventListener("click", () => {
+  if(sceneIdx + 1 >= SCENES.length){ stopAll(); clearFx(); moveCamera(null); finishAll(); return; }
+  playing = true;
+  btnPlay.textContent = "⏸ พัก";
+  runScene(sceneIdx + 1);
+});
+btnReplay.addEventListener("click", () => {
+  playing = true;
+  btnPlay.disabled = false;
+  btnPlay.textContent = "⏸ พัก";
+  btnNext.disabled = false;
+  runScene(0);
+});
+document.addEventListener("visibilitychange", () => { if(document.hidden && playing) btnPlay.click(); });
+window.addEventListener("beforeunload", stopAll);
+markProgress();
+</script>
+</body>
+</html>

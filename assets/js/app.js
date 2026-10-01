@@ -42,6 +42,7 @@ const HERO_KID_IMG = { boy:"assets/images/home-hero-boy.png", girl:"assets/image
 // ใช้รูปเดียวกันทุกหน่วย/ทุกชั้น (ไม่ผูกกับหน่วยใดหน่วยหนึ่ง) ถ้ายังไม่มีไฟล์จะใช้ปุ่มโค้ดแบบเดิมแทน
 const ACTION_BTN_IMG = {
   play: "assets/images/btn-play.webp",
+  flipcards: ["assets/images/btn-flipcards.webp?v=2", "assets/images/btn-play.webp"],
   handpoint: "assets/images/btn-ar-handpoint.webp",
   nocamera: "assets/images/btn-ar-nocamera.webp",
   "match-ar": "assets/images/btn-ar-match.webp",
@@ -51,7 +52,9 @@ const ACTION_BTN_IMG = {
   "sudoku-p5-0": "assets/images/btn-sudoku-p5-0.webp",
   "tetris-p1-0": "assets/images/btn-tetris.webp",
   "tetris-p2-0": "assets/images/btn-tetris.webp",
-  "tetris-p3-0": "assets/images/btn-tetris-p3-0.webp"
+  "tetris-p3-0": "assets/images/btn-tetris-p3-0.webp",
+  article: "assets/images/btn-article.webp",
+  "anim-cartoon": "assets/images/btn-anim-p1-0.webp"
 };
 
 // เรียงรูปไล่ลำดับสำรอง: ถ้าโหลดรูปแรกไม่ได้ (404) จะลองรูปถัดไปในลิสต์ให้อัตโนมัติ ไม่มีวันเห็นไอคอนรูปพัง
@@ -119,7 +122,13 @@ const TAB_META = {
 // แต่ละรายการ: { href, title, extraLink? }
 const READY_CONTENT = {
   "p1/cs/0": {
-    knowledge: { href:"content/p1-cs-0/knowledge.html", title:"การใช้งานเทคโนโลยีเบื้องต้น" },
+    knowledge: {
+      href:"content/p1-cs-0/knowledge.html", title:"การใช้งานเทคโนโลยีเบื้องต้น",
+      primaryKey:"article", primaryLabel:"📖 เนื้อหาบทความ"
+    },
+    cartoons:[
+      { href:"content/p1-cs-0/animation.html", title:"การ์ตูนเรียนรู้: รู้จักอุปกรณ์คอมพิวเตอร์", desc:"เด็กนักเรียนเดินแนะนำจอมอนิเตอร์ ซีพียู เมาส์ แป้นพิมพ์ และลำโพง พร้อมเสียงพากย์" }
+    ],
     worksheet: { href:"content/p1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 อุปกรณ์เทคโนโลยี" },
     quiz:      { href:"content/p1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game: {
@@ -143,8 +152,20 @@ const READY_CONTENT = {
     game:      { href:"content/p1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" },
     ar: { href:"content/p1-cs-1/ar-game-nocamera.html", title:"เรียงลำดับขั้นตอนแปรงฟัน" }
   },
-  "p1/cs/2": { ar: { href:"content/p1-cs-2/ar-game-nocamera.html", title:"เขียนโปรแกรมพาแมวไปหาปลา" } },
-  "p1/cs/3": { ar: { href:"content/p1-cs-3/ar-game-nocamera.html", title:"จัดหมวดหมู่ ทำถูก/ทำไม่ถูก" } },
+  "p1/cs/2": {
+    knowledge: { href:"content/p1-cs-2/knowledge.html", title:"การเขียนโปรแกรมเบื้องต้น" },
+    worksheet: { href:"content/p1-cs-2/worksheet.html", title:"ใบงานที่ 3.1 การเขียนโปรแกรมโดยใช้บัตรคำสั่ง" },
+    quiz:      { href:"content/p1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" },
+    ar: { href:"content/p1-cs-2/ar-game-nocamera.html", title:"เขียนโปรแกรมพาแมวไปหาปลา" }
+  },
+  "p1/cs/3": {
+    knowledge: { href:"content/p1-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศ" },
+    worksheet: { href:"content/p1-cs-3/worksheet.html", title:"ใบงานที่ 4.1 การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
+    quiz:      { href:"content/p1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p1-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" },
+    ar: { href:"content/p1-cs-3/ar-game-nocamera.html", title:"จัดหมวดหมู่ ทำถูก/ทำไม่ถูก" }
+  },
   "p2/cs/0": {
     knowledge: { href:"content/p2-cs-0/knowledge.html", title:"การแก้ปัญหาอย่างง่าย" },
     worksheet: { href:"content/p2-cs-0/worksheet.html", title:"ใบงานที่ 1.1 จับคู่สัญลักษณ์ทิศทาง" },
@@ -165,6 +186,30 @@ const READY_CONTENT = {
         { key:"tetris-p3-0", href:"content/p3-cs-0/game-tetris.html", label:"🧱 เกมคูณ–หาร สนุกคิด" }
       ]
     }
+  },
+  "m1/cs/0": {
+    knowledge: { href:"content/m1-cs-0/knowledge.html", title:"การออกแบบและการเขียนอัลกอริทึม" },
+    worksheet: { href:"content/m1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 แนวคิดเชิงนามธรรมและรูปแบบการเขียนอัลกอริทึม" },
+    quiz:      { href:"content/m1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/m1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "m1/cs/1": {
+    knowledge: { href:"content/m1-cs-1/knowledge.html", title:"การออกแบบและการเขียนโปรแกรมเบื้องต้น" },
+    worksheet: { href:"content/m1-cs-1/worksheet.html", title:"ใบงานที่ 2.1 หลักการเขียนโปรแกรมและโปรแกรมภาษา" },
+    quiz:      { href:"content/m1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/m1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "m1/cs/2": {
+    knowledge: { href:"content/m1-cs-2/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
+    worksheet: { href:"content/m1-cs-2/worksheet.html", title:"ใบงานที่ 3.1 ข้อมูลปฐมภูมิ ทุติยภูมิ และการเลือกใช้ซอฟต์แวร์" },
+    quiz:      { href:"content/m1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/m1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "m1/cs/3": {
+    knowledge: { href:"content/m1-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
+    worksheet: { href:"content/m1-cs-3/worksheet.html", title:"ใบงานที่ 4.1 ภัยคุกคามและสัญญาอนุญาตครีเอทีฟคอมมอนส์" },
+    quiz:      { href:"content/m1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/m1-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "m1/prog/0": {
     knowledge: { href:"content/m1-prog-0/knowledge.html", title:"การออกแบบและเขียนอัลกอริทึม" },
@@ -289,6 +334,7 @@ function render(){
     }
   }
 
+  if(parts[0] === "reports") return KrtomReports.render();   // เมนูครู: ดูงานนักเรียน
   if(parts[0] === "ar-games") return renderARGamesHub();
 
   if(parts[0] === "grade" && parts[1]){
@@ -313,6 +359,15 @@ function render(){
     const unit = subject.units[idx];
     if(!unit) return renderUnitList(grade, subject);
     const tab = parts[4] || "knowledge";
+    if(isFlowUnit(grade.id, subject.id, idx)){
+      const u = { g:grade.id, s:subject.id, i:idx };
+      if(tab === "objectives") return renderObjectives(grade, subject, idx, unit);
+      if(tab === "knowledge" && parts[5] === "cartoon") return flowGate(u, set => KrtomFlow.unlocked(set, u, "knowledge"), () => renderCartoonView(grade, subject, idx, unit));
+      if(tab === "knowledge" && parts[5] === "read") return flowGate(u, set => KrtomFlow.unlocked(set, u, "knowledge"), () => renderUnitDetail(grade, subject, idx, unit, "knowledge"));
+      if(tab === "game" || tab === "ar") return flowGate(u, set => KrtomFlow.done(set, u, "posttest"), () => renderUnitDetail(grade, subject, idx, unit, tab));
+      return renderFlowSteps(grade, subject, idx, unit);   // knowledge / worksheet / quiz / อื่น ๆ = หน้าขั้นตอนการเรียน
+    }
+    if(tab === "knowledge" && parts[5] === "cartoon") return renderCartoonView(grade, subject, idx, unit);
     return renderUnitDetail(grade, subject, idx, unit, tab);
   }
 
@@ -486,10 +541,15 @@ function renderGrade(grade){
 
   const cards = grade.subjects.map(s => `
     <a class="card subject-card" href="#/grade/${grade.id}/subject/${s.id}">
-      <span class="s-emoji">${s.id === "design" ? "🛠️" : "💻"}</span>
-      <div>
-        <div class="s-name">${s.name}</div>
-        <div class="s-meta">${s.units.length} หน่วยการเรียนรู้ · รหัส ${s.code}</div>
+      <img class="s-fullcard-img" src="assets/images/home-subject-${grade.id}-${s.id}.webp" alt="${s.name}"
+           onload="this.closest('.subject-card').classList.add('has-fullcard'); this.style.display='block'; this.nextElementSibling.style.display='none';"
+           onerror="this.style.display='none';">
+      <div class="s-coded-fallback">
+        <span class="s-emoji">${s.id === "design" ? "🛠️" : "💻"}</span>
+        <div>
+          <div class="s-name">${s.name}</div>
+          <div class="s-meta">${s.units.length} หน่วยการเรียนรู้ · รหัส ${s.code}</div>
+        </div>
       </div>
     </a>
   `).join("");
@@ -539,6 +599,211 @@ function renderUnitList(grade, subject){
 }
 
 /* ---------------- หน้ารายละเอียดหน่วย (แท็บ) ---------------- */
+/* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
+   1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
+   ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
+const FLOW_STEPS = [
+  { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
+  { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
+  { key:"knowledge",  emoji:"📘", label:"ใบความรู้" },
+  { key:"worksheet",  emoji:"✏️", label:"ใบงาน" },
+  { key:"posttest",   emoji:"✅", label:"แบบทดสอบหลังเรียน" }
+];
+// รูปปุ่มขั้นตอน (ใช้ทุกหน่วย/ทุกชั้น) — [รูปหลัก, รูปสำรอง]; ถ้าไม่มีไฟล์ใช้การ์ดโค้ดแทน
+const FLOW_IMG = {
+  objectives: ["assets/images/flow-objectives.webp"],
+  pretest:    ["assets/images/flow-pretest.webp"],
+  knowledge:  ["assets/images/home-tab-knowledge.webp"],
+  worksheet:  ["assets/images/home-tab-worksheet.webp"],
+  posttest:   ["assets/images/flow-posttest.webp", "assets/images/home-tab-quiz.webp"],
+  game:       ["assets/images/home-tab-game.webp"],
+  ar:         ["assets/images/home-tab-ar.webp"]
+};
+function flowImg(key, label){
+  const list = FLOW_IMG[key]; if(!list) return "";
+  return `<img class="flow-img" src="${list[0]}" data-alt="${list.slice(1).join(",")}" alt="${label}"
+    onload="this.closest('.flow-step').classList.add('has-img')"
+    onerror="var a=this.dataset.alt?this.dataset.alt.split(','):[]; if(a.length){ this.dataset.alt=a.slice(1).join(','); this.src=a[0]; } else this.remove();">`;
+}
+function isFlowUnit(g, s, i){
+  const r = READY_CONTENT[`${g}/${s}/${i}`];
+  return !!(window.KrtomFlow && r && r.knowledge && r.worksheet && r.quiz);
+}
+const flowEsc = (t) => String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+function flowStepHref(u, step){
+  const r = READY_CONTENT[`${u.g}/${u.s}/${u.i}`];
+  const base = `#/unit/${u.g}/${u.s}/${u.i}`;
+  return {
+    objectives: `${base}/objectives`,
+    pretest:    `${r.quiz.href}?mode=pre`,
+    knowledge:  `${base}/knowledge/read`,
+    worksheet:  r.worksheet.href,
+    posttest:   r.quiz.href
+  }[step];
+}
+function flowLockedMsg(){
+  if(window.Swal) Swal.fire({ icon:"info", title:"ยังเข้าไม่ได้", text:"ต้องเรียนตามลำดับขั้นตอน — ทำขั้นก่อนหน้าให้เสร็จก่อนนะ", confirmButtonText:"ตกลง", confirmButtonColor:"#3B82F6" });
+}
+// ตรวจสิทธิ์เข้าหน้า (ห้ามข้ามขั้น) แล้วค่อยวาดหน้า; ไม่ผ่านให้กลับหน้าขั้นตอน
+async function flowGate(u, allowed, then){
+  if(!KrtomFlow.tracked()) return then();
+  const hash = location.hash;
+  app.innerHTML = `<div class="page-subtitle">กำลังตรวจสอบ...</div>`;
+  let set;
+  try{ set = await KrtomFlow.getProgress(); }
+  catch(e){
+    if(location.hash !== hash) return;
+    app.innerHTML = `<div class="page-subtitle">${flowEsc(KrtomFlow.errText(e))}</div><div class="cx-teacherbar"><a class="cx-open" href="#/unit/${u.g}/${u.s}/${u.i}/knowledge">← กลับหน้าขั้นตอนการเรียน</a></div>`;
+    return;
+  }
+  if(location.hash !== hash) return;
+  if(allowed(set)) return then(set);
+  flowLockedMsg();
+  location.hash = `#/unit/${u.g}/${u.s}/${u.i}/knowledge`;
+}
+
+async function renderFlowSteps(grade, subject, idx, unit){
+  applyTextSize(grade.id);
+  const u = { g:grade.id, s:subject.id, i:idx };
+  const base = `#/unit/${grade.id}/${subject.id}/${idx}`;
+  setBreadcrumb([
+    { label:"🏠 หน้าแรก", href:"#/" },
+    { label: grade.grade, href: grade.subjects.length > 1 ? `#/grade/${grade.id}` : "#/" },
+    { label: subject.name, href: `#/grade/${grade.id}/subject/${subject.id}` },
+    { label: `หน่วยที่ ${idx+1}` }
+  ]);
+  const head = `
+    <div class="page-title">หน่วยที่ ${idx+1}: ${unit.name}</div>
+    <div class="page-subtitle">${subject.name} · ${grade.grade}</div>`;
+  const hash = location.hash;
+  app.innerHTML = head + `<div class="page-subtitle">กำลังโหลดความคืบหน้า...</div>`;
+  let set = null, err = null;
+  try{ set = await KrtomFlow.getProgress(); }catch(e){ err = e; }
+  if(location.hash !== hash) return;
+  if(err){
+    app.innerHTML = head + `<div class="tab-panel"><p style="text-align:center">${flowEsc(KrtomFlow.errText(err))}</p><div class="btn-row" style="justify-content:center"><a class="btn" href="javascript:render()">ลองใหม่</a></div></div>`;
+    return;
+  }
+  const tracked = !!set;
+  let nextFound = false;
+  const cards = FLOW_STEPS.map((st, n) => {
+    const isDone = tracked && set.has(`${u.g}/${u.s}/${u.i}/${st.key}`);
+    const isOpen = KrtomFlow.unlocked(set, u, st.key);
+    const isNext = tracked && isOpen && !isDone && !nextFound;
+    if(isNext) nextFound = true;
+    const state = isDone ? "done" : (isOpen ? (isNext ? "next" : "open") : "locked");
+    const badge = isDone ? "✅ ทำแล้ว" : (!isOpen ? "🔒 ล็อก" : (isNext ? "▶ ทำขั้นนี้" : ""));
+    const inner = `${flowImg(st.key, st.label)}<span class="flow-num">${n+1}</span><span class="flow-emoji">${st.emoji}</span><span class="flow-label">${st.label}</span><span class="flow-badge">${badge}</span>`;
+    return isOpen
+      ? `<a class="flow-step ${state}" href="${flowStepHref(u, st.key)}">${inner}</a>`
+      : `<button type="button" class="flow-step locked" onclick="flowLockedMsg()">${inner}</button>`;
+  }).join("");
+
+  const r = READY_CONTENT[`${u.g}/${u.s}/${u.i}`];
+  const finished = !tracked || set.has(`${u.g}/${u.s}/${u.i}/posttest`);
+  const bonus = [];
+  if(r.game) bonus.push({ key:"game", emoji:"🎮", label:"เกมประจำหน่วย" });
+  if(grade.hasAR && r.ar) bonus.push({ key:"ar", emoji:"🕶️", label:"เกม AR" });
+  const bonusHtml = bonus.length ? `
+    <div class="flow-bonus-title">${finished ? "🎉 เรียนครบทุกขั้นแล้ว เล่นเกมได้เลย!" : "🔒 เกมจะเปิดเมื่อทำแบบทดสอบหลังเรียนเสร็จ"}</div>
+    <div class="flow-steps flow-bonus">${bonus.map(b => finished
+      ? `<a class="flow-step open" href="${base}/${b.key}">${flowImg(b.key, b.label)}<span class="flow-emoji">${b.emoji}</span><span class="flow-label">${b.label}</span></a>`
+      : `<button type="button" class="flow-step locked" onclick="flowLockedMsg()">${flowImg(b.key, b.label)}<span class="flow-emoji">${b.emoji}</span><span class="flow-label">${b.label}</span><span class="flow-badge">🔒 ล็อก</span></button>`).join("")}</div>` : "";
+
+  const modeNote = KrtomFlow.mode() === "teacher" ? `<p class="flow-note">👩‍🏫 โหมดครู: เปิดได้ทุกขั้นตอนและไม่บันทึกคะแนน</p>`
+    : KrtomFlow.mode() === "local" ? `<p class="flow-note">ℹ️ ยังไม่ได้เชื่อมระบบเก็บคะแนน ความคืบหน้าจะบันทึกไว้ในเครื่องนี้เท่านั้น</p>` : "";
+  app.innerHTML = head + `
+    <div class="tab-panel flow-panel">
+      <p class="flow-intro">เรียนตามลำดับขั้นตอน 1 → 5 (ข้ามขั้นไม่ได้)</p>
+      <div class="flow-steps">${cards}</div>
+      ${modeNote}
+      ${bonusHtml}
+    </div>`;
+}
+
+async function renderObjectives(grade, subject, idx, unit){
+  applyTextSize(grade.id);
+  const u = { g:grade.id, s:subject.id, i:idx };
+  const base = `#/unit/${grade.id}/${subject.id}/${idx}`;
+  setBreadcrumb([
+    { label:"🏠 หน้าแรก", href:"#/" },
+    { label: grade.grade, href: grade.subjects.length > 1 ? `#/grade/${grade.id}` : "#/" },
+    { label: subject.name, href: `#/grade/${grade.id}/subject/${subject.id}` },
+    { label: `หน่วยที่ ${idx+1}`, href: `${base}/knowledge` },
+    { label: "จุดประสงค์" }
+  ]);
+  const r = READY_CONTENT[`${u.g}/${u.s}/${u.i}`];
+  const hash = location.hash;
+  app.innerHTML = `<div class="page-title">🎯 จุดประสงค์การเรียนรู้</div><div class="page-subtitle">กำลังโหลด...</div>`;
+  let items = [];
+  try{
+    const html = await (await fetch(r.knowledge.href)).text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    items = [...doc.querySelectorAll(".obj-box li")].map(li => li.textContent.trim()).filter(Boolean);
+  }catch(e){}
+  if(location.hash !== hash) return;
+  const st = (typeof UNIT_STANDARDS !== "undefined") && UNIT_STANDARDS[`${u.g}/${u.s}/${u.i}`];
+  const stdHtml = st ? `
+      ${st.standard ? `<div class="flow-obj flow-std"><p>📚 มาตรฐานการเรียนรู้</p><div><b>${flowEsc(st.standard.code)}</b> ${flowEsc(st.standard.text)}</div></div>` : ""}
+      ${st.indicators && st.indicators.length ? `<div class="flow-obj flow-ind"><p>📌 ตัวชี้วัด</p><ul>${st.indicators.map(r => `<li><b>${flowEsc(r.code)}</b> ${flowEsc(r.text)}${r.type ? ` <span class="flow-tag">${flowEsc(r.type)}</span>` : ""}</li>`).join("")}</ul></div>` : ""}` : "";
+  app.innerHTML = `
+    <div class="page-title">🎯 จุดประสงค์การเรียนรู้</div>
+    <div class="page-subtitle">หน่วยที่ ${idx+1}: ${unit.name}</div>
+    <div class="tab-panel flow-panel">
+      ${stdHtml}
+      <div class="flow-obj">
+        <p>🎯 จุดประสงค์การเรียนรู้ — เมื่อเรียนจบหน่วยนี้ นักเรียนจะสามารถ</p>
+        ${items.length ? `<ul>${items.map(t => `<li>${flowEsc(t)}</li>`).join("")}</ul>` : `<p>(ไม่พบจุดประสงค์ของหน่วยนี้)</p>`}
+      </div>
+      <div class="btn-row" style="justify-content:center;margin-top:18px">
+        <button type="button" class="btn" id="flow-obj-go">รับทราบแล้ว → ไปทำแบบทดสอบก่อนเรียน</button>
+      </div>
+      <p id="flow-obj-err" class="flow-note" style="color:#DC2626"></p>
+      <div class="cx-teacherbar"><a class="cx-open" href="${base}/knowledge">← กลับหน้าขั้นตอนการเรียน</a></div>
+    </div>`;
+  document.getElementById("flow-obj-go").onclick = async function(){
+    this.disabled = true;
+    try{ await KrtomFlow.mark(u, "objectives"); location.href = flowStepHref(u, "pretest"); }
+    catch(e){ this.disabled = false; document.getElementById("flow-obj-err").textContent = KrtomFlow.errText(e); }
+  };
+}
+
+// การ์ตูนแอนิเมชั่นของหน่วย = ที่ทำไว้ในเว็บ (READY_CONTENT.cartoons) + วิดีโอ/ไฟล์ที่ครูเพิ่ม (หมวด cartoon)
+function cartoonBuiltins(g, s, i){ const r = READY_CONTENT[`${g}/${s}/${i}`]; return (r && r.cartoons) || []; }
+function cartoonDbItems(g, s, i){ return KrtomContent.itemsFor(g, s, i, "knowledge").filter(x => x.section === "cartoon"); }
+function hasCartoons(g, s, i){ return cartoonBuiltins(g, s, i).length > 0 || cartoonDbItems(g, s, i).length > 0; }
+
+function renderCartoonView(grade, subject, idx, unit){
+  applyTextSize(grade.id);
+  const base = `#/unit/${grade.id}/${subject.id}/${idx}`;
+  setBreadcrumb([
+    { label:"🏠 หน้าแรก", href:"#/" },
+    { label: grade.grade, href: grade.subjects.length > 1 ? `#/grade/${grade.id}` : "#/" },
+    { label: subject.name, href: `#/grade/${grade.id}/subject/${subject.id}` },
+    { label: `หน่วยที่ ${idx+1}`, href: `${base}/knowledge` },
+    { label: "การ์ตูนแอนิเมชั่น" }
+  ]);
+  const built = cartoonBuiltins(grade.id, subject.id, idx).map(c => `
+    <article class="cx-card">
+      <div class="cx-head"><span class="cx-ico">🎬</span><h3>${c.title}</h3></div>
+      ${c.desc ? `<p class="cx-desc">${c.desc}</p>` : ""}
+      <a class="cx-open" href="${c.href}">▶ ดูการ์ตูน</a>
+    </article>`).join("");
+  const db = KrtomContent.renderCards(cartoonDbItems(grade.id, subject.id, idx));
+  const teacherBar = KrtomContent.isTeacher()
+    ? `<div class="cx-teacherbar"><button type="button" class="cx-addbtn" onclick="KrtomContent.openAddForm({grade:'${grade.id}',subject:'${subject.id}',unit:${idx},tab:'knowledge',section:'cartoon'})">➕ เพิ่มการ์ตูนแอนิเมชั่น / ลิงก์ YouTube</button></div>`
+    : "";
+  app.innerHTML = `
+    <div class="page-title">🎬 การ์ตูนแอนิเมชั่น · หน่วยที่ ${idx+1}: ${unit.name}</div>
+    <div class="page-subtitle">${subject.name} · ${grade.grade}</div>
+    <div class="tab-panel extra-panel">
+      ${(built || db) ? `<div class="cx-grid">${built}${db}</div>` : `<p style="text-align:center;color:#666">ยังไม่มีการ์ตูนแอนิเมชั่นในหน่วยนี้</p>`}
+    </div>
+    ${teacherBar}
+    <div class="cx-teacherbar"><a class="cx-open" href="${isFlowUnit(grade.id, subject.id, idx) ? base + "/knowledge/read" : base + "/knowledge"}">← กลับ</a></div>
+  `;
+}
+
 function renderUnitDetail(grade, subject, idx, unit, activeTab){
   applyTextSize(grade.id);
   setBreadcrumb([
@@ -548,12 +813,16 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
     { label: `หน่วยที่ ${idx+1}` }
   ]);
 
-  const visibleTabs = TABS.filter(t => !t.arOnly || grade.hasAR);
+  const flow = isFlowUnit(grade.id, subject.id, idx);
+  let visibleTabs = TABS.filter(t => !t.arOnly || grade.hasAR);
+  if(flow) visibleTabs = activeTab === "knowledge" ? [] : visibleTabs.filter(t => t.key === "game" || t.key === "ar");
   const unitKey = `${grade.id}/${subject.id}/${idx}`;
   const tabBtns = visibleTabs.map(t => {
     const ready = READY_CONTENT[unitKey] && READY_CONTENT[unitKey][t.key];
     // ถ้าแท็บนี้มีเนื้อหาพร้อมเล่นแบบทางเดียว (ไม่มีเวอร์ชันให้เลือกหลายแบบ) กดแท็บแล้วเข้าเนื้อหาได้เลย ไม่ต้องกดปุ่ม "เล่นเกมนี้เลย" ซ้ำอีกที
-    const directOpen = ready && ready.href && !(ready.extraLinks && ready.extraLinks.length);
+    const directOpen = ready && ready.href && !(ready.extraLinks && ready.extraLinks.length)
+      && !(t.key === "knowledge" && hasCartoons(grade.id, subject.id, idx))
+      && !KrtomContent.hasItems(grade.id, subject.id, idx, t.key); // มีเนื้อหาที่ครูเพิ่ม/การ์ตูน → ต้องเข้าหน้าหน่วยเพื่อให้เห็นรายการ
     const onclick = directOpen
       ? `location.href='${ready.href}'`
       : `location.hash='#/unit/${grade.id}/${subject.id}/${idx}/${t.key}'`;
@@ -567,11 +836,32 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
   `;
   }).join("");
 
+  let panelHtml = renderTabContent(activeTab, grade, subject, unit, idx);
+  const extras = KrtomContent.itemsFor(grade.id, subject.id, idx, activeTab).filter(x => x.section !== "cartoon");
+  // แท็บเกม/เกม AR: แสดงเกมสำเร็จรูปทุกแบบของหน่วย (และเกมที่ครูเพิ่ม) เป็นการ์ดในกริดเดียวกัน (ไม่แยกกล่อง "คลิกที่นี่เพื่อเปิด")
+  let extraOpts = null;
+  const readyHere = READY_CONTENT[unitKey] && READY_CONTENT[unitKey][activeTab];
+  if((activeTab === "game" || activeTab === "ar") && readyHere && readyHere.href){
+    const isGame = activeTab === "game";
+    const opts = [ isGame
+        ? { key:"flipcards", label:"🎮 เกมพลิกไพ่จับคู่", href: readyHere.href }
+        : { key: readyHere.primaryKey || "play", label: readyHere.primaryLabel || "▶ เล่นเกมนี้เลย", href: readyHere.href } ]
+      .concat((readyHere.extraLinks || []).map(l => ({ key:l.key, label:l.label, href:l.href })));
+    panelHtml = "";
+    extraOpts = { title: isGame ? "🎮 เกมและกิจกรรม" : "🕶️ เกม AR และกิจกรรม",
+      pre: `<div class="btn-row cx-gamebtns" style="justify-content:center; flex-direction:column; align-items:center">${opts.map(o => actionBtn(o.href, o.key, o.label, "")).join("")}</div>` };
+  }
+  const teacherBar = KrtomContent.isTeacher()
+    ? `<div class="cx-teacherbar"><button type="button" class="cx-addbtn" onclick="KrtomContent.openAddForm({grade:'${grade.id}',subject:'${subject.id}',unit:${idx},tab:'${activeTab}'})">➕ เพิ่มเนื้อหาในแท็บนี้</button></div>`
+    : "";
   app.innerHTML = `
     <div class="page-title">หน่วยที่ ${idx+1}: ${unit.name}</div>
     <div class="page-subtitle">${subject.name} · ${grade.grade}</div>
-    <div class="tabs">${tabBtns}</div>
-    <div class="tab-panel" id="tab-panel">${renderTabContent(activeTab, grade, subject, unit, idx)}</div>
+    ${flow ? `<div class="cx-teacherbar" style="margin-top:0"><a class="cx-open" href="#/unit/${grade.id}/${subject.id}/${idx}/knowledge">← กลับหน้าขั้นตอนการเรียน</a></div>` : ""}
+    ${tabBtns ? `<div class="tabs">${tabBtns}</div>` : ""}
+    ${panelHtml ? `<div class="tab-panel" id="tab-panel">${panelHtml}</div>` : ""}
+    ${(extras.length || extraOpts) ? `<div class="tab-panel extra-panel">${KrtomContent.renderItems(extras, extraOpts)}</div>` : ""}
+    ${teacherBar}
   `;
 }
 
@@ -582,13 +872,28 @@ function renderTabContent(tab, grade, subject, unit, idx){
   const key = `${grade.id}/${subject.id}/${idx}`;
   const ready = READY_CONTENT[key] && READY_CONTENT[key][tab];
 
-  if(ready) return readyPanel({
-    emoji: meta.emoji, title: meta.title,
-    desc: `${meta.title} "${ready.title}" พร้อมใช้งานแล้ว`,
-    href: ready.href,
-    extraLink: ready.extraLink || null,
-    extraLinks: ready.extraLinks || null
-  });
+  // ปุ่ม "เนื้อหาการ์ตูนแอนิเมชั่น" (แท็บใบความรู้) — กดแล้วเข้าไปดูรายการการ์ตูนของหน่วยนี้
+  const cartoonLink = (tab === "knowledge" && hasCartoons(grade.id, subject.id, idx))
+    ? { key:"anim-cartoon", href:`#/unit/${grade.id}/${subject.id}/${idx}/knowledge/cartoon`, label:"🎬 เนื้อหาการ์ตูนแอนิเมชั่น" } : null;
+
+  // ยังไม่มีเนื้อหาสำเร็จรูป แต่ครูเพิ่มเนื้อหาเองไว้แล้ว → ไม่ต้องขึ้นกล่อง "กำลังจัดทำ"
+  if(!ready && cartoonLink) return `
+    <div class="placeholder-box" style="border-style:solid; background:#FAFDFB">
+      <div class="btn-row" style="justify-content:center; flex-direction:column; align-items:center">${actionBtn(cartoonLink.href, cartoonLink.key, cartoonLink.label, "")}</div>
+    </div>`;
+  if(!ready && KrtomContent.hasItems(grade.id, subject.id, idx, tab)) return "";
+
+  if(ready){
+    const links = (ready.extraLinks || (ready.extraLink ? [ready.extraLink] : [])).concat(cartoonLink ? [cartoonLink] : []);
+    return readyPanel({
+      emoji: meta.emoji, title: meta.title,
+      desc: `${meta.title} "${ready.title}" พร้อมใช้งานแล้ว`,
+      href: ready.href,
+      primaryKey: ready.primaryKey || (tab === "knowledge" ? "article" : undefined),
+      primaryLabel: ready.primaryLabel || (tab === "knowledge" ? "📖 เนื้อหาบทความ" : undefined),
+      extraLinks: links.length ? links : null
+    });
+  }
 
   return placeholderPanel({
     emoji: meta.emoji, title: meta.title, desc: meta.desc, cta: meta.cta,
@@ -597,18 +902,18 @@ function renderTabContent(tab, grade, subject, unit, idx){
 }
 
 function actionBtn(href, key, label, cls){
-  const img = ACTION_BTN_IMG[key];
-  if(!img) return `<a class="btn ${cls}" href="${href}">${label}</a>`;
+  const list = [].concat(ACTION_BTN_IMG[key] || []);
+  if(!list.length) return `<a class="btn ${cls}" href="${href}">${label}</a>`;
   return `
     <a class="btn ${cls} action-btn" href="${href}">
-      <img class="action-btn-img" src="${img}" alt="${label}"
+      <img class="action-btn-img" src="${list[0]}" data-alt="${list.slice(1).join(",")}" alt="${label}"
            onload="this.closest('.action-btn').classList.add('has-actionimg'); this.nextElementSibling.style.display='none';"
-           onerror="this.style.display='none';">
+           onerror="var a=this.dataset.alt?this.dataset.alt.split(','):[]; if(a.length){ this.dataset.alt=a.slice(1).join(','); this.src=a[0]; } else this.style.display='none';">
       <span class="action-btn-coded">${label}</span>
     </a>
   `;
 }
-function readyPanel({emoji, title, desc, href, extraLink, extraLinks}){
+function readyPanel({emoji, title, desc, href, primaryKey = "play", primaryLabel = "▶ เล่นเกมนี้เลย", extraLink, extraLinks}){
   // รองรับทั้ง extraLink เดี่ยว (ของเดิม) และ extraLinks เป็น array (หลายทางเลือก)
   const links = extraLinks || (extraLink ? [extraLink] : []);
   // ถ้ามีแค่ทางเดียว (ไม่มีเวอร์ชันให้เลือก) กดที่แท็บด้านบนแล้วเข้าเนื้อหาได้เลย ไม่ต้องมีปุ่ม "เล่นเกมนี้เลย" ซ้ำในนี้
@@ -623,7 +928,7 @@ function readyPanel({emoji, title, desc, href, extraLink, extraLinks}){
     <span class="status-badge ready">✅ พร้อมเล่น</span>
     <div class="placeholder-box" style="border-style:solid; background:#FAFDFB">
       <div class="btn-row" style="justify-content:center; flex-direction:column; align-items:center">
-        ${actionBtn(href, "play", "▶ เล่นเกมนี้เลย", "")}
+        ${actionBtn(href, primaryKey, primaryLabel, "")}
         ${links.map(l => actionBtn(l.href, l.key, l.label, "secondary")).join("")}
       </div>
     </div>

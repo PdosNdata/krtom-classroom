@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การออกแบบและการเขียนโปรแกรมเบื้องต้น — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 2</h1>
+    <p>การออกแบบและการเขียนโปรแกรมเบื้องต้น · ม.1 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/m1/cs/1/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายหลักการเขียนโปรแกรมและความแตกต่างของโปรแกรมภาษาต่าง ๆ ได้</li>
+      <li>อธิบายซอฟต์แวร์ที่ใช้เขียนโปรแกรม และแนวคิดเรื่องตัวแปร เงื่อนไข วนซ้ำได้</li>
+      <li>ออกแบบอัลกอริทึมและเขียนโปรแกรมอย่างง่ายเพื่อแก้ปัญหาทางคณิตศาสตร์ได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> หลักการเขียนโปรแกรมเบื้องต้น
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>โปรแกรมคอมพิวเตอร์</b> คือชุดคำสั่งที่เขียนขึ้นให้คอมพิวเตอร์ทำงานตามเงื่อนไข ผู้เขียนต้องเลือกภาษาให้เหมาะสมกับงาน และเข้าใจ <b>โครงสร้างและไวยากรณ์</b> ของภาษานั้น หลักการเขียนโปรแกรมมี <b>4 ขั้นตอน</b></p>
+    <ol class="steps">
+      <li><b>กำหนดและวิเคราะห์ปัญหา</b> (Analysis) — ทำความเข้าใจปัญหา และกำหนดวัตถุประสงค์</li>
+      <li><b>ออกแบบโปรแกรม</b> (Design) — ออกแบบอัลกอริทึมและหน้าจอการทำงาน</li>
+      <li><b>เขียนโปรแกรม</b> (Programming) — เขียนชุดคำสั่งด้วยภาษาโปรแกรม</li>
+      <li><b>ทดสอบโปรแกรม</b> (Testing) — ตรวจสอบความถูกต้อง แก้ไขข้อผิดพลาด</li>
+    </ol>
+    <p><b>การวิเคราะห์ปัญหา</b> ประกอบด้วย 4 องค์ประกอบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🎯</span><div><h3>วัตถุประสงค์</h3><p>โปรแกรมต้องการทำอะไร</p></div></div>
+      <div class="concept-card"><span class="icon">📥</span><div><h3>ข้อมูลนำเข้า (Input)</h3><p>รับข้อมูลอะไร ชนิดใด กำหนดตัวแปร</p></div></div>
+      <div class="concept-card"><span class="icon">⚙️</span><div><h3>การประมวลผล (Process)</h3><p>ใช้วิธีหรือสูตรคำนวณอะไร</p></div></div>
+      <div class="concept-card"><span class="icon">📤</span><div><h3>ข้อมูลนำออก (Output)</h3><p>ผลลัพธ์คืออะไร กำหนดตัวแปร</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>ตัวอย่าง:</b> โปรแกรมหาพื้นที่สี่เหลี่ยมผืนผ้า — Input: width, length (จำนวนเต็ม) / Process: Area = width × length / Output: Area
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การออกแบบโปรแกรมและโครงสร้างการทำงาน
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p>การออกแบบโปรแกรมแบ่งเป็น 2 ลักษณะ คือ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🔀</span><div><h3>ออกแบบอัลกอริทึม</h3><p>ลำดับขั้นตอนก่อนหลัง เขียนได้ด้วยภาษาธรรมชาติ รหัสลำลอง หรือผังงาน</p></div></div>
+      <div class="concept-card"><span class="icon">🖥️</span><div><h3>ออกแบบส่วนติดต่อผู้ใช้ (UI)</h3><p>หน้าจอที่ใช้งานง่าย ไม่ซับซ้อน ข้อความสั้น กระชับ</p></div></div>
+    </div>
+    <p>โครงสร้างการทำงานของโปรแกรม มี 3 แบบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">➡️</span><div><h3>เรียงลำดับ (Sequence)</h3><p>ทำเรียงทีละขั้น ไม่ข้าม ไม่ย้อนกลับ</p></div></div>
+      <div class="concept-card"><span class="icon">🔀</span><div><h3>เงื่อนไข (Selection/Condition)</h3><p>ตัดสินใจ เลือกทำตามเงื่อนไขที่ตรวจสอบแล้ว</p></div></div>
+      <div class="concept-card"><span class="icon">🔁</span><div><h3>ทำซ้ำ (Iteration/Loop)</h3><p>ทำงานเดิมซ้ำ โดยมีเงื่อนไขกำหนดจำนวนรอบ</p></div></div>
+    </div>
+    <p>การทำซ้ำมี 3 ประเภท: ทำซ้ำตามจำนวนรอบที่ระบุ, ทำซ้ำในขณะที่เงื่อนไขเป็นจริง, ทำซ้ำจนกระทั่งเงื่อนไขเป็นจริง</p>
+    <div class="info-box">
+      💡 <b>ตัวแปร:</b> ใช้เก็บข้อมูลในโปรแกรม ควรตั้งชื่อให้สอดคล้องกับข้อมูล เช่น <b>width</b> เก็บความกว้าง
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> การเขียนและทดสอบโปรแกรม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic3.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic3-text">
+    <p>การเขียนโปรแกรมต้องเขียนชุดคำสั่งตามโครงสร้างและไวยากรณ์ของภาษา ชุดคำสั่งที่ได้เรียกว่า <b>รหัสต้นฉบับ (Source Code)</b> ขั้นตอนการเขียนโปรแกรม</p>
+    <ol class="steps">
+      <li><b>การให้รหัส (Coding)</b> — เขียนชุดคำสั่งให้ถูกต้องตามไวยากรณ์</li>
+      <li><b>แปลภาษา (Compile)</b> — ตัวแปลภาษา (Compiler) แปลเป็นภาษาคอมพิวเตอร์</li>
+      <li><b>ดำเนินงาน (Run)</b> — เรียกใช้โปรแกรมให้ทำงาน</li>
+    </ol>
+    <p>คำสั่งพื้นฐาน: ประกาศตัวแปร, รับค่า, คำนวณ/ประมวลผล, แสดงผล</p>
+    <p><b>การทดสอบโปรแกรม</b> ทำก่อนนำไปใช้จริง เพื่อหาข้อผิดพลาด</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">⬛</span><div><h3>Black Box Testing</h3><p>ดูเฉพาะข้อมูลนำเข้าและผลลัพธ์ ไม่ดูการประมวลผลภายใน เหมือนกล่องดำ</p></div></div>
+      <div class="concept-card"><span class="icon">⬜</span><div><h3>White Box Testing</h3><p>ตรวจทั้งผลลัพธ์และการประมวลผลภายในโปรแกรม เหมือนกล่องโปร่งใส ซับซ้อนกว่า</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>ตัวอย่าง Black Box:</b> ใส่ความกว้าง = 5 ความยาว = 10 โปรแกรมควรแสดงพื้นที่ = 50
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> ภาษาโปรแกรมที่ควรรู้จัก
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic4.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic4-text">
+    <p>ภาษาแต่ละภาษามีประวัติ โครงสร้าง และจุดเด่นต่างกัน</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🇨</span><div><h3>ภาษาซี (C)</h3><p>พัฒนาโดย เดนนิส ริตชี่ (Bell Labs) ราวปี ค.ศ. 1969–1973 ใช้พัฒนาเกม ระบบปฏิบัติการ แอปมือถือ คำสั่งจบด้วย ; เช่น printf แสดงผล scanf รับค่า</p></div></div>
+      <div class="concept-card"><span class="icon">🧩</span><div><h3>สแครช (Scratch)</h3><p>เขียนโปรแกรมแบบกราฟิก ลากบล็อก ประกอบด้วย เวที (Stage) ตัวละคร (Sprite) และสคริปต์ (Script) มีบล็อก 9 กลุ่ม เช่น Motion Looks Sound Events Control</p></div></div>
+      <div class="concept-card"><span class="icon">🐍</span><div><h3>ไพทอน (Python)</h3><p>พัฒนาโดย กีโด ฟัน รอสซัม เป็นโอเพนซอร์ส ไวยากรณ์เรียบง่าย ใช้ print() แสดงผล input() รับค่า</p></div></div>
+      <div class="concept-card"><span class="icon">☕</span><div><h3>จาวา (Java)</h3><p>พัฒนาโดย เจมส์ กอสลิง (Sun Microsystems) เป็นภาษาเชิงวัตถุ "เขียนครั้งเดียว รันได้ทุกที่" โครงสร้าง Import / Package / Class</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>เครื่องหมายในไพทอน:</b> + บวก, - ลบ, * คูณ, / หาร, % เศษของการหาร, ** ยกกำลัง, // หารปัดเศษทิ้ง
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> ตัวอย่างโปรแกรมและการตรวจหาข้อผิดพลาด
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic5.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic5-text">
+    <p><b>ตัวอย่าง คำนวณส่วนลดราคาสินค้า</b> (ลด 10%)</p>
+    <ol class="steps">
+      <li>วิเคราะห์: วัตถุประสงค์ คำนวณส่วนลด Input = <b>price</b> (ราคาปกติ) Output = <b>discount</b></li>
+      <li>ประมวลผล: temp = price / 100 แล้ว discount = 10 × temp</li>
+      <li>ออกแบบอัลกอริทึม แล้วเขียนเป็นโปรแกรม</li>
+    </ol>
+    <div class="info-box" style="font-family:Consolas,monospace;line-height:1.7">START<br>INPUT price<br>COMPUTE temp = price / 100<br>COMPUTE discount = 10 * temp<br>OUTPUT discount<br>STOP</div>
+    <p><b>ตรวจสอบข้อผิดพลาดของโปรแกรม</b> หลังเขียนเสร็จ ต้องตรวจว่าเขียนถูกไวยากรณ์และผลลัพธ์ถูกต้องหรือไม่ ถ้าผิดเพียงตัวเดียวโปรแกรมจะรัน (Run) ไม่ได้ ภาษาไพทอนจะแจ้งตำแหน่งข้อผิดพลาด ให้แก้ไขแล้วรันใหม่จนถูกต้อง</p>
+    <div class="info-box">
+      💡 <b>การใช้ print():</b> แสดงข้อความต้องอยู่ในเครื่องหมายอัญประกาศ เช่น print("Hello World") แต่แสดงค่าในตัวแปรไม่ต้องใส่ เช่น print(x)
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">💻</span>
+    <div><b>รู้หรือไม่?</b> โปรแกรมคำนวณที่เราใช้ในชีวิตจริง เช่น โปรแกรมคำนวณดัชนีมวลกาย (BMI) หรือโปรแกรมสมการการเคลื่อนที่ ก็เริ่มจากอัลกอริทึมง่าย ๆ แบบนี้</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>หลักการเขียนโปรแกรม 4 ขั้น: วิเคราะห์ปัญหา → ออกแบบ → เขียนโปรแกรม → ทดสอบ</li>
+      <li>วิเคราะห์ปัญหาต้องกำหนด วัตถุประสงค์ Input Process Output</li>
+      <li>โครงสร้างโปรแกรม: เรียงลำดับ เงื่อนไข ทำซ้ำ</li>
+      <li>เขียนโปรแกรม: Coding → Compile → Run และทดสอบ Black Box / White Box</li>
+      <li>ภาษาที่รู้จัก: C, Scratch, Python, Java</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m1/cs/1/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=4"></script>
+</body>
+</html>

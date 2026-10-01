@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การออกแบบและการเขียนอัลกอริทึม — ม.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>การออกแบบและการเขียนอัลกอริทึม · ม.1 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/m1/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายลักษณะของแนวคิดเชิงนามธรรมและนำไปใช้แยกสาระสำคัญของปัญหาได้</li>
+      <li>อธิบายและเขียนอัลกอริทึมด้วยภาษาธรรมชาติ รหัสลำลอง และผังงานได้</li>
+      <li>ออกแบบอัลกอริทึมเพื่อแก้ปัญหาในชีวิตประจำวันและถ่ายทอดได้อย่างถูกต้อง</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> แนวคิดเชิงนามธรรม
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>แนวคิดเชิงนามธรรม (Abstraction)</b> เป็นองค์ประกอบหนึ่งของ <b>แนวคิดเชิงคำนวณ</b> คือการประเมินความสำคัญของรายละเอียดปัญหา แล้ว <b>แยกส่วนที่เป็นสาระสำคัญ</b> ออกจากส่วนที่ไม่ใช่สาระสำคัญ และพิจารณา <b>จุดที่เหมือนกัน</b> ของปัญหา เพื่อหาแนวคิดรวบยอด</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🔍</span><div><h3>ประโยชน์</h3><p>ช่วยให้เข้าใจปัญหาและมองเห็นปัญหาได้ชัดเจนขึ้น และเลือกวิธีแก้ปัญหาได้มีประสิทธิภาพ</p></div></div>
+      <div class="concept-card"><span class="icon">📐</span><div><h3>ตัวอย่างคณิตศาสตร์</h3><p>รูปคลี่ของทรงกระบอก ประกอบด้วยวงกลม 2 รูป และสี่เหลี่ยมผืนผ้า 1 รูป</p></div></div>
+      <div class="concept-card"><span class="icon">💧</span><div><h3>ตัวอย่างวิทยาศาสตร์</h3><p>วัฏจักรของน้ำ เลือกเฉพาะ ระเหย → ควบแน่น → ตกเป็นฝน → ซึมลงดิน</p></div></div>
+      <div class="concept-card"><span class="icon">🗣️</span><div><h3>ตัวอย่างการนำเสนอ</h3><p>ถ่ายทอดเฉพาะสาระสำคัญ ทำให้ถูกต้อง ชัดเจน และตรงประเด็น</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>ตัวอย่าง:</b> เลือกรูป <b>สี่เหลี่ยมคางหมู</b> ออกจากรูปเรขาคณิตอื่น โดยดูคุณสมบัติ คือ มี 4 ด้าน มีด้านขนานกัน 1 คู่ และด้านขนานยาวไม่เท่ากัน<br>และตัวอย่างปูหญ้า สนาม 10 × 5 ม. หญ้าผืนละ 50 × 50 ซม. สาระสำคัญคือขนาดสนามกับขนาดหญ้า (ใช้หญ้า 200 ผืน)
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> อัลกอริทึมเบื้องต้น
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p><b>อัลกอริทึม (Algorithm)</b> คือ <b>ระเบียบวิธีหรือขั้นตอนวิธี</b> ที่ใช้แก้ปัญหา อธิบายเป็นขั้นตอนที่ชัดเจน ใช้แก้ปัญหาทั่วไปที่พบในชีวิตประจำวัน ไม่ใช่เฉพาะกรณีใดกรณีหนึ่ง และเขียนได้ <b>3 รูปแบบ</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">💬</span><div><h3>ภาษาธรรมชาติ</h3><p>บรรยายขั้นตอนด้วยภาษามนุษย์</p></div></div>
+      <div class="concept-card"><span class="icon">💻</span><div><h3>รหัสลำลอง (Pseudo Code)</h3><p>ลำลองคำสั่งด้วยประโยคภาษาอังกฤษหรือไทย</p></div></div>
+      <div class="concept-card"><span class="icon">🔀</span><div><h3>ผังงาน (Flowchart)</h3><p>ใช้ภาพสัญลักษณ์และลูกศร</p></div></div>
+    </div>
+    <p><b>เลือกอัลกอริทึมที่มีประสิทธิภาพ</b> เช่น การต่อโมเดลตัวต่อ 2 วิธี ได้ผลเหมือนกัน</p>
+    <ul><li>วิธีที่ 1 ลองผิดลองถูก ขั้นตอนน้อยกว่า</li><li>วิธีที่ 2 เปิดคู่มือแล้วต่อตามขั้นตอน ขั้นตอนมากกว่า แต่ต่อได้ถูกต้อง จึงมีประสิทธิภาพมากกว่า</li></ul>
+    <div class="info-box">
+      💡 <b>ที่มาของคำ:</b> "อัลกอริทึม" เพี้ยนมาจากชื่อนักคณิตศาสตร์ชาวเปอร์เซีย <b>อัล-ควาริซมี</b>
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> ภาษาคอมพิวเตอร์และภาษาธรรมชาติ
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic3.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic3-text">
+    <p><b>ภาษาธรรมชาติ</b> คือภาษาที่มนุษย์ใช้สื่อสารกันตามเชื้อชาติ เช่น ไทย อังกฤษ จีน แต่คอมพิวเตอร์ไม่เข้าใจความหมายและไวยากรณ์ของภาษาธรรมชาติ จึงต้องมี <b>ภาษาคอมพิวเตอร์</b> ซึ่งเป็นภาษาประดิษฐ์ (Artificial Language) ที่โปรแกรมเมอร์เขียนขึ้นเพื่อสั่งงาน</p>
+    <p>ภาษาคอมพิวเตอร์แบ่งเป็น <b>5 ยุค</b> ได้แก่ ภาษาเครื่อง → ภาษาแอสเซมบลี → ภาษาชั้นสูง → ภาษาขั้นสูงมาก → ภาษาธรรมชาติ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">⚙️</span><div><h3>ระดับต่ำ</h3><p>เช่น ภาษาเครื่อง แอสเซมบลี ควบคุมฮาร์ดแวร์ได้ตรงและรวดเร็ว แต่มนุษย์เข้าใจยาก</p></div></div>
+      <div class="concept-card"><span class="icon">🧱</span><div><h3>ระดับกลาง</h3><p>มีโครงสร้าง นำข้อดีของระดับต่ำและสูงมารวมกัน นิยมใช้แพร่หลาย</p></div></div>
+      <div class="concept-card"><span class="icon">🌐</span><div><h3>ระดับสูง</h3><p>เข้าใจง่าย ใกล้ภาษาอังกฤษ แล้วถูกแปลงเป็นภาษาเครื่องให้คอมพิวเตอร์ทำงาน</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> บุคคลที่ได้รับการยกย่องเป็น <b>โปรแกรมเมอร์คนแรกของโลก</b> คือ <b>เอดา ไบรอน (Ada Byron)</b>
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> การเขียนอัลกอริทึมด้วยรหัสลำลอง
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic4.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic4-text">
+    <p><b>รหัสลำลอง (Pseudo Code)</b> คือรูปแบบภาษาที่มีโครงสร้างชัดเจน กระชับ ใช้อธิบายขั้นตอนของอัลกอริทึม โดยไม่ขึ้นกับภาษาคอมพิวเตอร์ภาษาใด และแปลงเป็นภาษาคอมพิวเตอร์ได้ง่าย แต่ <b>ไม่ใช่ภาษาโปรแกรม</b> จึงสั่งให้คอมพิวเตอร์ทำงานจริงไม่ได้</p>
+    <p><b>หลักเกณฑ์การเขียน</b></p>
+    <ul><li>ใช้คำสั่งสั้น กระชับ เข้าใจง่าย เช่น START = เริ่มต้น, STOP = สิ้นสุด</li><li>มีหมายเลขลำดับขั้นตอนชัดเจน และไม่จำเป็นต้องมีเครื่องหมายวรรคตอน</li><li>ไม่ขึ้นกับภาษาคอมพิวเตอร์ภาษาใดภาษาหนึ่ง</li><li>1 บรรทัด มี 1 คำสั่ง เขียนจากบนลงล่าง มีจุดสิ้นสุดจุดเดียว</li></ul>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🏁</span><div><h3>เริ่มต้น/สิ้นสุด</h3><p>START, STOP, BEGIN, END</p></div></div>
+      <div class="concept-card"><span class="icon">📥</span><div><h3>รับข้อมูล</h3><p>READ, GET, INPUT</p></div></div>
+      <div class="concept-card"><span class="icon">📤</span><div><h3>แสดงผล</h3><p>WRITE, DISPLAY, SHOW, PRINT, OUTPUT</p></div></div>
+    </div>
+    <p><b>ประโยชน์:</b> วางโครงร่างกระบวนการ เป็นต้นแบบทบทวนและแก้ไขโปรแกรม และกำหนดงานให้โปรแกรมเมอร์นำไปพัฒนา</p>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> การเขียนอัลกอริทึมด้วยผังงาน
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic5.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic5-text">
+    <p><b>ผังงาน (Flowchart)</b> คือการใช้ <b>ภาพสัญลักษณ์</b> แสดงลำดับขั้นตอนการทำงานของอัลกอริทึม ตั้งแต่เริ่มต้นจนได้ผลลัพธ์ เขียนจากบนลงล่าง หรือซ้ายไปขวา และต้องมี <b>หัวลูกศร</b> บอกทิศทาง</p>
+    <div style="margin:14px 0;text-align:center"><img src="flowchart-symbols.webp" alt="ตารางสัญลักษณ์ผังงาน" style="max-width:100%;height:auto;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.12)"></div>
+    <p><b>รูปแบบผังงาน 3 แบบ</b></p>
+    <ol class="steps">
+      <li><b>แบบเรียงลำดับ (Sequence)</b> ทำงานเรียงจากบนลงล่าง ง่ายที่สุด ไม่มีทางเลือกหรือการทำซ้ำ</li>
+      <li><b>แบบเลือกกระทำ/เงื่อนไข (Selection)</b> เปรียบเทียบข้อมูล ถ้าจริงทำอย่างหนึ่ง ถ้าเท็จทำอีกอย่าง</li>
+      <li><b>แบบทำซ้ำ (Loop)</b> ทำกระบวนการซ้ำหลายครั้ง ขึ้นกับเงื่อนไขที่กำหนด</li>
+    </ol>
+    <div class="info-box">
+      💡 <b>หลักการเขียนที่ดี:</b> ใช้สัญลักษณ์มาตรฐาน มีจุดเริ่มต้นและสิ้นสุดอย่างละจุด เขียนคำอธิบายสั้น ๆ ในสัญลักษณ์ ช่วยให้แยกแยะปัญหา เห็นลำดับ หาข้อผิดพลาด และอ่านเข้าใจง่าย ไม่ขึ้นกับภาษาใด
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">6</span> ตัวอย่างอัลกอริทึม 3 รูปแบบ
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic6.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic6-text">
+    <p><b>ตัวอย่างที่ 1 หาพื้นที่สี่เหลี่ยมผืนผ้า</b> (พื้นที่ = กว้าง × ยาว)</p>
+    <div class="info-box" style="font-family:Consolas,monospace;line-height:1.7">START<br>INPUT width<br>INPUT length<br>COMPUTE area = width * length<br>OUTPUT area<br>STOP</div>
+    <p><b>ตัวอย่างที่ 2 ตรวจผลการเรียน</b> คะแนนเต็ม 100 ได้ตั้งแต่ 50 ขึ้นไป แสดง "สอบผ่าน" ไม่ถึง 50 แสดง "สอบไม่ผ่าน" (ใช้ผังงานแบบเลือกกระทำ)</p>
+    <div class="info-box" style="font-family:Consolas,monospace;line-height:1.7">START<br>INPUT score<br>IF score &gt;= 50 THEN OUTPUT "สอบผ่าน"<br>ELSE OUTPUT "สอบไม่ผ่าน"<br>STOP</div>
+    <p><b>ตัวอย่างที่ 3 สูตรคูณแม่ 2</b> (ใช้ผังงานแบบทำซ้ำ) เริ่มที่ 1 คูณ 2 แสดงผล แล้วบวกเพิ่มทีละ 1 ทำซ้ำจนไม่เกิน 12</p>
+    <div class="info-box" style="font-family:Consolas,monospace;line-height:1.7">counter = 1<br>REPEAT: result = 2 * counter → OUTPUT result → counter = counter + 1<br>ทำซ้ำเมื่อ counter &lt;= 12</div>
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> เครื่องหมาย × ใช้ <b>*</b> และ ÷ ใช้ <b>/</b> ในการเขียนโปรแกรม
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🧠</span>
+    <div><b>รู้หรือไม่?</b> เมื่อเราหาเส้นทางไปโรงเรียน เรามักคิดแบบนามธรรมโดยไม่รู้ตัว คือจำเฉพาะถนนและจุดเลี้ยว โดยไม่ต้องจำทุกบ้านที่ผ่าน</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>แนวคิดเชิงนามธรรม คือการคัดแยกสาระสำคัญออกจากรายละเอียดปลีกย่อย ช่วยให้เข้าใจปัญหาชัดเจนขึ้น</li>
+      <li>อัลกอริทึม คือขั้นตอนวิธีแก้ปัญหาอย่างเป็นระบบ ควรเลือกวิธีที่มีประสิทธิภาพที่สุด</li>
+      <li>เขียนได้ 3 รูปแบบ คือ ภาษาธรรมชาติ รหัสลำลอง (Pseudo Code) และผังงาน (Flowchart)</li>
+      <li>ผังงานมี 3 แบบ คือ เรียงลำดับ เลือกกระทำ/เงื่อนไข และทำซ้ำ</li>
+      <li>คอมพิวเตอร์ไม่เข้าใจภาษาธรรมชาติ จึงต้องใช้ภาษาคอมพิวเตอร์ ซึ่งมี 5 ยุค</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m1/cs/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=4"></script>
+</body>
+</html>

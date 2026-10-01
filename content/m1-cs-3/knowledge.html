@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย — ม.1 หน่วย 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 4</h1>
+    <p>การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย · ม.1 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/m1/cs/3/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3">
+      <span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span>
+    </button>
+  </div>
+
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายภัยคุกคามจากการใช้เทคโนโลยีสารสนเทศและวิธีป้องกันได้</li>
+      <li>อธิบายหลักปฏิบัติและจริยธรรมในการใช้เทคโนโลยีสารสนเทศได้</li>
+      <li>พิจารณาสัญลักษณ์และเงื่อนไขของสัญญาอนุญาตครีเอทีฟคอมมอนส์ได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> ความปลอดภัยและภัยคุกคามต่อเทคโนโลยีสารสนเทศ
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic1-text">
+    <p><b>ความปลอดภัยของเทคโนโลยีสารสนเทศ</b> คือนโยบาย ขั้นตอนปฏิบัติ และมาตรการทางเทคนิค ที่ใช้ป้องกันการใช้งานจากบุคคลภายนอก การเปลี่ยนแปลง การขโมย หรือการทำความเสียหาย <b>ภัยคุกคาม 4 ประเภท</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🖥️</span><div><h3>ต่อฮาร์ดแวร์</h3><p>อุปกรณ์ชำรุดเสียหาย ใช้งานไม่ได้ ถูกลักขโมย หรือถูกทำลาย</p></div></div>
+      <div class="concept-card"><span class="icon">💿</span><div><h3>ต่อซอฟต์แวร์</h3><p>ใช้งานไม่ได้ หรือได้ผลลัพธ์ผิดพลาด ถูกลบหรือแก้ไข</p></div></div>
+      <div class="concept-card"><span class="icon">🌐</span><div><h3>ต่อระบบเครือข่ายและการสื่อสาร</h3><p>ระบบขัดข้อง ใช้งานไม่ได้ หรือถูกปรับแต่งโดยไม่ได้รับอนุญาต</p></div></div>
+      <div class="concept-card"><span class="icon">🔒</span><div><h3>ต่อข้อมูล</h3><p>ข้อมูลสูญหาย ถูกเผยแพร่ ถูกแก้ไข หรือนำไปใช้โดยไม่ได้รับอนุญาต</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> ผู้ที่เจตนาไม่ดีเข้าระบบโดยไม่ได้รับอนุญาต เรียกว่า <b>แครกเกอร์ (Cracker)</b> ส่วน <b>แฮ็กเกอร์ (Hacker)</b> มีทั้ง White Hat (ฝ่ายดี) และ Black Hat (ฝ่ายร้าย)
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> รูปแบบภัยคุกคามที่พบบ่อย
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic2-text">
+    <p><b>ภัยจากผู้ไม่ประสงค์ดี</b> ต่อผู้ใช้และระบบ เช่น ภัยที่สร้างความรำคาญ (ส่งสแปมรบกวน) ภัยที่ทำให้ระบบเสียหาย (ลบหรือแก้ไขไฟล์สำคัญ) และภัยต่อความเป็นส่วนตัว (เจาะข้อมูลส่วนบุคคลด้วยสปายแวร์)</p>
+    <p><b>ภัยคุกคามด้านข้อมูลในคอมพิวเตอร์</b> ที่พบบ่อย</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🦠</span><div><h3>มัลแวร์ (Malware)</h3><p>โปรแกรมสร้างขึ้นเพื่อประสงค์ร้ายต่อคอมพิวเตอร์ ขโมยข้อมูลหรือทำให้ระบบเสียหาย</p></div></div>
+      <div class="concept-card"><span class="icon">🐛</span><div><h3>หนอนคอมพิวเตอร์ (Worm)</h3><p>แพร่กระจายผ่านอินเทอร์เน็ตหรืออีเมล ลบ/สร้างไฟล์ ขโมยข้อมูล</p></div></div>
+      <div class="concept-card"><span class="icon">🐴</span><div><h3>ม้าโทรจัน (Trojan Horse)</h3><p>โปรแกรมที่ฝังเข้าเครื่อง เพื่อเก็บหรือทำลายข้อมูล</p></div></div>
+      <div class="concept-card"><span class="icon">🕵️</span><div><h3>สปายแวร์ (Spyware)</h3><p>ฝังตัวในเครื่อง ดักข้อมูลการใช้งานโดยผู้ใช้ไม่รู้ตัว</p></div></div>
+      <div class="concept-card"><span class="icon">🧫</span><div><h3>ไวรัสคอมพิวเตอร์ (Virus)</h3><p>โปรแกรมที่ทำสำเนาตัวเองแพร่เชื้อ ทำลายข้อมูล แพร่ผ่านอุปกรณ์ เช่น Flash Drive</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>สังเกต:</b> เครื่องเปิดช้ากว่าปกติ มีโปรแกรมแปลก ๆ ทำงานขึ้นมาเอง ไฟล์หาย หรือมีป๊อปอัปมากผิดปกติ อาจถูกภัยคุกคาม
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> การป้องกันและการใช้เทคโนโลยีอย่างปลอดภัย
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic3.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic3-text">
+    <p><b>แนวทางป้องกัน</b></p>
+    <ul><li>ตรวจสอบและ <b>อัปเดต</b> ระบบปฏิบัติการให้เป็นปัจจุบัน ใช้ซอฟต์แวร์ที่ถูกลิขสิทธิ์</li><li>ติดตั้ง <b>โปรแกรมป้องกันไวรัส</b> และอัปเดตสม่ำเสมอ</li><li>ติดตั้ง <b>ไฟร์วอลล์ (Firewall)</b> เป็นกำแพงป้องกันผู้ไม่ได้รับอนุญาตและแฮ็กเกอร์</li><li><b>ไม่เปิดเผยข้อมูลส่วนตัว</b> บนสื่อสังคมออนไลน์ เช่น เลขบัตรประชาชน เบอร์โทร บัตรเครดิต</li><li>ต้อง <b>Login</b> ทุกครั้ง และล็อกหน้าจอเมื่อไม่ได้อยู่หน้าเครื่อง</li><li>ไม่เข้าเว็บไซต์เสี่ยงภัย เช่น เว็บพนัน เว็บอนาจาร เว็บที่มีป๊อปอัปมาก ลิงก์ไม่ตรงกับชื่อ</li><li><b>สำรองข้อมูล</b> ไว้ในอุปกรณ์อื่น นอกเหนือจากฮาร์ดดิสก์ เช่น Flash Drive</li><li>สแกนอุปกรณ์เก็บข้อมูลทุกครั้งก่อนใช้งาน</li></ul>
+    <p><b>ตั้งรหัสผ่านให้ปลอดภัย</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🔢</span><div><h3>ยาว 8 ตัวขึ้นไป</h3><p></p></div></div>
+      <div class="concept-card"><span class="icon">🔠</span><div><h3>ผสมพิมพ์ใหญ่และพิมพ์เล็ก</h3><p></p></div></div>
+      <div class="concept-card"><span class="icon">🔣</span><div><h3>ผสมตัวเลขและอักขระพิเศษ</h3><p></p></div></div>
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> จริยธรรมและจรรยาบรรณในการใช้เทคโนโลยี
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic4.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic4-text">
+    <p><b>จริยธรรม</b> คือหลักประพฤติปฏิบัติที่ถูกต้องเหมาะสมกับการทำหน้าที่ของบุคคล เพื่อปฏิบัติตนสอดคล้องกับมาตรฐานที่ดีงามของสังคม จริยธรรมในการใช้เทคโนโลยีสารสนเทศ แบ่งเป็น <b>4 ประเด็น</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🙈</span><div><h3>ความเป็นส่วนตัว</h3><p>สิทธิที่เจ้าของควบคุมข้อมูลของตนในการเปิดเผยกับผู้อื่น</p></div></div>
+      <div class="concept-card"><span class="icon">✅</span><div><h3>ความถูกต้อง</h3><p>ข้อมูลต้องตรวจสอบความถูกต้องก่อนบันทึก และปรับปรุงให้ทันสมัย</p></div></div>
+      <div class="concept-card"><span class="icon">©️</span><div><h3>ความเป็นเจ้าของ</h3><p>กรรมสิทธิ์ในทรัพย์สิน ทั้งที่จับต้องได้ และทรัพย์สินทางปัญญา เช่น เพลง โปรแกรม</p></div></div>
+      <div class="concept-card"><span class="icon">🔑</span><div><h3>การเข้าถึงข้อมูล</h3><p>กำหนดสิทธิตามระดับผู้ใช้ เพื่อรักษาความลับของข้อมูล</p></div></div>
+    </div>
+    <p><b>จรรยาบรรณในการใช้เทคโนโลยีสารสนเทศ</b> (ข้อที่ไม่ควรทำ)</p>
+    <ul><li>ใช้คอมพิวเตอร์ก่ออาชญากรรมหรือละเมิดสิทธิผู้อื่น</li><li>ใช้คอมพิวเตอร์รบกวนผู้อื่น</li><li>สอดแนม แก้ไข หรือเปิดไฟล์ของผู้อื่นโดยไม่ได้รับอนุญาต</li><li>ใช้คอมพิวเตอร์โจรกรรมข้อมูลข่าวสาร หรือสร้างหลักฐานเท็จ</li><li>คัดลอกโปรแกรมที่มีลิขสิทธิ์</li></ul>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> ครีเอทีฟคอมมอนส์ (Creative Commons)
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic5.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic5-text">
+    <p><b>ลิขสิทธิ์</b> คุ้มครองงานสร้างสรรค์ เจ้าของงานยังเป็นผู้ถือครองสิทธิ์ ถ้าผู้นำไปใช้ผิดเงื่อนไข เจ้าของฟ้องร้องตามกฎหมายได้ <b>ครีเอทีฟคอมมอนส์ (CC)</b> เป็นสัญญาอนุญาตที่เจ้าของงานใช้บอกเงื่อนไขการนำผลงานไปใช้</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">👤</span><div><h3>แสดงที่มา (Attribution: BY)</h3><p>ต้องระบุแหล่งที่มา/เจ้าของ ตามรูปแบบที่ผู้สร้างหรือผู้อนุญาตกำหนด</p></div></div>
+      <div class="concept-card"><span class="icon">💰</span><div><h3>ไม่ใช้เพื่อการค้า (NonCommercial: NC)</h3><p>ไม่ให้นำงานไปใช้เพื่อวัตถุประสงค์ทางการค้า</p></div></div>
+      <div class="concept-card"><span class="icon">✂️</span><div><h3>ไม่ดัดแปลง (NoDerivatives: ND)</h3><p>ห้ามดัดแปลงหรือแก้ไขจากต้นฉบับ และต้องขออนุญาตก่อนนำไปใช้</p></div></div>
+      <div class="concept-card"><span class="icon">🔄</span><div><h3>อนุญาตแบบเดียวกัน (ShareAlike: SA)</h3><p>เมื่อดัดแปลง ต้องใช้สัญญาอนุญาตแบบเดียวกัน</p></div></div>
+    </div>
+    <div class="info-box">
+      💡 <b>ควรรู้:</b> ก่อนนำภาพ เพลง หรือข้อความของผู้อื่นมาใช้ ให้ดูสัญลักษณ์และเงื่อนไขของผลงานนั้นเสมอ ประเทศไทยรองรับสัญญาอนุญาตนี้ (cc.in.th)
+    </div>
+    </div>
+  </section>
+
+  <div class="fun-fact">
+    <span class="emoji">🔐</span>
+    <div><b>รู้หรือไม่?</b> รหัสผ่านที่ดีควรยาวพอสมควร ผสมตัวอักษร ตัวเลข และสัญลักษณ์ และไม่ควรใช้รหัสเดียวกันกับทุกบริการ</div>
+  </div>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>ภัยคุกคามเทคโนโลยีสารสนเทศ 4 ประเภท: ฮาร์ดแวร์ ซอฟต์แวร์ เครือข่าย และข้อมูล</li>
+      <li>ภัยที่พบบ่อย: มัลแวร์ หนอน ม้าโทรจัน สปายแวร์ ไวรัส</li>
+      <li>ป้องกันด้วย อัปเดต โปรแกรมป้องกันไวรัส ไฟร์วอลล์ รหัสผ่านที่ดี และสำรองข้อมูล</li>
+      <li>จริยธรรม 4 ประเด็น: ความเป็นส่วนตัว ความถูกต้อง ความเป็นเจ้าของ การเข้าถึงข้อมูล</li>
+      <li>Creative Commons: BY NC ND SA บอกเงื่อนไขการใช้ผลงาน</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m1/cs/3/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=4"></script>
+</body>
+</html>

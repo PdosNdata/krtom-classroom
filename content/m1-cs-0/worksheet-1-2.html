@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.2: การเขียนอัลกอริทึม — ม.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; --c1:#C084FC; --c2:#7C3AED; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📝 ใบงานที่ 1.2 การเขียนอัลกอริทึม</h1>
+    <p>การออกแบบและการเขียนอัลกอริทึม · ม.1 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">กำหนดเรื่องที่สนใจมา 1 เรื่อง แล้วเขียนอัลกอริทึมแสดงลำดับขั้นตอนด้วยภาษาธรรมชาติ รหัสลำลอง และผังงาน</p>
+    <div class="example">💡 ตัวอย่าง: แปลงอุณหภูมิ เซลเซียส → ฟาเรนไฮต์ — 1. START 2. INPUT c 3. COMPUTE f = c * 9 / 5 + 32 4. OUTPUT f 5. STOP</div>
+  </div>
+
+  <div class="card" id="form">
+    <div class="field">
+      <label for="f0"><span class="fn">1</span> ปัญหาที่เลือก</label>
+      <div class="hint">เรื่องที่สนใจนำมาแก้ปัญหา</div>
+      <textarea id="f0" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f1"><span class="fn">2</span> ภาษาธรรมชาติ</label>
+      <div class="hint">บรรยายขั้นตอนเป็นข้อ ๆ เริ่มด้วย "เริ่มต้นการทำงาน" จบด้วย "จบการทำงาน"</div>
+      <textarea id="f1" rows="5" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f2"><span class="fn">3</span> รหัสลำลอง (Pseudo Code)</label>
+      <div class="hint">เขียนเป็นข้อ ๆ ใช้ START, INPUT, COMPUTE, OUTPUT, STOP</div>
+      <textarea id="f2" rows="5" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f3"><span class="fn">4</span> ผังงาน (Flowchart)</label>
+      <div class="hint">อธิบายลำดับสัญลักษณ์ เช่น วงรี(เริ่ม) → สี่เหลี่ยมด้านขนาน(รับค่า) → สี่เหลี่ยมผืนผ้า(คำนวณ) → ... → วงรี(จบ)</div>
+      <textarea id="f3" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/4 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const U = { g:"m1", s:"cs", i:0 }, N = 2, TOTAL = 4;
+const KEY = "krtomws:m1/cs/0:" + N, DONE = "krtomws-done:m1/cs/0:" + N;
+const boxes = [...document.querySelectorAll("textarea")];
+const answered = () => boxes.filter(b => b.value.trim().length >= 8).length;   // นับข้อที่ตอบอย่างน้อย 8 ตัวอักษร
+
+function refresh(){
+  const n = answered();
+  document.getElementById("bar").style.width = (n / TOTAL * 100) + "%";
+  document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ";
+}
+// บันทึกร่างอัตโนมัติ (เก็บในเครื่องนี้)
+try{
+  const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+  boxes.forEach((b, i) => { if(saved[i]) b.value = saved[i]; });
+}catch(e){}
+boxes.forEach(b => b.addEventListener("input", () => {
+  try{ localStorage.setItem(KEY, JSON.stringify(boxes.map(x => x.value))); }catch(e){}
+  refresh();
+}));
+refresh();
+
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), n = answered();
+  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", n, TOTAL);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/flow.js?v=4"></script>
+</body>
+</html>

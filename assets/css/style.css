@@ -623,3 +623,123 @@ footer{ text-align:center; color:var(--muted); font-size:.41rem; margin-top:50px
   .card-grid{ grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); }
   .ar-hub-banner h1{ font-size:1.35rem; }
 }
+
+
+/* ---------- เนื้อหาที่ครูเพิ่ม (contents.js) ---------- */
+.extra-panel{ margin-top:16px; }
+.cx-wrap .cx-title{ font-weight:800; font-size:1.05rem; margin-bottom:10px; color:var(--text); }
+.cx-sec{ font-weight:800; margin:14px 0 8px; padding:6px 14px; border-radius:999px; display:inline-block; background:#EEF1FB; color:#3B57C6; }
+.cx-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.cx-card{ background:#fff; border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:0 4px 10px rgba(0,0,0,.05); display:flex; flex-direction:column; gap:10px; }
+.cx-head{ display:flex; align-items:center; gap:10px; }
+.cx-head h3{ margin:0; font-size:1rem; flex:1; }
+.cx-ico{ font-size:1.5rem; }
+.cx-desc{ margin:0; font-size:.88rem; color:#555; }
+.cx-video{ position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#000; }
+.cx-video iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.cx-img,.cx-media{ width:100%; border-radius:12px; display:block; }
+.cx-audio{ width:100%; }
+.cx-open{ display:inline-block; align-self:flex-start; background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; font-weight:700; padding:9px 18px; border-radius:999px; }
+.cx-del{ border:none; background:#FEF2F2; color:#DC2626; font-weight:700; border-radius:999px; padding:5px 12px; cursor:pointer; font-family:inherit; }
+.cx-teacherbar{ margin-top:16px; text-align:center; }
+.cx-addbtn{ border:2px dashed #3B82F6; background:#EFF6FF; color:#1D4ED8; font-weight:800; font-family:inherit; font-size:1rem; padding:10px 22px; border-radius:999px; cursor:pointer; }
+
+.cx-lock{ overflow:hidden; }
+.cx-overlay{ position:fixed; inset:0; z-index:10001; background:rgba(20,15,35,.6); display:flex; align-items:flex-start; justify-content:center; overflow:auto; padding:20px 12px; }
+.cx-box{ position:relative; background:#fff; border-radius:20px; width:100%; max-width:640px; padding:22px 22px 18px; box-shadow:0 20px 50px rgba(0,0,0,.35); font-size:16px; line-height:1.5; margin:0 auto; }
+.cx-box h2{ margin:0 0 14px; font-size:22px; }
+.cx-x{ position:absolute; top:10px; right:12px; border:none; background:#EEF1FB; width:34px; height:34px; border-radius:50%; font-size:16px; cursor:pointer; }
+.cx-box form{ display:flex; flex-direction:column; gap:12px; }
+.cx-box label{ display:flex; flex-direction:column; gap:4px; font-weight:700; font-size:15px; }
+.cx-box label small{ font-weight:400; color:#777; }
+.cx-box input[type=text],.cx-box input[type=url],.cx-box input[type=password],.cx-box select,.cx-box textarea,.cx-box input[type=file]{
+  font-family:inherit; font-size:16px; padding:9px 12px; border:2px solid var(--border); border-radius:10px; background:#fff; font-weight:400; }
+.cx-box input:focus,.cx-box select:focus,.cx-box textarea:focus{ outline:none; border-color:#3B82F6; }
+.cx-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:560px){ .cx-row{ grid-template-columns:1fr; } }
+.cx-kinds{ border:2px solid var(--border); border-radius:12px; padding:8px 12px; display:flex; gap:16px; flex-wrap:wrap; }
+.cx-kinds legend{ font-weight:800; font-size:14px; padding:0 6px; }
+.cx-kinds label{ flex-direction:row; align-items:center; gap:6px; font-weight:600; cursor:pointer; }
+.cx-err{ color:#DC2626; font-weight:700; min-height:1.2em; font-size:15px; }
+.cx-actions{ display:flex; justify-content:flex-end; gap:10px; }
+.cx-actions button{ font-family:inherit; font-size:16px; font-weight:800; border:none; border-radius:999px; padding:10px 22px; cursor:pointer; }
+.cx-cancel{ background:#EEF1FB; color:#3B57C6; }
+.cx-save{ background:linear-gradient(135deg,#10B981,#059669); color:#fff; }
+.cx-save:disabled{ opacity:.6; cursor:wait; }
+
+
+/* ---- เรียนตามลำดับขั้นตอน ---- */
+.flow-panel{ max-width:640px; margin-left:auto; margin-right:auto; }
+.flow-intro{ text-align:center; font-weight:700; color:#4B5563; margin:0 0 14px; }
+.flow-steps{ display:flex; flex-direction:column; gap:12px; }
+.flow-step{ display:flex; align-items:center; gap:12px; width:100%; box-sizing:border-box; padding:14px 18px; border:2px solid #C7D2FE; border-radius:18px; background:#fff; color:#1F2430; text-decoration:none; font:inherit; font-weight:700; cursor:pointer; text-align:left; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+.flow-step .flow-num{ flex:none; width:34px; height:34px; border-radius:50%; background:#6366F1; color:#fff; display:flex; align-items:center; justify-content:center; font-size:.9em; }
+.flow-step .flow-emoji{ flex:none; font-size:1.4em; }
+.flow-step .flow-label{ flex:1; }
+.flow-step .flow-badge{ flex:none; font-size:.78em; font-weight:700; color:#6B7280; }
+.flow-step.next{ border-color:#3B82F6; background:#EFF6FF; box-shadow:0 0 0 3px rgba(59,130,246,.18); }
+.flow-step.next .flow-badge{ color:#2563EB; }
+.flow-step.done{ border-color:#34D399; background:#F0FBF6; }
+.flow-step.done .flow-num{ background:#10B981; }
+.flow-step.done .flow-badge{ color:#059669; }
+.flow-step.locked{ border-color:#E5E7EB; background:#F3F4F6; color:#9CA3AF; box-shadow:none; }
+.flow-step.locked .flow-num{ background:#9CA3AF; }
+.flow-bonus-title{ text-align:center; font-weight:700; margin:22px 0 10px; color:#4B5563; }
+.flow-note{ text-align:center; font-size:.8em; color:#6B7280; margin:12px 0 0; }
+.flow-obj{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 22px; }
+.flow-obj p{ margin:0 0 8px; font-weight:700; color:#1D4ED8; }
+.flow-obj ul{ margin:0; padding-left:22px; } .flow-obj li{ margin-bottom:6px; line-height:1.6; }
+
+.flow-img{ display:none; }
+.flow-step.has-img{ position:relative; padding:0; border:none; background:transparent; box-shadow:none; justify-content:center; }
+.flow-step.has-img .flow-img{ display:block; width:100%; max-width:560px; height:auto; border-radius:18px; box-shadow:0 4px 12px rgba(0,0,0,.12); transition:transform .15s; }
+.flow-step.has-img:hover .flow-img{ transform:translateY(-2px); }
+.flow-step.has-img .flow-num,.flow-step.has-img .flow-emoji,.flow-step.has-img .flow-label{ display:none; }
+.flow-step.has-img .flow-badge{ position:absolute; top:8px; right:calc(50% - 280px + 8px); background:#fff; padding:3px 10px; border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+.flow-step.has-img .flow-badge:empty{ display:none; }
+.flow-step.has-img.locked .flow-img{ filter:grayscale(1); opacity:.45; }
+.flow-step.has-img.next .flow-img{ box-shadow:0 0 0 4px rgba(59,130,246,.45); }
+.flow-step.has-img.done .flow-img{ box-shadow:0 0 0 4px rgba(16,185,129,.45); }
+@media (max-width:620px){ .flow-step.has-img .flow-badge{ right:8px; } }
+
+.flow-std,.flow-ind{ margin-bottom:14px; }
+.flow-std{ background:#FFF7ED; border-color:#FED7AA; } .flow-std p{ color:#C2410C; }
+.flow-ind{ background:#F0FDF4; border-color:#BBF7D0; } .flow-ind p{ color:#15803D; }
+.flow-tag{ display:inline-block; font-size:.75em; padding:1px 8px; border-radius:999px; background:#fff; border:1px solid #BBF7D0; color:#15803D; white-space:nowrap; }
+
+/* ---- รายงานคะแนน (ครู) ---- */
+.rp-wrap{ max-width:900px; margin:0 auto; background:rgba(255,255,255,.92); border-radius:18px; padding:16px; box-shadow:0 4px 14px rgba(0,0,0,.08); font-size:17px; }
+.rp-tabs{ display:flex; gap:8px; margin-bottom:12px; }
+.rp-tab{ flex:1; padding:10px; border:2px solid #C7D2FE; border-radius:14px; background:#fff; font:inherit; font-weight:700; cursor:pointer; }
+.rp-tab.on{ background:#6366F1; border-color:#6366F1; color:#fff; }
+.rp-filters{ display:flex; flex-wrap:wrap; gap:10px 16px; margin-bottom:10px; }
+.rp-filters label{ display:flex; align-items:center; gap:6px; font-weight:700; }
+.rp-filters select{ font:inherit; padding:6px 10px; border-radius:10px; border:1px solid #CBD5E1; max-width:100%; }
+.rp-title{ font-weight:800; font-size:1.1em; margin-top:6px; } .rp-sub{ color:#6B7280; font-size:.9em; margin-bottom:8px; }
+.rp-scroll{ overflow-x:auto; }
+.rp-table{ border-collapse:collapse; width:100%; font-size:.92em; }
+.rp-table th,.rp-table td{ border:1px solid #CBD5E1; padding:6px 9px; }
+.rp-table th{ background:#E0E7FF; position:sticky; top:0; }
+.rp-table .rp-c{ text-align:center; white-space:nowrap; } .rp-table .rp-none{ color:#9CA3AF; }
+.rp-table tfoot td{ background:#F3F4F6; font-weight:700; }
+.rp-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.rp-actions button{ padding:9px 16px; border:none; border-radius:999px; background:#3B82F6; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
+.rp-actions button:disabled{ opacity:.5; }
+
+/* การ์ดวิชา: ถ้ามีรูป home-subject-{ชั้น}-{วิชา}.webp จะแทนที่การ์ดโค้ดทั้งใบ */
+.subject-card .s-coded-fallback{ display:flex; align-items:center; gap:14px; }
+.subject-card .s-fullcard-img{ display:none; width:100%; height:auto; }
+.subject-card.has-fullcard{ display:block; padding:0; overflow:hidden; background:transparent; border:none; box-shadow:none; }
+.subject-card.has-fullcard:hover{ box-shadow:none; }
+.subject-card.has-fullcard .s-fullcard-img{ display:block; }
+
+/* ไฟล์ HTML ที่ครูอัปโหลด (เปิดในหน้าต่างเต็มจอ แบบ sandbox) */
+.cx-htmlview{ position:fixed; inset:0; z-index:99999; background:#0F172A; display:flex; flex-direction:column; }
+.cx-htmlbar{ flex:none; display:flex; align-items:center; gap:10px; padding:8px 12px; background:#1E293B; color:#fff; }
+.cx-htmltitle{ flex:1; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cx-hb{ border:none; border-radius:999px; padding:7px 16px; font:inherit; font-weight:700; cursor:pointer; background:#334155; color:#fff; }
+.cx-hclose{ background:#EF4444; }
+.cx-htmlbody{ flex:1; min-height:0; background:#fff; }
+.cx-htmlbody iframe{ width:100%; height:100%; border:0; display:block; }
+.cx-htmlload{ color:#64748B; text-align:center; padding:40px; }
+button.cx-open{ border:none; cursor:pointer; font:inherit; font-weight:700; }

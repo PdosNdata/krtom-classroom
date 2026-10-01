@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) วิทยาการคำนวณ ป.1–ม.3 โดยนายไชยภัทร ฉลูทอง</title>
 <meta name="description" content="บทเรียนคอมพิวเตอร์ช่วยสอน (CAI) วิชาวิทยาการคำนวณ ป.1–ม.3 โดยนายไชยภัทร ฉลูทอง ครบทุกหน่วย พร้อมใบความรู้ ใบงาน เกม และเกม AR">
-<link rel="icon" href="assets/images/favicon.ico?v=2" sizes="any">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16.png?v=2">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png?v=2">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png?v=2">
-<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png?v=2">
+<link rel="icon" href="assets/images/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png?v=3">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=63">
+<link rel="stylesheet" href="assets/css/style.css?v=73">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 </head>
@@ -42,14 +42,14 @@
         <span>👤 ชื่อ/รหัสนักเรียน</span>
         <img class="field-bg-img" src="assets/images/login-field-id.webp" alt=""
              onload="this.closest('.login-field').classList.add('has-fieldimg');" onerror="this.style.display='none';">
-        <input type="text" id="login-id" placeholder="กรอกชื่อหรือรหัสนักเรียน" autocomplete="username">
+        <input type="text" id="login-id" placeholder="เลขประจำตัว" autocomplete="username">
       </label>
       <label class="login-field" id="field-pw">
         <span>🔒 รหัสผ่าน</span>
         <img class="field-bg-img" src="assets/images/login-field-pw.webp" alt=""
              onload="this.closest('.login-field').classList.add('has-fieldimg');" onerror="this.style.display='none';">
         <div class="login-pw-wrap">
-          <input type="password" id="login-pw" placeholder="กรอกรหัสผ่าน" autocomplete="current-password">
+          <input type="password" id="login-pw" placeholder="รหัสผ่าน" autocomplete="current-password">
         </div>
         <button type="button" class="login-pw-toggle" onclick="toggleLoginPw(this)" aria-label="แสดง/ซ่อนรหัสผ่าน">👁</button>
       </label>
@@ -110,6 +110,8 @@
 </button>
 
 <div class="user-menu-dropdown" id="user-menu-dropdown">
+  <button type="button" id="menu-add-content" style="display:none" onclick="onAddContentClick()">➕ เพิ่มเนื้อหา</button>
+  <button type="button" id="menu-reports" style="display:none" onclick="onReportsClick()">📊 ดูงานนักเรียน</button>
   <button type="button" onclick="onUserSettingsClick()">⚙️ ตั้งค่า</button>
   <button type="button" onclick="onUserLogoutClick()">🚪 ออกจากระบบ</button>
 </div>
@@ -142,7 +144,11 @@
 </div>
 
 <script src="assets/js/data.js?v=15"></script>
-<script src="assets/js/app.js?v=43"></script>
+<script src="assets/js/contents.js?v=7"></script>
+<script src="assets/js/standards.js?v=3"></script>
+<script src="assets/js/flow.js?v=4"></script>
+<script src="assets/js/reports.js?v=1"></script>
+<script src="assets/js/app.js?v=61"></script>
 <script>
   function openLoginModal(){ document.getElementById("login-modal").classList.add("show"); }
   function closeLoginModal(){ document.getElementById("login-modal").classList.remove("show"); }
@@ -151,7 +157,7 @@
   // ===== หน้าเข้าสู่ระบบ (login-gate) =====
   // นักเรียน: ตรวจสอบจริงกับฐานข้อมูล Supabase (ตาราง krtom_students ผ่านฟังก์ชัน krtom_verify_student_login)
   //           รหัสผ่าน = เลขประจำตัวนักเรียน
-  // ครู: ยังไม่มีระบบบัญชีครูจริง จึงใช้ "บัญชีตัวอย่าง" (mock) ไปก่อน
+  // ครู: ตรวจกับบัญชีครูจริงใน Supabase (ตาราง krtom_teachers ผ่านฟังก์ชัน krtom_teacher_login)
   const SUPABASE_URL = "https://dhufwdxxfbahovnmjgrc.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
   let sbClient = null;
@@ -161,11 +167,6 @@
     }
     return sbClient;
   }
-
-  const MOCK_TEACHER_ACCOUNTS = [
-    { id:"ครู01", password:"1234", name:"คุณครูตัวอย่าง" },
-    { id:"teacher", password:"1234", name:"คุณครูตัวอย่าง" }
-  ];
 
   function toggleLoginPw(btn){
     const input = document.getElementById("login-pw");
@@ -187,18 +188,6 @@
     }
     errorBox.textContent = "";
 
-    if(role === "teacher"){
-      const account = MOCK_TEACHER_ACCOUNTS.find(a => a.id === id && a.password === pw);
-      if(!account){
-        errorBox.textContent = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
-        return;
-      }
-      try{ sessionStorage.setItem("loggedInRole", "teacher"); sessionStorage.removeItem("loggedInStudentGrade"); }catch(e){}
-      loginSuccess(account.name);
-      return;
-    }
-
-    // นักเรียน: เรียกฐานข้อมูลจริง
     const sb = getSupabase();
     if(!sb){
       errorBox.textContent = "ระบบเข้าสู่ระบบยังโหลดไม่เสร็จ กรุณาลองใหม่อีกครั้ง";
@@ -206,8 +195,41 @@
     }
     if(submitBtn) submitBtn.disabled = true;
     errorBox.textContent = "กำลังตรวจสอบ...";
+
+    // ครู: ตรวจกับบัญชีครูจริงใน Supabase (ฟังก์ชัน krtom_teacher_login) ได้โทเคนชั่วคราว ใช้เพิ่ม/ลบเนื้อหาต่อได้เลย
+    if(role === "teacher"){
+      try{
+        const { data, error } = await sb.rpc("krtom_teacher_login", { p_code: id, p_password: pw });
+        if(error) throw error;
+        const t = Array.isArray(data) ? data[0] : data;
+        if(!t || !t.token) throw new Error("no token");
+        errorBox.textContent = "";
+        try{
+          sessionStorage.setItem("loggedInRole", "teacher");
+          sessionStorage.setItem("krtomTeacherToken", t.token);
+          sessionStorage.removeItem("loggedInStudentGrade");
+          sessionStorage.removeItem("krtomStudentToken");
+        }catch(e){}
+        loginSuccess(t.full_name || id);
+        if(typeof render === "function") render();
+      }catch(e){
+        const m = (e && e.message) || "";
+        if(/Could not find the function|PGRST202/i.test(m)) errorBox.textContent = "ระบบครูยังไม่ได้ติดตั้งในฐานข้อมูล (ต้องรันไฟล์ SQL ใน Supabase ก่อน)";
+        else if(/รหัสครูหรือรหัสผ่านไม่ถูกต้อง/.test(m)) errorBox.textContent = "รหัสครูหรือรหัสผ่านไม่ถูกต้อง";
+        else errorBox.textContent = "เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
+      }finally{
+        if(submitBtn) submitBtn.disabled = false;
+      }
+      return;
+    }
+
+    // นักเรียน: เรียกฐานข้อมูลจริง (ได้โทเคนสำหรับส่งคะแนน; ถ้ายังไม่ได้รัน SQL ใหม่ ถอยไปใช้ตัวตรวจเดิม)
     try{
-      const { data, error } = await sb.rpc("krtom_verify_student_login", { p_code: id, p_password: pw });
+      let res = await sb.rpc("krtom_student_login", { p_code: id, p_password: pw });
+      if(res.error && /Could not find the function|PGRST202/i.test(res.error.message || res.error.code || "")){
+        res = await sb.rpc("krtom_verify_student_login", { p_code: id, p_password: pw });
+      }
+      const { data, error } = res;
       if(error) throw error;
       const match = Array.isArray(data) ? data[0] : data;
       if(!match){
@@ -218,6 +240,8 @@
       try{
         sessionStorage.setItem("loggedInRole", "student");
         sessionStorage.setItem("loggedInStudentGrade", match.grade_id || "");
+        sessionStorage.removeItem("krtomFlowLocal");
+        if(match.token) sessionStorage.setItem("krtomStudentToken", match.token); else sessionStorage.removeItem("krtomStudentToken");
       }catch(e){}
       loginSuccess(match.full_name);
       if(match.grade_id) location.hash = "#/grade/" + match.grade_id;
@@ -255,6 +279,8 @@
     const menu = document.getElementById("user-menu-dropdown");
     const isOpen = menu.classList.contains("show");
     if(isOpen){ closeUserMenu(); return; }
+    document.getElementById("menu-add-content").style.display = KrtomContent.isTeacher() ? "block" : "none";
+    document.getElementById("menu-reports").style.display = KrtomContent.isTeacher() ? "block" : "none";
     menu.classList.add("show");
     const rect = anchorEl.getBoundingClientRect();
     const menuWidth = menu.offsetWidth;
@@ -271,6 +297,14 @@
     if(menu.contains(e.target) || e.target.closest("#banner-login-btn, #compact-login-btn, #fixed-user-badge")) return;
     closeUserMenu();
   });
+  function onAddContentClick(){
+    closeUserMenu();
+    KrtomContent.openAddForm();
+  }
+  function onReportsClick(){
+    closeUserMenu();
+    location.hash = "#/reports";
+  }
   function onUserSettingsClick(){
     closeUserMenu();
     Swal.fire({
@@ -293,8 +327,15 @@
       cancelButtonColor: "#9CA3AF"
     }).then((result) => {
       if(result.isConfirmed){
-        try{ sessionStorage.removeItem("loggedInUserName"); }catch(e){}
-        location.reload();
+        let tk = null;
+        try{ tk = sessionStorage.getItem("krtomTeacherToken"); }catch(e){}
+        const done = () => {
+          try{ sessionStorage.removeItem("loggedInUserName"); sessionStorage.removeItem("krtomTeacherToken"); sessionStorage.removeItem("krtomStudentToken"); sessionStorage.removeItem("krtomFlowLocal"); sessionStorage.removeItem("loggedInRole"); }catch(e){}
+          location.reload();
+        };
+        const sb = getSupabase();
+        if(tk && sb){ Promise.resolve(sb.rpc("krtom_teacher_logout", { p_token: tk })).catch(() => {}).then(done); setTimeout(done, 1500); }
+        else done();
       }
     });
   }
