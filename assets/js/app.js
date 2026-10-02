@@ -292,8 +292,10 @@ function findSubject(grade, id){ return grade.subjects.find(s => s.id === id); }
 
 // ป.1–3 (เด็กเล็ก) ใช้ตัวอักษรใหญ่กว่าปกติ 2 เท่าทั้งเว็บ เพื่อให้อ่านง่ายขึ้น
 const LARGE_TEXT_GRADES = ["p1", "p2", "p3"];
+const MID_TEXT_GRADES = ["m1", "m2", "m3"];
 function applyTextSize(gradeId){
   document.documentElement.classList.toggle("large-text", LARGE_TEXT_GRADES.includes(gradeId));
+  document.documentElement.classList.toggle("mid-text", MID_TEXT_GRADES.includes(gradeId));   // ม.1–ม.3: ใหญ่ขึ้น 1.5 เท่า (16px → 24px)
 }
 
 function setBreadcrumb(parts){
