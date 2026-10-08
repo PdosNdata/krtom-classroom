@@ -187,6 +187,18 @@ const READY_CONTENT = {
       ]
     }
   },
+  "m2/design/0": {
+    quiz: { href:"content/m2-design-0/quiz.html", title:"แบบทดสอบหน่วยที่ 1", last:true }
+  },
+  "m2/design/1": {
+    quiz: { href:"content/m2-design-1/quiz.html", title:"แบบทดสอบหน่วยที่ 2", last:true }
+  },
+  "m2/design/2": {
+    quiz: { href:"content/m2-design-2/quiz.html", title:"แบบทดสอบหน่วยที่ 3", last:true }
+  },
+  "m2/design/3": {
+    quiz: { href:"content/m2-design-3/quiz.html", title:"แบบทดสอบหน่วยที่ 4", last:true }
+  },
   "m1/cs/0": {
     knowledge: { href:"content/m1-cs-0/knowledge.html", title:"การออกแบบและการเขียนอัลกอริทึม" },
     worksheet: { href:"content/m1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 แนวคิดเชิงนามธรรมและรูปแบบการเขียนอัลกอริทึม" },
@@ -819,6 +831,8 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
   let visibleTabs = TABS.filter(t => !t.arOnly || grade.hasAR);
   if(flow) visibleTabs = activeTab === "knowledge" ? [] : visibleTabs.filter(t => t.key === "game" || t.key === "ar");
   const unitKey = `${grade.id}/${subject.id}/${idx}`;
+  // แท็บที่ตั้ง last:true (เช่น แบบทดสอบสไตล์ฟอร์ม) ย้ายไปไว้ท้ายสุดของเมนูทั้งหมด
+  { const L = READY_CONTENT[unitKey]; if(L){ visibleTabs = visibleTabs.filter(t => !(L[t.key] && L[t.key].last)).concat(visibleTabs.filter(t => L[t.key] && L[t.key].last)); } }
   const tabBtns = visibleTabs.map(t => {
     const ready = READY_CONTENT[unitKey] && READY_CONTENT[unitKey][t.key];
     // ถ้าแท็บนี้มีเนื้อหาพร้อมเล่นแบบทางเดียว (ไม่มีเวอร์ชันให้เลือกหลายแบบ) กดแท็บแล้วเข้าเนื้อหาได้เลย ไม่ต้องกดปุ่ม "เล่นเกมนี้เลย" ซ้ำอีกที
