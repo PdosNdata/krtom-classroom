@@ -1,4 +1,4 @@
--- krtom-classroom: เปิดให้ ม.3 การออกแบบและเทคโนโลยี ส่งคะแนนแบบทดสอบฟอร์มได้ด้วย (ทำได้ครั้งเดียว) — รันต่อจาก 20261002110000
+-- krtom-classroom: เปิดให้ ม.1 และ ม.3 การออกแบบและเทคโนโลยี ส่งคะแนนแบบทดสอบฟอร์มได้ด้วย (ทำได้ครั้งเดียว) — รันต่อจาก 20261002110000
 -- รันใน Supabase SQL Editor 1 ครั้ง (ต่อจาก 20261002100000)
 -- ครูต้องการให้นักเรียนทำใหม่: ลบแถวคะแนนของคนนั้นในตาราง krtom_scores (Table Editor) แล้วนักเรียนจะทำได้อีกครั้ง
 
@@ -13,7 +13,7 @@ set search_path = public, extensions
 as $$
 declare
   s public.krtom_student_sessions;
-  v_allowed text[] := array['m2/design', 'm3/design'];
+  v_allowed text[] := array['m1/design', 'm2/design', 'm3/design'];
 begin
   s := public.krtom_check_student(p_token);
   if (p_grade || '/' || p_subject) <> all (v_allowed) then
