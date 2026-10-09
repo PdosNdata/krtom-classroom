@@ -30,6 +30,9 @@
   const maxScore = items.reduce((s, q) => s + (q.type === "paragraph" ? 0 : (q.points == null ? 1 : q.points)), 0);
   const letters = ["ก.", "ข.", "ค.", "ง.", "จ.", "ฉ.", "ช.", "ซ."];
   let submitted = false;
+  const optObj = (o) => (o && typeof o === "object") ? o : { text: o };
+  const optText = (q, k) => { const o = optObj(q.options[k]); return o.text != null ? String(o.text) : (o.alt || ("ตัวเลือก " + (letters[k] || (k + 1)).replace(".", ""))); };
+  const optInner = (o) => { o = optObj(o); return (o.img && safeSrc(o.img) ? `<img class="fq-oimg" src="${esc(safeSrc(o.img))}" alt="${esc(o.alt || "")}">` : "") + (o.text != null ? esc(o.text) : ""); };
 
   if(D.title) document.title = D.title;
   if(!items.length){
@@ -61,17 +64,18 @@
     let body = "";
     if(q.type === "choice" || q.type === "checkbox"){
       const t = q.type === "choice" ? "radio" : "checkbox";
-      body = ord.map((k, pos) => `<label class="fq-opt" data-k="${k}"><input type="${t}" name="q${i}" value="${k}"><span>${(D.letters === false) ? "" : esc(letters[pos] || "") + " "}${esc(q.options[k])}</span></label>`).join("");
+      body = ord.map((k, pos) => `<label class="fq-opt" data-k="${k}"><input type="${t}" name="q${i}" value="${k}"><span class="fq-ot">${(D.letters === false) ? "" : esc(letters[pos] || "") + " "}${optInner(q.options[k])}</span></label>`).join("");
     }else if(q.type === "truefalse"){
       body = `<label class="fq-opt" data-k="1"><input type="radio" name="q${i}" value="1"><span>ถูก</span></label><label class="fq-opt" data-k="0"><input type="radio" name="q${i}" value="0"><span>ผิด</span></label>`;
     }else if(q.type === "dropdown"){
-      body = `<select class="fq-field" name="q${i}"><option value="">เลือก</option>${(q.options || []).map((o, k) => `<option value="${k}">${esc(o)}</option>`).join("")}</select>`;
+      body = `<select class="fq-field" name="q${i}"><option value="">เลือก</option>${(q.options || []).map((o, k) => `<option value="${k}">${esc(optObj(o).text != null ? optObj(o).text : optObj(o).alt)}</option>`).join("")}</select>`;
     }else if(q.type === "short"){
       body = `<input class="fq-field" type="text" name="q${i}" placeholder="คำตอบของคุณ" autocomplete="off">`;
     }else{
       body = `<textarea class="fq-field" name="q${i}" placeholder="คำตอบของคุณ"></textarea>`;
     }
     html += `<section class="fq-card fq-q" data-i="${i}" data-req="${req ? 1 : 0}">
+      ${q.context ? `<div class="fq-ctx">${esc(q.context)}</div>` : ""}
       <div class="fq-qt"><span class="fq-no">${no}.</span>${esc(q.q)}${req ? '<span class="fq-star">*</span>' : ""}${pts}</div>
       ${q.image && safeSrc(q.image) ? `<img class="fq-img" src="${esc(safeSrc(q.image))}" alt="">` : ""}
       ${body}
@@ -101,8 +105,8 @@
   }
   const answered = (q, a) => q.type === "checkbox" ? a.length > 0 : (q.type === "short" || q.type === "paragraph") ? a !== "" : a !== null;
   function keyText(q){
-    if(q.type === "choice" || q.type === "dropdown") return q.options[q.answer];
-    if(q.type === "checkbox") return (q.answer || []).map(k => q.options[k]).join(" , ");
+    if(q.type === "choice" || q.type === "dropdown") return optText(q, q.answer);
+    if(q.type === "checkbox") return (q.answer || []).map(k => optText(q, k)).join(" , ");
     if(q.type === "truefalse") return q.answer ? "ถูก" : "ผิด";
     if(q.type === "short") return (q.answers || []).join("  /  ");
     return q.sample || "";
@@ -147,8 +151,8 @@
         const tag = keyOnly ? "" : g.manual ? '<span class="tag manual">ครูตรวจ</span>' : g.ok ? '<span class="tag right">✓ ถูก</span>' : '<span class="tag wrong">✗ ผิด</span>';
         const pts = (keyOnly || g.manual) ? "" : ` ${g.ok ? (q.points == null ? 1 : q.points) : 0}/${q.points == null ? 1 : q.points} คะแนน`;
         const mineTxt = (q.type === "short" || q.type === "paragraph") ? (a || "(ไม่ได้ตอบ)")
-          : q.type === "checkbox" ? (a.map(k => q.options[k]).join(" , ") || "(ไม่ได้ตอบ)")
-          : q.type === "truefalse" ? (a === null ? "(ไม่ได้ตอบ)" : a ? "ถูก" : "ผิด") : (a === null ? "(ไม่ได้ตอบ)" : q.options[a]);
+          : q.type === "checkbox" ? (a.map(k => optText(q, k)).join(" , ") || "(ไม่ได้ตอบ)")
+          : q.type === "truefalse" ? (a === null ? "(ไม่ได้ตอบ)" : a ? "ถูก" : "ผิด") : (a === null ? "(ไม่ได้ตอบ)" : optText(q, a));
         fb.style.display = "block";
         fb.innerHTML = `${tag}<b>${pts}</b>
           ${(keyOnly || g.ok) ? "" : `<div>คำตอบของคุณ: ${esc(mineTxt)}</div>`}

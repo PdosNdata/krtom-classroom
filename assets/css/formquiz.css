@@ -50,3 +50,8 @@ select.fq-field{ border:1px solid #DADCE0; border-radius:8px; padding:9px 10px; 
 .fq-empty{ text-align:center; color:#5F6368; padding:50px 20px; }
 @media (max-width:520px){ .fq-card{ padding:16px 14px; } }
 @media print{ .fq-top,.fq-actions{ display:none; } body{ background:#fff; } .fq-card{ break-inside:avoid; box-shadow:none; } }
+
+.fq-qt,.fq-ctx{ white-space:pre-line; }
+.fq-ctx{ background:#F8F5FD; border-left:4px solid var(--fq); border-radius:6px; padding:10px 14px; margin-bottom:12px; font-size:.88em; color:#3C4043; }
+.fq-oimg{ display:block; max-width:min(100%,300px); max-height:220px; border-radius:8px; border:1px solid #E8EAED; background:#fff; margin-top:4px; }
+.fq-ot{ flex:1; }
