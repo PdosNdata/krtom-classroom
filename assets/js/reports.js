@@ -48,7 +48,8 @@ const KrtomReports = (function(){
   function flowUnits(gid){
     const g = CURRICULUM.find(x => x.id === gid), out = [];
     if(g) g.subjects.forEach(s => s.units.forEach((u, i) => {
-      if(isFlowUnit(g.id, s.id, i)) out.push({ key:`${g.id}/${s.id}/${i}`, short:`${s.name} หน่วยที่ ${i+1}`, label:`${s.name} หน่วยที่ ${i+1}: ${u.name}` });
+      const rq = (typeof READY_CONTENT !== "undefined") && READY_CONTENT[`${g.id}/${s.id}/${i}`] && READY_CONTENT[`${g.id}/${s.id}/${i}`].quiz;
+      if(isFlowUnit(g.id, s.id, i) || (rq && rq.scoreAs)) out.push({ key:`${g.id}/${s.id}/${i}`, short:`${s.name} หน่วยที่ ${i+1}`, label:`${s.name} หน่วยที่ ${i+1}: ${u.name}` });
     }));
     return out;
   }

@@ -193,6 +193,34 @@
     document.getElementById("fq-submit").disabled = true;
     document.getElementById("fq-clear").style.display = "none";
     window.scrollTo({ top:0, behavior:"smooth" });
+    saveScore(score, slot.querySelector(".fq-result"));
+  }
+
+  // ส่งคะแนนเข้า Supabase (ตาราง krtom_scores) เมื่อเป็นนักเรียนที่ล็อกอิน — D.scoreAs = "pretest" | "posttest", D.unit = {g,s,i}
+  async function saveScore(score, host){
+    if(!D.scoreAs || !D.unit || !host) return;
+    const box = document.createElement("div"); box.className = "fq-meta"; box.style.cssText = "border:0;margin-top:10px;font-weight:700"; host.appendChild(box);
+    const role = ss("loggedInRole"), tok = ss("krtomStudentToken");
+    const typeTh = D.scoreAs === "pretest" ? "แบบทดสอบก่อนเรียน" : "แบบทดสอบหลังเรียน";
+    if(role === "teacher"){ box.textContent = "👩‍🏫 โหมดครู: ไม่บันทึกคะแนน"; return; }
+    if(role !== "student" || !tok){ box.textContent = "ℹ️ ยังไม่ได้เข้าสู่ระบบนักเรียน คะแนนจึงไม่ถูกบันทึก"; box.style.color = "#B45309"; return; }
+    box.textContent = "กำลังบันทึกคะแนน..."; box.style.color = "#5F6368";
+    const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
+    try{
+      const r = await fetch("https://dhufwdxxfbahovnmjgrc.supabase.co/rest/v1/rpc/krtom_submit_exam", {
+        method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_token: tok, p_grade: D.unit.g, p_subject: D.unit.s, p_unit: D.unit.i, p_type: D.scoreAs, p_score: score, p_total: maxScore })
+      });
+      let j = null; try{ j = await r.json(); }catch(e){}
+      if(!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status));
+      box.textContent = "✅ บันทึกคะแนน" + typeTh + "แล้ว"; box.style.color = "#137333";
+    }catch(e){
+      const m = (e && e.message) || "";
+      box.style.color = "#D93025";
+      box.textContent = /หมดเวลาเข้าสู่ระบบ/.test(m) ? "หมดเวลาเข้าสู่ระบบ กรุณาออกจากระบบแล้วเข้าใหม่ คะแนนยังไม่ถูกบันทึก"
+        : /PGRST202|Could not find the function/i.test(m) ? "ระบบเก็บคะแนนยังไม่ได้ติดตั้งในฐานข้อมูล (ครูต้องรันไฟล์ SQL)"
+        : "บันทึกคะแนนไม่สำเร็จ (ตรวจสอบอินเทอร์เน็ต)";
+    }
   }
   function showKey(){
     if(submitted) return;

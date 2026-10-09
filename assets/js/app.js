@@ -191,7 +191,7 @@ const READY_CONTENT = {
     quiz: { href:"content/m2-design-0/quiz.html", title:"แบบทดสอบหน่วยที่ 1", last:true }
   },
   "m2/design/1": {
-    quiz: { href:"content/m2-design-1/quiz.html", title:"แบบทดสอบหน่วยที่ 2", last:true }
+    quiz: { href:"content/m2-design-1/quiz.html", title:"แบบทดสอบหน่วยที่ 2", last:true, scoreAs:"posttest" }
   },
   "m2/design/2": {
     quiz: { href:"content/m2-design-2/quiz.html", title:"แบบทดสอบหน่วยที่ 3", last:true }
