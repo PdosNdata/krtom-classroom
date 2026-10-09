@@ -24,6 +24,13 @@
   const safeSrc = (u) => { u = String(u || "").trim(); return u && !/^\s*(javascript|data|vbscript):/i.test(u) ? u : ""; };
   const ss = (k) => { try{ return sessionStorage.getItem(k); }catch(e){ return null; } };
   const isTeacher = ss("loggedInRole") === "teacher";
+  const SB_URL = "https://dhufwdxxfbahovnmjgrc.supabase.co/rest/v1/rpc/", SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
+  async function rpc(name, args){
+    const r = await fetch(SB_URL + name, { method:"POST", headers:{ apikey:SB_KEY, Authorization:"Bearer " + SB_KEY, "Content-Type":"application/json" }, body: JSON.stringify(args) });
+    let j = null; try{ j = await r.json(); }catch(e){}
+    if(!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status));
+    return j;
+  }
   const shuffle = (a) => { a = a.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const Q = (D.questions || []).filter(Boolean);
   const items = Q.filter(q => q.type !== "section");
@@ -40,6 +47,28 @@
     return;
   }
 
+  async function boot(){
+    const tok = ss("krtomStudentToken");
+    if(D.once && D.scoreAs && D.unit && ss("loggedInRole") === "student" && tok){
+      root.innerHTML = '<div class="fq-card fq-empty">กำลังตรวจสอบ...</div>';
+      try{
+        const rows = await rpc("krtom_my_exam_score", { p_token: tok, p_grade: D.unit.g, p_subject: D.unit.s, p_unit: D.unit.i, p_type: D.scoreAs });
+        const r = Array.isArray(rows) ? rows[0] : rows;
+        if(r){
+          const pct = r.total ? Math.round(r.score * 100 / r.total) : 0;
+          const d = r.created_at ? new Date(r.created_at).toLocaleString("th-TH", { dateStyle:"long", timeStyle:"short" }) : "";
+          root.innerHTML = `<div class="fq-card fq-head"><h1>${esc(D.title || "แบบทดสอบ")}</h1></div>
+            <div class="fq-card fq-result"><div style="font-size:2.4em">✅</div><div style="font-weight:700">คุณทำแบบทดสอบนี้แล้ว</div>
+            <div class="fq-score">${r.score} / ${r.total}</div><div class="fq-bar"><i style="width:${pct}%"></i></div>
+            <div style="font-weight:700">${pct}%</div>${d ? `<div class="fq-meta" style="border:0">ส่งเมื่อ ${esc(d)}</div>` : ""}
+            <div class="fq-meta" style="border:0">แบบทดสอบนี้ทำได้ครั้งเดียว หากต้องการทำใหม่ ให้แจ้งครู</div></div>`;
+          return;
+        }
+      }catch(e){ /* เช็กไม่ได้ → ให้ทำต่อ ฝั่งเซิร์ฟเวอร์จะกันส่งซ้ำอยู่ดี */ }
+    }
+    start();
+  }
+  function start(){
   // ---------------------------------------------------------------- สร้างฟอร์ม
   let html = "", no = 0;
   html += `${D.sample ? `<div class="fq-sample">⚠️ นี่คือข้อสอบตัวอย่างเพื่อแสดงรูปแบบ — ครูจะนำข้อสอบจริงมาแทน</div>` : ""}
@@ -188,7 +217,7 @@
         <div class="fq-bar"><i style="width:${pct}%"></i></div>
         <div style="font-weight:700">${pct}% — ${msg}</div>
         ${items.some(q => q.type === "paragraph") ? '<div class="fq-meta" style="border:0">* ข้อเขียนอธิบายไม่นับในคะแนนอัตโนมัติ ครูตรวจเอง</div>' : ""}
-        <div class="fq-actions" style="justify-content:center;margin-top:14px"><button type="button" class="fq-btn" onclick="location.reload()">🔄 ทำใหม่อีกครั้ง</button><button type="button" class="fq-link" onclick="window.print()">🖨️ พิมพ์ผล</button></div>
+        <div class="fq-actions" style="justify-content:center;margin-top:14px">${D.once && D.scoreAs && ss("loggedInRole") === "student" ? "" : '<button type="button" class="fq-btn" onclick="location.reload()">🔄 ทำใหม่อีกครั้ง</button>'}<button type="button" class="fq-link" onclick="window.print()">🖨️ พิมพ์ผล</button></div>
       </div>`;
     document.getElementById("fq-submit").disabled = true;
     document.getElementById("fq-clear").style.display = "none";
@@ -205,19 +234,14 @@
     if(role === "teacher"){ box.textContent = "👩‍🏫 โหมดครู: ไม่บันทึกคะแนน"; return; }
     if(role !== "student" || !tok){ box.textContent = "ℹ️ ยังไม่ได้เข้าสู่ระบบนักเรียน คะแนนจึงไม่ถูกบันทึก"; box.style.color = "#B45309"; return; }
     box.textContent = "กำลังบันทึกคะแนน..."; box.style.color = "#5F6368";
-    const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
     try{
-      const r = await fetch("https://dhufwdxxfbahovnmjgrc.supabase.co/rest/v1/rpc/krtom_submit_exam", {
-        method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ p_token: tok, p_grade: D.unit.g, p_subject: D.unit.s, p_unit: D.unit.i, p_type: D.scoreAs, p_score: score, p_total: maxScore })
-      });
-      let j = null; try{ j = await r.json(); }catch(e){}
-      if(!r.ok) throw new Error((j && j.message) || ("HTTP " + r.status));
-      box.textContent = "✅ บันทึกคะแนน" + typeTh + "แล้ว"; box.style.color = "#137333";
+      await rpc("krtom_submit_exam", { p_token: tok, p_grade: D.unit.g, p_subject: D.unit.s, p_unit: D.unit.i, p_type: D.scoreAs, p_score: score, p_total: maxScore });
+      box.textContent = "✅ บันทึกคะแนน" + typeTh + "แล้ว (ทำได้ครั้งเดียว)"; box.style.color = "#137333";
     }catch(e){
       const m = (e && e.message) || "";
       box.style.color = "#D93025";
       box.textContent = /หมดเวลาเข้าสู่ระบบ/.test(m) ? "หมดเวลาเข้าสู่ระบบ กรุณาออกจากระบบแล้วเข้าใหม่ คะแนนยังไม่ถูกบันทึก"
+        : /ทำแบบทดสอบนี้แล้ว/.test(m) ? "คุณเคยส่งแบบทดสอบนี้แล้ว (ทำได้ครั้งเดียว) คะแนนครั้งแรกยังคงอยู่"
         : /PGRST202|Could not find the function/i.test(m) ? "ระบบเก็บคะแนนยังไม่ได้ติดตั้งในฐานข้อมูล (ครูต้องรันไฟล์ SQL)"
         : "บันทึกคะแนนไม่สำเร็จ (ตรวจสอบอินเทอร์เน็ต)";
     }
@@ -232,4 +256,6 @@
   }
   document.getElementById("fq-submit").onclick = submit;
   document.getElementById("fq-clear").onclick = () => { if(confirm("ล้างคำตอบทั้งหมด?")) location.reload(); };
+  }
+  boot();
 })();
