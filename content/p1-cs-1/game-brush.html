@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เกม AR: เรียงลำดับขั้นตอนแปรงฟัน (ไม่ใช้กล้อง)</title>
+<title>เกม: เรียงลำดับขั้นตอนแปรงฟัน — ป.1 หน่วย 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -70,14 +70,28 @@
   #finish .card{ background:#fff; border-radius:22px; padding:32px 24px; text-align:center; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
   #finish .card h2{ margin:10px 0 6px; font-size:42px; }
   #finish button{ margin-top:14px; padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+
+  /* ภาพขั้นตอนแปรงฟัน (วางไฟล์ภาพไว้ที่ assets/images/brush/ ถ้ายังไม่มีไฟล์ จะใช้ภาพวาดเดิมแทน) */
+  .dropzone .icon.has-img{ height:auto; width:100%; }
+  .dropzone .icon.has-img svg{ display:none; }
+  .dropzone .icon img.stepimg{ width:100%; max-width:250px; height:auto; object-fit:contain; filter:drop-shadow(0 6px 8px rgba(0,0,0,.18)); }
+  .dropzone.zone-img .step-num{ display:none; }          /* ภาพมีเลขขั้นตอนอยู่แล้ว */
+  .dropzone.zone-img{ padding:12px 8px; }
+  .label-chip.has-img svg{ display:none; }
+  .label-chip img.stepimg{ width:92px; height:auto; max-height:70px; object-fit:contain; flex:none; }
+  #scene{ grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); }
+  .dropzone{ min-height:250px; }
+  .label-chip svg{ display:none !important; }   /* ป้ายที่ลากไม่ใช้รูป ใช้เสียงแทน */
+  .label-chip .chip-listen{ border:none; background:#EEF1FB; color:#3B82F6; width:44px; height:44px; border-radius:50%; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; flex:none; }
+  .label-chip .chip-listen:hover{ background:#DBEAFE; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
 
 <header>
-  <h1>🕶️ เกม AR: เรียงลำดับขั้นตอนแปรงฟัน (ไม่ใช้กล้อง)</h1>
-  <a href="../../index.html#/unit/p1/cs/1/ar">← กลับหน้าหน่วย</a>
+  <h1>🪥 เกม: เรียงลำดับขั้นตอนแปรงฟัน</h1>
+  <a href="../../index.html#/unit/p1/cs/1/game">← กลับหน้าหน่วย</a>
 </header>
 
 <p class="desc">หน่วยที่ 2 การแก้ปัญหาอย่างเป็นขั้นตอน (ป.1) — ลากภาพขั้นตอนไปวางให้เรียงลำดับถูกต้อง ตั้งแต่ขั้นตอนที่ 1 ถึง 5</p>
@@ -267,6 +281,30 @@ document.querySelectorAll(".label-chip[data-hover-audio]").forEach(chip => {
     stopSpeaking();
   });
 });
+</script>
+<script>
+/* ใส่ภาพจริง/ภาพการ์ตูนของแต่ละขั้นตอน (ไฟล์ WebP โปร่งใส แนวนอน) */
+(function(){
+  const MAP = {
+    "หยิบแปรงและยาสีฟัน": "step1-take", "บีบยาสีฟันใส่แปรง": "step2-squeeze", "แปรงฟันให้ทั่วปาก": "step3-brush",
+    "บ้วนปากด้วยน้ำสะอาด": "step4-rinse", "เก็บแปรงสีฟันเข้าที่ให้เรียบร้อย": "step5-store"
+  };
+  function put(host, key, prepend){
+    const f = MAP[key]; if(!f) return;
+    const img = new Image(); img.className = "stepimg"; img.alt = key; img.draggable = false;
+    img.onload = () => { host.classList.add("has-img"); const z = host.closest(".dropzone"); if(z) z.classList.add("zone-img"); if(prepend) host.insertBefore(img, host.firstChild); else host.appendChild(img); };
+    img.src = "../../assets/images/brush/" + f + ".webp?v=3";   // ไม่มีไฟล์ = ไม่ทำอะไร (ใช้ภาพวาดเดิม)
+  }
+  document.querySelectorAll(".dropzone").forEach(z => put(z.querySelector(".icon"), z.dataset.answer, false));
+  // ป้ายที่ลาก: ไม่ใช้รูป แต่มีปุ่มลำโพง 🔊 อ่านออกเสียง (แตะป้ายบนจอสัมผัสก็มีเสียง / เอาเมาส์ชี้ก็มีเสียง)
+  document.querySelectorAll(".label-chip").forEach(c => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "chip-listen"; b.setAttribute("aria-label", "ฟังเสียง: " + c.dataset.name); b.textContent = "🔊";
+    b.addEventListener("pointerdown", (e) => e.stopPropagation());               // ไม่ให้เริ่มลากตอนกดปุ่มลำโพง
+    b.addEventListener("click", (e) => { e.stopPropagation(); if(c.dataset.hoverAudio) playAudio(c.dataset.hoverAudio, c); });
+    c.insertBefore(b, c.firstChild);
+    c.addEventListener("pointerdown", (e) => { if(e.pointerType !== "mouse" && c.dataset.hoverAudio) playAudio(c.dataset.hoverAudio, c); });   // จอสัมผัส: แตะ/เริ่มลาก = มีเสียง
+  });
+})();
 </script>
 </body>
 </html>

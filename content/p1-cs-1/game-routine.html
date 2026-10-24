@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกม: เรียงบัตรภาพกิจวัตรประจำวัน — ป.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; }
+  html,body{ margin:0; padding:0; color:#1F2430; }
+  *{ box-sizing:border-box; }
+  header{ background:linear-gradient(135deg,#F59E0B,#EC4899); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:40px; }
+  header a{ color:#fff; background:rgba(255,255,255,.25); padding:8px 16px; border-radius:999px; font-size:.5rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:1040px; margin:0 auto; padding:12px 12px 60px; }
+  .listen{ text-align:center; margin:6px 0; }
+  p.desc{ text-align:center; font-size:.55rem; color:#475569; margin:4px auto 6px; max-width:900px; }
+  #hud{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:6px 0 10px; }
+  .pill{ background:#fff; border:3px solid #E6E8F0; border-radius:999px; padding:2px 18px; font-size:.55rem; font-weight:800; box-shadow:0 3px 8px rgba(0,0,0,.08); }
+  h2.set{ text-align:center; font-size:.8rem; margin:6px 0 10px; color:#9D174D; }
+
+  /* ช่องลำดับ */
+  #slots{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:14px; }
+  .slot{ position:relative; min-height:270px; background:rgba(255,255,255,.85); border:4px dashed #C9D0E5; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px; transition:background .15s,border-color .15s; }
+  .slot .no{ position:absolute; left:8px; top:6px; width:44px; height:44px; border-radius:50%; background:#8B5CF6; color:#fff; font-weight:800; font-size:.8rem; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 0 #5B21B6; }
+  .slot .ph{ font-weight:700; font-size:.6rem; color:#94A3B8; }
+  .slot.over{ background:#EEF2FF; border-color:#6366F1; }
+  .slot.ok{ border:4px solid #10B981; background:#F0FBF6; }
+  .slot.flash{ border-color:#EF4444; background:#FEF2F2; animation:shake .35s; }
+  @keyframes shake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-8px); } 75%{ transform:translateX(8px); } }
+
+  /* บัตรภาพ */
+  .rcard{ width:200px; background:#fff; border:4px solid #fff; border-radius:20px; box-shadow:0 6px 14px rgba(0,0,0,.18); overflow:hidden; cursor:grab; user-select:none; touch-action:none; position:relative; }
+  .rcard .pic{ aspect-ratio:1/1; height:auto; background:#F1F5F9; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .rcard .pic img{ width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
+  .rcard .pic .em{ font-size:96px; line-height:1; }
+  .rcard .nm{ font-weight:800; font-size:.62rem; text-align:center; padding:3px 6px 6px; line-height:1.15; }
+  .rcard .sp{ position:absolute; right:6px; top:6px; width:44px; height:44px; border-radius:50%; border:none; background:rgba(255,255,255,.92); box-shadow:0 2px 6px rgba(0,0,0,.25); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+  .slot .rcard{ cursor:default; box-shadow:none; border-color:#10B981; }
+  #tray{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; padding:10px 6px; background:rgba(255,255,255,.55); border-radius:20px; min-height:260px; }
+  #tray .hint{ width:100%; text-align:center; font-size:.5rem; font-weight:700; color:#64748B; }
+  .rcard.gone{ visibility:hidden; }
+
+  .ov{ position:fixed; inset:0; background:rgba(15,23,42,.6); display:none; align-items:center; justify-content:center; padding:16px; z-index:60; }
+  .ov.show{ display:flex; }
+  .box{ background:#fff; border-radius:24px; padding:20px 26px; text-align:center; max-width:620px; box-shadow:0 20px 50px rgba(0,0,0,.4); }
+  .box h2{ margin:6px 0; font-size:.9rem; } .box p{ margin:0 0 10px; font-size:.55rem; color:#475569; }
+  .big{ border:none; border-radius:999px; padding:4px 26px; font:inherit; font-size:.62rem; font-weight:800; color:#fff; background:#10B981; box-shadow:0 5px 0 #047857; cursor:pointer; text-decoration:none; display:inline-block; margin:4px; }
+  .big.alt{ background:#F97316; box-shadow:0 5px 0 #C2410C; }
+  .dragghost{ position:fixed; z-index:99999; pointer-events:none; transform:translate(-50%,-50%) scale(.9) rotate(-3deg); opacity:.95; }
+
+  /* fit-one-page: จัดให้เห็นครบในหน้าเดียว (ช่องลำดับ + ถาดบัตร) โดยคำนวณขนาดบัตรจากความกว้าง/ความสูงของจอ */
+  :root{ --cw:min(calc((100vw - 56px) / 6 - 12px), calc((100vh - 270px) / 2 - 62px), 230px); }
+  header{ padding:6px 16px; } header h1{ font-size:30px; } header a{ font-size:.42rem; padding:4px 12px; }
+  main{ max-width:1320px; padding:4px 10px 12px; }
+  p.desc{ display:none; }
+  .listen{ position:absolute; right:10px; top:46px; margin:0; z-index:5; display:flex; gap:6px; align-items:center; }
+  .listen .tts-btn{ margin-left:0 !important; }
+  .listen .tts-btn{ font-size:.4rem; padding:2px 12px; }
+  #hud{ margin:2px 0 2px; gap:6px; } .pill{ font-size:.42rem; padding:0 14px; border-width:2px; }
+  h2.set{ font-size:.58rem; margin:2px 0 6px; }
+  #slots{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:8px; }
+  .slot{ width:var(--cw); min-height:calc(var(--cw) + 52px); padding:4px; border-width:3px; border-radius:16px; }
+  .slot .no{ width:30px; height:30px; font-size:.5rem; left:4px; top:4px; z-index:2; }
+  .slot .ph{ font-size:.42rem; text-align:center; }
+  .rcard{ width:var(--cw); border-width:3px; border-radius:14px; }
+  .slot .rcard{ width:100%; }
+  .rcard .nm{ font-size:.46rem; padding:2px 4px 4px; }
+  .rcard .sp{ width:34px; height:34px; font-size:17px; right:4px; top:4px; }
+  .rcard .pic .em{ font-size:calc(var(--cw) * .5); }
+  #tray{ gap:10px; padding:6px 4px; min-height:calc(var(--cw) + 62px); flex-wrap:wrap; align-content:flex-start; }
+  #tray .hint{ font-size:.4rem; line-height:1.1; }
+  @media (max-width:760px){ :root{ --cw:calc((100vw - 52px) / 3 - 4px); } .listen{ position:static; text-align:center; margin:2px 0; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>🌅 เกม: เรียงบัตรภาพกิจวัตรประจำวัน</h1>
+  <a href="../../index.html#/unit/p1/cs/1/game">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <p class="desc">หน่วยที่ 2 การแก้ปัญหาอย่างเป็นขั้นตอน (ป.1) — ลากบัตรภาพไปวางในช่อง ให้เรียงตามลำดับ ก่อน → หลัง ให้ถูกต้อง</p>
+  <div class="listen"><button class="tts-btn" data-audio-src="audio/rt-desc.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span></button></div>
+  <div id="hud"><span class="pill" id="p-round">ชุดที่ 1/2</span><span class="pill">⭐ ถูก <span id="p-score">0</span>/<span id="p-total">0</span></span><span class="pill">🔁 ลองผิด <span id="p-miss">0</span> ครั้ง</span></div>
+  <h2 class="set" id="set-title"></h2>
+  <div id="slots"></div>
+  <div id="tray"></div>
+</main>
+
+<div class="ov" id="ov-round"><div class="box"><div style="font-size:70px">⭐</div><h2>เก่งมาก!</h2><p>เรียงชุดนี้ถูกครบแล้ว ไปชุดต่อไปกันเลย</p><button class="big" id="next-btn">▶ ชุดต่อไป</button></div></div>
+<div class="ov" id="ov-end"><div class="box"><div style="font-size:70px">🎉</div><h2>เก่งมาก! เรียงถูกทุกชุด</h2><p id="end-text"></p><button class="big alt" id="again-btn">🔄 เล่นอีกครั้ง</button><a class="big" href="../../index.html#/unit/p1/cs/1/game">กลับหน้าหน่วย</a></div></div>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+(function(){
+  const IMG = "../../assets/images/routine/";
+  /* ภาพบัตร: วางไฟล์ภาพจริงในโฟลเดอร์ assets/images/routine/ ตามชื่อ (.webp หรือ .jpg/.png) — ถ้ายังไม่มีไฟล์จะแสดงอีโมจิแทน
+     acc = เลขลำดับที่ยอมรับ (ขั้นที่สลับกันได้ เช่น แต่งตัว/กินข้าว) */
+  const SETS = [
+    { title:"กิจวัตรตอนเช้า ก่อนไปโรงเรียน", cards:[
+      { n:1, em:"⏰", name:"ตื่นนอน", img:"a1-wake", audio:"rt-1", acc:[1] },
+      { n:2, em:"🪥", name:"แปรงฟัน", img:"a2-brush", audio:"rt-2", acc:[2] },
+      { n:3, em:"🚿", name:"อาบน้ำ", img:"a3-bath", audio:"rt-3", acc:[3] },
+      { n:4, em:"👕", name:"แต่งตัว", img:"a4-dress", audio:"rt-4", acc:[4, 5] },
+      { n:5, em:"🍚", name:"กินข้าวเช้า", img:"a5-eat", audio:"rt-5", acc:[4, 5] },
+      { n:6, em:"🚌", name:"เดินทางไปโรงเรียน", img:"a6-school", audio:"rt-6", acc:[6] } ] },
+    { title:"ขั้นตอนการปลูกต้นไม้", cards:[
+      { n:1, em:"🪴", name:"เตรียมกระถางและดิน", img:"b1-pot", audio:"ws4-1", acc:[1] },
+      { n:2, em:"⛏️", name:"ขุดหลุมเล็ก ๆ", img:"b2-dig", audio:"ws4-2", acc:[2] },
+      { n:3, em:"🌱", name:"ใส่เมล็ดหรือต้นกล้า", img:"b3-seed", audio:"ws4-3", acc:[3] },
+      { n:4, em:"🟤", name:"กลบดิน", img:"b4-cover", audio:"ws4-4", acc:[4] },
+      { n:5, em:"💧", name:"รดน้ำ", img:"b5-water", audio:"ws4-5", acc:[5] } ] }
+  ];
+  const $ = (id) => document.getElementById(id);
+  const shuffle = (a) => { a = a.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  let setIdx = 0, score = 0, miss = 0, totalMiss = 0, set, filled;
+
+  function cardEl(c){
+    const el = document.createElement("div"); el.className = "rcard"; el.dataset.n = c.n;
+    const pic = document.createElement("div"); pic.className = "pic";
+    const em = document.createElement("span"); em.className = "em"; em.textContent = c.em; pic.appendChild(em);
+    // ลองโหลดภาพจริง: webp -> jpg -> png (ไม่มีไฟล์ = ใช้อีโมจิ)
+    const exts = ["webp", "jpg", "png"]; let k = 0; const im = new Image(); im.alt = c.name; im.draggable = false;
+    im.onload = () => { pic.innerHTML = ""; pic.appendChild(im); };
+    im.onerror = () => { k++; if(k < exts.length) im.src = IMG + c.img + "." + exts[k] + "?v=1"; };
+    im.src = IMG + c.img + "." + exts[0] + "?v=1";
+    const nm = document.createElement("div"); nm.className = "nm"; nm.textContent = c.name;
+    const sp = document.createElement("button"); sp.type = "button"; sp.className = "sp"; sp.textContent = "🔊"; sp.setAttribute("aria-label", "ฟัง: " + c.name);
+    sp.addEventListener("pointerdown", (e) => e.stopPropagation());
+    sp.addEventListener("click", (e) => { e.stopPropagation(); playAudio("audio/" + c.audio + ".mp3", sp); });
+    el.append(pic, nm, sp);
+    return el;
+  }
+
+  function loadSet(i){
+    setIdx = i; set = SETS[i]; score = 0; miss = 0; filled = new Set();
+    $("set-title").textContent = "ชุดที่ " + (i + 1) + ": " + set.title;
+    $("p-round").textContent = "ชุดที่ " + (i + 1) + "/" + SETS.length; $("p-score").textContent = 0; $("p-total").textContent = set.cards.length; $("p-miss").textContent = totalMiss;
+    $("slots").innerHTML = set.cards.map((c, k) => `<div class="slot" data-k="${k}"><span class="no">${k + 1}</span><span class="ph">ลากบัตรมาวาง</span></div>`).join("");
+    const tray = $("tray"); tray.innerHTML = '<div class="hint">👆 ลากบัตรภาพไปวางในช่องตามลำดับ ก่อน → หลัง (กด 🔊 ฟังชื่อบัตร)</div>';
+    let order = shuffle(set.cards); if(order.every((c, k) => c.n === k + 1)) order.reverse();
+    order.forEach(c => { const el = cardEl(c); el._c = c; tray.appendChild(el); bindDrag(el, c); });
+  }
+
+  // ลาก-วาง (Pointer Events)
+  let drag = null;
+  function bindDrag(el, c){
+    el.addEventListener("pointerdown", (e) => {
+      if(el.classList.contains("gone") || e.target.closest(".sp")) return;
+      e.preventDefault(); drag = { el, c, x0:e.clientX, y0:e.clientY, moved:false, ghost:null };
+      document.addEventListener("pointermove", mv); document.addEventListener("pointerup", up); document.addEventListener("pointercancel", up);
+    });
+  }
+  function slotAt(x, y){ const e = document.elementFromPoint(x, y); return e && e.closest ? e.closest(".slot:not(.ok)") : null; }
+  function mv(e){
+    if(!drag) return;
+    if(!drag.moved){ if(Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 6) return;
+      drag.moved = true; const g = drag.el.cloneNode(true); g.className = "rcard dragghost"; g.style.width = "190px"; document.body.appendChild(g); drag.ghost = g; }
+    drag.ghost.style.left = e.clientX + "px"; drag.ghost.style.top = e.clientY + "px";
+    document.querySelectorAll(".slot.over").forEach(s => s.classList.remove("over")); const s = slotAt(e.clientX, e.clientY); if(s) s.classList.add("over");
+  }
+  function up(e){
+    document.removeEventListener("pointermove", mv); document.removeEventListener("pointerup", up); document.removeEventListener("pointercancel", up);
+    const d = drag; drag = null; if(!d) return;
+    document.querySelectorAll(".slot.over").forEach(s => s.classList.remove("over")); if(d.ghost) d.ghost.remove();
+    if(!d.moved){ playAudio("audio/" + d.c.audio + ".mp3", null); return; }          // แตะเฉย ๆ = ฟังชื่อบัตร
+    const s = slotAt(e.clientX, e.clientY); if(!s) return;
+    const k = +s.dataset.k, ok = d.c.acc.includes(k + 1) && !filled.has(k);
+    if(ok){
+      filled.add(k); s.classList.add("ok"); s.querySelector(".ph") && s.querySelector(".ph").remove();
+      const placed = cardEl(d.c); placed.classList.add("placed"); s.appendChild(placed); d.el.classList.add("gone"); d.el.style.display = "none";
+      score++; $("p-score").textContent = score; sfx.correct(); setTimeout(() => playAudio("audio/" + d.c.audio + ".mp3", null), 450);
+      if(score >= set.cards.length) setTimeout(finishSet, 900);
+    } else {
+      miss++; totalMiss++; $("p-miss").textContent = totalMiss; s.classList.add("flash"); setTimeout(() => s.classList.remove("flash"), 400); sfx.wrong();
+    }
+  }
+  function finishSet(){
+    sfx.win();
+    if(setIdx + 1 < SETS.length){ $("ov-round").classList.add("show"); setTimeout(() => playAudio("audio/rt-round.mp3", null), 1100); }
+    else { $("end-text").textContent = "เรียงถูกครบ " + SETS.length + " ชุด ลองผิด " + totalMiss + " ครั้ง"; $("ov-end").classList.add("show"); setTimeout(() => playAudio("audio/rt-win.mp3", null), 1100); }
+  }
+  $("next-btn").addEventListener("click", () => { $("ov-round").classList.remove("show"); loadSet(setIdx + 1); });
+  $("again-btn").addEventListener("click", () => { $("ov-end").classList.remove("show"); totalMiss = 0; loadSet(0); });
+  loadSet(0);
+  window.__rt = { get set(){ return set; }, get score(){ return score; }, get miss(){ return totalMiss; }, get idx(){ return setIdx; } };
+})();
+</script>
+</body>
+</html>

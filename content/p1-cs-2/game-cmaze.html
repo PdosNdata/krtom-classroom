@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมเขาวงกต: เขียนคำสั่งพาเดิน — ป.1 หน่วย 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; }
+  html,body{ margin:0; padding:0; color:#1F2430; }
+  *{ box-sizing:border-box; }
+  header{ background:linear-gradient(135deg,#8B5CF6,#0EA5E9); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:40px; }
+  header a{ color:#fff; background:rgba(255,255,255,.25); padding:8px 16px; border-radius:999px; font-size:.5rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:1000px; margin:0 auto; padding:12px 12px 40px; }
+  .listen{ text-align:center; margin-bottom:8px; }
+
+  #wrap{ position:relative; width:100%; max-width:960px; margin:0 auto; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.3); background:#CFEFB5; container-type:inline-size; aspect-ratio:16/9; }
+  canvas#cv{ display:block; width:100%; height:100%; }
+  .abs{ position:absolute; }
+
+  #hud{ position:absolute; left:0; right:0; top:0; display:none; align-items:center; gap:1.2cqw; padding:1.2cqw 1.6cqw; z-index:4; pointer-events:none; }
+  #hud.on{ display:flex; }
+  .hp{ display:flex; align-items:center; gap:.8cqw; background:rgba(15,40,90,.55); border-radius:999px; padding:.4cqw 1.6cqw .4cqw .5cqw; color:#fff; font-weight:800; font-size:2.6cqw; }
+  #avatar{ width:5cqw; height:5cqw; border-radius:50%; background:#BFE3FF; border:.3cqw solid #fff; }
+  .pill{ display:flex; align-items:center; gap:.8cqw; background:rgba(15,40,90,.6); color:#fff; border-radius:999px; padding:.5cqw 2cqw; font-size:2.6cqw; font-weight:800; justify-content:center; white-space:nowrap; }
+  #lvname{ margin-left:auto; }
+  #toast{ position:absolute; left:50%; bottom:2.5cqw; transform:translateX(-50%); max-width:92%; background:rgba(255,255,255,.97); border:.4cqw solid #10B981; border-radius:2cqw; padding:.4cqw 2.4cqw; font-size:2.8cqw; font-weight:800; text-align:center; display:none; z-index:5; pointer-events:none; color:#047857; }
+  #toast.warn{ border-color:#EF4444; color:#B91C1C; }
+
+  .ov{ position:absolute; inset:0; display:none; z-index:8; }
+  .ov.show{ display:block; }
+  .wood{ background:linear-gradient(180deg,#C98A4B,#9A5F2A); border:.4cqw solid #6B3F17; border-radius:1.4cqw; color:#FFF3DC; font-weight:800; text-align:center; text-shadow:0 .2cqw 0 #5A3410; box-shadow:0 .5cqw 0 #5A3410, 0 1cqw 2cqw rgba(0,0,0,.35); }
+  .paper{ background:linear-gradient(180deg,#FFF6E0,#F7E3BD); border:.4cqw solid #C98A4B; border-radius:1.6cqw; box-shadow:0 .8cqw 2cqw rgba(0,0,0,.3); }
+  #title{ left:50%; transform:translateX(-50%); top:2cqw; width:50cqw; padding:1cqw 1cqw 1.4cqw; }
+  #title .t1{ font-size:6cqw; line-height:1.05; color:#FFD93B; -webkit-text-stroke:.5cqw #7A3E0A; paint-order:stroke fill; text-shadow:0 .5cqw 0 #7A3E0A; }
+  #title .t2{ font-size:3.4cqw; line-height:1.15; color:#fff; -webkit-text-stroke:.4cqw #14532D; paint-order:stroke fill; margin-top:.3cqw; }
+  .ptitle{ display:inline-block; padding:.2cqw 3cqw; font-size:2.6cqw; margin-bottom:1cqw; }
+  #pick{ left:1.6cqw; top:19cqw; width:26cqw; padding:1cqw 1.2cqw 1.4cqw; }
+  #pick .cards{ display:flex; gap:1cqw; justify-content:center; }
+  .char{ flex:1; border-radius:1.4cqw; border:.4cqw solid transparent; padding:.5cqw .4cqw .8cqw; cursor:pointer; background:#BFE3FF; text-align:center; font-family:inherit; }
+  .char.girl{ background:#FBC9DE; }
+  .char.sel{ border-color:#F59E0B; box-shadow:0 0 0 .5cqw rgba(245,158,11,.45); }
+  .char canvas{ width:100%; height:auto; display:block; }
+  .char span{ display:block; margin-top:.4cqw; color:#fff; font-weight:800; font-size:2.3cqw; border-radius:999px; padding:.1cqw 0; background:#2563EB; }
+  .char.girl span{ background:#EC4899; }
+  .char small{ display:block; font-size:1.5cqw; color:#5A3410; font-weight:700; margin-top:.2cqw; }
+  #howm{ right:1.6cqw; top:19cqw; width:36cqw; padding:1cqw 1.6cqw; }
+  #howm .row{ display:flex; gap:1cqw; align-items:center; font-size:1.95cqw; line-height:1.15; font-weight:700; margin:.55cqw 0; }
+  #howm .row b{ flex:none; width:3.2cqw; height:3.2cqw; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:2cqw; }
+  #centerbox{ left:50%; transform:translateX(-50%); bottom:2cqw; width:44cqw; text-align:center; }
+  .startbtn{ border:none; font-family:inherit; font-size:4.2cqw; font-weight:800; color:#fff; padding:.4cqw 6cqw; border-radius:999px; background:linear-gradient(180deg,#4ADE80,#16A34A); box-shadow:0 .7cqw 0 #166534, 0 1cqw 2cqw rgba(0,0,0,.35); cursor:pointer; text-shadow:0 .2cqw 0 #14532D; }
+  .startbtn:active{ transform:translateY(.5cqw); }
+  #levels{ display:flex; flex-wrap:wrap; gap:1cqw; justify-content:center; margin-top:1.6cqw; }
+  .lvbtn{ white-space:nowrap; border:.3cqw solid #fff; font-family:inherit; font-size:2.3cqw; font-weight:800; border-radius:1.6cqw; padding:.3cqw 2cqw; color:#5A3410; background:linear-gradient(180deg,#FDE68A,#F59E0B); cursor:pointer; box-shadow:0 .4cqw 0 #B45309; text-align:center; line-height:1.15; }
+  .lvbtn small{ display:block; font-size:1.6cqw; font-weight:700; }
+  .lvbtn.sel{ outline:.5cqw solid #2563EB; }
+  @container (max-width:700px){ #howm{ display:none; } #title{ width:70cqw; } #pick{ top:auto; bottom:2cqw; left:1.6cqw; width:34cqw; } #centerbox{ left:auto; right:2cqw; transform:none; width:56cqw; bottom:2cqw; } .lvbtn{ font-size:2.8cqw; padding:.2cqw 1.4cqw; } }
+
+  .ovbox{ background:rgba(15,23,42,.6); }
+  .ovbox .box{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:60cqw; padding:2cqw 3cqw 2.4cqw; text-align:center; }
+  .box h2{ margin:0 0 .6cqw; font-size:4.4cqw; }
+  .box p{ margin:0 0 1.2cqw; font-size:2.5cqw; line-height:1.3; color:#475569; font-weight:600; }
+  .box .stars{ font-size:6cqw; letter-spacing:.6cqw; }
+  .bigbtn{ border:none; font-family:inherit; font-size:3cqw; font-weight:800; color:#fff; padding:.3cqw 3cqw; border-radius:999px; background:#10B981; box-shadow:0 .5cqw 0 #047857; cursor:pointer; text-decoration:none; display:inline-block; margin:.4cqw .6cqw; }
+  .bigbtn.alt{ background:#F97316; box-shadow:0 .5cqw 0 #C2410C; }
+  .bigbtn.gray{ background:#6B7280; box-shadow:0 .5cqw 0 #374151; }
+
+  /* ---------- แผงเขียนคำสั่ง ---------- */
+  #prog{ max-width:960px; margin:12px auto 0; background:#fff; border:3px solid #C7D2FE; border-radius:18px; padding:8px 12px; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+  #prog .ph{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-weight:800; font-size:.5rem; color:#3730A3; }
+  #prog .ph small{ font-weight:600; color:#64748B; font-size:.4rem; }
+  #cmds{ display:flex; flex-wrap:wrap; gap:6px; min-height:56px; padding:6px 0 2px; align-content:flex-start; }
+  #cmds{ display:grid; grid-template-columns:repeat(auto-fill,58px); gap:8px; padding:8px 0 4px; justify-content:center; }
+  .slot{ position:relative; width:58px; height:58px; border:3px dashed #A5B4FC; border-radius:14px; background:#F5F7FF; display:flex; align-items:center; justify-content:center; touch-action:none; user-select:none; }
+  .slot .n{ position:absolute; left:4px; top:0; font-size:12px; font-weight:800; color:#94A3B8; line-height:1.3; pointer-events:none; }
+  .slot.filled{ border:3px solid #fff; box-shadow:0 3px 0 rgba(0,0,0,.28); cursor:grab; }
+  .slot.filled .n{ color:rgba(255,255,255,.85); }
+  .slot.up{ background:#3B82F6; } .slot.down{ background:#F97316; } .slot.left{ background:#8B5CF6; } .slot.right{ background:#10B981; }
+  .slot.over{ background:#FEF9C3 !important; border-color:#F59E0B !important; transform:scale(1.08); }
+  .slot.now{ outline:5px solid #FACC15; box-shadow:0 0 0 9px rgba(250,204,21,.45), 0 0 24px 8px rgba(250,204,21,.95); transform:scale(1.2); z-index:3; animation:nowPulse .45s ease-in-out infinite alternate; }
+  @keyframes nowPulse{ from{ transform:scale(1.14); } to{ transform:scale(1.26); } }
+  .slot.done::after{ content:'✓'; position:absolute; right:3px; bottom:0; font-size:15px; font-weight:800; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.5); }
+  .slot.done{ opacity:.55; }
+  .slot.bad{ background:#EF4444 !important; outline:4px solid #FCA5A5; }
+  .slot svg{ pointer-events:none; }
+  #palette{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .ptile{ width:92px; height:100px; border-radius:20px; border:4px solid #fff; color:#fff; font-family:inherit; font-weight:800; font-size:17px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; cursor:grab; box-shadow:0 6px 0 rgba(0,0,0,.3); touch-action:none; user-select:none; padding:0; }
+  .ptile:active{ transform:translateY(3px); box-shadow:0 3px 0 rgba(0,0,0,.3); }
+  .ptile.up{ background:linear-gradient(180deg,#60A5FA,#2563EB); } .ptile.left{ background:linear-gradient(180deg,#A78BFA,#6D28D9); }
+  .ptile.down{ background:linear-gradient(180deg,#FDBA74,#EA580C); } .ptile.right{ background:linear-gradient(180deg,#6EE7B7,#059669); }
+  .dragghost{ position:fixed; z-index:99999; pointer-events:none; width:64px; height:64px; border-radius:16px; border:3px solid #fff; box-shadow:0 10px 20px rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; transform:translate(-50%,-50%) scale(1.1); opacity:.95; }
+  .dragghost.up{ background:#3B82F6; } .dragghost.down{ background:#F97316; } .dragghost.left{ background:#8B5CF6; } .dragghost.right{ background:#10B981; }
+  #ctl{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; align-items:center; margin-top:8px; }
+  #acts{ display:flex; flex-direction:column; gap:8px; }
+  .act{ border:none; border-radius:999px; font-family:inherit; font-size:.55rem; font-weight:800; color:#fff; padding:4px 26px; cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,.28); }
+  .act:active{ transform:translateY(3px); box-shadow:0 2px 0 rgba(0,0,0,.28); }
+  .act.run{ background:#16A34A; font-size:.65rem; } .act.undo{ background:#F59E0B; } .act.clear{ background:#EF4444; }
+  .act:disabled{ opacity:.5; cursor:not-allowed; }
+  #prog.busy #palette{ opacity:.5; pointer-events:none; }
+  .keys{ text-align:center; font-size:.42rem; color:#64748B; margin-top:10px; }
+
+  /* ---------- เต็มหน้าจอ ---------- */
+  #stage:fullscreen, #stage.pfs{ background:#0B1220; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; width:100vw; height:100vh; padding:8px; overflow:auto; }
+  #stage.pfs{ position:fixed; inset:0; z-index:9999; }
+  #stage:fullscreen #wrap, #stage.pfs #wrap{ width:min(calc(100vw - 16px), calc((100vh - 330px) * 16 / 9)); max-width:none; border-radius:10px; }
+  #stage:fullscreen #prog, #stage.pfs #prog{ width:min(calc(100vw - 16px), 960px); }
+    #fsbar{ display:none; width:min(calc(100vw - 16px), 960px); justify-content:flex-end; margin-bottom:6px; }
+  #stage:fullscreen #fsbar, #stage.pfs #fsbar{ display:flex; }
+  #fs-exit{ border:3px solid #fff; border-radius:999px; padding:2px 22px; font-family:inherit; font-size:.5rem; font-weight:800; color:#fff; background:linear-gradient(180deg,#F87171,#DC2626); box-shadow:0 4px 0 #991B1B; cursor:pointer; }
+  #fs-btn{ margin-left:8px; }
+
+  /* ปุ่มกลับหน้าหลักของเกม + ปุ่มกลับหน้าหน่วย (ใช้ได้ตอนเต็มหน้าจอ) */
+  .hbtn{ pointer-events:auto; width:5.6cqw; height:5.6cqw; border-radius:1.4cqw; border:.3cqw solid #fff; background:linear-gradient(180deg,#60A5FA,#2563EB); color:#fff; font-size:3cqw; line-height:1; cursor:pointer; font-family:inherit; padding:0; }
+  .hbtn:active{ transform:translateY(.3cqw); }
+  .backbtn{ position:absolute; left:1.6cqw; top:1.6cqw; padding:.3cqw 2cqw; font-size:2.2cqw; text-decoration:none; z-index:3; border-radius:999px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧭 เกมเขาวงกต: เขียนคำสั่งพาเดิน</h1>
+  <a href="../../index.html#/unit/p1/cs/2/game">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div class="listen"><button class="tts-btn" data-audio-src="audio/cmaze-desc.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span></button>
+  <button class="tts-btn" id="fs-btn" type="button"><span class="tts-icon">⛶</span> <span class="tts-label">เต็มหน้าจอ</span></button></div>
+
+  <div id="stage">
+    <div id="fsbar"><button id="fs-exit" type="button">🗗 ออกจากเต็มหน้าจอ (กด Esc ก็ได้)</button></div>
+    <div id="wrap">
+      <canvas id="cv" width="960" height="540"></canvas>
+      <div id="hud">
+        <div class="hp"><canvas id="avatar" width="80" height="80"></canvas><span id="pname">ดาต้า</span></div>
+        <div class="pill">👣 คำสั่ง <span id="ncmd">0</span></div>
+        <div class="pill" id="curcmd" style="display:none"></div>
+        <div class="pill" id="best">🎯 ทางสั้นสุด 0 ก้าว</div>
+        <div class="pill" id="lvname">ง่าย</div>
+        <button id="home-btn" class="hbtn" type="button" aria-label="กลับหน้าหลักของเกม" title="กลับหน้าหลักของเกม">🏠</button>
+      </div>
+      <div id="toast"></div>
+
+      <div class="ov show" id="ov-start">
+      <a class="backbtn wood" href="../../index.html#/unit/p1/cs/2/game">← กลับหน้าหน่วย</a>
+        <div class="abs wood" id="title"><div class="t1">เขาวงกต</div><div class="t2">เขียนคำสั่งพาเดินไปถึงทางออก</div></div>
+        <div class="abs paper" id="pick">
+          <div class="wood ptitle">เลือกผู้เล่น</div>
+          <div class="cards">
+            <button class="char boy sel" id="pick-boy" type="button"><canvas width="200" height="250" id="pv-boy"></canvas><span>ดาต้า</span><small>นักเรียนชาย</small></button>
+            <button class="char girl" id="pick-girl" type="button"><canvas width="200" height="250" id="pv-girl"></canvas><span>ใบข้าว</span><small>นักเรียนหญิง</small></button>
+          </div>
+        </div>
+        <div class="abs paper" id="howm">
+          <div class="wood ptitle">วิธีเล่น</div>
+          <div class="row"><b style="background:#3B82F6">1</b><span>กดลูกศร ⬅️ ➡️ ⬆️ ⬇️ เลือกคำสั่ง (1 ลูกศร = เดิน 1 ช่อง)</span></div>
+          <div class="row"><b style="background:#22C55E">2</b><span>เรียงคำสั่งต่อกันให้ครบทาง แล้วกด ▶ เริ่มเดิน</span></div>
+          <div class="row"><b style="background:#F59E0B">3</b><span>ตัวละครเดินตามคำสั่ง ถึงประตู 🚪 คือชนะ! ใช้คำสั่งน้อยได้ดาวมาก</span></div>
+        </div>
+        <div class="abs" id="centerbox"><button class="startbtn" id="start-btn">▶ เริ่มเกม</button><div id="levels"></div></div>
+      </div>
+
+      <div class="ov ovbox" id="ov-win"><div class="box paper"><div class="stars" id="win-stars">⭐⭐⭐</div><h2 id="win-title">ถึงทางออกแล้ว!</h2><p id="win-text"></p>
+        <button class="bigbtn" id="next-btn">ด่านต่อไป ▶</button>
+        <a class="bigbtn alt" href="../../index.html#/unit/p1/cs/2/game" id="back-btn" style="display:none">กลับหน้าหน่วย</a>
+        <button class="bigbtn gray" id="again-btn">🔄 เขาวงกตใหม่</button><button class="bigbtn gray" id="menu-btn">เลือกระดับ</button></div></div>
+    </div>
+
+    <div id="prog">
+      <div class="ph"><span>📝 คำสั่งของฉัน <small>(ลากลูกศรไปวางในช่อง ตามลำดับ 1, 2, 3 …)</small></span><small>กดที่ลูกศรในช่อง เพื่อเอาออก · ลากสลับช่องได้</small></div>
+      <div id="cmds"></div>
+      <div id="ctl">
+        <div id="palette">
+          <button class="ptile up" data-d="up" type="button" aria-label="ขึ้น"><span class="ps"></span>ขึ้น</button>
+          <button class="ptile left" data-d="left" type="button" aria-label="ซ้าย"><span class="ps"></span>ซ้าย</button>
+          <button class="ptile down" data-d="down" type="button" aria-label="ลง"><span class="ps"></span>ลง</button>
+          <button class="ptile right" data-d="right" type="button" aria-label="ขวา"><span class="ps"></span>ขวา</button>
+        </div>
+        <div id="acts">
+          <button class="act run" id="run-btn" type="button">▶ เริ่มเดิน</button>
+          <button class="act undo" id="undo-btn" type="button">⌫ ลบคำสั่งล่าสุด</button>
+          <button class="act clear" id="clear-btn" type="button">🗑️ ล้างทั้งหมด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="keys">🖱️ ลากลูกศรไปวางในช่อง (หรือแตะลูกศรเพื่อวางในช่องว่างช่องแรก) · ⌨️ คีย์บอร์ด: ลูกศร = เพิ่มคำสั่ง · Enter = เริ่มเดิน · Backspace = ลบล่าสุด · F = เต็มหน้าจอ</div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+(function(){
+  const W = 960, H = 540, TOP = 84, BOT = 12;
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- ตัวละคร (นักเรียนไทย) ---------- */
+  function rrect(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function drawChar(c, kind, cx, bottom, face, phase, moving, scale){
+    const fill = (x, y, w, h, r, col) => { c.fillStyle = col; rrect(c, x, y, w, h, r); c.fill(); };
+    const sw = moving ? Math.sin(phase) : 0, girl = kind === "girl";
+    c.save(); c.translate(cx, bottom); c.scale(face * scale, scale);
+    c.fillStyle = "rgba(0,0,0,.2)"; c.beginPath(); c.ellipse(0, 0, 15, 4, 0, 0, 7); c.fill();
+    [-sw * 5, sw * 5].forEach((dx, i) => { const lx = (i ? 3 : -8) + dx; fill(lx, -14, 5.5, 8, 2, "#F2C9A0"); fill(lx - .5, -7, 6.5, 5, 2, "#FFFFFF"); fill(lx - 1, -3.5, 8.5, 3.5, 1.8, "#1F2430"); });
+    if(girl){ c.fillStyle = "#1E3A8A"; c.beginPath(); c.moveTo(-9, -26); c.lineTo(9, -26); c.lineTo(13, -9); c.lineTo(-13, -9); c.closePath(); c.fill(); }
+    else { fill(-10, -24, 20, 12, 3, "#1E3A8A"); fill(-10, -24, 20, 3, 1.5, "#172554"); }
+    const ax = sw * 5;
+    fill(-13 + ax * .3, -41, 5, 14, 2.5, "#FFFFFF"); fill(-13 + ax * .3, -29, 5, 5, 2.5, "#F2C9A0");
+    fill(-10.5, -42, 21, 21, 4, "#FFFFFF");
+    if(girl){ c.fillStyle = "#1E3A8A"; c.beginPath(); c.moveTo(0, -38); c.lineTo(-6, -42); c.lineTo(-6, -34); c.closePath(); c.fill(); c.beginPath(); c.moveTo(0, -38); c.lineTo(6, -42); c.lineTo(6, -34); c.closePath(); c.fill(); }
+    else { c.fillStyle = "#E5E9F2"; c.beginPath(); c.moveTo(-4, -42); c.lineTo(0, -37); c.lineTo(4, -42); c.closePath(); c.fill(); fill(-9.5, -23, 19, 2.5, 1, "#7C4A1E"); }
+    fill(8 - ax * .3, -41, 5, 14, 2.5, "#FFFFFF"); fill(8 - ax * .3, -29, 5, 5, 2.5, "#F2C9A0");
+    fill(-3, -46, 6, 5, 2, "#E8B98C");
+    c.fillStyle = "#F2C9A0"; c.beginPath(); c.arc(0, -55, 12.5, 0, 7); c.fill(); c.beginPath(); c.arc(-12, -54, 3, 0, 7); c.arc(12, -54, 3, 0, 7); c.fill();
+    c.fillStyle = girl ? "#3A281C" : "#33261C";
+    if(girl){ c.beginPath(); c.arc(0, -56, 13.6, Math.PI, 0); c.lineTo(13.4, -50); c.quadraticCurveTo(6, -56, 0, -55.5); c.quadraticCurveTo(-6, -56, -13.4, -50); c.closePath(); c.fill();
+      c.fillStyle = "#2563EB"; c.beginPath(); c.moveTo(-14, -66); c.lineTo(-21, -71); c.lineTo(-21, -61); c.closePath(); c.fill(); c.beginPath(); c.moveTo(-14, -66); c.lineTo(-7, -71); c.lineTo(-7, -61); c.closePath(); c.fill(); }
+    else { c.beginPath(); c.arc(0, -55, 12.9, Math.PI * 1.04, Math.PI * 1.96); c.quadraticCurveTo(7, -58.5, 0, -58); c.quadraticCurveTo(-7, -58.5, -12.5, -58.5); c.closePath(); c.fill(); }
+    c.fillStyle = "#1F2430"; c.beginPath(); c.arc(-4.2, -54, 1.7, 0, 7); c.arc(4.2, -54, 1.7, 0, 7); c.fill();
+    c.fillStyle = "rgba(244,114,114,.45)"; c.beginPath(); c.arc(-7, -50.5, 2.2, 0, 7); c.arc(7, -50.5, 2.2, 0, 7); c.fill();
+    c.strokeStyle = "#9A3412"; c.lineWidth = 1.5; c.lineCap = "round"; c.beginPath(); c.arc(0, -50.5, 3.6, .15 * Math.PI, .85 * Math.PI); c.stroke();
+    c.restore();
+  }
+  const NAMES = { boy:"ดาต้า", girl:"ใบข้าว" };
+  let charKind = "boy";
+  try { const s = JSON.parse(localStorage.getItem("p1PlatProg") || "{}"); charKind = s.char === "girl" ? "girl" : "boy"; } catch(e) {}
+  function portrait(canvas, kind){ const c = canvas.getContext("2d"); c.clearRect(0, 0, canvas.width, canvas.height); drawChar(c, kind, canvas.width / 2, canvas.height - 6, 1, 0, false, (canvas.height - 14) / 75); }
+  function avatar(){ const c = $("avatar").getContext("2d"); c.clearRect(0, 0, 80, 80); drawChar(c, charKind, 40, 94, 1, 0, false, 80 / 42); }
+
+  /* ---------- ระดับ: ยากง่ายตามจำนวนช่อง ---------- */
+  const LEVELS = [ { name:"ง่าย", cols:5, rows:4 }, { name:"ปานกลาง", cols:8, rows:6 }, { name:"ยาก", cols:12, rows:8 } ];
+  const DIRS = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
+  const ARROW = { up:"▲", down:"▼", left:"◀", right:"▶" };
+  const SAY = { up:"ขึ้น", down:"ลง", left:"ซ้าย", right:"ขวา" };
+
+  let L = 0, cols, rows, wallR, wallD, cs, ox, oy, cmds = [], best = 0, pos, face = 1, phase = 0, state = "title", selLevel = 0, tt = 0, last = 0, toastT = null, runToken = 0, crash = null;
+  /* wallR[y][x] = มีกำแพงทางขวาของช่อง (x,y) · wallD[y][x] = มีกำแพงด้านล่าง */
+  function makeMaze(c, r){
+    wallR = Array.from({ length:r }, () => Array(c).fill(true)); wallD = Array.from({ length:r }, () => Array(c).fill(true));
+    const seen = Array.from({ length:r }, () => Array(c).fill(false)); const st = [[0, 0]]; seen[0][0] = true;
+    while(st.length){
+      const [x, y] = st[st.length - 1];
+      const nb = Object.values(DIRS).map(d => [x + d[0], y + d[1], d]).filter(n => n[0] >= 0 && n[1] >= 0 && n[0] < c && n[1] < r && !seen[n[1]][n[0]]);
+      if(!nb.length){ st.pop(); continue; }
+      const n = nb[Math.floor(Math.random() * nb.length)];
+      if(n[2][0] === 1) wallR[y][x] = false; else if(n[2][0] === -1) wallR[y][x - 1] = false; else if(n[2][1] === 1) wallD[y][x] = false; else wallD[y - 1][x] = false;
+      seen[n[1]][n[0]] = true; st.push([n[0], n[1]]);
+    }
+  }
+  const canMove = (x, y, d) => { const nx = x + DIRS[d][0], ny = y + DIRS[d][1]; if(nx < 0 || ny < 0 || nx >= cols || ny >= rows) return false;
+    return d === "right" ? !wallR[y][x] : d === "left" ? !wallR[y][x - 1] : d === "down" ? !wallD[y][x] : !wallD[y - 1][x]; };
+  function shortest(){ const dist = Array.from({ length:rows }, () => Array(cols).fill(-1)); dist[0][0] = 0; const q = [[0, 0]];
+    while(q.length){ const [x, y] = q.shift(); for(const d in DIRS){ if(canMove(x, y, d)){ const nx = x + DIRS[d][0], ny = y + DIRS[d][1]; if(dist[ny][nx] < 0){ dist[ny][nx] = dist[y][x] + 1; q.push([nx, ny]); } } } }
+    return dist[rows - 1][cols - 1]; }
+
+  function loadLevel(i){
+    L = i; const lv = LEVELS[i]; cols = lv.cols; rows = lv.rows; makeMaze(cols, rows);
+    cs = Math.floor(Math.min((W - 40) / cols, (H - TOP - BOT - 16) / rows)); ox = Math.floor((W - cs * cols) / 2); oy = TOP + Math.floor((H - TOP - BOT - cs * rows) / 2);
+    best = shortest(); slots = Array(best + 6).fill(null); cmds = []; pos = [0, 0]; face = 1; crash = null; runToken++;
+    $("lvname").textContent = lv.name + " (" + cols + "×" + rows + " ช่อง)"; $("best").textContent = "🎯 ทางสั้นสุด " + best + " ก้าว";
+    renderSlots(); setBusy(false);
+  }
+
+  /* ---------- วาด ---------- */
+  function wallStrip(x0, y0, x1, y1){   // กำแพงพุ่มไม้ (แถบหนาตามเส้นขอบช่อง)
+    const t = cs * .26; const x = Math.min(x0, x1) - (y0 === y1 ? t / 2 : t / 2), y = Math.min(y0, y1) - t / 2;
+    const w = Math.abs(x1 - x0) + t, h = Math.abs(y1 - y0) + t;
+    ctx.fillStyle = "#2E9B47"; rrect(ctx, x, y, y0 === y1 ? w : t, y0 === y1 ? t : h, t * .45); ctx.fill();
+    ctx.fillStyle = "#47B85F"; rrect(ctx, x + 2, y + 2, (y0 === y1 ? w : t) - 4, (y0 === y1 ? t : h) - 8, t * .35); ctx.fill();
+  }
+  function draw(){
+    ctx.fillStyle = "#9BD98C"; ctx.fillRect(0, 0, W, H);
+    if(state === "title"){
+      for(let y = 0; y < 9; y++) for(let x = 0; x < 15; x++){ ctx.fillStyle = (x + y) % 2 ? "#F6E5B5" : "#F2DDA5"; ctx.fillRect(x * 64, y * 64 - 18, 64, 64); if((x * 7 + y * 13) % 5 < 2){ ctx.fillStyle = "#2E9B47"; rrect(ctx, x * 64 + 3, y * 64 - 15, 58, 58, 14); ctx.fill(); ctx.fillStyle = "#47B85F"; ctx.beginPath(); ctx.arc(x * 64 + 22, y * 64 + 4, 10, 0, 7); ctx.arc(x * 64 + 42, y * 64 + 10, 8, 0, 7); ctx.fill(); } }
+      return;
+    }
+    for(let y = 0; y < rows; y++) for(let x = 0; x < cols; x++){ ctx.fillStyle = (x + y) % 2 ? "#F6E5B5" : "#F2DDA5"; ctx.fillRect(ox + x * cs, oy + y * cs, cs, cs); }
+    // เริ่ม / ทางออก
+    ctx.fillStyle = "#3B82F6"; ctx.font = "bold " + (cs * .24) + "px Sarabun, sans-serif"; ctx.textAlign = "left"; ctx.fillText("เริ่ม", ox + 4, oy + cs * .26);
+    const ex = ox + (cols - 1) * cs + cs / 2, ey = oy + (rows - 1) * cs + cs / 2;
+    ctx.fillStyle = "rgba(34,197,94," + (.3 + .2 * Math.sin(tt * .08)) + ")"; ctx.beginPath(); ctx.arc(ex, ey, cs * .46, 0, 7); ctx.fill();
+    emoji("🚪", ex, ey + cs * .26, cs * .62);
+    // กำแพง
+    [0, cols].forEach(x => wallStrip(ox + x * cs, oy, ox + x * cs, oy + rows * cs));   // ขอบนอก
+    [0, rows].forEach(y => wallStrip(ox, oy + y * cs, ox + cols * cs, oy + y * cs));
+    for(let y = 0; y < rows; y++) for(let x = 0; x < cols; x++){
+      if(x < cols - 1 && wallR[y][x]) wallStrip(ox + (x + 1) * cs, oy + y * cs, ox + (x + 1) * cs, oy + (y + 1) * cs);
+      if(y < rows - 1 && wallD[y][x]) wallStrip(ox + x * cs, oy + (y + 1) * cs, ox + (x + 1) * cs, oy + (y + 1) * cs);
+    }
+    // ตัวละคร
+    const px = ox + pos[0] * cs + cs / 2, py = oy + pos[1] * cs + cs * .92;
+    drawChar(ctx, charKind, px, py, face, phase, state === "run", cs * .82 / 78);
+    if(crash){ emoji("💥", ox + crash[0] * cs + cs / 2, oy + crash[1] * cs + cs * .55, cs * .7); }
+  }
+  function emoji(ch, x, y, size){ ctx.font = size + "px 'Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji',sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "#000"; ctx.fillText(ch, x, y); }
+  function loop(ts){ const dt = Math.min(50, ts - last || 16); last = ts; tt += dt / 16.67; if(state === "run") phase += dt * .02; draw(); requestAnimationFrame(loop); }
+
+  /* ---------- คำสั่ง: ลากลูกศร (มีเส้นมีหัว) ไปวางในช่อง แล้วกดเริ่มเดิน ---------- */
+  const COLOR = { up:"#3B82F6", down:"#F97316", left:"#8B5CF6", right:"#10B981" };
+  const ROT = { right:0, down:90, left:180, up:270 };
+  const arrowSvg = (d, w) => `<svg viewBox="0 0 100 100" width="${w}" height="${w}" aria-hidden="true"><g transform="rotate(${ROT[d]} 50 50)"><path d="M6 38 H56 V16 L96 50 L56 84 V62 H6 Z" fill="#fff" stroke="rgba(0,0,0,.4)" stroke-width="3" stroke-linejoin="round"/></g></svg>`;
+  document.querySelectorAll(".ptile .ps").forEach(e => { e.innerHTML = arrowSvg(e.parentNode.dataset.d, 58); });
+  let slots = [];
+  function toast(msg, warn){ const t = $("toast"); t.textContent = msg; t.className = warn ? "warn" : ""; t.style.display = "block"; clearTimeout(toastT); toastT = setTimeout(() => t.style.display = "none", 3000); }
+  function sync(){ cmds = slots.filter(Boolean); $("ncmd").textContent = cmds.length; }
+  function renderSlots(o){
+    o = o || {}; sync();
+    $("cmds").innerHTML = slots.map((v, i) => `<div class="slot ${v ? "filled " + v : ""} ${o.cur === i ? "now" : ""} ${o.done && o.done.has(i) ? "done" : ""} ${o.fail === i ? "bad" : ""}" data-i="${i}"><span class="n">${i + 1}</span>${v ? arrowSvg(v, 42) : ""}</div>`).join("");
+  }
+  function setBusy(b){ document.querySelectorAll("#run-btn,#undo-btn,#clear-btn").forEach(e => e.disabled = b); $("prog").classList.toggle("busy", b); }
+  function addCmd(d){ if(state !== "edit") return; const i = slots.indexOf(null); if(i < 0){ toast("ช่องเต็มแล้ว ลบบางคำสั่งก่อนนะ", true); return; } slots[i] = d; renderSlots(); sfx.pop(); playAudio("audio/cm-" + d + ".mp3", null); }
+
+  // ลาก-วาง (Pointer Events): จากถาดลูกศร หรือย้าย/สลับ/ลากออกจากช่อง
+  let drag = null;
+  function startDrag(e, d, from){
+    if(state !== "edit") return;
+    drag = { d, from, x0:e.clientX, y0:e.clientY, moved:false, ghost:null };
+    document.addEventListener("pointermove", onMove); document.addEventListener("pointerup", onUp); document.addEventListener("pointercancel", onUp);
+  }
+  function onMove(e){
+    if(!drag) return;
+    if(!drag.moved){ if(Math.hypot(e.clientX - drag.x0, e.clientY - drag.y0) < 6) return;
+      drag.moved = true; const g = document.createElement("div"); g.className = "dragghost " + drag.d; g.innerHTML = arrowSvg(drag.d, 46); (document.fullscreenElement || document.getElementById("stage") || document.body).appendChild(g); drag.ghost = g;
+      if(drag.from != null){ slots[drag.from] = null; renderSlots(); } }
+    drag.ghost.style.left = e.clientX + "px"; drag.ghost.style.top = e.clientY + "px";
+    document.querySelectorAll(".slot.over").forEach(x => x.classList.remove("over"));
+    const el = document.elementFromPoint(e.clientX, e.clientY), sl = el && el.closest && el.closest(".slot"); if(sl) sl.classList.add("over");
+  }
+  function onUp(e){
+    document.removeEventListener("pointermove", onMove); document.removeEventListener("pointerup", onUp); document.removeEventListener("pointercancel", onUp);
+    const g = drag; drag = null; if(!g) return;
+    document.querySelectorAll(".slot.over").forEach(x => x.classList.remove("over")); if(g.ghost) g.ghost.remove();
+    if(!g.moved){ if(g.from == null) addCmd(g.d); else { slots[g.from] = null; renderSlots(); } return; }   // แตะเฉย ๆ
+    const el = document.elementFromPoint(e.clientX, e.clientY), sl = el && el.closest && el.closest(".slot");
+    if(sl && state === "edit"){
+      const i = +sl.dataset.i;
+      if(g.from != null && slots[i] != null) slots[g.from] = slots[i];   // สลับช่อง
+      slots[i] = g.d; sfx.pop(); playAudio("audio/cm-" + g.d + ".mp3", null);
+    }
+    renderSlots();
+  }
+  document.querySelectorAll(".ptile").forEach(b => b.addEventListener("pointerdown", (e) => { e.preventDefault(); startDrag(e, b.dataset.d, null); }));
+  $("cmds").addEventListener("pointerdown", (e) => { const sl = e.target.closest && e.target.closest(".slot"); if(!sl) return; const i = +sl.dataset.i; if(!slots[i]) return; e.preventDefault(); startDrag(e, slots[i], i); });
+  $("undo-btn").addEventListener("click", () => { if(state !== "edit") return; for(let i = slots.length - 1; i >= 0; i--){ if(slots[i]){ slots[i] = null; break; } } renderSlots(); });
+  $("clear-btn").addEventListener("click", () => { if(state === "edit"){ slots = slots.map(() => null); renderSlots(); } });
+  const keyMap = { ArrowUp:"up", ArrowDown:"down", ArrowLeft:"left", ArrowRight:"right", w:"up", W:"up", s:"down", S:"down", a:"left", A:"left", d:"right", D:"right" };
+  window.addEventListener("keydown", (e) => {
+    if(state !== "edit") return;
+    if(keyMap[e.key]){ e.preventDefault(); if(!e.repeat) addCmd(keyMap[e.key]); }
+    else if(e.key === "Enter"){ e.preventDefault(); run(); }
+    else if(e.key === "Backspace"){ e.preventDefault(); $("undo-btn").click(); }
+  });
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  async function run(){
+    if(state !== "edit") return;
+    sync(); if(!cmds.length){ toast("ยังไม่มีคำสั่ง ลากลูกศรไปวางในช่องก่อนนะ", true); return; }
+    const order = slots.map((v, i) => v ? i : -1).filter(i => i >= 0);
+    state = "run"; setBusy(true); const token = ++runToken; pos = [0, 0]; crash = null; face = 1; const done = new Set();
+    for(let k = 0; k < order.length; k++){
+      if(token !== runToken) return;
+      const si = order[k], d = slots[si]; renderSlots({ cur:si, done });
+      const cc = $("curcmd"); cc.style.display = "flex"; cc.textContent = "▶ คำสั่งที่ " + (k + 1) + "/" + order.length + ": " + SAY[d];
+      const el = document.querySelector('.slot[data-i="' + si + '"]'); if(el && el.scrollIntoView) el.scrollIntoView({ block:"nearest", behavior:"smooth" });
+      playAudio("audio/cm-" + d + ".mp3", null);
+      await sleep(550); if(token !== runToken) return;   // หยุดให้เห็นว่าคำสั่งไหนกำลังทำงาน
+      if(d === "left") face = -1; else if(d === "right") face = 1;
+      if(!canMove(pos[0], pos[1], d)){
+        crash = [pos[0], pos[1]]; $("curcmd").style.display = "none"; renderSlots({ fail:si, done }); toast("💥 ชนกำแพง! คำสั่งที่ " + (k + 1) + " เดินไม่ได้ ลองแก้คำสั่งดูนะ", true); sfx.wrong(); setTimeout(() => playAudio("audio/cmaze-crash.mp3", null), 650);
+        await sleep(1400); if(token !== runToken) return; crash = null; pos = [0, 0]; face = 1; state = "edit"; setBusy(false); renderSlots({ fail:si }); return;
+      }
+      const from = pos.slice(), to = [pos[0] + DIRS[d][0], pos[1] + DIRS[d][1]];
+      for(let q = 1; q <= 6; q++){ pos = [from[0] + (to[0] - from[0]) * q / 6, from[1] + (to[1] - from[1]) * q / 6]; await sleep(30); if(token !== runToken) return; }
+      pos = to; done.add(si);
+      if(pos[0] === cols - 1 && pos[1] === rows - 1){ $("curcmd").style.display = "none"; renderSlots({ done }); state = "won"; setTimeout(showWin, 500); return; }
+    }
+    $("curcmd").style.display = "none"; renderSlots({ done });
+    toast("ยังไม่ถึงทางออก ต่อคำสั่งเพิ่มได้เลย (ตัวละครจะเริ่มเดินใหม่จากจุดเริ่มต้น)", true); sfx.nope();
+    await sleep(1300); if(token !== runToken) return; pos = [0, 0]; face = 1; state = "edit"; setBusy(false); renderSlots();
+  }
+  $("run-btn").addEventListener("click", run);
+
+  /* ---------- หน้าจอ ---------- */
+  function show(id, on){ $(id).classList.toggle("show", !!on); }
+  function renderLevelBtns(){
+    $("levels").innerHTML = LEVELS.map((l, i) => `<button class="lvbtn ${i === selLevel ? "sel" : ""}" data-i="${i}" type="button">${l.name}<small>${l.cols}×${l.rows} = ${l.cols * l.rows} ช่อง</small></button>`).join("");
+    $("levels").querySelectorAll(".lvbtn").forEach(b => b.addEventListener("click", () => { selLevel = +b.dataset.i; renderLevelBtns(); }));
+  }
+  function pickChar(k){
+    charKind = k; $("pick-boy").classList.toggle("sel", k === "boy"); $("pick-girl").classList.toggle("sel", k === "girl");
+    try { const o = JSON.parse(localStorage.getItem("p1PlatProg") || "{}"); o.char = k; localStorage.setItem("p1PlatProg", JSON.stringify(o)); } catch(e) {}
+    $("pname").textContent = NAMES[k]; avatar();
+  }
+  function goTitle(){ runToken++; setBusy(false); $("curcmd").style.display = "none"; portrait($("pv-boy"), "boy"); portrait($("pv-girl"), "girl"); pickChar(charKind); state = "title"; show("ov-win", false); $("hud").classList.remove("on"); show("ov-start", true); renderLevelBtns(); $("cmds").innerHTML = ""; $("ncmd").textContent = 0; }
+  function start(i){ loadLevel(i); show("ov-start", false); show("ov-win", false); $("hud").classList.add("on"); state = "edit"; avatar(); toast(NAMES[charKind] + " พร้อมแล้ว! เขียนคำสั่งพาเดินไปถึงประตู 🚪"); }
+  function showWin(){
+    const n = cmds.length, stars = n <= best ? 3 : n <= Math.ceil(best * 1.4) ? 2 : 1, lastLv = L === LEVELS.length - 1;
+    $("win-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
+    $("win-title").textContent = lastLv ? "เก่งมาก " + NAMES[charKind] + "! ผ่านครบทุกระดับ" : NAMES[charKind] + " ถึงทางออกแล้ว!";
+    $("win-text").textContent = `ใช้ ${n} คำสั่ง (ทางสั้นสุด ${best} ก้าว) · โปรแกรมคือชุดคำสั่งที่เรียงตามลำดับ`;
+    $("next-btn").style.display = lastLv ? "none" : "inline-block"; $("back-btn").style.display = lastLv ? "inline-block" : "none";
+    show("ov-win", true); sfx.win(); setTimeout(() => playAudio("audio/cmaze-win.mp3", null), 1100);
+  }
+  $("start-btn").addEventListener("click", () => start(selLevel));
+  $("next-btn").addEventListener("click", () => { selLevel = L + 1; start(L + 1); });
+  $("again-btn").addEventListener("click", () => start(L));
+  $("menu-btn").addEventListener("click", goTitle);
+  $("home-btn").addEventListener("click", goTitle);
+  $("pick-boy").addEventListener("click", () => pickChar("boy")); $("pick-girl").addEventListener("click", () => pickChar("girl"));
+
+  /* ---------- เต็มหน้าจอ ---------- */
+  (function(){
+    const stage = $("stage"), btn = $("fs-btn");
+    const isFs = () => !!document.fullscreenElement || stage.classList.contains("pfs");
+    function label(){ btn.querySelector(".tts-label").textContent = isFs() ? "ออกจากเต็มหน้าจอ" : "เต็มหน้าจอ"; btn.querySelector(".tts-icon").textContent = isFs() ? "🗗" : "⛶"; }
+    async function enter(){ try { if(stage.requestFullscreen) await stage.requestFullscreen(); else if(stage.webkitRequestFullscreen) stage.webkitRequestFullscreen(); else stage.classList.add("pfs"); } catch(e){ stage.classList.add("pfs"); } label(); }
+    async function leave(){ try { if(document.fullscreenElement) await document.exitFullscreen(); } catch(e){} stage.classList.remove("pfs"); label(); }
+    const toggle = () => isFs() ? leave() : enter();
+    btn.addEventListener("click", toggle); $("fs-exit").addEventListener("click", leave);
+    document.addEventListener("fullscreenchange", label);
+    window.addEventListener("keydown", (e) => { if((e.key === "f" || e.key === "F") && !e.ctrlKey && !e.metaKey) toggle(); else if(e.key === "Escape" && stage.classList.contains("pfs")) leave(); });
+  })();
+
+  goTitle(); requestAnimationFrame(loop);
+  window.__cm = { start, get state(){ return state; }, get cmds(){ return cmds; }, get best(){ return best; }, add:addCmd, run, get slots(){ return slots; }, set slots(v){ slots = v; renderSlots(); }, get pos(){ return pos; }, get size(){ return [cols, rows]; },
+    solution(){ // หาเส้นทางที่ถูกต้อง (ใช้ทดสอบ)
+      const prev = {}; const q = [[0, 0]]; prev["0,0"] = null; while(q.length){ const [x, y] = q.shift(); for(const d in DIRS){ if(canMove(x, y, d)){ const nx = x + DIRS[d][0], ny = y + DIRS[d][1], k = nx + "," + ny; if(!(k in prev)){ prev[k] = [x + "," + y, d]; q.push([nx, ny]); } } } }
+      const out = []; let c = (cols - 1) + "," + (rows - 1); while(prev[c]){ out.unshift(prev[c][1]); c = prev[c][0]; } return out; },
+    wrongMove(){ for(const d in DIRS){ if(!canMove(0, 0, d)) return d; } return null; } };
+})();
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-/*
+﻿/*
   app.js — ตัวเว็บแอปหลัก (ไม่ต้องมี build tool / server framework)
   ทำงานด้วย hash-routing (#/...) ล้วนๆ เพื่อให้อัปโหลดขึ้น hosting/โดเมน
   แบบไฟล์สแตติกธรรมดาได้ทันที ไม่ต้องตั้งค่า rewrite rule ใดๆ บนเซิร์ฟเวอร์
@@ -32,7 +32,8 @@ const TAB_IMG = {
   worksheet:"assets/images/home-tab-worksheet.webp",
   quiz:"assets/images/home-tab-quiz.webp",
   game:"assets/images/home-tab-game.webp",
-  ar:"assets/images/home-tab-ar.webp"
+  ar:"assets/images/home-tab-ar.webp",
+  paint:"assets/images/flow-paint.webp?v=2"
 };
 
 // รูปตัวการ์ตูนเด็กในกล่องต้อนรับหน้าแรก — เป็นคนละ layout แยกจากรูปในการ์ดชั้นเรียนโดยเฉพาะ
@@ -51,6 +52,9 @@ const ACTION_BTN_IMG = {
   "jigsaw-p2-0": "assets/images/btn-jigsaw-p2-0.webp",
   "sudoku-p5-0": "assets/images/btn-sudoku-p5-0.webp",
   "tetris-p1-0": "assets/images/btn-tetris.webp",
+  "platformer-p1-0": "assets/images/btn-game-runner.webp?v=2",
+  "maze-p1-0": "assets/images/btn-game-maze.webp?v=3",
+  "cmaze-p1-2": "assets/images/btn-game-cmaze.webp?v=2",
   "tetris-p2-0": "assets/images/btn-tetris.webp",
   "tetris-p3-0": "assets/images/btn-tetris-p3-0.webp",
   article: "assets/images/btn-article.webp",
@@ -99,7 +103,8 @@ const TABS = [
   { key:"worksheet", label:"ใบงาน",      emoji:"📝" },
   { key:"quiz",      label:"แบบทดสอบ",   emoji:"✅" },
   { key:"game",      label:"เกม",        emoji:"🎮" },
-  { key:"ar",        label:"เกม AR",     emoji:"🕶️", arOnly:true }
+  { key:"ar",        label:"เกม AR",     emoji:"🕶️", arOnly:true },
+  { key:"paint",     label:"Paint",      emoji:"🎨", needsReady:true } // แสดงเฉพาะหน่วยที่มี READY_CONTENT[..].paint
 ];
 
 // คำอธิบาย/ไอคอนประจำแท็บแต่ละประเภท (ใช้ทั้งตอน "พร้อมเล่น" และตอน "กำลังจัดทำ")
@@ -112,6 +117,8 @@ const TAB_META = {
     desc:"แบบทดสอบปรนัยท้ายหน่วย ตรวจให้คะแนนอัตโนมัติ พร้อมเฉลยเมื่อทำเสร็จ" },
   game: { emoji:"🎮", title:"เกมประจำหน่วย", cta:"เพิ่มเกม",
     desc:"มินิเกมทบทวนเนื้อหาหน่วยนี้ เช่น จับคู่ความจำ ทายภาพ หรือเรียงลำดับขั้นตอน เล่นได้ในเบราว์เซอร์ทันที" },
+  paint: { emoji:"🎨", title:"Paint จำลอง", cta:"เพิ่ม Paint จำลอง",
+    desc:"ฝึกใช้โปรแกรมกราฟิกเบื้องต้นตามขั้นตอน เข้าโปรแกรม → สร้างไฟล์ → บันทึก → เปิดไฟล์ → ออกจากโปรแกรม" },
   ar: { emoji:"🕶️", title:"เกม AR", cta:"เพิ่มเกม AR",
     desc:"เกม AR ประจำหน่วยนี้ — บางหน่วยมีแบบใช้กล้องส่องหาอุปกรณ์จริง และแบบลากวางที่เล่นได้ทุกอุปกรณ์โดยไม่ต้องขอสิทธิ์กล้อง",
     extraLink:{ href:"ar-demo/game-style.html", label:"ดูตัวอย่างต้นแบบ" } }
@@ -130,11 +137,14 @@ const READY_CONTENT = {
       { href:"content/p1-cs-0/animation.html", title:"การ์ตูนเรียนรู้: รู้จักอุปกรณ์คอมพิวเตอร์", desc:"เด็กนักเรียนเดินแนะนำจอมอนิเตอร์ ซีพียู เมาส์ แป้นพิมพ์ และลำโพง พร้อมเสียงพากย์" }
     ],
     worksheet: { href:"content/p1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 อุปกรณ์เทคโนโลยี" },
+    paint:     { href:"content/p1-cs-0/paint.html", title:"ฝึกใช้โปรแกรมกราฟิก (Paint จำลอง)" },
     quiz:      { href:"content/p1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game: {
       href:"content/p1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
-        { key:"tetris-p1-0", href:"content/p1-cs-0/game-tetris.html", label:"🧱 เกมเตอติสบวกลบเลข" }
+        { key:"tetris-p1-0", href:"content/p1-cs-0/game-tetris.html", label:"🧱 เกมเตอติสบวกลบเลข" },
+        { key:"platformer-p1-0", href:"content/p1-cs-0/game-platformer.html", label:"🏃 เกมวิ่งเก็บ เปิด–ปิดเครื่อง" },
+        { key:"maze-p1-0", href:"content/p1-cs-0/game-maze.html", label:"🌿 เกมเขาวงกต เปิด–ปิดเครื่อง" }
       ]
     },
     ar: {
@@ -149,14 +159,17 @@ const READY_CONTENT = {
     knowledge: { href:"content/p1-cs-1/knowledge.html", title:"การแก้ปัญหาอย่างเป็นขั้นตอน" },
     worksheet: { href:"content/p1-cs-1/worksheet.html", title:"ใบงานที่ 2.1 เรียงลำดับขั้นตอนการล้างมือ" },
     quiz:      { href:"content/p1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
-    game:      { href:"content/p1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" },
-    ar: { href:"content/p1-cs-1/ar-game-nocamera.html", title:"เรียงลำดับขั้นตอนแปรงฟัน" }
+    game:      { href:"content/p1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[
+        { key:"brush-p1-1", href:"content/p1-cs-1/game-brush.html", label:"🪥 เกมเรียงลำดับขั้นตอนแปรงฟัน" },
+        { key:"routine-p1-1", href:"content/p1-cs-1/game-routine.html", label:"🌅 เกมเรียงบัตรภาพกิจวัตรประจำวัน" } ] },
   },
   "p1/cs/2": {
     knowledge: { href:"content/p1-cs-2/knowledge.html", title:"การเขียนโปรแกรมเบื้องต้น" },
     worksheet: { href:"content/p1-cs-2/worksheet.html", title:"ใบงานที่ 3.1 การเขียนโปรแกรมโดยใช้บัตรคำสั่ง" },
     quiz:      { href:"content/p1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
-    game:      { href:"content/p1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" },
+    game:      { href:"content/p1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[ { key:"cmaze-p1-2", href:"content/p1-cs-2/game-cmaze.html", label:"🧭 เกมเขาวงกต เขียนคำสั่งพาเดิน" } ] },
     ar: { href:"content/p1-cs-2/ar-game-nocamera.html", title:"เขียนโปรแกรมพาแมวไปหาปลา" }
   },
   "p1/cs/3": {
@@ -165,6 +178,13 @@ const READY_CONTENT = {
     quiz:      { href:"content/p1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game:      { href:"content/p1-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" },
     ar: { href:"content/p1-cs-3/ar-game-nocamera.html", title:"จัดหมวดหมู่ ทำถูก/ทำไม่ถูก" }
+  },
+  "p1/cs/4": {
+    knowledge: { href:"content/p1-cs-4/knowledge.html", title:"การเปรียบเทียบ" },
+    worksheet: { href:"content/p1-cs-4/worksheet.html", title:"ใบงานที่ 5.1 เปรียบเทียบความเหมือนและความแตกต่าง" },
+    quiz:      { href:"content/p1-cs-4/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    game:      { href:"content/p1-cs-4/game.html", title:"เกมพลิกไพ่ความจำ" },
+    ar: { href:"content/p1-cs-4/ar-game-nocamera.html", title:"เลือกให้เหมาะสม" }
   },
   "p2/cs/0": {
     knowledge: { href:"content/p2-cs-0/knowledge.html", title:"การแก้ปัญหาอย่างง่าย" },
@@ -213,9 +233,11 @@ const READY_CONTENT = {
   },
   "m1/cs/1": {
     knowledge: { href:"content/m1-cs-1/knowledge.html", title:"การออกแบบและการเขียนโปรแกรมเบื้องต้น" },
-    worksheet: { href:"content/m1-cs-1/worksheet.html", title:"ใบงานที่ 2.1 หลักการเขียนโปรแกรมและโปรแกรมภาษา" },
+    worksheet: { href:"content/m1-cs-1/worksheet.html", title:"ใบงานที่ 2.1–2.7 โครงสร้างการเขียนโปรแกรม 3 แบบ" },
     quiz:      { href:"content/m1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
-    game:      { href:"content/m1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" }
+    game:      { href:"content/m1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ",
+      extraLinks:[ { key:"scratch-m1-1", href:"content/m1-cs-1/game-scratch.html", label:"🧩 เกมพลิกไพ่ บล็อกคำสั่ง Scratch" },
+                   { key:"blocks-m1-1", href:"content/m1-cs-1/blocks.html", label:"🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)" } ] }
   },
   "m1/cs/2": {
     knowledge: { href:"content/m1-cs-2/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
@@ -379,12 +401,18 @@ function render(){
     const unit = subject.units[idx];
     if(!unit) return renderUnitList(grade, subject);
     const tab = parts[4] || "knowledge";
+    // แท็บ Paint: เปิดโปรแกรมจำลองทันที (replace เพื่อไม่ให้ปุ่มย้อนกลับวนกลับมาที่แท็บนี้)
+    if(tab === "paint"){
+      const pr = READY_CONTENT[`${grade.id}/${subject.id}/${idx}`];
+      if(pr && pr.paint){ location.replace(pr.paint.href); return; }
+    }
     if(isFlowUnit(grade.id, subject.id, idx)){
       const u = { g:grade.id, s:subject.id, i:idx };
       if(tab === "objectives") return renderObjectives(grade, subject, idx, unit);
       if(tab === "knowledge" && parts[5] === "cartoon") return flowGate(u, set => KrtomFlow.unlocked(set, u, "knowledge"), () => renderCartoonView(grade, subject, idx, unit));
       if(tab === "knowledge" && parts[5] === "read") return flowGate(u, set => KrtomFlow.unlocked(set, u, "knowledge"), () => renderUnitDetail(grade, subject, idx, unit, "knowledge"));
       if(tab === "game" || tab === "ar") return flowGate(u, set => KrtomFlow.done(set, u, "posttest"), () => renderUnitDetail(grade, subject, idx, unit, tab));
+      if(tab === "paint") return renderUnitDetail(grade, subject, idx, unit, tab);   // ฝึกปฏิบัติ: ไม่ต้องรอผ่านแบบทดสอบ
       return renderFlowSteps(grade, subject, idx, unit);   // knowledge / worksheet / quiz / อื่น ๆ = หน้าขั้นตอนการเรียน
     }
     if(tab === "knowledge" && parts[5] === "cartoon") return renderCartoonView(grade, subject, idx, unit);
@@ -582,6 +610,36 @@ function renderGrade(grade){
 }
 
 /* ---------------- หน้ารายการหน่วย ---------------- */
+// ป้ายบนการ์ดหน่วย: แสดงตามเนื้อหาที่มีจริงของหน่วยนั้น (ถ้ายังไม่ลงทะเบียนไว้ใช้ชุดมาตรฐาน)
+function unitTags(grade, subject, i){
+  const r = READY_CONTENT[`${grade.id}/${subject.id}/${i}`];
+  const T = [["knowledge","📘 ใบความรู้"],["worksheet","📝 ใบงาน"],["quiz","✅ แบบทดสอบ"],["paint","🎨 Paint"],["game","🎮 เกม"]];
+  let out = r ? T.filter(([k]) => r[k]).map(([,l]) => `<span class="tag">${l}</span>`)
+              : ["📘 ใบความรู้","📝 ใบงาน","🎮 เกม"].map(l => `<span class="tag">${l}</span>`);
+  if(grade.hasAR && (!r || r.ar)) out.push('<span class="tag ar">🕶️ AR</span>');
+  return out.join("");
+}
+
+
+// วางรายการเป็นเส้นทางงู: แถวละ 3 ช่อง แถวคี่ไปทางขวา แถวคู่วนกลับทางซ้าย มีลูกศรบอกทิศทาง (1→2→3 ↓ 6←5←4)
+function snakeHtml(cells, per){
+  per = per || 3;
+  const n = cells.length;
+  const arrow = (dir, col, row) => `<div class="path-arrow ${dir}" style="grid-column:${col}; grid-row:${row}" aria-hidden="true">
+    <svg viewBox="0 0 120 80"><path d="M6 28 H70 V6 L116 40 L70 74 V52 H6 Z" /></svg></div>`;
+  let html = "";
+  cells.forEach((c, i) => {
+    const r = Math.floor(i / per), q = i % per, rev = r % 2 === 1;
+    const col = rev ? 5 - 2 * q : 1 + 2 * q;
+    html += `<div class="path-cell" style="grid-column:${col}; grid-row:${1 + 2 * r}">${c}</div>`;
+    if(i < n - 1){
+      if(q < per - 1) html += arrow(rev ? "left" : "right", rev ? col - 1 : col + 1, 1 + 2 * r);
+      else html += arrow("down", rev ? 1 : 5, 2 + 2 * r);
+    }
+  });
+  return `<div class="unit-path flow-path">${html}</div>`;
+}
+
 function renderUnitList(grade, subject){
   applyTextSize(grade.id);
   setBreadcrumb([
@@ -591,7 +649,7 @@ function renderUnitList(grade, subject){
   ]);
 
   // การ์ดหน่วยเต็ม (ถ้าครูออกแบบภาพของหน่วยนั้นไว้เอง): ถ้าโหลดได้จะแทนที่การ์ดโค้ดทั้งหมด ถ้าไม่มีไฟล์จะใช้การ์ดโค้ดสำรองแทน
-  const cards = subject.units.map((u,i) => `
+  const cardHtml = (u, i) => `
     <a class="card unit-card" href="#/unit/${grade.id}/${subject.id}/${i}">
       <img class="u-fullcard-img" src="assets/images/home-unit-${grade.id}-${subject.id}-${i}.webp" alt="${u.name}"
            onload="this.closest('.unit-card').classList.add('has-fullcard'); this.style.display='block'; this.nextElementSibling.style.display='none';"
@@ -600,17 +658,14 @@ function renderUnitList(grade, subject){
         <span class="u-num" style="background:${UNIT_COLORS[i % UNIT_COLORS.length]}">${i+1}</span>
         <div>
           <div class="u-name">${u.name}</div>
-          <div class="u-tags">
-            <span class="tag">📘 ใบความรู้</span>
-            <span class="tag">📝 ใบงาน</span>
-            <span class="tag">🎮 เกม</span>
-            ${grade.hasAR ? '<span class="tag ar">🕶️ AR</span>' : ""}
-          </div>
+          <div class="u-tags">${unitTags(grade, subject, i)}</div>
         </div>
       </div>
     </a>
-  `).join("");
+  `;
 
+
+  const cards = subject.units.map(cardHtml).join("");
   app.innerHTML = `
     <div class="page-title">${subject.name} · ${grade.grade}</div>
     <div class="page-subtitle">รหัสอ้างอิงแผนการสอน: ${subject.code} — ทั้งหมด ${subject.units.length} หน่วยการเรียนรู้</div>
@@ -637,6 +692,7 @@ const FLOW_IMG = {
   worksheet:  ["assets/images/home-tab-worksheet.webp"],
   posttest:   ["assets/images/flow-posttest.webp", "assets/images/home-tab-quiz.webp"],
   game:       ["assets/images/home-tab-game.webp"],
+  paint:      ["assets/images/flow-paint.webp?v=2"],
   ar:         ["assets/images/home-tab-ar.webp"]
 };
 function flowImg(key, label){
@@ -706,7 +762,7 @@ async function renderFlowSteps(grade, subject, idx, unit){
   }
   const tracked = !!set;
   let nextFound = false;
-  const cards = FLOW_STEPS.map((st, n) => {
+  const cardList = FLOW_STEPS.map((st, n) => {
     const isDone = tracked && set.has(`${u.g}/${u.s}/${u.i}/${st.key}`);
     const isOpen = KrtomFlow.unlocked(set, u, st.key);
     const isNext = tracked && isOpen && !isDone && !nextFound;
@@ -717,13 +773,17 @@ async function renderFlowSteps(grade, subject, idx, unit){
     return isOpen
       ? `<a class="flow-step ${state}" href="${flowStepHref(u, st.key)}">${inner}</a>`
       : `<button type="button" class="flow-step locked" onclick="flowLockedMsg()">${inner}</button>`;
-  }).join("");
+  });
+  const cards = snakeHtml(cardList);
 
   const r = READY_CONTENT[`${u.g}/${u.s}/${u.i}`];
   const finished = !tracked || set.has(`${u.g}/${u.s}/${u.i}/posttest`);
   const bonus = [];
   if(r.game) bonus.push({ key:"game", emoji:"🎮", label:"เกมประจำหน่วย" });
   if(grade.hasAR && r.ar) bonus.push({ key:"ar", emoji:"🕶️", label:"เกม AR" });
+  const practiceHtml = r.paint ? `
+    <div class="flow-bonus-title">🎨 ฝึกปฏิบัติ (เล่นได้ตลอด)</div>
+    <div class="flow-steps flow-bonus"><a class="flow-step open" href="${base}/paint">${flowImg("paint", "Paint จำลอง")}<span class="flow-emoji">🎨</span><span class="flow-label">Paint จำลอง</span></a></div>` : "";
   const bonusHtml = bonus.length ? `
     <div class="flow-bonus-title">${finished ? "🎉 เรียนครบทุกขั้นแล้ว เล่นเกมได้เลย!" : "🔒 เกมจะเปิดเมื่อทำแบบทดสอบหลังเรียนเสร็จ"}</div>
     <div class="flow-steps flow-bonus">${bonus.map(b => finished
@@ -735,8 +795,9 @@ async function renderFlowSteps(grade, subject, idx, unit){
   app.innerHTML = head + `
     <div class="tab-panel flow-panel">
       <p class="flow-intro">เรียนตามลำดับขั้นตอน 1 → 5 (ข้ามขั้นไม่ได้)</p>
-      <div class="flow-steps">${cards}</div>
+      ${cards}
       ${modeNote}
+      ${practiceHtml}
       ${bonusHtml}
     </div>`;
 }
@@ -834,9 +895,9 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
   ]);
 
   const flow = isFlowUnit(grade.id, subject.id, idx);
-  let visibleTabs = TABS.filter(t => !t.arOnly || grade.hasAR);
-  if(flow) visibleTabs = activeTab === "knowledge" ? [] : visibleTabs.filter(t => t.key === "game" || t.key === "ar");
   const unitKey = `${grade.id}/${subject.id}/${idx}`;
+  let visibleTabs = TABS.filter(t => (!t.arOnly || grade.hasAR) && (!t.needsReady || (READY_CONTENT[unitKey] && READY_CONTENT[unitKey][t.key])));
+  if(flow) visibleTabs = activeTab === "knowledge" ? [] : visibleTabs.filter(t => t.key === "game" || t.key === "ar" || t.key === "paint");
   // แท็บที่ตั้ง last:true (เช่น แบบทดสอบสไตล์ฟอร์ม) ย้ายไปไว้ท้ายสุดของเมนูทั้งหมด
   { const L = READY_CONTENT[unitKey]; if(L){ visibleTabs = visibleTabs.filter(t => !(L[t.key] && L[t.key].last)).concat(visibleTabs.filter(t => L[t.key] && L[t.key].last)); } }
   const tabBtns = visibleTabs.map(t => {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ใบงานที่ 2.1: เรียงลำดับขั้นตอนการล้างมือ — ป.1 หน่วย 2</title>
+<title>ใบงานที่ 2.1: เรียงลำดับขั้นตอน — ป.1 หน่วย 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -85,6 +85,20 @@
 
   .print-note{ text-align:center; color:#999; font-size:.78rem; margin-top:30px; }
   @media print{ header a, #check-btn{ display:none; } }
+
+  /* ตอนที่ 3-4: เรียงลำดับด้วยตัวเลข */
+  .ord-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
+  .ord-card{ background:#fff; border:3px solid #E6E8F0; border-radius:18px; padding:12px 10px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,.06); }
+  .ord-card .em{ font-size:2.6rem; line-height:1.1; }
+  .ord-card .tx{ font-weight:700; font-size:.8rem; margin:2px 0 6px; }
+  .ord-card select{ font:inherit; font-size:.9rem; font-weight:800; padding:2px 14px; border-radius:12px; border:3px solid #C7D2FE; background:#EEF2FF; color:#3730A3; }
+  .ord-card.ok{ border-color:#10B981; background:#F0FBF6; }
+  .ord-card.bad{ border-color:#EF4444; background:#FEF2F2; }
+  .ord-card .hint2{ font-size:.55rem; color:#B91C1C; min-height:1.2em; }
+  .ord-card .ol{ border:none; background:#EEF1FB; color:#3B82F6; width:40px; height:40px; border-radius:50%; font-size:20px; cursor:pointer; margin-bottom:4px; }
+  .ord-btn{ display:block; margin:16px auto 0; padding:10px 28px; border:none; border-radius:999px; background:#3B82F6; color:#fff; font:inherit; font-weight:800; font-size:.8rem; cursor:pointer; }
+  .ord-res{ text-align:center; margin-top:12px; font-weight:800; font-size:.9rem; display:none; }
+  .ord-res.show{ display:block; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -154,6 +168,23 @@
 
   <button id="check-btn" onclick="checkAnswers()">✅ ตรวจคำตอบตอนที่ 2</button>
   <div id="result"></div>
+
+  <div class="part">
+    <h2>🏫 ตอนที่ 3: เรียงลำดับกิจวัตรก่อนไปโรงเรียน</h2>
+    <p class="instruction">เลือกตัวเลข 1–6 ใต้ภาพ ตามลำดับที่ทำก่อนหลัง (เลขห้ามซ้ำ)</p>
+    <button class="tts-btn" data-audio-src="audio/ws3-inst.mp3" style="margin-bottom:12px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำสั่ง</span></button>
+    <div class="ord-grid" id="ord3-grid"></div>
+    <button class="ord-btn" id="ord3-btn" type="button">✅ ตรวจคำตอบ</button>
+    <div class="ord-res" id="ord3-res"></div>
+  </div>
+  <div class="part">
+    <h2>🌱 ตอนที่ 4: เรียงลำดับขั้นตอนการปลูกต้นไม้</h2>
+    <p class="instruction">เลือกตัวเลข 1–5 ใต้ภาพ ตามลำดับที่ทำก่อนหลัง (เลขห้ามซ้ำ)</p>
+    <button class="tts-btn" data-audio-src="audio/ws4-inst.mp3" style="margin-bottom:12px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำสั่ง</span></button>
+    <div class="ord-grid" id="ord4-grid"></div>
+    <button class="ord-btn" id="ord4-btn" type="button">✅ ตรวจคำตอบ</button>
+    <div class="ord-res" id="ord4-res"></div>
+  </div>
 
   <p class="print-note">🖨️ ต้องการพิมพ์ใบงานนี้เป็นกระดาษ? กด Ctrl+P (Windows) หรือ Cmd+P (Mac)</p>
 </main>
@@ -292,6 +323,37 @@ function checkAnswers(){
   result.textContent = `🎉 ได้คะแนนตอนที่ 2: ${score}/${total} ข้อ`;
   result.classList.add("show");
 }
+</script>
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+/* ตอนที่ 3-4: เรียงลำดับด้วยตัวเลข */
+(function(){
+  const SETS = {
+    ord3: { prefix:"ws3", data:[[1, "⏰", "ตื่นนอน", [1]], [2, "🚿", "อาบน้ำ", [2]], [3, "👕", "แต่งตัว", [3, 4]], [4, "🍚", "กินข้าวเช้า", [3, 4]], [5, "🎒", "สะพายกระเป๋า", [5]], [6, "🚌", "เดินทางไปโรงเรียน", [6]]] },
+    ord4: { prefix:"ws4", data:[[1, "🪴", "เตรียมกระถางและดิน", [1]], [2, "⛏️", "ขุดหลุมเล็ก ๆ", [2]], [3, "🌱", "ใส่เมล็ดหรือต้นกล้า", [3]], [4, "🟤", "กลบดิน", [4]], [5, "💧", "รดน้ำ", [5]]] }
+  };
+  const shuffle = (a) => { a = a.slice(); for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  Object.keys(SETS).forEach(id => {
+    const set = SETS[id], grid = document.getElementById(id + "-grid"), n = set.data.length;
+    const order = shuffle(set.data.map((_, i) => i));
+    if(order.every((v, i) => v === i)) order.reverse();   // ไม่ให้ออกมาเรียงถูกอยู่แล้ว
+    grid.innerHTML = order.map(i => { const c = set.data[i];
+      return `<div class="ord-card" data-i="${i}"><button type="button" class="ol" aria-label="ฟัง" data-a="audio/${set.prefix}-${i + 1}.mp3">🔊</button><div class="em">${c[1]}</div><div class="tx">${c[2]}</div>
+        <select><option value="">ตอบ…</option>${set.data.map((_, k) => `<option value="${k + 1}">${k + 1}</option>`).join("")}</select><div class="hint2"></div></div>`; }).join("");
+    grid.querySelectorAll(".ol").forEach(b => b.addEventListener("click", () => playAudio(b.dataset.a, b)));
+    document.getElementById(id + "-btn").addEventListener("click", () => {
+      const cards = [...grid.querySelectorAll(".ord-card")], vals = cards.map(c => c.querySelector("select").value);
+      const res = document.getElementById(id + "-res"); res.classList.add("show");
+      if(vals.some(v => !v)){ res.style.color = "#B45309"; res.textContent = "ยังเลือกเลขไม่ครบทุกภาพนะ"; sfx.wrong(); return; }
+      if(new Set(vals).size !== vals.length){ res.style.color = "#B45309"; res.textContent = "มีเลขซ้ำกัน ลองตรวจดูอีกครั้งนะ (ใช้เลขแต่ละตัวได้ครั้งเดียว)"; sfx.wrong(); return; }
+      let score = 0;
+      cards.forEach((c, idx) => { const d = set.data[+c.dataset.i], ok = d[3].includes(+vals[idx]);
+        c.classList.toggle("ok", ok); c.classList.toggle("bad", !ok); c.querySelector(".hint2").textContent = ok ? "" : "ลองคิดอีกที"; if(ok) score++; });
+      res.style.color = score === n ? "#047857" : "#1D4ED8"; res.textContent = (score === n ? "🎉 เก่งมาก! " : "") + "ได้คะแนน " + score + "/" + n + " ข้อ";
+      score === n ? sfx.win() : (score >= n / 2 ? sfx.correct() : sfx.wrong());
+    });
+  });
+})();
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
 </body>

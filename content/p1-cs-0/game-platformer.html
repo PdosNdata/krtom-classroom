@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมวิ่งเก็บ: เปิด–ปิดเครื่องและใช้อย่างปลอดภัย — ป.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; }
+  html,body{ margin:0; padding:0; color:#1F2430; }
+  *{ box-sizing:border-box; }
+  header{ background:linear-gradient(135deg,#22C55E,#3B82F6); color:#fff; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:40px; }
+  header a{ color:#fff; background:rgba(255,255,255,.25); padding:8px 16px; border-radius:999px; font-size:.5rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:1000px; margin:0 auto; padding:12px 12px 40px; }
+
+  #wrap{ position:relative; width:100%; max-width:960px; margin:0 auto; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.3); background:#8ED1FF; touch-action:none; container-type:inline-size; aspect-ratio:16/9; }
+  canvas#cv{ display:block; width:100%; height:100%; }
+  .abs{ position:absolute; }
+
+  /* ---------- HUD ระหว่างเล่น ---------- */
+  #hud{ position:absolute; left:0; right:0; top:0; display:none; align-items:center; gap:1.2cqw; padding:1.2cqw 1.6cqw; z-index:4; pointer-events:none; }
+  #hud.on{ display:flex; }
+  .hp{ display:flex; align-items:center; gap:.8cqw; background:rgba(15,40,90,.55); border-radius:999px; padding:.4cqw 1.4cqw .4cqw .5cqw; }
+  #avatar{ width:5cqw; height:5cqw; border-radius:50%; background:#BFE3FF; border:.3cqw solid #fff; }
+  #hearts{ font-size:3cqw; line-height:1; letter-spacing:.1cqw; }
+  .pill{ display:flex; align-items:center; gap:.8cqw; background:rgba(15,40,90,.6); color:#fff; border-radius:999px; padding:.5cqw 2cqw; font-size:2.8cqw; font-weight:800; min-width:12cqw; justify-content:center; }
+  #timer{ margin-left:auto; }
+  #pause-btn{ pointer-events:auto; width:5.6cqw; height:5.6cqw; border-radius:1.4cqw; border:.3cqw solid #fff; background:linear-gradient(180deg,#FBBF24,#F59E0B); color:#fff; font-size:3cqw; cursor:pointer; font-family:inherit; }
+  #toast{ position:absolute; left:50%; top:9cqw; transform:translateX(-50%); max-width:92%; background:rgba(255,255,255,.97); border:.4cqw solid #F97316; border-radius:2cqw; padding:.4cqw 2.4cqw; font-size:2.6cqw; font-weight:800; text-align:center; display:none; z-index:5; pointer-events:none; }
+  #toast.bad{ border-color:#EF4444; color:#B91C1C; }
+  #toast.good{ border-color:#10B981; color:#047857; }
+
+  /* ---------- หน้าเริ่มเกม ---------- */
+  .ov{ position:absolute; inset:0; display:none; z-index:8; }
+  .ov.show{ display:block; }
+  #ov-start{ background:linear-gradient(180deg,rgba(255,255,255,0) 50%,rgba(0,0,0,.12)); }
+  .wood{ background:linear-gradient(180deg,#C98A4B,#9A5F2A); border:.4cqw solid #6B3F17; border-radius:1.4cqw; color:#FFF3DC; font-weight:800; text-align:center; text-shadow:0 .2cqw 0 #5A3410; box-shadow:0 .5cqw 0 #5A3410, 0 1cqw 2cqw rgba(0,0,0,.35); }
+  .paper{ background:linear-gradient(180deg,#FFF6E0,#F7E3BD); border:.4cqw solid #C98A4B; border-radius:1.6cqw; box-shadow:0 .8cqw 2cqw rgba(0,0,0,.3); }
+  #title{ left:50%; transform:translateX(-50%); top:1.2cqw; width:44cqw; padding:1cqw 1cqw 1.4cqw; }
+  #title .t1{ font-size:6.2cqw; line-height:1.05; color:#FFD93B; -webkit-text-stroke:.5cqw #7A3E0A; paint-order:stroke fill; text-shadow:0 .5cqw 0 #7A3E0A; }
+  #title .t2{ font-size:3.5cqw; line-height:1.1; color:#fff; -webkit-text-stroke:.45cqw #1E3A8A; paint-order:stroke fill; margin-top:.2cqw; }
+  #title .t3{ font-size:2.3cqw; color:#FFF3DC; margin-top:.3cqw; }
+  .pw{ width:7cqw; height:7cqw; border-radius:50%; background:radial-gradient(circle at 35% 30%,#FF8A80,#E11D1D); border:.4cqw solid #fff; color:#fff; font-size:4.6cqw !important; display:flex; align-items:center; justify-content:center; }
+  .deco{ position:absolute; font-size:7cqw; filter:drop-shadow(0 .4cqw .3cqw rgba(0,0,0,.4)); }
+  #pick{ left:1.6cqw; top:12cqw; width:26cqw; padding:1cqw 1.2cqw 1.4cqw; }
+  .ptitle{ display:inline-block; padding:.2cqw 3cqw; font-size:2.6cqw; margin-bottom:1cqw; }
+  #pick .cards{ display:flex; gap:1cqw; justify-content:center; }
+  .char{ flex:1; border-radius:1.4cqw; border:.4cqw solid transparent; padding:.5cqw .4cqw .8cqw; cursor:pointer; background:#BFE3FF; text-align:center; font-family:inherit; }
+  .char.girl{ background:#FBC9DE; }
+  .char.sel{ border-color:#F59E0B; box-shadow:0 0 0 .5cqw rgba(245,158,11,.45); }
+  .char canvas{ width:100%; height:auto; display:block; }
+  .char span{ display:block; margin-top:.4cqw; color:#fff; font-weight:800; font-size:2.2cqw; border-radius:999px; padding:.1cqw 0; background:#2563EB; }
+  .char.girl span{ background:#EC4899; }
+  #how{ right:1.6cqw; top:12cqw; width:30cqw; padding:1cqw 1.6cqw 1.4cqw; text-align:left; }
+  #how .ptitle{ display:block; text-align:center; width:60%; margin:0 auto .8cqw; }
+  .step{ display:flex; gap:1cqw; align-items:center; font-size:1.95cqw; line-height:1.15; margin:.55cqw 0; font-weight:700; }
+  .step b{ flex:none; width:3.2cqw; height:3.2cqw; border-radius:50%; color:#fff; font-size:2cqw; display:flex; align-items:center; justify-content:center; }
+  .goal{ margin-top:1cqw; background:#FFFFFFAA; border-radius:1cqw; padding:.5cqw 1cqw; font-size:1.9cqw; line-height:1.2; font-weight:700; }
+  .goal i{ display:inline-block; background:#2563EB; color:#fff; font-style:normal; border-radius:999px; padding:0 1.6cqw; margin-bottom:.3cqw; }
+  #centerbox{ left:50%; transform:translateX(-50%); bottom:2cqw; width:40cqw; text-align:center; }
+  .startbtn{ border:none; font-family:inherit; font-size:4.2cqw; font-weight:800; color:#fff; padding:.4cqw 6cqw; border-radius:999px; background:linear-gradient(180deg,#4ADE80,#16A34A); box-shadow:0 .7cqw 0 #166534, 0 1cqw 2cqw rgba(0,0,0,.35); cursor:pointer; text-shadow:0 .2cqw 0 #14532D; }
+  .startbtn:active{ transform:translateY(.5cqw); }
+  #levels{ display:flex; gap:1cqw; justify-content:center; margin-top:1.6cqw; }
+  .lvbtn{ white-space:nowrap; border:.3cqw solid #fff; font-family:inherit; font-size:2.3cqw; font-weight:800; border-radius:999px; padding:.3cqw 2cqw; color:#5A3410; background:linear-gradient(180deg,#FDE68A,#F59E0B); cursor:pointer; box-shadow:0 .4cqw 0 #B45309; }
+  .lvbtn.sel{ outline:.5cqw solid #2563EB; }
+  .lvbtn.lock{ background:linear-gradient(180deg,#9CA3AF,#6B7280); color:#E5E7EB; box-shadow:0 .4cqw 0 #374151; cursor:not-allowed; }
+
+  @container (max-width:700px){
+    #how{ display:none; }
+    #pick{ top:auto; bottom:2cqw; left:1.6cqw; width:34cqw; }
+    #centerbox{ left:auto; right:2cqw; transform:none; width:50cqw; bottom:2cqw; }
+    #title{ width:62cqw; }
+    #title .t3{ display:none; }
+    .deco{ display:none; }
+    .lvbtn{ font-size:3cqw; padding:.3cqw 1.6cqw; }
+  }
+
+  /* ---------- กล่องข้อความ (พัก/แพ้/ชนะ) ---------- */
+  .ovbox{ background:rgba(15,23,42,.6); }
+  .ovbox .box{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:58cqw; padding:2cqw 3cqw 2.4cqw; text-align:center; }
+  .box h2{ margin:0 0 .6cqw; font-size:4.4cqw; }
+  .box p{ margin:0 0 1.2cqw; font-size:2.5cqw; line-height:1.3; color:#475569; font-weight:600; }
+  .box .stars{ font-size:6cqw; letter-spacing:.6cqw; }
+  .bigbtn{ border:none; font-family:inherit; font-size:3cqw; font-weight:800; color:#fff; padding:.3cqw 3cqw; border-radius:999px; background:#10B981; box-shadow:0 .5cqw 0 #047857; cursor:pointer; text-decoration:none; display:inline-block; margin:.4cqw .6cqw; }
+  .bigbtn.alt{ background:#F97316; box-shadow:0 .5cqw 0 #C2410C; }
+  .bigbtn.gray{ background:#6B7280; box-shadow:0 .5cqw 0 #374151; }
+
+  #steps{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:10px 0 0; max-width:960px; margin-left:auto; margin-right:auto; }
+  .chip{ background:#fff; border:3px solid #E6E8F0; border-radius:999px; padding:0 12px; font-size:.42rem; font-weight:700; color:#6B7280; }
+  .chip.next{ border-color:#F97316; color:#1F2430; background:#FFF7ED; }
+  .chip.done{ border-color:#10B981; color:#047857; background:#F0FBF6; }
+
+  #pad{ display:flex; justify-content:space-between; gap:12px; max-width:960px; margin:12px auto 0; user-select:none; touch-action:none; }
+  #pad .grp{ display:flex; gap:12px; }
+  .pbtn{ width:84px; height:84px; border-radius:22px; border:4px solid #fff; background:linear-gradient(180deg,#60A5FA,#2563EB); color:#fff; font-size:44px; line-height:1; box-shadow:0 6px 0 #1D4ED8; cursor:pointer; font-family:inherit; touch-action:none; }
+  .pbtn.jump{ background:linear-gradient(180deg,#34D399,#059669); box-shadow:0 6px 0 #047857; width:130px; }
+  .pbtn:active,.pbtn.on{ transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.3); }
+  .keys{ text-align:center; font-size:.42rem; color:#64748B; margin-top:10px; }
+  .listen{ text-align:center; margin-bottom:8px; }
+
+  /* ---------- โหมดเต็มหน้าจอ ---------- */
+  #stage:fullscreen, #stage.pfs{ background:#0B1220; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100vw; height:100vh; padding:8px; overflow:auto; }
+  #stage.pfs{ position:fixed; inset:0; z-index:9999; }
+  #stage:fullscreen #wrap, #stage.pfs #wrap{ width:min(calc(100vw - 16px), calc((100vh - 170px) * 16 / 9)); max-width:none; border-radius:10px; }
+  #stage:fullscreen #pad, #stage.pfs #pad{ margin-top:8px; }
+  #stage:fullscreen .pbtn, #stage.pfs .pbtn{ width:64px; height:64px; font-size:32px; border-width:3px; }
+  #stage:fullscreen .pbtn.jump, #stage.pfs .pbtn.jump{ width:100px; }
+  #stage:fullscreen #pad, #stage.pfs #pad{ grid-template-columns:repeat(3,64px); grid-template-rows:repeat(2,64px); }
+  #stage:fullscreen #steps, #stage.pfs #steps{ margin-top:6px; }
+  #fs-btn{ margin-left:8px; }
+
+  #fsbar{ display:none; width:min(calc(100vw - 16px), calc((100vh - 170px) * 16 / 9)); justify-content:flex-end; margin-bottom:6px; }
+  #stage:fullscreen #fsbar, #stage.pfs #fsbar{ display:flex; }
+  #fs-exit{ border:3px solid #fff; border-radius:999px; padding:2px 22px; font-family:inherit; font-size:.5rem; font-weight:800; color:#fff; background:linear-gradient(180deg,#F87171,#DC2626); box-shadow:0 4px 0 #991B1B; cursor:pointer; }
+  #fs-exit:active{ transform:translateY(3px); box-shadow:0 1px 0 #991B1B; }
+
+  /* ปุ่มกลับหน้าหลักของเกม + ปุ่มกลับหน้าหน่วย (ใช้ได้ตอนเต็มหน้าจอ) */
+  .hbtn{ pointer-events:auto; width:5.6cqw; height:5.6cqw; border-radius:1.4cqw; border:.3cqw solid #fff; background:linear-gradient(180deg,#60A5FA,#2563EB); color:#fff; font-size:3cqw; line-height:1; cursor:pointer; font-family:inherit; padding:0; }
+  .hbtn:active{ transform:translateY(.3cqw); }
+  .backbtn{ position:absolute; left:1.6cqw; top:1.6cqw; padding:.3cqw 2cqw; font-size:2.2cqw; text-decoration:none; z-index:3; border-radius:999px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏃 เกมวิ่งเก็บ: เปิด–ปิดเครื่อง และใช้อย่างปลอดภัย</h1>
+  <a href="../../index.html#/unit/p1/cs/0/game">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div class="listen"><button class="tts-btn" id="listen-btn" data-audio-src="audio/plat-desc.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span></button> <button class="tts-btn" id="fs-btn" type="button"><span class="tts-icon">⛶</span> <span class="tts-label">เต็มหน้าจอ</span></button></div>
+
+  <div id="stage">
+  <div id="fsbar"><button id="fs-exit" type="button">🗗 ออกจากเต็มหน้าจอ (กด Esc ก็ได้)</button></div>
+  <div id="wrap">
+    <canvas id="cv" width="960" height="540"></canvas>
+
+    <div id="hud">
+      <div class="hp"><canvas id="avatar" width="80" height="80"></canvas><span id="hearts">❤️❤️❤️</span></div>
+      <div class="pill">🪙 <span id="coins">0</span></div>
+      <div class="pill">⭐ <span id="stars">0/0</span></div>
+      <div class="pill" id="timer">⏱️ 01:30</div>
+      <button id="home-btn" class="hbtn" type="button" aria-label="กลับหน้าหลักของเกม" title="กลับหน้าหลักของเกม">🏠</button>
+      <button id="pause-btn" aria-label="พักเกม">⏸</button>
+    </div>
+    <div id="toast"></div>
+
+    <!-- หน้าเริ่มเกม -->
+    <div class="ov show" id="ov-start">
+      <a class="backbtn wood" href="../../index.html#/unit/p1/cs/0/game">← กลับหน้าหน่วย</a>
+      <div class="deco" style="left:20cqw;top:1.5cqw">💻</div>
+      <div class="deco pw" style="left:13cqw;top:.5cqw">⏻</div>
+      <div class="deco" style="right:19cqw;top:1cqw">🛡️</div>
+      <div class="deco" style="right:25.5cqw;top:10cqw;font-size:5cqw">🖱️</div>
+      <div class="abs wood" id="title">
+        <div class="t1">เกมวิ่งเก็บ</div>
+        <div class="t2">เปิด–ปิดเครื่อง</div>
+        <div class="t3">และใช้อย่างปลอดภัย</div>
+      </div>
+      <div class="abs paper" id="pick">
+        <div class="wood ptitle">เลือกตัวละคร</div>
+        <div class="cards">
+          <button class="char boy sel" id="pick-boy"><canvas width="200" height="250" id="pv-boy"></canvas><span>ดาต้า</span></button>
+          <button class="char girl" id="pick-girl"><canvas width="200" height="250" id="pv-girl"></canvas><span>ใบข้าว</span></button>
+        </div>
+      </div>
+      <div class="abs paper" id="how">
+        <div class="wood ptitle">วิธีเล่น</div>
+        <div class="step"><b style="background:#3B82F6">1</b><span>กด ⬅️ ➡️ เพื่อวิ่ง กด ⬆️ หรือเว้นวรรคเพื่อกระโดด</span></div>
+        <div class="step"><b style="background:#22C55E">2</b><span>เก็บป้ายที่ถูกต้อง ⭐</span></div>
+        <div class="step"><b style="background:#EF4444">3</b><span>หลีกเลี่ยงสิ่งที่ไม่ปลอดภัย ❌ และหนามแหลม</span></div>
+        <div class="step"><b style="background:#F59E0B">4</b><span>ผ่านให้ครบ 5 ด่านเพื่อเรียนรู้การเปิด–ปิดเครื่อง และใช้อย่างปลอดภัย</span></div>
+        <div class="goal"><i>เป้าหมาย</i><br>เก็บให้ครบทุกด่าน เรียนรู้ให้ถูกต้อง ใช้อย่างปลอดภัย</div>
+      </div>
+      <div class="abs" id="centerbox">
+        <button class="startbtn" id="start-btn">▶ เริ่มเกม</button>
+        <div id="levels"></div>
+      </div>
+    </div>
+
+    <div class="ov ovbox" id="ov-pause"><div class="box paper"><h2>⏸ พักเกม</h2><p>พักก่อนนะ พร้อมแล้วกดเล่นต่อ</p>
+      <button class="bigbtn" id="resume-btn">▶ เล่นต่อ</button><button class="bigbtn alt" id="restart-btn">🔄 เริ่มด่านนี้ใหม่</button><button class="bigbtn gray" id="menu-btn">เลือกด่าน</button></div></div>
+    <div class="ov ovbox" id="ov-lose"><div class="box paper"><h2 id="lose-title">😢 หัวใจหมดแล้ว</h2><p id="lose-text">ไม่เป็นไร ลองอีกครั้งนะ ระวังสิ่งที่ไม่ควรทำ!</p>
+      <button class="bigbtn alt" id="retry-btn">🔄 เล่นด่านนี้ใหม่</button><button class="bigbtn gray" id="menu2-btn">เลือกด่าน</button></div></div>
+    <div class="ov ovbox" id="ov-win"><div class="box paper"><div class="stars" id="win-stars">⭐⭐⭐</div><h2 id="win-title">ผ่านด่านแล้ว!</h2><p id="win-text"></p>
+      <button class="bigbtn" id="next-btn">ด่านต่อไป ▶</button>
+      <a class="bigbtn alt" href="../../index.html#/unit/p1/cs/0/game" id="back-btn" style="display:none">กลับหน้าหน่วย</a>
+      <button class="bigbtn gray" id="again-btn">🔄 เล่นด่านนี้อีกครั้ง</button><button class="bigbtn gray" id="menu3-btn">เลือกด่าน</button></div></div>
+  </div>
+
+  <div id="steps"></div>
+
+  <div id="pad">
+    <div class="grp"><button class="pbtn" id="b-left" aria-label="เดินซ้าย">◀</button><button class="pbtn" id="b-right" aria-label="เดินขวา">▶</button></div>
+    <div class="grp"><button class="pbtn jump" id="b-jump" aria-label="กระโดด">⬆</button></div>
+  </div>
+  </div><!-- /stage -->
+  <div class="keys">⌨️ คีย์บอร์ด: ลูกศรซ้าย–ขวา วิ่ง · ลูกศรขึ้น หรือ เว้นวรรค กระโดด · A D W ก็ใช้ได้ · P พักเกม · F เต็มหน้าจอ</div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+(function(){
+  const W = 960, H = 540, GROUND = 480, WORLD = 3000;
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+  const $ = (id) => document.getElementById(id);
+
+  /* ================= ตัวละคร (วาดด้วยโค้ด: นักเรียนไทยแต่งกายเรียบร้อย) ================= */
+  function rrect(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function drawChar(c, kind, cx, bottom, face, phase, moving, air, scale){
+    const fill = (x, y, w, h, r, col) => { c.fillStyle = col; rrect(c, x, y, w, h, r); c.fill(); };
+    const sw = moving && !air ? Math.sin(phase) : 0, girl = kind === "girl";
+    c.save(); c.translate(cx, bottom); c.scale(face * scale, scale);
+    c.fillStyle = "rgba(0,0,0,.18)"; c.beginPath(); c.ellipse(0, 0, 15, 4, 0, 0, 7); c.fill();
+    const legs = air ? [-5, 5] : [-sw * 5, sw * 5];
+    legs.forEach((dx, i) => {
+      const lx = (i ? 3 : -8) + dx;
+      fill(lx, -14, 5.5, 8, 2, "#F2C9A0"); fill(lx - .5, -7, 6.5, 5, 2, "#FFFFFF"); fill(lx - 1, -3.5, 8.5, 3.5, 1.8, "#1F2430");
+    });
+    if(girl){ c.fillStyle = "#1E3A8A"; c.beginPath(); c.moveTo(-9, -26); c.lineTo(9, -26); c.lineTo(13, -9); c.lineTo(-13, -9); c.closePath(); c.fill();
+      c.strokeStyle = "#172554"; c.lineWidth = .8; for(let k = -9; k <= 9; k += 4.5){ c.beginPath(); c.moveTo(k * .75, -25); c.lineTo(k * 1.4, -9); c.stroke(); } }
+    else { fill(-10, -24, 20, 12, 3, "#1E3A8A"); fill(-10, -24, 20, 3, 1.5, "#172554"); }
+    const ax = air ? -7 : sw * 5, up = air ? 6 : 0;
+    fill(-13 + ax * .3, -41 - up, 5, 14, 2.5, "#FFFFFF"); fill(-13 + ax * .3, -29 - up, 5, 5, 2.5, "#F2C9A0");
+    fill(-10.5, -42, 21, 21, 4, "#FFFFFF");
+    c.strokeStyle = "#D5DBE8"; c.lineWidth = 1; rrect(c, -10.5, -42, 21, 21, 4); c.stroke();
+    if(girl){ c.fillStyle = "#1E3A8A"; c.beginPath(); c.moveTo(0, -38); c.lineTo(-6, -42); c.lineTo(-6, -34); c.closePath(); c.fill(); c.beginPath(); c.moveTo(0, -38); c.lineTo(6, -42); c.lineTo(6, -34); c.closePath(); c.fill(); c.fillStyle = "#2563EB"; c.beginPath(); c.arc(0, -38, 2, 0, 7); c.fill(); }
+    else { c.fillStyle = "#E5E9F2"; c.beginPath(); c.moveTo(-4, -42); c.lineTo(0, -37); c.lineTo(4, -42); c.closePath(); c.fill(); fill(3, -35, 5, 5, 1, "#EEF1F8"); fill(-9.5, -23, 19, 2.5, 1, "#7C4A1E"); }
+    fill(8 - ax * .3, -41 - up, 5, 14, 2.5, "#FFFFFF"); fill(8 - ax * .3, -29 - up, 5, 5, 2.5, "#F2C9A0");
+    fill(-3, -46, 6, 5, 2, "#E8B98C");
+    c.fillStyle = "#F2C9A0"; c.beginPath(); c.arc(0, -55, 12.5, 0, 7); c.fill();
+    c.beginPath(); c.arc(-12, -54, 3, 0, 7); c.arc(12, -54, 3, 0, 7); c.fill();
+    c.fillStyle = girl ? "#3A281C" : "#33261C";
+    if(girl){   // ผมยาวมัดจุก + โบว์น้ำเงิน
+      c.beginPath(); c.arc(0, -56, 13.6, Math.PI, 0); c.lineTo(13.4, -50); c.quadraticCurveTo(6, -56, 0, -55.5); c.quadraticCurveTo(-6, -56, -13.4, -50); c.closePath(); c.fill();
+      c.beginPath(); c.ellipse(-15, -49, 4, 9, .25, 0, 7); c.fill();
+      c.fillStyle = "#2563EB"; c.beginPath(); c.moveTo(-14, -66); c.lineTo(-21, -71); c.lineTo(-21, -61); c.closePath(); c.fill(); c.beginPath(); c.moveTo(-14, -66); c.lineTo(-7, -71); c.lineTo(-7, -61); c.closePath(); c.fill();
+    } else {    // ผมเกรียน
+      c.beginPath(); c.arc(0, -55, 12.9, Math.PI * 1.04, Math.PI * 1.96); c.quadraticCurveTo(7, -58.5, 0, -58); c.quadraticCurveTo(-7, -58.5, -12.5, -58.5); c.closePath(); c.fill();
+    }
+    c.fillStyle = "#1F2430"; c.beginPath(); c.arc(-4.2, -54, 1.7, 0, 7); c.arc(4.2, -54, 1.7, 0, 7); c.fill();
+    c.fillStyle = "#fff"; c.beginPath(); c.arc(-3.7, -54.6, .55, 0, 7); c.arc(4.7, -54.6, .55, 0, 7); c.fill();
+    c.fillStyle = "rgba(244,114,114,.45)"; c.beginPath(); c.arc(-7, -50.5, 2.2, 0, 7); c.arc(7, -50.5, 2.2, 0, 7); c.fill();
+    c.strokeStyle = "#9A3412"; c.lineWidth = 1.5; c.lineCap = "round"; c.beginPath(); c.arc(0, -50.5, 3.6, .15 * Math.PI, .85 * Math.PI); c.stroke();
+    c.restore();
+  }
+  // รูปตัวละครสำหรับการ์ดเลือก/อวาตาร์ (ถ้าครูใส่ภาพ img/boy.webp, img/girl.webp จะใช้ภาพของครูแทน)
+  const userImg = {};
+  ["boy", "girl"].forEach(k => { const im = new Image(); im.onload = () => { userImg[k] = im; paintPortraits(); }; im.src = "img/" + k + ".webp"; });
+  function portrait(canvas, kind, head){
+    const c = canvas.getContext("2d"); c.clearRect(0, 0, canvas.width, canvas.height);
+    if(userImg[kind]){ const im = userImg[kind], r = Math.min(canvas.width / im.width, canvas.height / im.height); c.drawImage(im, (canvas.width - im.width * r) / 2, canvas.height - im.height * r, im.width * r, im.height * r); return; }
+    if(head){ drawChar(c, kind, canvas.width / 2, canvas.height * 1.18, 1, 0, false, false, canvas.height / 42); }
+    else drawChar(c, kind, canvas.width / 2, canvas.height - 6, 1, 0, false, false, (canvas.height - 14) / 75);
+  }
+  function paintPortraits(){ portrait($("pv-boy"), "boy"); portrait($("pv-girl"), "girl"); portrait($("avatar"), charKind, true); }
+
+  /* ================= ข้อมูลด่าน ================= */
+  const BLOCKS = [[520,400,160],[1380,380,200],[2200,400,180]];                     // ก้อนดิน (ชนด้านข้างได้)
+  const PLATS = [[260,370,150],[760,330,150],[1020,270,150],[1700,330,160],[1960,270,150],[2560,350,170],[2760,280,150]];  // แท่นลอย
+  const SPIKES = [[980,70],[1650,70]];
+  const SLOT = [[335,325],[600,345],[835,285],[1095,225],[1480,325],[2035,225],[2280,345],[2645,305],[2835,235]];  // ตำแหน่งป้าย (กลางป้าย)
+  const HZ = [[700,930],[1100,1330],[1750,2150],[2400,2740]];
+  const LEVELS = [
+    { title:"ด่าน 1: เปิดเครื่องอย่างถูกต้อง", mode:"order", time:100, slots:[1,3,5], hz:[0,2], spikes:[0],
+      items:[
+        { emoji:"🔌", lab:"ตรวจ|สายไฟ", name:"ตรวจสายไฟ", say:"ตรวจดูว่าเสียบสายไฟเรียบร้อย", audio:"plat-s1" },
+        { emoji:"🔘", lab:"กดปุ่ม|เปิด", name:"กดปุ่มเปิด", say:"กดปุ่มเปิดที่จอภาพและตัวเครื่อง", audio:"plat-s2" },
+        { emoji:"🖥️", lab:"รอหน้าจอ|เดสก์ท็อป", name:"รอหน้าจอเดสก์ท็อป", say:"รอจนขึ้นหน้าจอเดสก์ท็อป", audio:"plat-s3" } ],
+      hazards:[ { emoji:"🔌", name:"ห้ามดึงปลั๊กขณะเครื่องทำงาน", audio:"plat-h0" } ],
+      win:"เปิดเครื่องถูกวิธี: ตรวจสายไฟ → กดปุ่มเปิด → รอหน้าจอเดสก์ท็อป", winAudio:"plat-w1" },
+    { title:"ด่าน 2: ใช้ซอฟต์แวร์เบื้องต้น", mode:"order", time:110, slots:[0,2,4,6,7], hz:[0,1,3], spikes:[0,1],
+      items:[
+        { emoji:"🖱️", lab:"เข้าสู่|โปรแกรม", name:"เข้าสู่โปรแกรม", say:"เข้าสู่โปรแกรมที่ต้องการใช้งาน", audio:"plat-l2a" },
+        { emoji:"📄", lab:"สร้างไฟล์|ใหม่", name:"สร้างไฟล์ใหม่", say:"สร้างไฟล์ใหม่ตามที่ต้องการ", audio:"plat-l2b" },
+        { emoji:"💾", lab:"บันทึก|ไฟล์", name:"บันทึกไฟล์", say:"บันทึกไฟล์ ตั้งชื่อให้เข้าใจง่าย", audio:"plat-l2c" },
+        { emoji:"📂", lab:"เรียกใช้|ไฟล์", name:"เรียกใช้ไฟล์", say:"เรียกใช้ไฟล์ที่เคยบันทึกไว้", audio:"plat-l2d" },
+        { emoji:"🚪", lab:"ออกจาก|โปรแกรม", name:"ออกจากโปรแกรม", say:"ออกจากโปรแกรมเมื่อใช้เสร็จ", audio:"plat-l2e" } ],
+      hazards:[ { emoji:"💥", name:"ลืมบันทึกไฟล์ ข้อมูลอาจหาย", audio:"plat-h2" } ],
+      win:"ใช้ซอฟต์แวร์: เข้าโปรแกรม → สร้างไฟล์ → บันทึก → เรียกใช้ → ออกจากโปรแกรม", winAudio:"plat-w2" },
+    { title:"ด่าน 3: ปิดเครื่องถูกวิธี", mode:"order", time:110, slots:[1,3,5,8], hz:[0,1,2], spikes:[0,1],
+      items:[
+        { emoji:"💾", lab:"บันทึก|ไฟล์", name:"บันทึกไฟล์", say:"บันทึกไฟล์", audio:"plat-s4" },
+        { emoji:"❌", lab:"ปิด|โปรแกรม", name:"ปิดโปรแกรม", say:"ปิดโปรแกรมทุกโปรแกรม", audio:"plat-s5" },
+        { emoji:"🪟", lab:"กด Start|ปิดเครื่อง", name:"กด Start เลือกปิดเครื่อง", say:"กดปุ่มเริ่ม แล้วเลือกปิดเครื่อง", audio:"plat-l3c" },
+        { emoji:"⬛", lab:"รอจอ|ดับ", name:"รอจนหน้าจอดับ", say:"รอจนหน้าจอดับ", audio:"plat-l3d" } ],
+      hazards:[ { emoji:"🔌", name:"ห้ามดึงปลั๊กขณะเครื่องทำงาน", audio:"plat-h0" } ],
+      win:"ปิดเครื่องถูกวิธี: บันทึกไฟล์ → ปิดโปรแกรม → เลือกปิดเครื่อง → รอจอดับ", winAudio:"plat-w3" },
+    { title:"ด่าน 4: ดูแลตัวเองตอนใช้เครื่อง", mode:"collect", time:100, slots:[0,2,4,7], hz:[0,1,2,3], spikes:[0,1],
+      items:[
+        { emoji:"🪑", lab:"นั่งหลังตรง|ห่างจอ", name:"นั่งหลังตรง ห่างจอหนึ่งช่วงแขน", say:"นั่งหลังตรง ห่างจอหนึ่งช่วงแขน", audio:"plat-g1" },
+        { emoji:"👀", lab:"พักสายตา|ทุก 30 นาที", name:"พักสายตาทุก 30 นาที", say:"พักสายตาทุกสามสิบนาที", audio:"plat-g2" },
+        { emoji:"🤲", lab:"มือแห้ง|ก่อนจับปลั๊ก", name:"มือแห้งก่อนจับปลั๊ก", say:"มือแห้งก่อนจับปลั๊กไฟ", audio:"plat-g5" },
+        { emoji:"🕒", lab:"ใช้ไม่นาน|เกินไป", name:"ใช้เครื่องไม่นานเกินไป", say:"ใช้เครื่องไม่นานเกินไป พักบ้างนะ", audio:"plat-l4d" } ],
+      hazards:[ { emoji:"🍔", name:"ไม่ควรกินอาหารใกล้คอมพิวเตอร์", audio:"plat-b1" }, { emoji:"💦", name:"ห้ามใช้มือเปียกจับปลั๊กไฟ", audio:"plat-b2" } ],
+      win:"ดูแลตัวเอง: นั่งให้ถูกท่า พักสายตา มือแห้งก่อนจับปลั๊ก และใช้ไม่นานเกินไป", winAudio:"plat-w4" },
+    { title:"ด่าน 5: ปลอดภัยและมีน้ำใจ", mode:"collect", time:120, slots:[0,2,3,5,8], hz:[0,1,2,3], spikes:[0,1],
+      items:[
+        { emoji:"🙋", lab:"ขออนุญาต|ก่อนใช้", name:"ขออนุญาตก่อนใช้", say:"ขออนุญาตครูหรือผู้ปกครองก่อนใช้", audio:"plat-g3" },
+        { emoji:"🔒", lab:"ไม่บอก|รหัสผ่าน", name:"ไม่บอกรหัสผ่านคนอื่น", say:"ไม่บอกรหัสผ่านให้คนอื่น", audio:"plat-g4" },
+        { emoji:"🔗", lab:"ไม่กดลิงก์|แปลก ๆ", name:"ไม่กดลิงก์แปลก ๆ", say:"ไม่กดลิงก์แปลกๆ", audio:"plat-l5c" },
+        { emoji:"👩‍🏫", lab:"บอกผู้ใหญ่|เมื่อเจอแปลก", name:"บอกผู้ใหญ่เมื่อเจออะไรแปลก", say:"บอกผู้ใหญ่ เมื่อเจออะไรแปลกๆ", audio:"plat-l5d" },
+        { emoji:"🧽", lab:"ดูแล|อุปกรณ์", name:"ดูแลรักษาอุปกรณ์", say:"ดูแลรักษาอุปกรณ์ให้สะอาด", audio:"plat-l5e" } ],
+      hazards:[ { emoji:"🗣️", name:"ไม่บอกรหัสผ่านคนที่ไม่รู้จัก", audio:"plat-b3" }, { emoji:"📧", name:"ไม่เปิดลิงก์จากคนแปลกหน้า (สแปม)", audio:"plat-b4" }, { emoji:"🍔", name:"ไม่ควรกินอาหารใกล้คอมพิวเตอร์", audio:"plat-b1" } ],
+      win:"ใช้อย่างปลอดภัย: ขออนุญาต เก็บรหัสผ่านเป็นความลับ ไม่กดลิงก์แปลก ๆ และบอกผู้ใหญ่เมื่อเจออะไรแปลก", winAudio:"plat-w5" }
+  ];
+
+  /* ================= สถานะ ================= */
+  let L = 0, lv, player, items, hazards, spikes, coinsList, hearts, nextIdx, got, coinsGot, camX, invuln, timeLeft;
+  let state = "title", last = 0, charKind = "boy", unlocked = 0, selLevel = 0, toastTimer = null, tt = 0;
+  const keys = { left:false, right:false, jump:false };
+  try { const s = JSON.parse(localStorage.getItem("p1PlatProg") || "{}"); unlocked = s.unlocked | 0; charKind = s.char === "girl" ? "girl" : "boy"; } catch(e) {}
+  if(/[?&]unlock=all/.test(location.search)) unlocked = LEVELS.length - 1;
+  selLevel = Math.min(unlocked, LEVELS.length - 1);
+  const save = () => { try { localStorage.setItem("p1PlatProg", JSON.stringify({ unlocked, char:charKind })); } catch(e) {} };
+
+  function loadLevel(i){
+    L = i; lv = LEVELS[i];
+    player = { x:60, y:GROUND - 72, w:32, h:72, vx:0, vy:0, on:true, face:1, t:0 };
+    items = lv.items.map((it, k) => ({ ...it, k, taken:false, x:SLOT[lv.slots[k]][0], y:SLOT[lv.slots[k]][1], t:Math.random() * 6 }));
+    hazards = lv.hz.map((hi, k) => { const hd = lv.hazards[k % lv.hazards.length], r = HZ[hi]; return { ...hd, minX:r[0], maxX:r[1], x:r[0] + (k * 37) % 120, vx:1.5 + k * .25, dir:1, w:46, h:52 }; });
+    spikes = lv.spikes.map(si => ({ x:SPIKES[si][0], w:SPIKES[si][1] }));
+    // เหรียญ: วางบนแท่น/ก้อนดิน และเป็นแถวบนพื้น
+    coinsList = [];
+    BLOCKS.concat(PLATS).forEach(b => { for(let k = 0; k < 3; k++) coinsList.push({ x:b[0] + b[2] * (k + 1) / 4, y:b[1] - 26, got:false }); });
+    for(let x = 180; x < WORLD - 100; x += 230){ const inBlk = BLOCKS.some(b => x > b[0] - 30 && x < b[0] + b[2] + 30) || SPIKES.some(s => x > s[0] - 40 && x < s[0] + s[1] + 40); if(!inBlk) coinsList.push({ x, y:GROUND - 28, got:false }); }
+    hearts = 3; nextIdx = 0; got = 0; coinsGot = 0; camX = 0; invuln = 0; timeLeft = lv.time;
+    renderHud(); renderSteps();
+  }
+  function renderHud(){
+    $("hearts").textContent = "❤️".repeat(Math.max(hearts, 0)) + "🤍".repeat(3 - Math.max(hearts, 0));
+    $("coins").textContent = coinsGot; $("stars").textContent = got + "/" + items.length;
+    const t = Math.max(0, Math.ceil(timeLeft)); $("timer").textContent = "⏱️ " + String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0");
+  }
+  function renderSteps(){
+    $("steps").innerHTML = `<span class="chip" style="border-color:#3B82F6;color:#1D4ED8">${lv.title}</span>` + items.map((it, k) => {
+      const cls = it.taken ? "done" : (lv.mode === "order" && k === nextIdx ? "next" : "");
+      return `<span class="chip ${cls}">${lv.mode === "order" ? (k + 1) + ". " : ""}${it.taken ? "✓ " : ""}${it.emoji} ${it.name}</span>`;
+    }).join("");
+  }
+  function toast(msg, kind){ const t = $("toast"); t.textContent = msg; t.className = kind || ""; t.style.display = "block"; clearTimeout(toastTimer); toastTimer = setTimeout(() => t.style.display = "none", 2600); }
+
+  /* ================= ควบคุม ================= */
+  const map = { ArrowLeft:"left", a:"left", A:"left", ArrowRight:"right", d:"right", D:"right", ArrowUp:"jump", w:"jump", W:"jump", " ":"jump" };
+  window.addEventListener("keydown", (e) => {
+    if(e.key === "p" || e.key === "P"){ if(state === "play") pauseGame(); else if(state === "pause") resumeGame(); return; }
+    const k = map[e.key]; if(k){ keys[k] = true; if(state === "play") e.preventDefault(); }
+  });
+  window.addEventListener("keyup", (e) => { const k = map[e.key]; if(k) keys[k] = false; });
+  function bindBtn(id, key){ const b = $(id); const on = (e) => { e.preventDefault(); keys[key] = true; b.classList.add("on"); }; const off = () => { keys[key] = false; b.classList.remove("on"); };
+    b.addEventListener("pointerdown", on); ["pointerup", "pointerleave", "pointercancel"].forEach(ev => b.addEventListener(ev, off)); }
+  bindBtn("b-left", "left"); bindBtn("b-right", "right"); bindBtn("b-jump", "jump");
+
+  /* ================= ฟิสิกส์ ================= */
+  const overlap = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+  const blockRects = BLOCKS.map(b => ({ x:b[0], y:b[1], w:b[2], h:H - b[1] }));
+
+  function update(dt){
+    const p = player;
+    p.vx = (keys.right ? 4.4 : 0) - (keys.left ? 4.4 : 0);
+    if(p.vx){ p.face = p.vx > 0 ? 1 : -1; p.t += dt * 0.32; }
+    if(keys.jump && p.on){ p.vy = -14.2; p.on = false; sfx.jump(); }
+    p.x = Math.max(0, Math.min(WORLD - p.w, p.x + p.vx * dt));
+    for(const b of blockRects){ if(overlap(p, b)){ if(p.vx > 0) p.x = b.x - p.w; else if(p.vx < 0) p.x = b.x + b.w; } }
+    const prevBottom = p.y + p.h;
+    p.vy += 0.62 * dt; p.y += p.vy * dt; p.on = false;
+    if(p.y + p.h >= GROUND){ p.y = GROUND - p.h; p.vy = 0; p.on = true; }
+    for(const b of blockRects){ if(overlap(p, b) && p.vy >= 0 && prevBottom <= b.y + 6){ p.y = b.y - p.h; p.vy = 0; p.on = true; } }
+    if(p.vy >= 0 && !p.on){
+      for(const pl of PLATS){ if(prevBottom <= pl[1] + 4 && p.y + p.h >= pl[1] && p.x + p.w > pl[0] && p.x < pl[0] + pl[2]){ p.y = pl[1] - p.h; p.vy = 0; p.on = true; break; } }
+    }
+    camX = Math.max(0, Math.min(WORLD - W, p.x - W / 2));
+    if(invuln > 0) invuln -= dt * 16.7;
+    timeLeft -= dt * 16.67 / 1000; renderHud();
+    if(timeLeft <= 0 && state === "play"){ lose("⏰ หมดเวลา", "ไม่เป็นไร ลองใหม่อีกครั้ง เดินให้เร็วขึ้นหน่อยนะ"); return; }
+
+    for(const c of coinsList){ if(!c.got && Math.abs(c.x - (p.x + p.w / 2)) < 26 && Math.abs(c.y - (p.y + p.h / 2)) < 44){ c.got = true; coinsGot++; sfx.coin(); renderHud(); } }
+    for(const it of items){
+      it.t += dt * 0.08;
+      if(it.taken) continue;
+      const box = { x:it.x - 38, y:it.y - 40 + Math.sin(it.t) * 4, w:76, h:76 };
+      if(overlap(p, box)){
+        if(lv.mode === "order" && it.k !== nextIdx){
+          if(!it.warn || Date.now() - it.warn > 2500){ it.warn = Date.now(); toast(`ต้องเก็บขั้นที่ ${nextIdx + 1} ก่อนนะ: ${items[nextIdx].name}`); sfx.wrong(); }
+          continue;
+        }
+        it.taken = true; got++; if(lv.mode === "order") nextIdx++;
+        toast("✅ " + it.say, "good"); sfx.correct(); setTimeout(() => playAudio("audio/" + it.audio + ".mp3", null), 500); renderHud(); renderSteps();
+        if(got >= items.length){ state = "won"; setTimeout(showWin, 1700); }
+      }
+    }
+    const hurt = (name, audio, dir) => {
+      hearts--; invuln = 1600; p.vy = -9; p.x = Math.max(0, p.x - 80 * (dir || 1)); renderHud();
+      toast("⚠️ " + name, "bad"); sfx.wrong(); setTimeout(() => playAudio("audio/" + audio + ".mp3", null), 550);
+      if(hearts <= 0) lose("😢 หัวใจหมดแล้ว", "ไม่เป็นไร ลองอีกครั้งนะ ระวังสิ่งที่ไม่ควรทำ!");
+    };
+    for(const h of hazards){
+      h.x += h.vx * h.dir * dt; if(h.x < h.minX){ h.x = h.minX; h.dir = 1; } if(h.x > h.maxX){ h.x = h.maxX; h.dir = -1; }
+      if(invuln <= 0 && state === "play" && overlap(p, { x:h.x + 5, y:GROUND - h.h + 4, w:h.w - 10, h:h.h - 6 })) hurt(h.name, h.audio, h.dir);
+    }
+    for(const s of spikes){
+      if(invuln <= 0 && state === "play" && overlap(p, { x:s.x + 6, y:GROUND - 20, w:s.w - 12, h:20 })) hurt("ระวังหนามแหลม!", "plat-h1", 1);
+    }
+  }
+
+  /* ================= วาดฉาก ================= */
+  const rnd = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+  function cloud(x, y, s){ ctx.fillStyle = "rgba(255,255,255,.92)"; [[0,0,26],[26,-8,32],[56,0,24],[28,8,24]].forEach(c => { ctx.beginPath(); ctx.arc(x + c[0] * s, y + c[1] * s, c[2] * s, 0, 7); ctx.fill(); }); }
+  function school(x, y){   // อาคารโรงเรียนไกล ๆ + เสาธงชาติไทย
+    ctx.fillStyle = "#F3C9A8"; ctx.fillRect(x, y - 80, 420, 80);
+    ctx.fillStyle = "#E7A98F"; ctx.fillRect(x + 150, y - 110, 120, 110);
+    ctx.fillStyle = "#C8584F"; ctx.beginPath(); ctx.moveTo(x - 10, y - 80); ctx.lineTo(x + 430, y - 80); ctx.lineTo(x + 400, y - 100); ctx.lineTo(x + 20, y - 100); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x + 140, y - 110); ctx.lineTo(x + 280, y - 110); ctx.lineTo(x + 250, y - 134); ctx.lineTo(x + 170, y - 134); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#8FB6E8"; for(let r = 0; r < 2; r++) for(let k = 0; k < 11; k++){ if(k > 4 && k < 6) continue; ctx.fillRect(x + 14 + k * 37, y - 66 + r * 32, 22, 20); }
+    ctx.fillStyle = "#7B5B3A"; ctx.fillRect(x + 196, y - 34, 28, 34);
+    ctx.fillStyle = "#6B7280"; ctx.fillRect(x + 207, y - 190, 4, 80);   // เสาธง
+    [["#ED1C24",0,4],["#fff",4,4],["#241D6E",8,12],["#fff",20,4],["#ED1C24",24,4]].forEach(s => { ctx.fillStyle = s[0]; ctx.fillRect(x + 211, y - 190 + s[1], 34, s[2]); });
+  }
+  function tree(x, y, s){ ctx.fillStyle = "#7A4E2A"; ctx.fillRect(x - 6 * s, y - 56 * s, 12 * s, 56 * s); ctx.fillStyle = "#3FA34D"; [[0,-70,34],[-26,-52,26],[26,-52,26],[0,-45,30]].forEach(c => { ctx.beginPath(); ctx.arc(x + c[0] * s, y + c[1] * s, c[2] * s, 0, 7); ctx.fill(); }); ctx.fillStyle = "#58BE62"; ctx.beginPath(); ctx.arc(x - 8 * s, y - 78 * s, 16 * s, 0, 7); ctx.fill(); }
+
+  function drawBack(cam){
+    const g = ctx.createLinearGradient(0, 0, 0, GROUND); g.addColorStop(0, "#4FB0F2"); g.addColorStop(1, "#D7F0FF"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for(let i = 0; i < 9; i++){ cloud((((i * 330 - cam * 0.25) % 3000) + 3000) % 3000 - 150, 60 + (i % 3) * 50, 1 + (i % 2) * .4); }
+    const sx = -((cam * 0.35) % 1500); for(let k = 0; k < 3; k++) school(sx + k * 1500 + 300, GROUND - 6);
+    ctx.fillStyle = "#9ADB7C"; for(let i = -1; i < 5; i++){ ctx.beginPath(); ctx.arc(i * 330 - (cam * 0.5) % 330 + 160, GROUND + 50, 170, Math.PI, 0); ctx.fill(); }
+    const tx = -((cam * 0.6) % 520); for(let k = -1; k < 3; k++) tree(tx + k * 520 + 120, GROUND - 4, .85 + (k & 1) * .2);
+  }
+  function drawWorld(){
+    ctx.save(); ctx.translate(-camX, 0);
+    // พื้น: หญ้า + ดิน + ก้อนหิน
+    ctx.fillStyle = "#B97B3E"; ctx.fillRect(camX - 10, GROUND + 12, W + 20, H - GROUND);
+    ctx.fillStyle = "rgba(0,0,0,.12)"; ctx.fillRect(camX - 10, GROUND + 40, W + 20, H - GROUND);
+    for(let x = Math.floor(camX / 70) * 70; x < camX + W + 70; x += 70){ const r = rnd(x); ctx.fillStyle = "#8E5A2B"; ctx.beginPath(); ctx.ellipse(x + r * 40, GROUND + 28 + (r * 7 | 0) * 4, 10 + r * 8, 6 + r * 3, 0, 0, 7); ctx.fill(); }
+    ctx.fillStyle = "#58B848"; ctx.fillRect(camX - 10, GROUND, W + 20, 16); ctx.fillStyle = "#3E9A3A"; for(let x = Math.floor(camX / 14) * 14; x < camX + W + 14; x += 14){ ctx.beginPath(); ctx.moveTo(x, GROUND + 16); ctx.lineTo(x + 7, GROUND + 24); ctx.lineTo(x + 14, GROUND + 16); ctx.fill(); }
+    // ก้อนดิน
+    for(const b of BLOCKS){
+      ctx.fillStyle = "#B97B3E"; ctx.fillRect(b[0], b[1], b[2], GROUND - b[1] + 14); ctx.fillStyle = "#8E5A2B"; for(let k = 0; k < b[2] / 40; k++){ ctx.beginPath(); ctx.ellipse(b[0] + 20 + k * 40, b[1] + 34 + (k % 2) * 16, 10, 6, 0, 0, 7); ctx.fill(); }
+      ctx.fillStyle = "#58B848"; rrect(ctx, b[0] - 4, b[1] - 4, b[2] + 8, 18, 6); ctx.fill(); ctx.fillStyle = "#3E9A3A"; ctx.fillRect(b[0] - 2, b[1] + 10, b[2] + 4, 3);
+    }
+    // แท่นลอย
+    for(const pl of PLATS){ ctx.fillStyle = "#B97B3E"; rrect(ctx, pl[0], pl[1], pl[2], 22, 8); ctx.fill(); ctx.fillStyle = "#58B848"; rrect(ctx, pl[0] - 3, pl[1] - 5, pl[2] + 6, 14, 6); ctx.fill(); }
+    // หนามแหลม
+    for(const s of spikes){ for(let x = s.x; x < s.x + s.w - 6; x += 14){ const gr = ctx.createLinearGradient(x, GROUND - 22, x + 14, GROUND); gr.addColorStop(0, "#E5E7EB"); gr.addColorStop(1, "#6B7280"); ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(x, GROUND); ctx.lineTo(x + 7, GROUND - 24); ctx.lineTo(x + 14, GROUND); ctx.fill(); } }
+    // เหรียญ
+    for(const c of coinsList){ if(c.got) continue; const w = Math.abs(Math.cos(tt * .06 + c.x)) * 9 + 3; ctx.fillStyle = "#F59E0B"; ctx.beginPath(); ctx.ellipse(c.x, c.y, w + 2, 11, 0, 0, 7); ctx.fill(); ctx.fillStyle = "#FCD34D"; ctx.beginPath(); ctx.ellipse(c.x, c.y, w, 9, 0, 0, 7); ctx.fill(); }
+    // ป้ายที่ต้องเก็บ
+    for(const it of items){ if(!it.taken) drawSign(it.x, it.y + Math.sin(it.t) * 4, it.emoji, it.lab, false, lv.mode === "order" && it.k === nextIdx, lv.mode === "order" ? it.k + 1 : 0); }
+    // อุปสรรค (ป้ายห้าม)
+    for(const h of hazards) drawSign(h.x + 23, GROUND - 34, h.emoji, "", true, false, 0);
+    // ผู้เล่น
+    if(!(invuln > 0 && Math.floor(invuln / 120) % 2)) drawChar(ctx, charKind, player.x + player.w / 2, player.y + player.h, player.face, player.t, !!player.vx, !player.on, 1.25);
+    ctx.restore();
+  }
+  function drawSign(x, y, emo, lab, bad, glow, num){
+    const w = 84, h = lab ? 80 : 62, tx = x - w / 2, ty = y - h / 2;
+    if(glow){ ctx.fillStyle = "rgba(255,220,0,.5)"; rrect(ctx, tx - 8, ty - 8, w + 16, h + 22, 18); ctx.fill(); }
+    ctx.fillStyle = "rgba(0,0,0,.18)"; rrect(ctx, tx + 2, ty + 4, w, h, 12); ctx.fill();
+    ctx.fillStyle = "#fff"; rrect(ctx, tx, ty, w, h, 12); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x - 8, ty + h - 1); ctx.lineTo(x, ty + h + 12); ctx.lineTo(x + 8, ty + h - 1); ctx.fill();
+    ctx.lineWidth = 3; ctx.strokeStyle = bad ? "#EF4444" : "#CBD5E1"; rrect(ctx, tx, ty, w, h, 12); ctx.stroke();
+    ctx.font = "34px 'Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji',sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "#000";
+    ctx.fillText(emo, x, ty + (lab ? 38 : 42));
+    if(lab){ ctx.fillStyle = "#1F2430"; ctx.font = "bold 12px Sarabun, sans-serif"; lab.split("|").forEach((ln, i) => ctx.fillText(ln, x, ty + 54 + i * 14)); }
+    if(bad){ ctx.fillStyle = "#EF4444"; ctx.beginPath(); ctx.arc(tx + w - 6, ty + 6, 12, 0, 7); ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(tx + w - 11, ty + 1); ctx.lineTo(tx + w - 1, ty + 11); ctx.moveTo(tx + w - 1, ty + 1); ctx.lineTo(tx + w - 11, ty + 11); ctx.stroke(); }
+    if(num){ ctx.fillStyle = "#F97316"; ctx.beginPath(); ctx.arc(tx + w - 4, ty + 4, 12, 0, 7); ctx.fill(); ctx.fillStyle = "#fff"; ctx.font = "bold 15px sans-serif"; ctx.fillText(num, tx + w - 4, ty + 9); }
+  }
+  function draw(){
+    if(state === "title"){ drawBack(tt * 0.6); ctx.fillStyle = "#58B848"; ctx.fillRect(0, GROUND, W, 16); ctx.fillStyle = "#B97B3E"; ctx.fillRect(0, GROUND + 16, W, H); return; }
+    drawBack(camX); drawWorld();
+    ctx.fillStyle = "rgba(0,0,0,.25)"; rrect(ctx, 20, H - 14, W - 40, 7, 3); ctx.fill(); ctx.fillStyle = "#22C55E"; rrect(ctx, 20, H - 14, Math.max(8, (W - 40) * Math.min(1, player.x / WORLD)), 7, 3); ctx.fill();
+  }
+  function loop(ts){ const dt = Math.min(2, (ts - last) / 16.67 || 1); last = ts; tt += dt; if(state === "play") update(dt); draw(); requestAnimationFrame(loop); }
+
+  /* ================= หน้าจอ/ปุ่ม ================= */
+  function show(id, on){ $(id).classList.toggle("show", !!on); }
+  function renderLevelBtns(){
+    $("levels").innerHTML = LEVELS.map((l, i) => `<button class="lvbtn ${i > unlocked ? "lock" : ""} ${i === selLevel ? "sel" : ""}" data-i="${i}">${i > unlocked ? "🔒" : "ด่าน "}${i + 1}</button>`).join("");
+    $("levels").querySelectorAll(".lvbtn").forEach(b => b.addEventListener("click", () => { const i = +b.dataset.i; if(i > unlocked){ return; } selLevel = i; renderLevelBtns(); }));
+  }
+  function goTitle(){ state = "title"; ["ov-pause","ov-lose","ov-win"].forEach(i => show(i, false)); $("hud").classList.remove("on"); show("ov-start", true); renderLevelBtns(); paintPortraits(); $("steps").innerHTML = ""; }
+  function startLevel(i){
+    loadLevel(i); show("ov-start", false); ["ov-pause","ov-lose","ov-win"].forEach(x => show(x, false)); $("hud").classList.add("on");
+    keys.left = keys.right = keys.jump = false; state = "play"; toast("ด่านที่ " + (i + 1) + ": " + lv.title.replace(/^ด่าน \d: /, ""), "good");
+  }
+  function pauseGame(){ state = "pause"; show("ov-pause", true); }
+  function resumeGame(){ show("ov-pause", false); state = "play"; }
+  function lose(title, text){ state = "lost"; $("lose-title").textContent = title; $("lose-text").textContent = text; setTimeout(() => { show("ov-lose", true); sfx.lose(); }, 800); }
+  function showWin(){
+    const lastLv = L === LEVELS.length - 1;
+    if(L >= unlocked && !lastLv){ unlocked = L + 1; } save();
+    $("win-stars").textContent = "⭐".repeat(Math.max(1, hearts)) + "☆".repeat(3 - Math.max(1, hearts));
+    $("win-title").textContent = lastLv ? "เก่งมาก! ผ่านครบทุกด่าน" : "ผ่านด่านแล้ว!";
+    $("win-text").textContent = lv.win + " · เหรียญ " + coinsGot;
+    $("next-btn").style.display = lastLv ? "none" : "inline-block"; $("back-btn").style.display = lastLv ? "inline-block" : "none";
+    show("ov-win", true); sfx.win(); setTimeout(() => playAudio("audio/" + lv.winAudio + ".mp3", null), 1100);
+  }
+  $("start-btn").addEventListener("click", () => startLevel(selLevel));
+  $("pause-btn").addEventListener("click", pauseGame);
+  $("home-btn").addEventListener("click", goTitle);
+  $("resume-btn").addEventListener("click", resumeGame);
+  $("restart-btn").addEventListener("click", () => startLevel(L));
+  $("retry-btn").addEventListener("click", () => startLevel(L));
+  $("again-btn").addEventListener("click", () => startLevel(L));
+  $("next-btn").addEventListener("click", () => startLevel(L + 1));
+  ["menu-btn","menu2-btn","menu3-btn"].forEach(id => $(id).addEventListener("click", () => { selLevel = Math.min(unlocked, LEVELS.length - 1); goTitle(); }));
+  function pickChar(k){ charKind = k; $("pick-boy").classList.toggle("sel", k === "boy"); $("pick-girl").classList.toggle("sel", k === "girl"); save(); portrait($("avatar"), charKind, true); }
+  $("pick-boy").addEventListener("click", () => pickChar("boy")); $("pick-girl").addEventListener("click", () => pickChar("girl"));
+  document.addEventListener("visibilitychange", () => { if(document.hidden && state === "play") pauseGame(); });
+
+  pickChar(charKind); goTitle(); paintPortraits();
+  requestAnimationFrame(loop);
+  window.__game = { step(n){ for(let i = 0; i < n; i++){ if(state === "play") update(1); } }, keys, start:startLevel, get state(){ return state; }, get player(){ return player; }, get items(){ return items; }, get hearts(){ return hearts; }, get level(){ return L; }, get unlocked(){ return unlocked; }, get coins(){ return coinsGot; } };
+})();
+</script>
+<script>
+  /* ---------- โหมดเต็มหน้าจอ (กดปุ่ม หรือกด F · ออกด้วย Esc) ---------- */
+  (function(){
+    const stage = document.getElementById("stage"), btn = document.getElementById("fs-btn");
+    const isFs = () => !!document.fullscreenElement || stage.classList.contains("pfs");
+    function label(){ btn.querySelector(".tts-label").textContent = isFs() ? "ออกจากเต็มหน้าจอ" : "เต็มหน้าจอ"; btn.querySelector(".tts-icon").textContent = isFs() ? "🗗" : "⛶"; }
+    async function enter(){
+      try { if(stage.requestFullscreen){ await stage.requestFullscreen(); } else if(stage.webkitRequestFullscreen){ stage.webkitRequestFullscreen(); } else { stage.classList.add("pfs"); } }
+      catch(e){ stage.classList.add("pfs"); }
+      label();
+    }
+    async function leave(){ try { if(document.fullscreenElement) await document.exitFullscreen(); } catch(e){} stage.classList.remove("pfs"); label(); }
+    function toggle(){ isFs() ? leave() : enter(); }
+    btn.addEventListener("click", toggle);
+    document.getElementById("fs-exit").addEventListener("click", leave);
+    document.addEventListener("fullscreenchange", label);
+    window.addEventListener("keydown", (e) => { if((e.key === "f" || e.key === "F") && !e.ctrlKey && !e.metaKey) toggle(); else if(e.key === "Escape" && stage.classList.contains("pfs")) leave(); });
+    label();
+  })();
+</script>
+</body>
+</html>

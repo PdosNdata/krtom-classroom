@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>จำลองหน้าจอ Windows 7 + Paint — ป.1 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; color:#1F2430; line-height:1.5; }
+  *{ box-sizing:border-box; }
+  header{
+    background:linear-gradient(135deg,#F97316,#EC4899);
+    color:#fff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:40px; }
+  header p{ margin:2px 0 0; font-size:.55rem; opacity:.95; }
+  header a{ color:#fff; background:rgba(255,255,255,.25); padding:8px 16px; border-radius:999px; font-size:.5rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:1000px; margin:0 auto; padding:16px 14px 50px; }
+
+  /* ---------- ขั้นตอน + คำแนะนำ ---------- */
+  #stepper{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:10px; }
+  .step-chip{
+    display:flex; align-items:center; gap:8px; background:#fff; border:3px solid #E6E8F0; border-radius:999px;
+    padding:4px 14px 4px 6px; font-size:.5rem; font-weight:700; color:#6B7280;
+  }
+  .step-chip b{ width:36px; height:36px; border-radius:50%; background:#E6E8F0; color:#6B7280; display:flex; align-items:center; justify-content:center; font-size:.55rem; }
+  .step-chip.current{ border-color:#F97316; color:#1F2430; background:#FFF7ED; }
+  .step-chip.current b{ background:#F97316; color:#fff; }
+  .step-chip.done{ border-color:#10B981; color:#047857; background:#F0FBF6; }
+  .step-chip.done b{ background:#10B981; color:#fff; }
+  #hint{
+    background:#fff; border:3px solid #F97316; border-radius:20px; padding:12px 16px; margin-bottom:14px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap; box-shadow:0 4px 12px rgba(0,0,0,.08);
+  }
+  #hint-text{ flex:1 1 260px; font-size:.62rem; font-weight:700; }
+
+  /* ================= จอคอมพิวเตอร์สไตล์ Windows 7 ================= */
+  #screen{
+    position:relative; display:flex; flex-direction:column; overflow:hidden;
+    height:min(86vh,780px); min-height:560px;
+    border:14px solid #1b1b1f; border-bottom-width:22px; border-radius:18px; background:#000;
+    box-shadow:0 14px 40px rgba(0,0,0,.4); font-size:16px; /* ภายในจอใช้ขนาดตัวอักษรของระบบจำลอง */
+  }
+  #wallpaper{
+    position:relative; flex:1; min-height:0; overflow:hidden;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 105%, rgba(255,255,255,.55), transparent 70%),
+      radial-gradient(ellipse 35% 22% at 22% 30%, rgba(255,255,255,.25), transparent 70%),
+      radial-gradient(ellipse 40% 26% at 80% 22%, rgba(180,235,255,.35), transparent 70%),
+      linear-gradient(180deg,#0a3d7a 0%,#1f78c8 45%,#68bff0 100%);
+  }
+  .rays{ position:absolute; inset:0; pointer-events:none; opacity:.35;
+    background:conic-gradient(from 200deg at 50% 120%, transparent 0 10deg, rgba(255,255,255,.35) 14deg, transparent 20deg 40deg, rgba(255,255,255,.25) 46deg, transparent 54deg 80deg, rgba(255,255,255,.3) 86deg, transparent 96deg 360deg); }
+
+  /* ไอคอนบนเดสก์ท็อป */
+  #icons{ position:absolute; left:8px; top:8px; display:flex; flex-direction:column; flex-wrap:wrap; gap:6px; max-height:calc(100% - 16px); align-content:flex-start; }
+  .dicon{
+    width:104px; padding:6px 2px; border:1px solid transparent; border-radius:4px; background:transparent; color:#fff; cursor:pointer;
+    font-family:inherit; font-size:15px; text-align:center; text-shadow:0 1px 3px #000, 0 0 6px rgba(0,0,0,.6); user-select:none;
+  }
+  .dicon .pic{ display:block; font-size:50px; line-height:1.1; filter:drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+  .dicon:hover{ background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.35); }
+  .dicon.sel{ background:rgba(90,160,255,.45); border-color:rgba(190,225,255,.9); }
+  .dicon.pulse{ animation:pulse 1.1s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(255,200,0,.0); } 50%{ transform:scale(1.07); box-shadow:0 0 0 5px rgba(255,200,0,.9); } }
+  #tip{ position:absolute; left:120px; top:14px; background:#FFFBE6; border:1px solid #B8A24A; color:#333; padding:4px 10px; border-radius:4px; font-size:15px; display:none; z-index:6; box-shadow:0 2px 6px rgba(0,0,0,.4); }
+
+  /* พื้นที่ทำงานของหน้าต่าง */
+  #work{ position:absolute; inset:0; display:none; padding:8px; overflow:auto; z-index:4; }
+  #work.on{ display:block; }
+
+  /* ---------- แถบงาน ---------- */
+  #taskbar{
+    position:relative; z-index:20; height:46px; flex:none; display:flex; align-items:center; gap:4px; padding:0 6px 0 4px;
+    background:linear-gradient(180deg,rgba(120,170,215,.92),rgba(40,80,135,.96) 48%,rgba(18,45,90,.98) 52%,rgba(40,85,140,.98));
+    border-top:1px solid rgba(220,240,255,.7); color:#fff; font-size:14px;
+  }
+  #start-orb{
+    width:44px; height:44px; border-radius:50%; border:2px solid rgba(255,255,255,.75); cursor:pointer; padding:0; margin-top:-4px; flex:none;
+    background:radial-gradient(circle at 35% 30%,#9fe0ff,#1f7fd6 55%,#0b3d86); box-shadow:0 0 8px rgba(120,200,255,.9), inset 0 -4px 8px rgba(0,30,90,.5);
+    display:grid; place-items:center;
+  }
+  #start-orb:hover{ filter:brightness(1.2); }
+  #start-orb.pulse{ animation:pulse 1.1s ease-in-out infinite; }
+  .flag{ width:22px; height:22px; display:grid; grid-template-columns:1fr 1fr; gap:2px; transform:skewY(-6deg) rotate(-4deg); }
+  .flag i{ border-radius:3px 1px; }
+  .flag i:nth-child(1){ background:#f25022; } .flag i:nth-child(2){ background:#7fba00; }
+  .flag i:nth-child(3){ background:#00a4ef; } .flag i:nth-child(4){ background:#ffb900; }
+  .tb-btn{
+    height:38px; min-width:46px; padding:0 8px; border:1px solid rgba(255,255,255,.18); border-radius:4px; cursor:default; color:#fff; font-size:22px;
+    background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.04)); display:flex; align-items:center; gap:6px; font-family:inherit;
+  }
+  .tb-btn.run{ border-color:rgba(255,255,255,.55); background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(130,190,255,.2)); cursor:pointer; font-size:15px; font-weight:600; }
+  .tb-btn.run span.ico{ font-size:22px; }
+  .tb-btn.run.min{ background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02)); }
+  .tb-btn.run.pulse{ animation:pulse 1.1s ease-in-out infinite; }
+  #tray{ margin-left:auto; display:flex; align-items:center; gap:10px; padding-right:4px; font-size:14px; text-align:center; line-height:1.15; }
+  #tray .ic{ font-size:18px; }
+
+  /* ---------- เมนูเริ่ม ---------- */
+  #startmenu{
+    position:absolute; left:4px; bottom:46px; z-index:30; width:420px; display:none; border-radius:8px 8px 0 0; overflow:hidden;
+    background:linear-gradient(180deg,rgba(90,140,200,.95),rgba(30,70,130,.97)); border:1px solid rgba(220,240,255,.85); box-shadow:0 -4px 20px rgba(0,0,0,.6);
+    font-size:16px; color:#1F2430;
+  }
+  #startmenu.show{ display:block; }
+  .sm-body{ display:flex; }
+  .sm-left{ flex:1.25; background:#fff; margin:6px 0 6px 6px; border-radius:6px; padding:6px; }
+  .sm-right{ flex:1; padding:10px 10px; color:#fff; font-size:16px; }
+  .sm-item{ display:flex; align-items:center; gap:10px; width:100%; padding:6px 8px; border:1px solid transparent; border-radius:4px; background:transparent; font-family:inherit; font-size:16px; text-align:left; cursor:default; color:#1F2430; }
+  .sm-item .e{ font-size:28px; width:34px; text-align:center; }
+  .sm-item.click{ cursor:pointer; }
+  .sm-item.click:hover{ background:#DCEBFF; border-color:#99C4F5; }
+  .sm-item.pulse{ animation:pulse 1.1s ease-in-out infinite; background:#FFF4C2; border-color:#E6B800; }
+  .sm-item.dim{ color:#98A2B3; }
+  .sm-sep{ height:1px; background:#DADFE7; margin:6px 4px; }
+  .sm-right div{ padding:5px 6px; }
+  .sm-foot{ background:rgba(10,30,70,.65); padding:8px 10px; display:flex; justify-content:flex-end; }
+  .shut{ border:1px solid rgba(255,255,255,.5); border-radius:4px; background:linear-gradient(180deg,#d9534f,#9d1c1c); color:#fff; padding:4px 16px; font-family:inherit; font-size:15px; cursor:pointer; }
+
+  /* ---------- หน้าต่าง Paint (สไตล์ Windows 11) ---------- */
+  #app{ display:none; margin:0 auto; max-width:940px; border-radius:8px; background:#f3f3f3; position:relative; border:1px solid #9aa0a6; box-shadow:0 10px 30px rgba(0,0,0,.55); overflow:hidden; }
+  #app.open{ display:block; }
+  .titlebar{ display:flex; align-items:center; justify-content:space-between; padding:0 0 0 10px; height:34px; background:#f3f3f3; color:#444; font-size:14px; }
+  .wbtns{ display:flex; height:100%; }
+  .wbtn{ width:46px; height:100%; border:none; background:transparent; font-size:15px; cursor:pointer; color:#222; font-family:inherit; }
+  .wbtn:hover{ background:#e5e5e5; }
+  .wbtn.x:hover{ background:#c42b1c; color:#fff; }
+  .wbtn.x{ font-size:17px; }
+  .wbtn.pulse{ animation:pulse 1.1s ease-in-out infinite; background:#FFF4C2; }
+  .client{ background:#f3f3f3; }
+  .menubar{ display:flex; align-items:center; gap:2px; padding:2px 10px 4px; background:#f3f3f3; }
+  .menubar .mi{ font-size:15px; padding:4px 10px; color:#222; }
+  .menubar .vs{ width:1px; height:22px; background:#d0d0d0; margin:0 6px; }
+  .mb{ border:1px solid transparent; background:transparent; border-radius:5px; padding:4px 10px; font-family:inherit; font-size:15px; cursor:pointer; color:#222; display:flex; align-items:center; gap:5px; }
+  .mb:hover{ background:#e6e6e6; }
+  .mb.pulse{ animation:pulse 1.1s ease-in-out infinite; background:#FFF4C2; border-color:#E6B800; }
+  .ribbon{ display:flex; flex-wrap:wrap; background:#fbfbfb; border-top:1px solid #e3e3e3; border-bottom:1px solid #e3e3e3; padding:4px 0; }
+  .grp{ padding:2px 12px 0; border-right:1px solid #e3e3e3; display:flex; flex-direction:column; align-items:center; }
+  .grp:last-child{ border-right:none; }
+  .grp .row{ display:flex; gap:4px; flex-wrap:wrap; justify-content:center; align-items:flex-start; min-height:64px; }
+  .grp .gl{ font-size:13px; color:#555; padding:2px 0 3px; }
+  .btn{ border:2px solid transparent; background:transparent; border-radius:6px; padding:3px 6px; cursor:pointer; font-family:inherit; font-size:13px; color:#222;
+    display:flex; flex-direction:column; align-items:center; min-width:56px; }
+  .btn .ic{ font-size:28px; line-height:1.2; }
+  .btn:hover{ background:#ececec; }
+  .btn.on{ background:#e6f0fb; border-color:#2f7fd0; }
+  .btn.pulse{ animation:pulse 1.1s ease-in-out infinite; }
+  .dot{ border-radius:50%; background:#1F2430; display:block; }
+  .sw{ width:26px; height:26px; border-radius:50%; border:1px solid #b5b5b5; cursor:pointer; padding:0; }
+  .sw.on{ box-shadow:0 0 0 3px #fff, 0 0 0 5px #0067c0; }
+  .pal{ display:grid; grid-template-columns:repeat(6,auto); gap:8px; padding:6px 4px; }
+  .stage{ background:#e9e9e9; padding:10px 10px 10px 10px; }
+  canvas{ display:block; width:100%; height:auto; background:#fff; border:1px solid #c8c8c8; touch-action:none; cursor:crosshair; }
+  .status{ background:#f3f3f3; border-top:1px solid #e0e0e0; font-size:13px; color:#333; padding:4px 12px; display:flex; justify-content:space-between; }
+
+  /* ---------- กล่องโต้ตอบ (Windows 7) ---------- */
+  .modal{ position:absolute; inset:0; background:rgba(8,20,45,.35); display:none; align-items:center; justify-content:center; padding:10px; z-index:50; }
+  .modal.show{ display:flex; }
+  .dlg{ width:min(94%,520px); max-height:94%; overflow:auto; background:#f0f0f0; border:1px solid #2b4b7a; border-radius:6px; box-shadow:0 10px 30px rgba(0,0,0,.6); font-size:16px; color:#1F2430; }
+  .dlg .dt{ background:linear-gradient(180deg,#bcd6f3,#8db4e6); padding:4px 10px; font-weight:700; text-shadow:0 0 6px #fff; display:flex; justify-content:space-between; align-items:center; }
+  .dlg .db{ padding:14px 16px; text-align:center; }
+  .dlg h2{ margin:0 0 8px; font-size:20px; }
+  .dlg p{ margin:0 0 10px; font-size:17px; }
+  .dlg input[type=text]{ width:100%; font:inherit; font-size:20px; padding:6px 10px; border:2px solid #7fa6d9; border-radius:4px; text-align:center; }
+  .drow{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+  .wb{ border:1px solid #5a6e8e; border-radius:4px; padding:7px 22px; font-family:inherit; font-size:18px; font-weight:700; cursor:pointer; background:linear-gradient(180deg,#f8fbff,#d6e2f2); color:#1F2430; }
+  .wb.pri{ border-color:#2b6cb0; background:linear-gradient(180deg,#e4f1ff,#9fc7f2); }
+  .wb:hover{ filter:brightness(1.06); }
+  .files{ display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; margin-top:6px; }
+  .file{ background:#fff; border:2px solid #b2c4de; border-radius:6px; padding:6px; cursor:pointer; font-family:inherit; font-size:15px; font-weight:700; }
+  .file:hover{ border-color:#F97316; background:#FFF7ED; }
+  .file img{ width:100%; border:1px solid #cbd5e1; background:#fff; display:block; margin-bottom:3px; }
+
+  /* เสร็จทุกขั้นตอน (อยู่นอกจอจำลอง) */
+  .fin{ position:fixed; inset:0; background:rgba(15,23,42,.6); display:none; align-items:center; justify-content:center; padding:16px; z-index:80; }
+  .fin.show{ display:flex; }
+  .fbox{ background:#fff; border-radius:24px; padding:22px; width:min(94vw,620px); text-align:center; box-shadow:0 20px 50px rgba(0,0,0,.4); }
+  .fbox h2{ margin:0 0 10px; font-size:.75rem; } .fbox p{ margin:0 0 12px; font-size:.55rem; } .party{ font-size:90px; }
+  .big{ border:none; border-radius:999px; padding:10px 26px; font:inherit; font-size:.6rem; font-weight:800; cursor:pointer; color:#fff; background:#10B981; box-shadow:0 5px 0 #047857; text-decoration:none; display:inline-block; }
+  .big.orange{ background:#F97316; box-shadow:0 5px 0 #C2410C; }
+  .note{ text-align:center; font-size:.42rem; color:#64748B; margin-top:12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🖥️ จำลองหน้าจอ Windows 7 + Paint</h1>
+    <p>ฝึกเปิดโปรแกรมกราฟิกเบื้องต้น · ป.1 หน่วยที่ 1</p>
+  </div>
+  <a href="../../index.html#/unit/p1/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="stepper"></div>
+
+  <div id="hint">
+    <button class="tts-btn tts-large" id="hint-listen"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button>
+    <div id="hint-text"></div>
+  </div>
+
+  <div id="screen">
+    <div id="wallpaper">
+      <div class="rays"></div>
+
+      <div id="icons">
+        <button class="dicon" id="ic-computer"><span class="pic">🖥️</span>คอมพิวเตอร์</button>
+        <button class="dicon" id="ic-docs"><span class="pic">📁</span>เอกสาร</button>
+        <button class="dicon" id="ic-trash"><span class="pic">🗑️</span>ถังขยะ</button>
+        <button class="dicon" id="paint-icon"><span class="pic">🎨</span>Paint</button>
+      </div>
+      <div id="tip">แตะ <b>สองครั้ง</b> เพื่อเปิดโปรแกรม</div>
+
+      <!-- หน้าต่าง Paint -->
+      <div id="work">
+        <div id="app">
+          <div class="titlebar">
+            <span>🎨 <span id="file-title">ไม่มีชื่อ</span> - Paint</span>
+            <div class="wbtns">
+              <button class="wbtn" id="min-btn" title="ย่อหน้าต่าง">—</button>
+              <button class="wbtn" title="ขยาย" disabled>☐</button>
+              <button class="wbtn x" id="close-btn" title="ปิดโปรแกรม">✕</button>
+            </div>
+          </div>
+          <div class="client">
+            <div class="menubar">
+              <span class="mi">ไฟล์</span><span class="mi">แก้ไข</span><span class="mi">มุมมอง</span><span class="vs"></span>
+              <button class="mb" id="btn-new">📄 ไฟล์ใหม่</button>
+              <button class="mb" id="btn-open">📂 เปิด</button>
+              <button class="mb" id="btn-save">💾 บันทึก</button>
+              <span class="vs"></span>
+              <button class="mb" id="btn-undo">↩️ ย้อนกลับ</button>
+            </div>
+            <div class="ribbon">
+              <div class="grp"><div class="row" id="tool-bar">
+                <button class="btn on" data-tool="pen"><span class="ic">✏️</span>ดินสอ</button>
+                <button class="btn" data-tool="fill"><span class="ic">🪣</span>เทสี</button>
+                <button class="btn" data-tool="eraser"><span class="ic">🧽</span>ยางลบ</button>
+              </div><div class="gl">เครื่องมือ</div></div>
+
+              <div class="grp"><div class="row">
+                <button class="btn" data-tool="brush"><span class="ic">🖌️</span>แปรง</button>
+              </div><div class="gl">แปรง</div></div>
+
+              <div class="grp"><div class="row">
+                <button class="btn" data-tool="circle"><span class="ic">⭕</span>วงกลม</button>
+                <button class="btn" data-tool="rect"><span class="ic">⬜</span>สี่เหลี่ยม</button>
+                <button class="btn" data-tool="tri"><span class="ic">🔺</span>สามเหลี่ยม</button>
+                <button class="btn" data-tool="star"><span class="ic">⭐</span>ดาว</button>
+              </div><div class="gl">รูปร่าง</div></div>
+
+              <div class="grp"><div class="row" id="size-bar">
+                <button class="btn on" data-size="4"><span class="ic"><i class="dot" style="width:8px;height:8px;margin:10px auto"></i></span>เล็ก</button>
+                <button class="btn" data-size="10"><span class="ic"><i class="dot" style="width:16px;height:16px;margin:6px auto"></i></span>กลาง</button>
+                <button class="btn" data-size="22"><span class="ic"><i class="dot" style="width:26px;height:26px;margin:1px auto"></i></span>ใหญ่</button>
+              </div><div class="gl">ขนาด</div></div>
+
+              <div class="grp"><div class="row"><div class="pal" id="palette"></div></div><div class="gl">สี</div></div>
+            </div>
+            <div class="stage"><canvas id="cv" width="760" height="460"></canvas></div>
+            <div class="status"><span id="st-tool">✏️ ดินสอ</span><span>760 × 460px</span><span>100%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- กล่องโต้ตอบอยู่ภายในจอ -->
+      <div class="modal" id="m-save">
+        <div class="dlg"><div class="dt">บันทึกเป็น</div><div class="db">
+          <p>ตั้งชื่อให้เข้าใจง่าย เช่น "บ้านของฉัน"</p>
+          <input type="text" id="save-name" maxlength="20" value="ภาพของฉัน">
+          <div class="drow"><button class="wb pri" id="save-ok">บันทึก</button><button class="wb" data-close="m-save">ยกเลิก</button></div>
+        </div></div>
+      </div>
+      <div class="modal" id="m-open">
+        <div class="dlg"><div class="dt">เปิด</div><div class="db">
+          <p id="open-msg">แตะเลือกภาพที่เคยบันทึกไว้</p>
+          <div class="files" id="files"></div>
+          <div class="drow"><button class="wb" data-close="m-open">ยกเลิก</button></div>
+        </div></div>
+      </div>
+      <div class="modal" id="m-new">
+        <div class="dlg"><div class="dt">Paint</div><div class="db">
+          <p>ภาพนี้ยังไม่ได้บันทึก ต้องการเริ่มภาพใหม่เลยไหม?</p>
+          <div class="drow"><button class="wb pri" id="new-yes">เริ่มภาพใหม่</button><button class="wb" data-close="m-new">กลับไปวาดต่อ</button></div>
+        </div></div>
+      </div>
+      <div class="modal" id="m-info">
+        <div class="dlg"><div class="dt">ข้อความ</div><div class="db">
+          <p id="info-msg"></p>
+          <div class="drow"><button class="wb pri" data-close="m-info">ตกลง</button></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- เมนูเริ่ม -->
+    <div id="startmenu">
+      <div class="sm-body">
+        <div class="sm-left">
+          <button class="sm-item click" id="sm-paint"><span class="e">🎨</span>Paint</button>
+          <button class="sm-item dim"><span class="e">🧮</span>เครื่องคิดเลข</button>
+          <button class="sm-item dim"><span class="e">📝</span>สมุดบันทึก</button>
+          <button class="sm-item dim"><span class="e">🌐</span>อินเทอร์เน็ต</button>
+          <div class="sm-sep"></div>
+          <button class="sm-item dim"><span class="e">▶️</span>โปรแกรมทั้งหมด</button>
+        </div>
+        <div class="sm-right">
+          <div>👤 ผู้ใช้</div><div>📁 เอกสาร</div><div>🖼️ รูปภาพ</div><div>🎵 เพลง</div><div>🖥️ คอมพิวเตอร์</div>
+        </div>
+      </div>
+      <div class="sm-foot"><button class="shut" id="sm-shut">ปิดเครื่อง ▸</button></div>
+    </div>
+
+    <!-- แถบงาน -->
+    <div id="taskbar">
+      <button id="start-orb" aria-label="เริ่ม"><span class="flag"><i></i><i></i><i></i><i></i></span></button>
+      <span class="tb-btn" title="อินเทอร์เน็ต">🌐</span>
+      <span class="tb-btn" title="โฟลเดอร์">📁</span>
+      <button class="tb-btn run" id="tb-paint" style="display:none"><span class="ico">🎨</span><span id="tb-title">ไม่มีชื่อ - Paint</span></button>
+      <div id="tray"><span class="ic">🔊</span><span class="ic">📶</span><div><div id="clock"></div><div id="date"></div></div></div>
+    </div>
+  </div>
+
+  <p class="note">ภาพที่บันทึกจะเก็บไว้ในเครื่องนี้ (เบราว์เซอร์) ของนักเรียนเท่านั้น · หน้าจอนี้เป็นการจำลองเพื่อการเรียนรู้</p>
+</main>
+
+<div class="fin" id="m-done">
+  <div class="fbox">
+    <div class="party">🎉</div>
+    <h2>เก่งมาก! ใช้โปรแกรมกราฟิกครบทุกขั้นตอนแล้ว</h2>
+    <p>เข้าโปรแกรม → สร้างไฟล์ → บันทึก → เปิดไฟล์ → ออกจากโปรแกรม</p>
+    <div><button class="big" onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+    <a class="big orange" href="knowledge.html">กลับใบความรู้</a></div>
+  </div>
+</div>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+(function(){
+  const STEPS = ["เข้าสู่โปรแกรม", "สร้างไฟล์ใหม่", "บันทึกไฟล์", "เปิดไฟล์", "ออกจากโปรแกรม"];
+  const HINTS = [
+    "ขั้นที่ 1: กดปุ่ม Start (ปุ่มกลมสีฟ้ามุมซ้ายล่าง) แล้วเลือก 🎨 Paint — หรือแตะไอคอน Paint บนหน้าจอ 2 ครั้ง",
+    "ขั้นที่ 2: กดปุ่ม 📄 ไฟล์ใหม่ แล้ววาดภาพที่ชอบ (เลือกเครื่องมือและสีได้เลย)",
+    "ขั้นที่ 3: กดปุ่ม 💾 บันทึก ตั้งชื่อให้เข้าใจง่าย แล้วกด \"บันทึก\"",
+    "ขั้นที่ 4: กดปุ่ม 📂 เปิดไฟล์ แล้วแตะเลือกภาพที่เคยบันทึกไว้",
+    "ขั้นที่ 5: เมื่อใช้งานเสร็จ กดปุ่ม ✕ สีแดงมุมขวาบนของหน้าต่าง เพื่อออกจากโปรแกรม"
+  ];
+  const done = [false,false,false,false,false];
+  const $ = (id) => document.getElementById(id);
+  const stepper = $("stepper"), hintText = $("hint-text"), hintBtn = $("hint-listen");
+  const appEl = $("app"), work = $("work");
+  let minimized = false;
+
+  function current(){ const i = done.indexOf(false); return i < 0 ? 5 : i; }
+  const isOpen = () => appEl.classList.contains("open");
+
+  function pulseTargets(){
+    document.querySelectorAll(".pulse").forEach(e => e.classList.remove("pulse"));
+    const c = current();
+    if(c === 0){
+      if(isOpen()) return;
+      if($("startmenu").classList.contains("show")) $("sm-paint").classList.add("pulse");
+      else { $("start-orb").classList.add("pulse"); $("paint-icon").classList.add("pulse"); }
+    } else if(c < 5){
+      if(isOpen() && !minimized) $(["", "btn-new","btn-save","btn-open"][c] || "close-btn").classList.add("pulse");
+      else if(isOpen() && minimized) $("tb-paint").classList.add("pulse");
+    }
+    if(c === 4 && isOpen() && !minimized) $("close-btn").classList.add("pulse");
+  }
+
+  function render(){
+    stepper.innerHTML = STEPS.map((s,i) => {
+      const cls = done[i] ? "done" : (i === current() ? "current" : "");
+      return `<div class="step-chip ${cls}"><b>${done[i] ? "✓" : i+1}</b>${s}</div>`;
+    }).join("");
+    const c = current();
+    hintText.textContent = c < 5 ? HINTS[c] : "ครบทุกขั้นตอนแล้ว เก่งมาก!";
+    pulseTargets();
+  }
+
+  function finishStep(n){
+    if(done[n]) return;
+    done[n] = true; render();
+    const c = current();
+    if(c === 5){ setTimeout(() => { $("m-done").classList.add("show"); playAudio("audio/paint-done.mp3", null); }, 500); }
+    else playAudio("audio/paint-step" + (c+1) + ".mp3", null);
+  }
+
+  hintBtn.addEventListener("click", () => {
+    const c = Math.min(current(), 4);
+    playAudio("audio/paint-step" + (c+1) + ".mp3", hintBtn);
+  });
+
+  // ---------- นาฬิกา/วันที่ ----------
+  function tick(){
+    const d = new Date();
+    $("clock").textContent = d.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"});
+    $("date").textContent = d.toLocaleDateString("th-TH",{day:"numeric",month:"numeric",year:"numeric"});
+  }
+  tick(); setInterval(tick, 20000);
+
+  // ---------- เมนูเริ่ม ----------
+  const sm = $("startmenu");
+  function closeStart(){ sm.classList.remove("show"); pulseTargets(); }
+  $("start-orb").addEventListener("click", (e) => { e.stopPropagation(); sm.classList.toggle("show"); pulseTargets(); });
+  document.addEventListener("click", (e) => { if(sm.classList.contains("show") && !sm.contains(e.target)) closeStart(); });
+  $("sm-shut").addEventListener("click", () => { closeStart(); info("นี่เป็นเพียงการจำลอง ไม่ได้ปิดเครื่องจริง 😊"); });
+  $("sm-paint").addEventListener("click", () => { closeStart(); openApp(); });
+
+  function info(msg){ $("info-msg").textContent = msg; $("m-info").classList.add("show"); }
+
+  // ---------- ไอคอนบนเดสก์ท็อป: แตะ 1 ครั้ง = เลือก, แตะ 2 ครั้ง = เปิด ----------
+  const tip = $("tip");
+  let tipTimer = null;
+  document.querySelectorAll(".dicon").forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(".dicon").forEach(x => x.classList.toggle("sel", x === b));
+      tip.style.display = "block"; clearTimeout(tipTimer); tipTimer = setTimeout(() => tip.style.display = "none", 2200);
+    });
+    b.addEventListener("dblclick", () => {
+      tip.style.display = "none";
+      if(b.id === "paint-icon") openApp();
+      else info("ไอคอนนี้ใช้ดูเฉยๆ ในการจำลอง ลองเปิด 🎨 Paint ดูนะ");
+    });
+  });
+  $("wallpaper").addEventListener("click", (e) => {
+    if(!e.target.closest(".dicon")) document.querySelectorAll(".dicon.sel").forEach(x => x.classList.remove("sel"));
+  });
+
+  // ---------- เปิด/ย่อ/ปิดโปรแกรม ----------
+  function openApp(){
+    work.classList.add("on"); appEl.classList.add("open"); minimized = false;
+    $("tb-paint").style.display = "flex"; $("tb-paint").classList.remove("min");
+    finishStep(0); render();
+  }
+  function setMin(m){
+    minimized = m;
+    work.classList.toggle("on", !m);
+    $("tb-paint").classList.toggle("min", m);
+    render();
+  }
+  $("min-btn").addEventListener("click", () => setMin(true));
+  $("tb-paint").addEventListener("click", () => setMin(!minimized));
+  $("paint-icon").addEventListener("click", () => { if(isOpen()) setMin(false); });
+
+  // ---------- Canvas ----------
+  const cv = $("cv"), ctx = cv.getContext("2d", { willReadFrequently:true });
+  let tool = "pen", color = "#1F2430", size = 4, drawing = false, sx = 0, sy = 0, snap = null;
+  let dirty = false, fileName = "ไม่มีชื่อ";
+  const undoStack = [];
+  const TOOLNAME = { pen:"✏️ ดินสอ", brush:"🖌️ แปรง", eraser:"🧽 ยางลบ", fill:"🪣 เทสี", circle:"⭕ วงกลม", rect:"⬜ สี่เหลี่ยม", tri:"🔺 สามเหลี่ยม", star:"⭐ ดาว" };
+
+  function blank(){ ctx.fillStyle = "#fff"; ctx.fillRect(0,0,cv.width,cv.height); }
+  blank();
+  function pushUndo(){ undoStack.push(ctx.getImageData(0,0,cv.width,cv.height)); if(undoStack.length > 20) undoStack.shift(); }
+  function setTitle(n){ fileName = n; $("file-title").textContent = n; $("tb-title").textContent = n + " - Paint"; }
+  function pos(e){ const r = cv.getBoundingClientRect(); return { x:(e.clientX - r.left) * cv.width / r.width, y:(e.clientY - r.top) * cv.height / r.height }; }
+
+  function shapePath(kind, x0, y0, x1, y1){
+    ctx.beginPath();
+    const cx = (x0+x1)/2, cy = (y0+y1)/2, w = Math.abs(x1-x0), h = Math.abs(y1-y0);
+    if(kind === "circle"){ ctx.ellipse(cx, cy, w/2, h/2, 0, 0, Math.PI*2); }
+    else if(kind === "rect"){ ctx.rect(Math.min(x0,x1), Math.min(y0,y1), w, h); }
+    else if(kind === "tri"){ ctx.moveTo(cx, Math.min(y0,y1)); ctx.lineTo(Math.max(x0,x1), Math.max(y0,y1)); ctx.lineTo(Math.min(x0,x1), Math.max(y0,y1)); ctx.closePath(); }
+    else if(kind === "star"){
+      const R = Math.max(w,h)/2, r = R*0.45;
+      for(let i = 0; i < 10; i++){
+        const a = -Math.PI/2 + i*Math.PI/5, rad = i%2 ? r : R;
+        const px = cx + Math.cos(a)*rad, py = cy + Math.sin(a)*rad;
+        i ? ctx.lineTo(px,py) : ctx.moveTo(px,py);
+      }
+      ctx.closePath();
+    }
+  }
+  function floodFill(x, y, hex){
+    x = Math.floor(x); y = Math.floor(y);
+    const img = ctx.getImageData(0,0,cv.width,cv.height), d = img.data, W = cv.width, H = cv.height;
+    const i0 = (y*W + x)*4, tr = d[i0], tg = d[i0+1], tb = d[i0+2];
+    const n = parseInt(hex.slice(1),16), fr = (n>>16)&255, fg = (n>>8)&255, fb = n&255;
+    if(Math.abs(tr-fr) + Math.abs(tg-fg) + Math.abs(tb-fb) < 6) return;
+    const match = (i) => Math.abs(d[i]-tr) + Math.abs(d[i+1]-tg) + Math.abs(d[i+2]-tb) <= 60;
+    const stack = [[x,y]], seen = new Uint8Array(W*H);
+    while(stack.length){
+      const [px,py] = stack.pop();
+      if(px < 0 || py < 0 || px >= W || py >= H) continue;
+      const k = py*W + px; if(seen[k]) continue;
+      const i = k*4; if(!match(i)) continue;
+      seen[k] = 1; d[i] = fr; d[i+1] = fg; d[i+2] = fb; d[i+3] = 255;
+      stack.push([px+1,py],[px-1,py],[px,py+1],[px,py-1]);
+    }
+    ctx.putImageData(img,0,0);
+  }
+
+  cv.addEventListener("pointerdown", (e) => {
+    if(!isOpen()) return;
+    e.preventDefault();
+    try{ cv.setPointerCapture(e.pointerId); }catch(err){}
+    const p = pos(e);
+    if(tool === "fill"){ pushUndo(); floodFill(p.x, p.y, color); dirty = true; return; }
+    pushUndo();
+    drawing = true; sx = p.x; sy = p.y;
+    if(["pen","brush","eraser"].includes(tool)){
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.strokeStyle = tool === "eraser" ? "#fff" : color;
+      ctx.lineWidth = tool === "pen" ? size : tool === "brush" ? size*2 : size*3;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x+0.01, p.y+0.01); ctx.stroke();
+    } else { snap = ctx.getImageData(0,0,cv.width,cv.height); }
+    dirty = true;
+  });
+  cv.addEventListener("pointermove", (e) => {
+    if(!drawing) return;
+    const p = pos(e);
+    if(["pen","brush","eraser"].includes(tool)){ ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    else { ctx.putImageData(snap,0,0); shapePath(tool, sx, sy, p.x, p.y); ctx.fillStyle = color; ctx.fill(); }
+  });
+  const stop = () => { drawing = false; snap = null; };
+  cv.addEventListener("pointerup", stop); cv.addEventListener("pointercancel", stop);
+
+  document.querySelectorAll("[data-tool]").forEach(b => b.addEventListener("click", () => {
+    tool = b.dataset.tool; $("st-tool").textContent = TOOLNAME[tool];
+    document.querySelectorAll("[data-tool]").forEach(x => x.classList.toggle("on", x === b));
+  }));
+  document.querySelectorAll("[data-size]").forEach(b => b.addEventListener("click", () => {
+    size = +b.dataset.size;
+    document.querySelectorAll("[data-size]").forEach(x => x.classList.toggle("on", x === b));
+  }));
+  ["#1F2430","#EF4444","#F97316","#FACC15","#22C55E","#14B8A6","#3B82F6","#8B5CF6","#EC4899","#92400E","#9CA3AF","#FFFFFF"].forEach((c,i) => {
+    const s = document.createElement("button");
+    s.className = "sw" + (i === 0 ? " on" : ""); s.style.background = c; s.setAttribute("aria-label", "สี " + c);
+    s.addEventListener("click", () => { color = c; document.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", x === s)); });
+    $("palette").appendChild(s);
+  });
+  $("btn-undo").addEventListener("click", () => { const img = undoStack.pop(); if(img) ctx.putImageData(img,0,0); });
+
+  // ---------- ที่เก็บไฟล์ (เก็บในเครื่อง) ----------
+  const KEY = "p1PaintFiles";
+  let memFiles = [];
+  function loadFiles(){ try{ return JSON.parse(localStorage.getItem(KEY) || "[]"); }catch(e){ return memFiles; } }
+  function saveFiles(list){
+    memFiles = list;
+    while(list.length){ try{ localStorage.setItem(KEY, JSON.stringify(list)); return; }catch(e){ list.shift(); } }
+  }
+
+  // ขั้นที่ 2: ไฟล์ใหม่
+  function newFile(){
+    blank(); undoStack.length = 0; dirty = false; setTitle("ไม่มีชื่อ");
+    $("m-new").classList.remove("show"); finishStep(1);
+  }
+  $("btn-new").addEventListener("click", () => { if(dirty) $("m-new").classList.add("show"); else newFile(); });
+  $("new-yes").addEventListener("click", newFile);
+
+  // ขั้นที่ 3: บันทึก
+  $("btn-save").addEventListener("click", () => {
+    $("save-name").value = fileName === "ไม่มีชื่อ" ? "ภาพของฉัน" : fileName;
+    $("m-save").classList.add("show");
+    setTimeout(() => $("save-name").select(), 50);
+  });
+  $("save-ok").addEventListener("click", () => {
+    const name = ($("save-name").value || "").trim() || "ภาพของฉัน";
+    const list = loadFiles().filter(f => f.name !== name);
+    list.push({ name, data: cv.toDataURL("image/png"), time: Date.now() });
+    saveFiles(list); setTitle(name); dirty = false;
+    $("m-save").classList.remove("show"); finishStep(2);
+  });
+
+  // ขั้นที่ 4: เปิดไฟล์
+  $("btn-open").addEventListener("click", () => {
+    const list = loadFiles(), box = $("files"); box.innerHTML = "";
+    $("open-msg").textContent = list.length ? "แตะเลือกภาพที่เคยบันทึกไว้" : "ยังไม่มีไฟล์ — ลองกด 💾 บันทึกภาพก่อนนะ";
+    list.slice().reverse().forEach(f => {
+      const b = document.createElement("button"); b.className = "file";
+      const im = document.createElement("img"); im.src = f.data; im.alt = f.name;
+      b.appendChild(im); b.appendChild(document.createTextNode(f.name));
+      b.addEventListener("click", () => {
+        const img = new Image();
+        img.onload = () => { pushUndo(); blank(); ctx.drawImage(img,0,0,cv.width,cv.height); setTitle(f.name); dirty = false; $("m-open").classList.remove("show"); finishStep(3); };
+        img.src = f.data;
+      });
+      box.appendChild(b);
+    });
+    $("m-open").classList.add("show");
+  });
+
+  // ขั้นที่ 5: ปิดโปรแกรม
+  $("close-btn").addEventListener("click", () => {
+    appEl.classList.remove("open"); work.classList.remove("on"); minimized = false;
+    $("tb-paint").style.display = "none";
+    blank(); undoStack.length = 0; dirty = false; setTitle("ไม่มีชื่อ");
+    ["m-save","m-open","m-new"].forEach(id => $(id).classList.remove("show"));
+    finishStep(4); render();
+  });
+
+  document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => $(b.dataset.close).classList.remove("show")));
+  render();
+})();
+</script>
+</body>
+</html>

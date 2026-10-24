@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โค้ดจิ๊กซอว์ — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; --bd:#D9DEEA; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; background:#EEF1F8; color:#1F2430; }
+  body{ display:flex; flex-direction:column; }
+  header{ background:linear-gradient(135deg,#4C97FF,#9966FF); color:#fff; padding:8px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:1.15rem; flex:1; min-width:200px; }
+  header a, header button, header select{ color:#fff; background:rgba(255,255,255,.22); border:none; padding:6px 14px; border-radius:999px; font:inherit; font-size:.85rem; text-decoration:none; cursor:pointer; }
+  header select option{ color:#1F2430; }
+
+  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:300px; }
+  #sharemenu.open{ display:block; }
+  #sharemenu button{ display:block; width:100%; text-align:left; background:none !important; color:#1F2430 !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; }
+  #sharemenu button:hover{ background:#EEF2FF !important; }
+  #sharemenu button[disabled]{ opacity:.4; cursor:not-allowed; }
+  #viewbar{ display:none; background:#FEF9C3; border-bottom:1px solid #FDE047; padding:6px 14px; font-size:.85rem; font-weight:700; }
+  #viewbar button{ font:inherit; font-size:.8rem; border:none; background:#3B82F6; color:#fff; border-radius:999px; padding:3px 12px; cursor:pointer; margin-left:8px; }
+  #app{ flex:1; min-height:0; display:grid; grid-template-columns:230px minmax(280px,1fr) minmax(340px,36%); gap:8px; padding:8px; }
+  .panel{ background:#fff; border:1px solid var(--bd); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; min-height:0; }
+
+  /* ───── คลังบล็อก ───── */
+  #cats{ display:flex; flex-wrap:wrap; gap:4px; padding:6px; border-bottom:1px solid var(--bd); background:#F8FAFF; }
+  #cats button{ border:none; border-radius:999px; padding:2px 9px; font:inherit; font-size:.72rem; font-weight:700; color:#fff; cursor:pointer; }
+  #palette{ flex:1; overflow:auto; padding:8px 10px 40px; }
+  #palette h4{ margin:12px 0 6px; font-size:.8rem; color:#64748B; }
+  .pitem{ margin:0 0 6px; }
+  #palette .inp > input, #palette .inp > select{ pointer-events:none; }
+  #newvar{ border:2px dashed #FB923C; background:#FFF7ED; color:#C2410C; font:inherit; font-weight:700; font-size:.8rem; border-radius:10px; padding:4px 10px; cursor:pointer; margin-bottom:6px; }
+
+  /* ───── พื้นที่เขียนโปรแกรม ───── */
+  #ws{ flex:1; overflow:auto; position:relative; background:
+        linear-gradient(#0000000a 1px,transparent 1px) 0 0/24px 24px, linear-gradient(90deg,#0000000a 1px,transparent 1px) 0 0/24px 24px, #FBFCFF; }
+  #wsin{ position:relative; min-width:1400px; min-height:1000px; }
+  .script{ position:absolute; display:block; min-width:40px; }
+  #wshint{ position:absolute; left:40px; top:60px; color:#94A3B8; font-weight:700; text-align:center; pointer-events:none; line-height:1.6; }
+  .wsbar{ display:flex; gap:6px; align-items:center; padding:6px 8px; border-bottom:1px solid var(--bd); background:#F8FAFF; font-size:.8rem; flex-wrap:wrap; }
+  .wsbar button{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:3px 10px; font:inherit; font-size:.78rem; cursor:pointer; }
+
+  /* ───── บล็อก ───── */
+  .blk{ --c:#4C97FF; background:var(--c); color:#fff; font-weight:700; font-size:.88rem; position:relative; user-select:none; touch-action:none; cursor:grab; }
+  .blk.run{ background-image:linear-gradient(rgba(253,224,71,.5),rgba(253,224,71,.5)); filter:brightness(1.2) saturate(1.2); z-index:2; }
+  .brow{ display:flex; align-items:center; flex-wrap:wrap; gap:5px; padding:5px 8px; min-height:34px; }
+  /* รูปทรงจิ๊กซอว์: ช่องบากด้านบน + ติ่งนูนด้านล่าง (ติ่งอยู่ในส่วนสูงเพิ่ม 6px แล้วบล็อกถัดไปซ้อนขึ้นมา 6px) */
+  .k-stack, .k-c, .k-hat{ padding-bottom:6px; border-radius:4px;
+    clip-path:polygon(0 0,14px 0,18px 6px,32px 6px,36px 0,100% 0,100% calc(100% - 6px),36px calc(100% - 6px),32px 100%,18px 100%,14px calc(100% - 6px),0 calc(100% - 6px)); }
+  .k-hat{ border-radius:22px 22px 4px 4px; padding-top:8px;
+    clip-path:polygon(0 0,100% 0,100% calc(100% - 6px),36px calc(100% - 6px),32px 100%,18px 100%,14px calc(100% - 6px),0 calc(100% - 6px)); }
+  .k-stack.cap, .k-c.cap{ padding-bottom:0; clip-path:polygon(0 0,14px 0,18px 6px,32px 6px,36px 0,100% 0,100% 100%,0 100%); }
+  .script > .blk + .blk, .cslot > .blk + .blk, .dragbox > .blk + .blk{ margin-top:-6px; }
+  .script, .pitem, .dragbox{ filter:drop-shadow(0 1px 0 rgba(0,0,0,.28)) drop-shadow(0 0 .5px rgba(0,0,0,.5)); }
+  .dragbox{ filter:drop-shadow(0 8px 10px rgba(0,0,0,.3)) drop-shadow(0 0 .5px rgba(0,0,0,.5)); }
+  /* ติ่งต่อ: แสดงเป็นแถบเข้มเล็กน้อยเพื่อให้เห็นรอยต่อแบบจิ๊กซอว์ */
+  .k-stack:not(.cap)::after, .k-c:not(.cap)::after, .k-hat::after{ content:""; position:absolute; left:14px; bottom:0; width:22px; height:6px; background:rgba(0,0,0,.2); clip-path:polygon(0 0,100% 0,calc(100% - 4px) 100%,4px 100%); pointer-events:none; }
+  .k-c > .cslot::before{ content:""; position:absolute; left:14px; top:0; width:22px; height:6px; background:linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,.2)),var(--c); clip-path:polygon(0 0,100% 0,calc(100% - 4px) 100%,4px 100%); z-index:3; pointer-events:none; }
+  .k-c > .cslot{ position:relative; margin-left:16px; min-height:26px; background:rgba(255,255,255,.18); border-radius:0 0 0 6px; }
+  .k-c > .cslot:empty::after{ content:""; display:block; height:26px; }
+  .cfoot{ height:14px; }
+  .elsebar{ min-height:24px; padding-top:2px; padding-bottom:2px; }
+  .k-rep, .k-bool{ display:inline-flex; align-items:center; gap:4px; padding:1px 8px; font-size:.82rem; vertical-align:middle; box-shadow:inset 0 -2px 0 rgba(0,0,0,.18); }
+  .k-rep > .brow, .k-bool > .brow{ display:contents; }
+  .k-rep{ border-radius:999px; }
+  .k-bool{ padding:1px 14px; clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,9px 100%,0 50%); border-radius:0; }
+  .inp{ display:inline-flex; align-items:center; }
+  .inp > input{ font:inherit; font-size:.85rem; font-weight:700; text-align:center; border:none; border-radius:999px; padding:1px 8px; min-width:30px; color:#1F2430; background:#fff; outline:none; }
+  .inp > input:focus{ box-shadow:0 0 0 3px #FDE047; }
+  .inp > select{ font:inherit; font-size:.8rem; font-weight:700; border:none; border-radius:8px; padding:1px 4px; background:#fff; color:#1F2430; max-width:130px; }
+  .inp[data-t="bool"]{ min-width:34px; height:22px; background:rgba(0,0,0,.28); clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 50%,calc(100% - 8px) 100%,8px 100%,0 50%); }
+  .inp.has-rep > input{ display:none; }
+  .inp.has-rep[data-t="bool"]{ background:none; clip-path:none; min-width:0; height:auto; }
+  .inp.hot{ outline:3px solid #FDE047; border-radius:8px; }
+  #ins{ position:fixed; height:6px; width:90px; background:#FDE047; border-radius:3px; box-shadow:0 0 0 2px #CA8A04; display:none; z-index:2000; pointer-events:none; }
+  .dragbox{ position:fixed; z-index:1500; pointer-events:none; opacity:.95; }
+  #trashhint{ display:none; position:fixed; left:0; top:0; width:230px; bottom:0; z-index:1400; background:rgba(239,68,68,.12); border:3px dashed #EF4444; pointer-events:none; }
+  body.dragging #trashhint{ display:block; }
+
+  .cat-event{ --c:#F5B800; } .cat-motion{ --c:#4C97FF; } .cat-looks{ --c:#9966FF; } .cat-sound{ --c:#CF63CF; } .cat-pen{ --c:#0FBD8C; }
+  .cat-control{ --c:#FF9F1C; } .cat-sensing{ --c:#3AAAD1; } .cat-ops{ --c:#59C059; } .cat-vars{ --c:#FF6B3D; }
+
+  /* ───── เวที ───── */
+  #right{ display:flex; flex-direction:column; gap:8px; min-height:0; overflow:auto; }
+  #stagebox{ position:relative; container-type:inline-size; width:100%; aspect-ratio:4/3; background:#fff; border-radius:12px; overflow:hidden; border:2px solid var(--bd); flex:none; }
+  #stagebox canvas{ position:absolute; inset:0; width:100%; height:100%; }
+  #sprite{ position:absolute; font-size:9cqw; line-height:1; transform:translate(-50%,-50%); transition:left .12s linear, top .12s linear; pointer-events:none; }
+  #sprite svg, #sprite img{ height:15cqw; width:auto; display:block; }
+  #bubble{ position:absolute; background:#fff; border:2px solid #94A3B8; border-radius:14px; padding:3px 10px; font-weight:700; font-size:3.6cqw; max-width:60%; display:none; transform:translate(-50%,calc(-100% - 9cqw)); z-index:3; transition:left .12s linear, top .12s linear; }
+  #mon{ position:absolute; left:6px; top:6px; display:flex; flex-direction:column; gap:3px; z-index:3; }
+  #mon span{ background:#FFEDD5; border:1px solid #FDBA74; border-radius:6px; padding:0 8px; font-size:3.3cqw; font-weight:700; color:#9A3412; }
+  #askbar{ position:absolute; left:6px; right:6px; bottom:6px; background:#fff; border:2px solid #38BDF8; border-radius:12px; padding:6px; display:none; z-index:4; }
+  #askbar div{ font-weight:700; font-size:.85rem; margin-bottom:4px; }
+  #askbar input{ width:calc(100% - 70px); font:inherit; border:2px solid #CBD5E1; border-radius:8px; padding:3px 8px; }
+  #askbar button{ font:inherit; border:none; background:#3AAAD1; color:#fff; border-radius:8px; padding:4px 10px; cursor:pointer; font-weight:700; }
+  #ctl{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  #flag, #stop{ border:none; font:inherit; font-weight:800; border-radius:12px; padding:6px 18px; cursor:pointer; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  #flag{ background:#16A34A; } #stop{ background:#DC2626; }
+  #flag:active,#stop:active{ transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .opt{ font-size:.8rem; color:#475569; display:flex; align-items:center; gap:4px; }
+  .opt select{ font:inherit; font-size:.8rem; }
+  #help{ background:#fff; border:1px solid var(--bd); border-radius:12px; padding:8px 12px; font-size:.82rem; line-height:1.6; color:#475569; }
+  #help b{ color:#1F2430; }
+  #toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#1F2937; color:#fff; padding:8px 18px; border-radius:999px; font-size:.85rem; display:none; z-index:3000; }
+
+  @media (max-width:980px){
+    html,body{ height:auto; }
+    #app{ grid-template-columns:1fr; }
+    #right{ order:-1; }
+    #ws{ min-height:420px; } #palette{ max-height:300px; }
+    .panel.pal{ order:3; } .panel.wsp{ order:2; }
+    #trashhint{ display:none !important; }
+  }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <h1>🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)</h1>
+  <select id="sample" title="ตัวอย่างโปรแกรม">
+    <option value="">📂 โหลดตัวอย่างโปรแกรม…</option>
+    <option value="square">ภารกิจ 1: วาดสี่เหลี่ยมจัตุรัส</option>
+    <option value="triangle">ภารกิจ 2: วาดสามเหลี่ยมด้านเท่า</option>
+    <option value="polygon">ภารกิจ 3: รูปหลายเหลี่ยมด้วยตัวแปร</option>
+    <option value="hopper">ภารกิจ 4: ตัวละครขยับท่าไม่รู้จบ</option>
+    <option value="temp">ภารกิจ 5: แปลงอุณหภูมิ F → C</option>
+    <option value="score">ภารกิจ 6: ตรวจคะแนนมากกว่า 80</option>
+    <option value="evenodd">ภารกิจ 7: เลขคู่หรือเลขคี่</option>
+    <option value="" disabled>— ตัวอย่างจากใบความรู้ —</option>
+    <option value="ex-seq1">เรียงลำดับ 1: แปรงฟัน</option>
+    <option value="ex-seq2">เรียงลำดับ 2: พื้นที่สี่เหลี่ยมผืนผ้า</option>
+    <option value="ex-sel1">เงื่อนไข 1: ตรวจผลสอบ</option>
+    <option value="ex-sel2">เงื่อนไข 2: เลขคู่หรือเลขคี่</option>
+    <option value="ex-loop1">ทำซ้ำ 1: วาดสี่เหลี่ยมจัตุรัส</option>
+    <option value="ex-loop2">ทำซ้ำ 2: ผลรวม 1 ถึง 5</option>
+  </select>
+  <div style="position:relative">
+    <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
+    <div id="sharemenu">
+      <button id="sh-ws">📥 ส่งโปรแกรมไปใบงาน (ใส่ในช่องข้อ 8)</button>
+      <button id="sh-link">🔗 คัดลอกลิงก์โปรแกรม (ส่งให้ครูเปิดดู)</button>
+      <button id="sh-text">📝 คัดลอกเป็นข้อความคำสั่ง</button>
+      <button id="sh-png">🖼️ บันทึกภาพผลบนเวที (.png)</button>
+    </div>
+  </div>
+  <a href="../../index.html#/unit/m1/cs/1/game">← กลับหน้าหน่วย</a>
+</header>
+<div id="viewbar">👀 กำลังดูโปรแกรมที่แชร์มา — <button id="viewedit">✏️ คัดลอกไปแก้ไขต่อ</button></div>
+
+<div id="app">
+  <div class="panel pal">
+    <div id="cats"></div>
+    <div id="palette"></div>
+  </div>
+
+  <div class="panel wsp">
+    <div class="wsbar">
+      <span>🧩 พื้นที่เขียนโปรแกรม</span>
+      <button id="tidy">จัดเรียง</button>
+      <button id="clearws">ลบทั้งหมด</button>
+      <span style="color:#94A3B8">คลิกที่ชุดบล็อก = รันชุดนั้น · ลากไปวางที่คลังบล็อก = ลบ</span>
+    </div>
+    <div id="ws"><div id="wsin"><div id="wshint">ลากบล็อกจากด้านซ้ายมาวางที่นี่<br>เริ่มด้วย 🟨 "เมื่อกดธงเขียว" แล้วต่อบล็อกข้างล่าง</div></div></div>
+  </div>
+
+  <div id="right">
+    <div id="ctl">
+      <button id="flag">🟩 ธงเขียว (เริ่ม)</button>
+      <button id="stop">⏹ หยุด</button>
+      <label class="opt">ความเร็ว
+        <select id="speed"><option value="slow">ช้า (ดูทีละบล็อก)</option><option value="normal" selected>ปกติ</option><option value="fast">เร็ว</option></select>
+      </label>
+    </div>
+    <div id="stagebox">
+      <canvas id="pen" width="480" height="360"></canvas>
+      <div id="sprite"></div>
+      <div id="bubble"></div>
+      <div id="mon"></div>
+      <div id="askbar"><div id="asktxt"></div><input id="askin" autocomplete="off"> <button id="askok">ตกลง</button></div>
+    </div>
+    <div id="ctl2" class="opt" style="gap:12px;flex-wrap:wrap">
+      <label class="opt">ตัวละคร
+        <select id="spr"><option value="0">🧒 นักเรียนชาย</option><option value="1">👧 นักเรียนหญิง</option><option value="2">🐱 แมว</option><option value="3">🐶 หมา</option><option value="4">🐸 กบ</option><option value="5">🚀 จรวด</option></select>
+      </label>
+      <label class="opt"><input type="checkbox" id="rot"> หมุนตัวละครตามทิศ</label>
+      <label class="opt"><input type="checkbox" id="autoclr" checked> ล้างลายเส้นก่อนรัน</label>
+    </div>
+    <div id="help">
+      <b>วิธีใช้:</b> ① ลากบล็อกจากคลังมาวางในพื้นที่ตรงกลาง ② วางบล็อกให้ชิดใต้บล็อกอื่นจะต่อกันเอง ③ วางบล็อกวงรี/หกเหลี่ยมลงในช่องของบล็อกอื่นได้ ④ กด 🟩 ธงเขียว เพื่อดูผล
+      <br>⚡ ดูภารกิจตัวอย่างได้จากเมนู "โหลดตัวอย่างโปรแกรม" · ตัวอย่างตรงกับใบงาน 2.2–2.5
+    </div>
+  </div>
+</div>
+
+<div id="ins"></div>
+<div id="trashhint"></div>
+<div id="toast"></div>
+
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+"use strict";
+/* ============================================================
+ * โค้ดจิ๊กซอว์ — เขียนใหม่ทั้งหมดเพื่อการเรียนวิทยาการคำนวณ ม.1 (ไม่ใช่ Scratch ของ MIT)
+ * ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; };
+const COLORS = { "แดง":"#EF4444", "ส้ม":"#F97316", "เหลือง":"#EAB308", "เขียว":"#22C55E", "ฟ้า":"#0EA5E9", "ม่วง":"#8B5CF6", "ดำ":"#1F2937" };
+
+/* ---------- นิยามบล็อก ----------
+ * parts: ข้อความ (string) หรือช่องรับค่า {i:"num|text|any|bool|var|opt", d:ค่าเริ่มต้น, o:[ตัวเลือก]}
+ * kind: hat | stack | c | rep | bool ;  cap: true = ต่อบล็อกถัดไปไม่ได้ ; els: true = มีช่อง "ไม่เช่นนั้น"
+ */
+const N = (d) => ({ i:"num", d }), T = (d) => ({ i:"text", d }), A = (d = "") => ({ i:"any", d }), BL = { i:"bool" };
+const SPEC = {
+  flag:      { cat:"event",   kind:"hat",   parts:["เมื่อกด 🟩 ธงเขียว"] },
+  keyspace:  { cat:"event",   kind:"hat",   parts:["เมื่อกดปุ่ม ␣ เว้นวรรค"] },
+  move:      { cat:"motion",  kind:"stack", parts:["เดิน", N(10), "ก้าว"] },
+  turnR:     { cat:"motion",  kind:"stack", parts:["หมุนขวา ↻", N(15), "องศา"] },
+  turnL:     { cat:"motion",  kind:"stack", parts:["หมุนซ้าย ↺", N(15), "องศา"] },
+  goto:      { cat:"motion",  kind:"stack", parts:["ไปที่ x:", N(0), "y:", N(0)] },
+  point:     { cat:"motion",  kind:"stack", parts:["หันไปทาง", N(90), "องศา"] },
+  changex:   { cat:"motion",  kind:"stack", parts:["เปลี่ยน x ทีละ", N(10)] },
+  changey:   { cat:"motion",  kind:"stack", parts:["เปลี่ยน y ทีละ", N(10)] },
+  say:       { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี")] },
+  sayfor:    { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี"), "เป็นเวลา", N(2), "วินาที"] },
+  costume:   { cat:"looks",   kind:"stack", parts:["สลับชุดตัวละคร"] },
+  beep:      { cat:"sound",   kind:"stack", parts:["เล่นเสียง ปิ๊ง 🔔"] },
+  pendown:   { cat:"pen",     kind:"stack", parts:["ปากกา ลง ✏️"] },
+  penup:     { cat:"pen",     kind:"stack", parts:["ปากกา ขึ้น"] },
+  penclear:  { cat:"pen",     kind:"stack", parts:["ล้างลายเส้น"] },
+  pencolor:  { cat:"pen",     kind:"stack", parts:["ตั้งสีปากกาเป็น", { i:"opt", o:Object.keys(COLORS), d:"แดง" }] },
+  pensize:   { cat:"pen",     kind:"stack", parts:["ตั้งขนาดปากกา", N(3)] },
+  wait:      { cat:"control", kind:"stack", parts:["รอ", N(1), "วินาที"] },
+  repeat:    { cat:"control", kind:"c",     parts:["ทำซ้ำ", N(10), "รอบ"] },
+  forever:   { cat:"control", kind:"c",     parts:["ทำซ้ำไม่รู้จบ ♾️"], cap:true },
+  if:        { cat:"control", kind:"c",     parts:["ถ้า", BL, "แล้ว"] },
+  ifelse:    { cat:"control", kind:"c",     parts:["ถ้า", BL, "แล้ว"], els:true },
+  while:     { cat:"control", kind:"c",     parts:["ทำซ้ำในขณะที่", BL] },
+  waituntil: { cat:"control", kind:"stack", parts:["รอจนกว่า", BL] },
+  stopall:   { cat:"control", kind:"stack", parts:["หยุดทั้งหมด ⏹"], cap:true },
+  ask:       { cat:"sensing", kind:"stack", parts:["ถาม", T("คุณชื่ออะไร"), "และรอคำตอบ"] },
+  answer:    { cat:"sensing", kind:"rep",   parts:["คำตอบ"] },
+  add:       { cat:"ops",     kind:"rep",   parts:[A(), "+", A()] },
+  sub:       { cat:"ops",     kind:"rep",   parts:[A(), "−", A()] },
+  mul:       { cat:"ops",     kind:"rep",   parts:[A(), "×", A()] },
+  div:       { cat:"ops",     kind:"rep",   parts:[A(), "÷", A()] },
+  mod:       { cat:"ops",     kind:"rep",   parts:[A(), "หารเอาเศษ", A()] },
+  rand:      { cat:"ops",     kind:"rep",   parts:["สุ่มเลข", N(1), "ถึง", N(10)] },
+  join:      { cat:"ops",     kind:"rep",   parts:["ต่อข้อความ", T("สวัสดี"), T("โลก")] },
+  gt:        { cat:"ops",     kind:"bool",  parts:[A(), ">", A(50)] },
+  lt:        { cat:"ops",     kind:"bool",  parts:[A(), "<", A(50)] },
+  eq:        { cat:"ops",     kind:"bool",  parts:[A(), "=", A(50)] },
+  and:       { cat:"ops",     kind:"bool",  parts:[BL, "และ", BL] },
+  or:        { cat:"ops",     kind:"bool",  parts:[BL, "หรือ", BL] },
+  not:       { cat:"ops",     kind:"bool",  parts:["ไม่", BL] },
+  set:       { cat:"vars",    kind:"stack", parts:["กำหนด", { i:"var" }, "เป็น", A(0)] },
+  change:    { cat:"vars",    kind:"stack", parts:["เปลี่ยน", { i:"var" }, "ทีละ", N(1)] },
+  var:       { cat:"vars",    kind:"rep",   parts:[] }
+};
+const CATS = [
+  ["event","เหตุการณ์","#F5B800",["flag","keyspace"]],
+  ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","goto","point","changex","changey"]],
+  ["looks","รูปร่าง","#9966FF",["say","sayfor","costume"]],
+  ["sound","เสียง","#CF63CF",["beep"]],
+  ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
+  ["control","ควบคุม","#FF9F1C",["wait","repeat","while","forever","if","ifelse","waituntil","stopall"]],
+  ["sensing","รับค่า","#3AAAD1",["ask","answer"]],
+  ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","mod","rand","join","gt","lt","eq","and","or","not"]],
+  ["vars","ตัวแปร","#FF6B3D",[]]
+];
+
+let VARS = [];                       // รายชื่อตัวแปร
+const wsin = $("#wsin"), ws = $("#ws");
+
+/* ---------- สร้างบล็อกใน DOM ---------- */
+function makeSlot(def, val){
+  const s = el("span", "inp"); s.dataset.t = def.i;
+  if(def.i === "bool") return s;
+  if(def.i === "var" || def.i === "opt"){
+    const sel = el("select");
+    if(def.i === "var") fillVarSelect(sel, val);
+    else { def.o.forEach(o => sel.append(new Option(o, o))); sel.value = val != null ? val : def.d; }
+    if(def.i === "opt") sel.addEventListener("change", save);
+    s.append(sel); return s;
+  }
+  const inp = el("input"); inp.type = "text"; inp.value = val != null ? val : (def.d ?? "");
+  if(def.i === "num") inp.inputMode = "decimal";
+  const fit = () => { inp.size = Math.max(2, Math.min(24, String(inp.value).length + 1)); };
+  inp.addEventListener("input", () => { fit(); save(); }); fit();
+  s.append(inp); return s;
+}
+function fillVarSelect(sel, keep){
+  const cur = keep != null ? keep : sel.value;
+  sel.innerHTML = "";
+  if(!VARS.length) sel.append(new Option("(สร้างตัวแปรก่อน)", ""));
+  VARS.forEach(v => sel.append(new Option(v, v)));
+  if(cur && VARS.includes(cur)) sel.value = cur;
+}
+function makeBlock(id, vals, varName){
+  const sp = SPEC[id], b = el("div", "blk k-" + sp.kind + " cat-" + sp.cat + (sp.cap ? " cap" : ""));
+  b.dataset.id = id;
+  if(id === "var"){ b.dataset.var = varName; b.append(el("span", "lbl", varName)); return b; }
+  const head = el("div", "brow"); let si = 0;
+  sp.parts.forEach(p => {
+    if(typeof p === "string") head.append(el("span", "lbl", p));
+    else { head.append(makeSlot(p, vals ? vals[si] : null)); si++; }
+  });
+  b.append(head);
+  if(sp.kind === "c"){
+    b.append(el("div", "cslot"));
+    if(sp.els){ b.append(el("div", "brow elsebar", "ไม่เช่นนั้น")); b.append(el("div", "cslot")); }
+    b.append(el("div", "cfoot"));
+  }
+  return b;
+}
+const slotsOf = (b) => [...b.querySelectorAll(":scope > .brow > .inp, :scope > .inp")];
+const cslotsOf = (b) => [...b.querySelectorAll(":scope > .cslot")];
+const isRep = (b) => b.classList.contains("k-rep") || b.classList.contains("k-bool");
+
+/* ---------- แปลงเป็น JSON (ใช้รัน/บันทึก) ---------- */
+function slotValue(s){
+  const rep = s.querySelector(":scope > .blk");
+  if(rep) return ser(rep);
+  if(s.dataset.t === "bool") return null;
+  const f = s.querySelector("input,select"); return f ? f.value : "";
+}
+function ser(b){
+  const o = { t:b.dataset.id, a:[], s:[] }; Object.defineProperty(o, "el", { value:b, enumerable:false });
+  if(b.dataset.id === "var"){ o.name = b.dataset.var; return o; }
+  o.a = slotsOf(b).map(slotValue);
+  o.s = cslotsOf(b).map(c => [...c.children].filter(x => x.classList.contains("blk")).map(ser));
+  return o;
+}
+function bld(j){
+  if(j.t === "var") return makeBlock("var", null, j.name);
+  const b = makeBlock(j.t, j.a.map(x => (x && typeof x === "object") ? null : x));
+  slotsOf(b).forEach((s, i) => { const v = j.a[i]; if(v && typeof v === "object") putRep(s, bld(v)); });
+  cslotsOf(b).forEach((c, i) => (j.s[i] || []).forEach(k => c.append(bld(k))));
+  return b;
+}
+function putRep(slot, rep){ slot.classList.add("has-rep"); slot.append(rep); }
+const allScripts = () => [...wsin.querySelectorAll(":scope > .script")];
+function wsToJSON(){
+  return { vars:VARS, spr:$("#spr").value, scripts: allScripts().map(sc => ({ x:parseInt(sc.style.left) || 0, y:parseInt(sc.style.top) || 0, b:[...sc.children].filter(x => x.classList.contains("blk")).map(ser) })) };
+}
+function loadJSON(d){
+  allScripts().forEach(s => s.remove());
+  VARS = (d.vars || []).slice(); refreshVars();
+  if(d.spr != null){ $("#spr").value = d.spr; setSprite(); }
+  (d.scripts || []).forEach(s => { const sc = newScript(s.x, s.y); s.b.forEach(j => sc.append(bld(j))); });
+  hint();
+}
+function newScript(x, y){ const sc = el("div", "script"); sc.style.left = Math.max(0, x) + "px"; sc.style.top = Math.max(0, y) + "px"; wsin.append(sc); return sc; }
+function hint(){ $("#wshint").style.display = allScripts().length ? "none" : "block"; }
+let saveT = 0;
+let VIEW = false;
+function save(){ if(VIEW) return; clearTimeout(saveT); saveT = setTimeout(() => { try{ localStorage.setItem("krtomBlocks:m1/cs/1", JSON.stringify(wsToJSON())); }catch(e){} }, 300); }
+function toast(t){ const e = $("#toast"); e.textContent = t; e.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = "none", 2600); }
+
+/* ---------- คลังบล็อก ---------- */
+function buildPalette(){
+  const pal = $("#palette"), cats = $("#cats"); pal.innerHTML = ""; cats.innerHTML = "";
+  CATS.forEach(([key, name, color, ids]) => {
+    const b = el("button", "", name); b.style.background = color;
+    b.onclick = () => { const h = $("#h-" + key); pal.scrollTo({ top:h.offsetTop - 8, behavior:"smooth" }); };
+    cats.append(b);
+    const h = el("h4", "", name); h.id = "h-" + key; pal.append(h);
+    if(key === "vars"){
+      const nb = el("button", "", "➕ สร้างตัวแปร"); nb.id = "newvar"; nb.onclick = newVar; pal.append(nb);
+      VARS.forEach(v => { const w = el("div", "pitem"); w.append(makeBlock("var", null, v)); pal.append(w); });
+      ["set", "change"].forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
+      return;
+    }
+    ids.forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
+  });
+}
+function newVar(){
+  const n = (prompt("ตั้งชื่อตัวแปร (ควรสื่อความหมาย เช่น คะแนน, จำนวนรอบ)") || "").trim();
+  if(!n) return;
+  if(VARS.includes(n)) return toast("มีตัวแปรชื่อนี้แล้ว");
+  VARS.push(n); refreshVars(); save(); toast("สร้างตัวแปร \"" + n + "\" แล้ว");
+}
+function refreshVars(){
+  const top = $("#palette").scrollTop; buildPalette(); $("#palette").scrollTop = top;
+  document.querySelectorAll("#wsin select").forEach(sel => { if(sel.parentElement.dataset.t === "var") fillVarSelect(sel); });
+}
+
+/* ---------- ลาก–วาง ---------- */
+let DR = null;   // สถานะการลาก
+const ins = $("#ins");
+document.addEventListener("pointerdown", e => {
+  if(e.button !== 0) return;
+  const tg = e.target;
+  if(tg.closest("input,select,button,textarea")) return;
+  const blk = tg.closest(".blk"); if(!blk) return;
+  const fromPal = !!blk.closest("#palette");
+  if(!fromPal && !blk.closest("#wsin")) return;
+  e.preventDefault();
+  DR = { blk, fromPal, sx:e.clientX, sy:e.clientY, started:false, id:e.pointerId };
+});
+document.addEventListener("pointermove", e => {
+  if(!DR) return;
+  if(!DR.started){
+    if(Math.hypot(e.clientX - DR.sx, e.clientY - DR.sy) < 5) return;
+    startDrag(e);
+  }
+  const bx = DR.box; bx.style.left = (e.clientX - DR.ox) + "px"; bx.style.top = (e.clientY - DR.oy) + "px";
+  showTarget(e);
+});
+document.addEventListener("pointerup", e => {
+  if(!DR) return;
+  const d = DR; DR = null;
+  if(!d.started){ if(!d.fromPal) runStack(d.blk); return; }   // คลิกเฉย ๆ = รันชุดนั้น
+  endDrag(d, e);
+});
+function startDrag(e){
+  const d = DR, b = d.blk; d.started = true;
+  const r = b.getBoundingClientRect();
+  let list;
+  if(d.fromPal){
+    list = [b.dataset.id === "var" ? makeBlock("var", null, b.dataset.var) : makeBlock(b.dataset.id)];
+    if(b.dataset.id !== "var"){ const vs = slotsOf(b); slotsOf(list[0]).forEach((s, i) => { const f = s.querySelector("input,select"), g = vs[i].querySelector("input,select"); if(f && g) f.value = g.value; }); }
+  }else if(isRep(b)){
+    const slot = b.parentElement; list = [b]; b.remove(); if(slot && slot.classList.contains("inp")) slot.classList.remove("has-rep");
+  }else{
+    const par = b.parentElement; list = []; let n = b;
+    while(n){ const nx = n.nextElementSibling; if(n.classList.contains("blk")) list.push(n); n = nx; }
+    list.forEach(x => x.remove());
+    if(par.classList.contains("script") && !par.querySelector(":scope > .blk")) par.remove();
+  }
+  const box = el("div", "dragbox"); list.forEach(x => box.append(x)); document.body.append(box);
+  box.style.left = r.left + "px"; box.style.top = r.top + "px";
+  d.box = box; d.list = list; d.ox = d.sx - r.left; d.oy = d.sy - r.top;
+  document.body.classList.add("dragging"); hint();
+}
+function clearHot(){ document.querySelectorAll(".inp.hot").forEach(x => x.classList.remove("hot")); ins.style.display = "none"; }
+function slotAccepts(slot, first){
+  const t = slot.dataset.t;
+  if(t === "var" || t === "opt") return false;
+  if(slot.querySelector(":scope > .blk")) return false;
+  if(t === "bool") return first.classList.contains("k-bool");
+  return true;
+}
+function findTarget(e){
+  const d = DR, first = d.list[0], r = d.box.getBoundingClientRect();
+  if(isRep(first)){
+    const px = r.left + 12, py = r.top + r.height / 2; let best = null, ba = 1e9;
+    wsin.querySelectorAll(".inp").forEach(s => {
+      if(!slotAccepts(s, first)) return;
+      const q = s.getBoundingClientRect();
+      if(px >= q.left - 6 && px <= q.right + 6 && py >= q.top - 8 && py <= q.bottom + 8){ const a = q.width * q.height; if(a < ba){ ba = a; best = s; } }
+    });
+    return best ? { type:"slot", slot:best } : null;
+  }
+  if(first.classList.contains("k-hat")) return null;           // บล็อกเริ่มต้นวางอิสระเท่านั้น
+  const last = d.list[d.list.length - 1], lastCap = last.classList.contains("cap");
+  let best = null, bd = 38;
+  wsin.querySelectorAll(".script, .cslot").forEach(c => {
+    const kids = [...c.children].filter(x => x.classList.contains("blk")), cr = c.getBoundingClientRect();
+    for(let i = 0; i <= kids.length; i++){
+      if(i === 0 && kids[0] && kids[0].classList.contains("k-hat")) continue;
+      if(i > 0 && kids[i - 1].classList.contains("cap")) continue;
+      if(lastCap && i < kids.length) continue;
+      let x, y;
+      if(i === 0){ x = cr.left; y = cr.top; } else { const q = kids[i - 1].getBoundingClientRect(); x = q.left; y = q.bottom - 6; }
+      const dist = Math.hypot(r.left - x, r.top - y);
+      if(dist < bd){ bd = dist; best = { type:"stack", c, i, x, y, kids }; }
+    }
+  });
+  return best;
+}
+function showTarget(e){
+  clearHot(); const t = findTarget(e); DR.target = t;
+  if(!t) return;
+  if(t.type === "slot") t.slot.classList.add("hot");
+  else { ins.style.display = "block"; ins.style.left = t.x + "px"; ins.style.top = (t.y - 3) + "px"; }
+}
+function endDrag(d, e){
+  clearHot(); document.body.classList.remove("dragging");
+  const palR = $(".panel.pal").getBoundingClientRect();
+  const overPal = e.clientX >= palR.left && e.clientX <= palR.right && e.clientY >= palR.top && e.clientY <= palR.bottom;
+  const t = d.target, first = d.list[0], r = d.box.getBoundingClientRect(), wr = wsin.getBoundingClientRect();
+  d.box.remove();
+  if(overPal){ save(); hint(); return; }                                            // ลากไปคลัง = ลบ
+  if(t && t.type === "slot"){ putRep(t.slot, first); }
+  else if(t && t.type === "stack"){
+    const ref = t.kids[t.i] || null; d.list.forEach(x => t.c.insertBefore(x, ref));
+  }else if(!isRep(first)){
+    const inWs = e.clientX >= ws.getBoundingClientRect().left && e.clientX <= ws.getBoundingClientRect().right;
+    if(inWs){ const sc = newScript(r.left - wr.left, r.top - wr.top); d.list.forEach(x => sc.append(x)); }
+  }
+  hint(); save();
+}
+
+/* ---------- เวทีและตัวละคร ---------- */
+// นักเรียนชายประถม (ผมเกรียน ชุดนักเรียนเรียบร้อย) วาดด้วย SVG — ถ้ามีรูปของครู img/boy.webp จะใช้รูปนั้นแทน
+const boySvg = (pose) => `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="50" cy="146" rx="26" ry="3.5" fill="rgba(0,0,0,.18)"/>
+  <rect x="${pose ? 33 : 36}" y="104" width="12" height="32" rx="4" fill="#F2C29B"/><rect x="${pose ? 55 : 52}" y="104" width="12" height="${pose ? 26 : 32}" rx="4" fill="#F2C29B"/>
+  <rect x="${pose ? 33 : 36}" y="128" width="12" height="9" fill="#fff"/><rect x="${pose ? 55 : 52}" y="${pose ? 124 : 128}" width="12" height="9" fill="#fff"/>
+  <rect x="${pose ? 30 : 33}" y="135" width="18" height="9" rx="4" fill="#1F2937"/><rect x="${pose ? 54 : 49}" y="${pose ? 131 : 135}" width="18" height="9" rx="4" fill="#1F2937"/>
+  <rect x="31" y="92" width="38" height="20" rx="5" fill="#1E3A8A"/>
+  <rect x="${pose ? 14 : 18}" y="60" width="11" height="26" rx="5" fill="#F2C29B"/><rect x="${pose ? 75 : 71}" y="60" width="11" height="26" rx="5" fill="#F2C29B"/>
+  <rect x="29" y="56" width="42" height="42" rx="9" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="${pose ? 14 : 18}" y="58" width="13" height="14" rx="5" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/><rect x="${pose ? 73 : 69}" y="58" width="13" height="14" rx="5" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+  <path d="M42 56 L50 66 L58 56 Z" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="55" y="74" width="9" height="9" rx="1.5" fill="none" stroke="#94A3B8" stroke-width="1.2"/>
+  <rect x="44" y="48" width="12" height="10" rx="3" fill="#F2C29B"/>
+  <ellipse cx="29" cy="33" rx="4.5" ry="6" fill="#F2C29B"/><ellipse cx="71" cy="33" rx="4.5" ry="6" fill="#F2C29B"/>
+  <circle cx="50" cy="32" r="22" fill="#F6CDA6"/>
+  <path d="M28 30 Q28 8 50 8 Q72 8 72 30 Q66 20 50 19 Q34 20 28 30 Z" fill="#111827"/>
+  <ellipse cx="42" cy="34" rx="2.6" ry="3.4" fill="#111827"/><ellipse cx="58" cy="34" rx="2.6" ry="3.4" fill="#111827"/>
+  <circle cx="43" cy="33" r=".9" fill="#fff"/><circle cx="59" cy="33" r=".9" fill="#fff"/>
+  <path d="M43 43 Q50 49 57 43" stroke="#9A3412" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="37" cy="41" rx="3.4" ry="2" fill="#F9A8A8" opacity=".6"/><ellipse cx="63" cy="41" rx="3.4" ry="2" fill="#F9A8A8" opacity=".6"/>
+</svg>`;
+// นักเรียนหญิงประถม (ผมสั้นติดโบว์ ชุดนักเรียนเรียบร้อย)
+const girlSvg = (pose) => `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="50" cy="146" rx="26" ry="3.5" fill="rgba(0,0,0,.18)"/>
+  <rect x="${pose ? 36 : 38}" y="108" width="10" height="28" rx="4" fill="#F2C29B"/><rect x="${pose ? 54 : 52}" y="108" width="10" height="${pose ? 22 : 28}" rx="4" fill="#F2C29B"/>
+  <rect x="${pose ? 36 : 38}" y="128" width="10" height="9" fill="#fff"/><rect x="${pose ? 54 : 52}" y="${pose ? 124 : 128}" width="10" height="9" fill="#fff"/>
+  <rect x="${pose ? 32 : 35}" y="135" width="17" height="9" rx="4" fill="#1F2937"/><rect x="${pose ? 52 : 50}" y="${pose ? 131 : 135}" width="17" height="9" rx="4" fill="#1F2937"/>
+  <path d="M27 112 L33 90 L67 90 L73 112 Z" fill="#1E3A8A"/><path d="M40 92 L38 112 M50 92 L50 112 M60 92 L62 112" stroke="#1E40AF" stroke-width="1.4"/>
+  <rect x="${pose ? 14 : 18}" y="60" width="10" height="26" rx="5" fill="#F2C29B"/><rect x="${pose ? 76 : 72}" y="60" width="10" height="26" rx="5" fill="#F2C29B"/>
+  <rect x="30" y="56" width="40" height="40" rx="9" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="${pose ? 14 : 18}" y="58" width="12" height="14" rx="5" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/><rect x="${pose ? 74 : 70}" y="58" width="12" height="14" rx="5" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/>
+  <path d="M40 56 L50 70 L60 56 Z" fill="#fff" stroke="#CBD5E1" stroke-width="1.5"/><path d="M50 70 L45 80 L55 80 Z" fill="#1E3A8A"/>
+  <rect x="44" y="48" width="12" height="10" rx="3" fill="#F2C29B"/>
+  <path d="M26 32 Q22 12 50 8 Q78 12 74 32 L74 54 Q70 58 66 52 L66 34 L34 34 L34 52 Q30 58 26 54 Z" fill="#111827"/>
+  <circle cx="50" cy="33" r="20" fill="#F6CDA6"/>
+  <path d="M30 30 Q32 10 50 10 Q68 10 70 30 Q62 18 50 18 Q38 18 30 30 Z" fill="#111827"/>
+  <path d="M26 20 L18 14 L20 26 Z M26 20 L34 14 L32 26 Z" fill="#EC4899"/><circle cx="26" cy="20" r="3" fill="#BE185D"/>
+  <ellipse cx="42" cy="35" rx="2.6" ry="3.4" fill="#111827"/><ellipse cx="58" cy="35" rx="2.6" ry="3.4" fill="#111827"/>
+  <circle cx="43" cy="34" r=".9" fill="#fff"/><circle cx="59" cy="34" r=".9" fill="#fff"/>
+  <path d="M43 44 Q50 50 57 44" stroke="#9A3412" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="37" cy="42" rx="3.4" ry="2" fill="#F9A8A8" opacity=".7"/><ellipse cx="63" cy="42" rx="3.4" ry="2" fill="#F9A8A8" opacity=".7"/>
+</svg>`;
+const COSTUMES = [[boySvg(0), boySvg(1)], [girlSvg(0), girlSvg(1)], ["🐱","😺","😸"], ["🐶","🐕","🦮"], ["🐸","🦎"], ["🚀","🛸"]];
+["boy", "girl"].forEach((k, i) => { const im = new Image(); im.onload = () => { COSTUMES[i] = [`<img src="img/${k}.webp" alt="">`]; renderSprite(); }; im.src = "img/" + k + ".webp"; });
+const S = { x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, cost:0, spr:0, vars:{}, answer:"" };
+const cv = $("#pen"), cx = cv.getContext("2d"), spriteEl = $("#sprite"), bubble = $("#bubble");
+function setSprite(){ S.spr = +$("#spr").value; S.cost = 0; renderSprite(); save(); }
+function renderSprite(){
+  spriteEl.innerHTML = COSTUMES[S.spr][S.cost % COSTUMES[S.spr].length];
+  spriteEl.style.left = ((S.x + 240) / 480 * 100) + "%"; spriteEl.style.top = ((180 - S.y) / 360 * 100) + "%";
+  spriteEl.style.rotate = $("#rot").checked ? ((S.dir - 90) + "deg") : "0deg";
+  // ให้กรอบคำพูดอยู่เหนือหัวตัวละคร (ถ้าตัวละครชิดขอบบนให้ไปอยู่ใต้เท้า) และไม่ล้นเวที
+  const xp = (S.x + 240) / 480 * 100, yp = (180 - S.y) / 360 * 100;
+  bubble.style.left = Math.min(70, Math.max(30, xp)) + "%"; bubble.style.top = yp + "%";
+  bubble.style.transform = yp < 26 ? "translate(-50%, 9cqw)" : "translate(-50%, calc(-100% - 9cqw))";
+  renderMon();
+}
+function renderMon(){
+  const m = $("#mon"); m.innerHTML = "";
+  VARS.forEach(v => { const s = el("span", "", v + " = " + fmt(S.vars[v] ?? 0)); m.append(s); });
+}
+const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
+function resetSprite(){ S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; S.cost = 0; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; renderSprite(); }
+
+/* ---------- ตัวแปลสั่งงาน ---------- */
+const STOP = { stop:true };
+let RUN = 0, sleepers = new Set(), askRes = null, cnt = 0;
+const sleep = (ms) => new Promise(res => { const t = setTimeout(() => { sleepers.delete(f); res(); }, ms); const f = () => { clearTimeout(t); res(); }; sleepers.add(f); });
+const chk = (c) => { if(c.my !== RUN) throw STOP; };
+const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
+const isNum = (v) => typeof v === "number" || (typeof v === "string" && v.trim() !== "" && Number.isFinite(Number(v)));
+function val(a){
+  if(a == null) return 0;
+  if(typeof a !== "object") return isNum(a) ? Number(a) : a;
+  switch(a.t){
+    case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
+    case "var": return S.vars[a.name] ?? 0;
+    case "add": return num(val(a.a[0])) + num(val(a.a[1]));
+    case "sub": return num(val(a.a[0])) - num(val(a.a[1]));
+    case "mul": return num(val(a.a[0])) * num(val(a.a[1]));
+    case "div": return num(val(a.a[0])) / num(val(a.a[1]));
+    case "mod": { const x = num(val(a.a[0])), y = num(val(a.a[1])); return y === 0 ? NaN : ((x % y) + y) % y; }
+    case "rand": { const lo = Math.ceil(num(val(a.a[0]))), hi = Math.floor(num(val(a.a[1]))); return lo + Math.floor(Math.random() * (Math.max(hi, lo) - lo + 1)); }
+    case "join": return fmt(val(a.a[0])) + fmt(val(a.a[1]));
+    case "gt": return cmp(val(a.a[0]), val(a.a[1])) > 0;
+    case "lt": return cmp(val(a.a[0]), val(a.a[1])) < 0;
+    case "eq": return cmp(val(a.a[0]), val(a.a[1])) === 0;
+    case "and": return !!val(a.a[0]) && !!val(a.a[1]);
+    case "or": return !!val(a.a[0]) || !!val(a.a[1]);
+    case "not": return !val(a.a[0]);
+  }
+  return 0;
+}
+function cmp(x, y){ if(typeof x === "number" && typeof y === "number") return x === y ? 0 : x > y ? 1 : -1; x = fmt(x).toLowerCase(); y = fmt(y).toLowerCase(); return x === y ? 0 : x > y ? 1 : -1; }
+const cond = (a) => a == null ? false : !!val(a);
+
+function drawTo(nx, ny){
+  if(S.pen){ cx.strokeStyle = S.color; cx.lineWidth = S.size; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(S.x + 240, 180 - S.y); cx.lineTo(nx + 240, 180 - ny); cx.stroke(); }
+  S.x = nx; S.y = ny;
+  S.x = Math.max(-1000, Math.min(1000, S.x)); S.y = Math.max(-1000, Math.min(1000, S.y));
+}
+const spd = () => $("#speed").value;
+async function pace(c){
+  chk(c); const m = spd();
+  if(m === "slow") await sleep(420); else if(m === "normal") await sleep(45); else if(++cnt % 250 === 0) await sleep(0);
+  chk(c);
+}
+const EXEC = {
+  async move(j){ const n = num(val(j.a[0])), r = S.dir * Math.PI / 180; drawTo(S.x + n * Math.sin(r), S.y + n * Math.cos(r)); renderSprite(); },
+  async turnR(j){ S.dir = (S.dir + num(val(j.a[0]))) % 360; renderSprite(); },
+  async turnL(j){ S.dir = (S.dir - num(val(j.a[0]))) % 360; renderSprite(); },
+  async goto(j){ drawTo(num(val(j.a[0])), num(val(j.a[1]))); renderSprite(); },
+  async point(j){ S.dir = num(val(j.a[0])); renderSprite(); },
+  async changex(j){ drawTo(S.x + num(val(j.a[0])), S.y); renderSprite(); },
+  async changey(j){ drawTo(S.x, S.y + num(val(j.a[0]))); renderSprite(); },
+  async say(j){ bubble.textContent = fmt(val(j.a[0])); bubble.style.display = bubble.textContent ? "block" : "none"; },
+  async sayfor(j, c){ bubble.textContent = fmt(val(j.a[0])); bubble.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); bubble.style.display = "none"; },
+  async costume(){ S.cost = (S.cost + 1) % COSTUMES[S.spr].length; renderSprite(); },
+  async beep(){ if(window.sfx) sfx.coin(); },
+  async pendown(){ S.pen = true; cx.fillStyle = S.color; cx.beginPath(); cx.arc(S.x + 240, 180 - S.y, S.size / 2, 0, 7); cx.fill(); },
+  async penup(){ S.pen = false; },
+  async penclear(){ cx.clearRect(0, 0, 480, 360); },
+  async pencolor(j){ S.color = COLORS[j.a[0]] || "#EF4444"; },
+  async pensize(j){ S.size = Math.max(1, num(val(j.a[0]))); },
+  async wait(j, c){ await sleep(Math.max(0, num(val(j.a[0]))) * 1000); chk(c); },
+  async repeat(j, c){ const n = Math.floor(num(val(j.a[0]))); for(let i = 0; i < n; i++){ await execList(j.s[0], c); await pace(c); } },
+  async while(j, c){ let g = 0; while(cond(j.a[0])){ await execList(j.s[0], c); await pace(c); if(++g > 100000) break; } },
+  async forever(j, c){ for(;;){ await execList(j.s[0], c); await sleep(spd() === "fast" ? 4 : 16); chk(c); } },
+  async if(j, c){ if(cond(j.a[0])) await execList(j.s[0], c); },
+  async ifelse(j, c){ await execList(cond(j.a[0]) ? j.s[0] : j.s[1], c); },
+  async waituntil(j, c){ while(!cond(j.a[0])){ await sleep(30); chk(c); } },
+  async stopall(){ stopAll(); },
+  async set(j){ if(j.a[0]) S.vars[j.a[0]] = val(j.a[1]); renderMon(); },
+  async change(j){ if(j.a[0]) S.vars[j.a[0]] = num(S.vars[j.a[0]]) + num(val(j.a[1])); renderMon(); },
+  async ask(j, c){
+    $("#asktxt").textContent = fmt(val(j.a[0])); $("#askin").value = ""; $("#askbar").style.display = "block"; $("#askin").focus();
+    await new Promise(res => { askRes = res; });
+    $("#askbar").style.display = "none"; chk(c);
+  }
+};
+async function execList(list, c){ for(const j of (list || [])) await execBlock(j, c); }
+async function execBlock(j, c){
+  chk(c); j.el.classList.add("run");
+  try{ await EXEC[j.t](j, c); await pace(c); }
+  finally{ j.el.classList.remove("run"); }
+}
+function stopAll(){
+  RUN++; sleepers.forEach(f => f()); sleepers.clear();
+  if(askRes){ askRes(); askRes = null; } $("#askbar").style.display = "none";
+  document.querySelectorAll(".blk.run").forEach(x => x.classList.remove("run"));
+}
+async function runScriptsList(lists, fresh){
+  stopAll(); const my = RUN; const c = { my };
+  if(fresh){ resetSprite(); if($("#autoclr").checked) cx.clearRect(0, 0, 480, 360); }
+  try{ await Promise.all(lists.map(l => execList(l, c))); }
+  catch(err){ if(err !== STOP){ console.error(err); toast("เกิดข้อผิดพลาดในโปรแกรม: " + (err.message || err)); } }
+}
+const hatLists = (id) => allScripts().map(sc => [...sc.children].filter(x => x.classList.contains("blk"))).filter(l => l.length && l[0].dataset.id === id).map(l => l.slice(1).map(ser));
+function runStack(blk){
+  const sc = blk.closest(".script"); if(!sc) return;
+  const l = [...sc.children].filter(x => x.classList.contains("blk")).map(ser);
+  runScriptsList([l[0] && SPEC[l[0].t].kind === "hat" ? l.slice(1) : l], true);
+}
+$("#flag").onclick = () => { const ls = hatLists("flag"); if(!ls.length) return toast("ยังไม่มีชุดบล็อกที่ขึ้นต้นด้วย \"เมื่อกดธงเขียว\""); runScriptsList(ls, true); };
+$("#stop").onclick = stopAll;
+document.addEventListener("keydown", e => {
+  if(e.code === "Space" && !e.target.closest("input,select,textarea,button")){ const ls = hatLists("keyspace"); if(ls.length){ e.preventDefault(); runScriptsList(ls, true); } }
+});
+$("#askok").onclick = () => { S.answer = $("#askin").value; if(askRes){ askRes(); askRes = null; } };
+$("#askin").addEventListener("keydown", e => { if(e.key === "Enter") $("#askok").click(); });
+$("#spr").onchange = setSprite; $("#rot").onchange = renderSprite;
+
+/* ---------- แถบเครื่องมือ ---------- */
+$("#clearws").onclick = () => { if(!allScripts().length || confirm("ลบบล็อกทั้งหมดในพื้นที่เขียนโปรแกรม?")){ allScripts().forEach(s => s.remove()); hint(); save(); } };
+$("#tidy").onclick = () => { let y = 16; allScripts().forEach(sc => { sc.style.left = "16px"; sc.style.top = y + "px"; y += sc.getBoundingClientRect().height + 20; }); save(); };
+
+/* ---------- ตัวอย่างโปรแกรม (ภารกิจ) ---------- */
+const B = (t, a = [], s = []) => ({ t, a, s });
+const SAMPLES = {
+  square:   { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("pendown"), B("repeat", [4], [[B("move", [100]), B("turnR", [90])]])] }] },
+  triangle: { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("pencolor", ["ฟ้า"]), B("pendown"), B("repeat", [3], [[B("move", [100]), B("turnR", [120])]])] }] },
+  polygon:  { vars:["ด้าน"], scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["ด้าน", 5]), B("pencolor", ["ม่วง"]), B("pendown"),
+              B("repeat", [{ t:"var", name:"ด้าน", a:[], s:[] }], [[B("move", [70]), B("turnR", [B("div", [360, { t:"var", name:"ด้าน", a:[], s:[] }])])]])] }] },
+  hopper:   { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("forever", [], [[B("costume"), B("wait", [0.3])]])] }] },
+  temp:     { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["อุณหภูมิ ฟาเรนไฮต์ (F) เท่าไร"]),
+              B("say", [B("div", [B("mul", [B("sub", [B("answer"), 32]), 5]), 9])])] }] },
+  score:    { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["สอบได้กี่คะแนน"]),
+              B("ifelse", [B("gt", [B("answer"), 80])], [[B("say", ["ได้รางวัลพิเศษ 🎉"])], [B("say", ["พยายามอีกนิดนะ"])]])] }] },
+  evenodd:  { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ใส่จำนวนเต็ม"]),
+              B("ifelse", [B("eq", [B("mod", [B("answer"), 2]), 0])], [[B("say", ["เป็นเลขคู่"])], [B("say", ["เป็นเลขคี่"])]])] }] }
+};
+const V = (n) => ({ t:"var", name:n, a:[], s:[] });
+Object.assign(SAMPLES, {
+  "ex-seq1":  { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("sayfor", ["หยิบแปรงสีฟัน", 1.5]), B("sayfor", ["บีบยาสีฟันลงบนแปรง", 1.5]), B("sayfor", ["แปรงฟัน 2 นาที", 1.5]), B("sayfor", ["บ้วนปาก", 1.5]), B("say", ["เสร็จแล้ว ฟันสะอาด!"])] }] },
+  "ex-seq2":  { vars:["width", "length", "area"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ความกว้าง (width) เท่าไร"]), B("set", ["width", B("answer")]), B("ask", ["ความยาว (length) เท่าไร"]), B("set", ["length", B("answer")]),
+              B("set", ["area", B("mul", [V("width"), V("length")])]), B("say", [V("area")])] }] },
+  "ex-sel1":  { vars:["score"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["คะแนนสอบ (score) เท่าไร"]), B("set", ["score", B("answer")]),
+              B("ifelse", [B("or", [B("gt", [V("score"), 50]), B("eq", [V("score"), 50])])], [[B("say", ["ผ่าน"])], [B("say", ["ไม่ผ่าน"])]])] }] },
+  "ex-sel2":  { vars:["n", "r"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ใส่จำนวนเต็ม n"]), B("set", ["n", B("answer")]), B("set", ["r", B("mod", [V("n"), 2])]),
+              B("ifelse", [B("eq", [V("r"), 0])], [[B("say", ["เลขคู่"])], [B("say", ["เลขคี่"])]])] }] },
+  "ex-loop1": { vars:["i"], scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["i", 1]), B("pendown"),
+              B("while", [B("lt", [V("i"), 5])], [[B("move", [100]), B("turnR", [90]), B("change", ["i", 1])]])] }] },
+  "ex-loop2": { vars:["total", "count"], scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["total", 0]), B("set", ["count", 1]),
+              B("while", [B("lt", [V("count"), 6])], [[B("set", ["total", B("add", [V("total"), V("count")])]), B("change", ["count", 1])]]), B("say", [V("total")])] }] }
+});
+Object.assign(SAMPLES, {
+  "blank":  { vars:[], scripts:[{ x:24, y:24, b:[B("flag")] }] },
+  "ws-egg": { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("sayfor", ["แม่ไก่ออกไข่", 1.5]), B("sayfor", ["ตอกไข่ลงในกระทะที่ใส่น้ำมันตั้งไฟ", 1.5]), B("sayfor", ["รอไข่สุก 1-2 นาที", 1.5]), B("costume"), B("say", ["นำไข่ดาวใส่จาน"])] }] },
+  "ws-cat": { vars:["times"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ให้แมวร้องกี่ครั้ง"]), B("set", ["times", B("answer")]),
+              B("repeat", [V("times")], [[B("beep"), B("say", ["เหมียว"]), B("wait", [0.5])]]), B("say", ["ร้องครบแล้ว"])] }] },
+  "ws-zoo": { vars:["height"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ส่วนสูงกี่เซนติเมตร"]), B("set", ["height", B("answer")]),
+              B("ifelse", [B("gt", [V("height"), 120])], [[B("say", ["เสียค่าเข้าชม 20 บาท"])], [B("say", ["ไม่เสียค่าเข้าชม"])]])] }] }
+});
+const EXNAME2 = { "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
+const EXNAME = { "ex-seq1":"แปรงฟัน", "ex-seq2":"หาพื้นที่สี่เหลี่ยมผืนผ้า", "ex-sel1":"ตรวจผลสอบ", "ex-sel2":"เลขคู่หรือเลขคี่", "ex-loop1":"วาดสี่เหลี่ยมจัตุรัส", "ex-loop2":"หาผลรวม 1 ถึง 5" };
+$("#sample").onchange = function(){
+  const k = this.value; this.value = ""; if(!k) return;
+  if(allScripts().length && !confirm("โหลดตัวอย่างจะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return;
+  loadJSON(JSON.parse(JSON.stringify(SAMPLES[k]))); stopAll(); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
+  toast("โหลดตัวอย่างแล้ว — กด 🟩 ธงเขียว เพื่อรัน");
+};
+
+
+/* ---------- ส่ง / แชร์โปรแกรม ---------- */
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
+const b64e = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/")))));
+function shareURL(){ const u = new URL("blocks.html", location.href); u.search = ""; u.searchParams.set("p", b64e(wsToJSON())); return u.href; }
+function lbl(j){
+  if(j.t === "var") return j.name;
+  const sp = SPEC[j.t]; let si = 0;
+  return sp.parts.map(p => { if(typeof p === "string") return p; const v = j.a[si++];
+    if(v && typeof v === "object") return "(" + lbl(v) + ")";
+    if(v == null || v === "") return p.i === "bool" ? "‹…›" : "[ ]";
+    return p.i === "bool" ? "‹" + v + "›" : "[" + v + "]"; }).join(" ").replace(/\s+/g, " ").trim();
+}
+function outline(list, ind){
+  return list.map(j => { const sp = SPEC[j.t], pad = "  ".repeat(ind); let out = pad + lbl(j);
+    if(sp.kind === "c"){ out += "\n" + outline(j.s[0] || [], ind + 1); if(sp.els) out += "\n" + pad + "ไม่เช่นนั้น\n" + outline(j.s[1] || [], ind + 1); }
+    return out; }).join("\n");
+}
+function programText(){
+  const d = wsToJSON();
+  if(!d.scripts.length) return "(ยังไม่ได้ต่อบล็อก)";
+  let t = d.scripts.map((sc, i) => (d.scripts.length > 1 ? "ชุดที่ " + (i + 1) + "\n" : "") + outline(sc.b, 0)).join("\n\n");
+  if(d.vars.length) t = "ตัวแปร: " + d.vars.join(", ") + "\n" + t;
+  return t;
+}
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }
+  catch(e){ const a = el("textarea"); a.value = t; a.style.cssText = "position:fixed;opacity:0"; document.body.append(a); a.select(); let ok = false; try{ ok = document.execCommand("copy"); }catch(_){} a.remove(); return ok; }
+}
+const menu = $("#sharemenu");
+$("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
+document.addEventListener("click", () => menu.classList.remove("open"));
+if(!BACK) $("#sh-ws").disabled = true, $("#sh-ws").title = "เปิดโค้ดจิ๊กซอว์จากปุ่มในใบงาน จึงจะส่งไปใบงานได้";
+$("#sh-link").onclick = async () => { if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์โปรแกรมแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-text").onclick = async () => { toast((await copyText(programText())) ? "คัดลอกข้อความคำสั่งแล้ว" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-png").onclick = () => {
+  const c = el("canvas"); c.width = 480; c.height = 360; const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, 480, 360); g.drawImage(cv, 0, 0);
+  const a = el("a"); a.download = "ผลจากโค้ดจิ๊กซอว์.png"; a.href = c.toDataURL("image/png"); a.click();
+};
+$("#sh-ws").onclick = () => {
+  if(!BACK) return;
+  if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก");
+  const key = "krtomws:m1/cs/1:" + BACK[2];
+  const txt = "ลิงก์โปรแกรม (ครูกดเปิดดูได้):\n" + shareURL() + "\n\nบล็อกที่ใช้:\n" + programText();
+  try{
+    const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < 8) arr.push(""); arr[7] = txt;
+    localStorage.setItem(key, JSON.stringify(arr));
+    toast("ส่งโปรแกรมไปที่ข้อ 8 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง");
+  }catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
+};
+$("#viewedit").onclick = () => { VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); save(); toast("คัดลอกโปรแกรมไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };
+
+/* ---------- เริ่มต้น ---------- */
+buildPalette();
+try{ const d = JSON.parse(localStorage.getItem("krtomBlocks:m1/cs/1") || "null"); if(d && d.scripts) loadJSON(d); }catch(e){}
+resetSprite(); hint();
+
+try{
+  const pp = new URLSearchParams(location.search).get("p");
+  if(pp){ VIEW = true; loadJSON(b64d(pp)); resetSprite(); $("#viewbar").style.display = "block"; }
+}catch(e){ toast("เปิดลิงก์โปรแกรมไม่ได้ — ลิงก์อาจไม่ครบ"); }
+try{
+  const qs = new URLSearchParams(location.search), ex = qs.get("ex"), back = qs.get("back");
+  if(back && /^worksheet[\w-]*\.html$/.test(back)){ const a = document.querySelector("header a"); a.textContent = "← กลับไปใบงาน"; a.href = back; }
+  if(ex && SAMPLES[ex] && !VIEW){ loadJSON(JSON.parse(JSON.stringify(SAMPLES[ex]))); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
+    toast(ex === "blank" ? "เริ่มจากกระดานว่าง — ลากบล็อกมาต่อใต้ \"เมื่อกดธงเขียว\" แล้วกด 🟩 ธงเขียว" : "ระบบเขียนโปรแกรม \"" + (EXNAME[ex] || EXNAME2[ex] || ex) + "\" ให้แล้ว — กด 🟩 ธงเขียว เพื่อรัน"); }
+}catch(e){}
+window.__blocks = { SAMPLES, loadJSON, wsToJSON, S, runScriptsList, hatLists, stopAll };   // สำหรับทดสอบ
+</script>
+</body>
+</html>

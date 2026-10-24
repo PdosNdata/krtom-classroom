@@ -70,6 +70,7 @@
 </div>
 
 <script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/sfx.js?v=1"></script>
 <script>
 const ITEMS = [
   { name:"AND (และ)", emoji:"AND" },
@@ -110,7 +111,7 @@ cards.forEach((c, idx) => {
 
 function flipCard(el, id){
   if(lock || el.classList.contains("flipped") || el.classList.contains("matched")) return;
-  el.classList.add("flipped");
+  el.classList.add("flipped"); if(window.sfx) sfx.pop();
   flipped.push({el, id});
 
   if(flipped.length === 2){
@@ -120,7 +121,7 @@ function flipCard(el, id){
     const [a, b] = flipped;
     if(a.id === b.id){
       setTimeout(() => {
-        a.el.classList.add("matched");
+        a.el.classList.add("matched"); if(window.sfx) sfx.correct();
         b.el.classList.add("matched");
         matchesCount++;
         document.getElementById("matches").textContent = matchesCount;
@@ -133,12 +134,13 @@ function flipCard(el, id){
           const finishText = `ใช้ไป ${moves} ครั้ง — ${msg}`;
           document.getElementById("finish-msg").textContent = finishText;
           setTimeout(() => {
-            document.getElementById("finish").style.display = "flex";
+            document.getElementById("finish").style.display = "flex"; if(window.sfx) sfx.win();
             speakText(`เก่งมาก จับคู่ครบแล้ว ${finishText}`, null);
           }, 500);
         }
       }, 400);
     } else {
+      if(window.sfx) setTimeout(() => sfx.nope(), 350);
       setTimeout(() => {
         a.el.classList.remove("flipped");
         b.el.classList.remove("flipped");

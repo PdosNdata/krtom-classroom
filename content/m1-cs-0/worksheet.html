@@ -98,7 +98,7 @@
 </header>
 
 <main>
-  <p class="lead">เลือกทำใบงานทั้ง 3 ใบ ✨<small>ทำได้ตามลำดับที่ต้องการ แล้วกดส่งในแต่ละใบ</small></p>
+  <p class="lead">เลือกทำใบงานทั้ง 7 ใบ ✨<small>ทำได้ตามลำดับที่ต้องการ แล้วกดส่งในแต่ละใบ</small></p>
   <div class="stack">
     <a class="wsbtn" href="worksheet-1-1.html" data-n="1" style="--c1:#38BDF8;--c2:#2563EB;--edge:#1E40AF;--glow:56,189,248">
       <img class="wsbtn-img" src="../../assets/images/btn-ws-m1-cs-0-1.webp" alt="ใบงานที่ 1.1"
@@ -148,6 +148,62 @@
         <span class="go">เริ่มทำ ➜</span>
       </span>
     </a>
+    <a class="wsbtn" href="worksheet-1-4.html" data-n="4" style="--c1:#34D399;--c2:#059669;--edge:#059669;--glow:52,211,153">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="ghost-no">1.4</span>
+      <span class="orb"><span class="orb-in">🏠</span></span>
+      <span class="wsbtn-text">
+        <span class="wsbtn-kicker">ใบงานที่ 1.4</span>
+        <span class="wsbtn-title">บ้านฉันอยู่นี่ โรงเรียนอยู่ไหน</span>
+        <span class="wsbtn-sub">แนวคิดเชิงนามธรรม: ย่อแผนที่ให้เหลือแต่สาระสำคัญ</span>
+      </span>
+      <span class="wsbtn-side">
+        <span class="status" id="st-4">ยังไม่ได้ส่ง</span>
+        <span class="go">เริ่มทำ ➜</span>
+      </span>
+    </a>
+    <a class="wsbtn" href="worksheet-1-5.html" data-n="5" style="--c1:#FACC15;--c2:#CA8A04;--edge:#CA8A04;--glow:250,204,21">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="ghost-no">1.5</span>
+      <span class="orb"><span class="orb-in">🌽</span></span>
+      <span class="wsbtn-text">
+        <span class="wsbtn-kicker">ใบงานที่ 1.5</span>
+        <span class="wsbtn-title">ไร่ข้าวโพดจำลอง</span>
+        <span class="wsbtn-sub">แนวคิดเชิงนามธรรม: หาสูตรจากรูปแบบ</span>
+      </span>
+      <span class="wsbtn-side">
+        <span class="status" id="st-5">ยังไม่ได้ส่ง</span>
+        <span class="go">เริ่มทำ ➜</span>
+      </span>
+    </a>
+    <a class="wsbtn" href="worksheet-1-6.html" data-n="6" style="--c1:#FB7185;--c2:#E11D48;--edge:#E11D48;--glow:251,113,133">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="ghost-no">1.6</span>
+      <span class="orb"><span class="orb-in">🍚</span></span>
+      <span class="wsbtn-text">
+        <span class="wsbtn-kicker">ใบงานที่ 1.6</span>
+        <span class="wsbtn-title">หุงข้าวให้สุกพอดี</span>
+        <span class="wsbtn-sub">ขั้นตอนแก้ปัญหา: นำเข้า · ผลลัพธ์ · อัลกอริทึม</span>
+      </span>
+      <span class="wsbtn-side">
+        <span class="status" id="st-6">ยังไม่ได้ส่ง</span>
+        <span class="go">เริ่มทำ ➜</span>
+      </span>
+    </a>
+    <a class="wsbtn" href="worksheet-1-7.html" data-n="7" style="--c1:#38BDF8;--c2:#0369A1;--edge:#0369A1;--glow:56,189,248">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="ghost-no">1.7</span>
+      <span class="orb"><span class="orb-in">🐟</span></span>
+      <span class="wsbtn-text">
+        <span class="wsbtn-kicker">ใบงานที่ 1.7</span>
+        <span class="wsbtn-title">เลี้ยงปลากัด</span>
+        <span class="wsbtn-sub">ขั้นตอนแก้ปัญหา: นำเข้า · ผลลัพธ์ · อัลกอริทึม</span>
+      </span>
+      <span class="wsbtn-side">
+        <span class="status" id="st-7">ยังไม่ได้ส่ง</span>
+        <span class="go">เริ่มทำ ➜</span>
+      </span>
+    </a>
   </div>
   <p class="note">🖨️ พิมพ์ใบงานเป็นกระดาษได้ที่หน้าใบงานแต่ละใบ (กด Ctrl+P)</p>
 </main>
@@ -156,7 +212,7 @@
 (function(){
   // แสดงสถานะ "ส่งแล้ว" ของแต่ละใบ (เก็บในเครื่องนี้)
   try{
-    for(let n = 1; n <= 3; n++){
+    for(let n = 1; n <= 7; n++){
       if(localStorage.getItem("krtomws-done:m1/cs/0:" + n)){
         const el = document.getElementById("st-" + n);
         if(el){ el.textContent = "✅ ส่งแล้ว"; el.classList.add("done"); }

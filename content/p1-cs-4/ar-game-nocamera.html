@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกม AR: เลือกให้เหมาะสม (ไม่ใช้กล้อง)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; }
+  header{
+    background:linear-gradient(135deg,#8B5CF6,#EC4899);
+    color:#fff; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:42px; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:7px 14px; border-radius:999px; font-size:.82rem; text-decoration:none; }
+  p.desc{ max-width:640px; margin:14px auto 0; padding:0 20px; font-size:.9rem; color:#555; text-align:center; }
+
+  #hud{ max-width:900px; margin:12px auto 0; padding:0 20px; display:flex; justify-content:center; gap:10px; }
+  #hud .pill{
+    background:#fff; border:1px solid #E6E8F0; border-radius:999px; padding:7px 16px;
+    font-weight:700; font-size:.9rem; box-shadow:0 4px 10px rgba(0,0,0,.06);
+  }
+
+  #scene{
+    position:relative; max-width:900px; margin:16px auto; min-height:44vh;
+    border-radius:20px; overflow:hidden;
+    background:linear-gradient(to bottom, #DCEBFF 0%, #F3F8FF 100%);
+    box-shadow:0 10px 30px rgba(0,0,0,.12); touch-action:none; border:1px solid #dfe4ee;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:18px;
+    padding:34px 24px; align-content:center;
+  }
+  .dropzone{
+    background:#fff; border:3px dashed #C9D0E5; border-radius:18px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    padding:16px 10px; min-height:150px; transition:border-color .15s, background .15s;
+  }
+  .dropzone .step-num{
+    width:32px; height:32px; border-radius:50%; background:#8B5CF6; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem;
+  }
+  .dropzone .icon{ display:flex; align-items:center; justify-content:center; height:64px; filter:drop-shadow(0 4px 6px rgba(0,0,0,.12)); }
+  .dropzone .icon svg{ max-width:100%; max-height:100%; }
+  .dropzone .slot{
+    min-width:100px; min-height:30px; border-radius:10px; background:#F0F2FA;
+    display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:#9AA1B5; text-align:center; padding:4px 8px;
+  }
+  .dropzone.correct{ border-color:#10B981; background:#F0FBF6; }
+  .dropzone.correct .slot{ background:#10B981; color:#fff; }
+  .dropzone.wrong-flash{ border-color:#EF4444; }
+
+  #tray{ max-width:900px; margin:0 auto 16px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; padding:0 20px; }
+  .label-chip{
+    display:flex; align-items:center; gap:8px;
+    font-size:.85rem; font-weight:700; background:#fff; border:2px solid #E6E8F0; border-radius:999px;
+    padding:10px 18px; cursor:grab; box-shadow:0 4px 10px rgba(0,0,0,.08); touch-action:none; user-select:none;
+  }
+  .label-chip svg{ width:26px; height:26px; }
+  .label-chip.placed{ visibility:hidden; }
+
+  .hint{ text-align:center; color:#888; font-size:.82rem; margin:0 0 14px; }
+
+  #finish{
+    position:fixed; inset:0; background:rgba(20,10,30,.55); z-index:40;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  #finish .card{ background:#fff; border-radius:22px; padding:32px 24px; text-align:center; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  #finish .card h2{ margin:10px 0 6px; font-size:42px; }
+  #finish button{ margin-top:14px; padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <h1>🕶️ เกม AR: เลือกให้เหมาะสม (ไม่ใช้กล้อง)</h1>
+  <a href="../../index.html#/unit/p1/cs/4/ar">← กลับหน้าหน่วย</a>
+</header>
+
+<p class="desc">หน่วยที่ 5 การเปรียบเทียบ (ป.1) — ลากคำตอบไปวางให้ตรงกับสถานการณ์ ทีละ 5 ข้อ (2 รอบ) โดยเปรียบเทียบแล้วเลือกสิ่งที่เหมาะสมที่สุด</p>
+<div style="text-align:center; margin-bottom:6px">
+  <button class="tts-btn" data-audio-src="audio/ar-desc.mp3">
+    <span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำอธิบายเกม</span>
+  </button>
+</div>
+
+<div id="hud"><span class="pill">🎯 รอบที่ <span id="round-no">1</span>/2</span> <span class="pill">⭐ คะแนน: <span id="score">0</span>/5</span></div>
+
+<div id="scene"></div>
+
+<p class="hint">👆 ลาก/แตะคำตอบด้านล่างไปวางให้ตรงกับสถานการณ์</p>
+
+<div id="tray"></div>
+
+<div id="round-done" style="position:fixed;inset:0;background:rgba(20,10,30,.55);z-index:40;display:none;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:22px;padding:32px 24px;text-align:center;max-width:380px;box-shadow:0 20px 50px rgba(0,0,0,.3)">
+    <div style="font-size:2.6rem">⭐</div>
+    <h2 style="margin:8px 0;font-size:42px">เก่งมาก!</h2>
+    <p style="color:#666;font-size:.9rem">ลากถูกครบ 5 ข้อแล้ว เตรียมไปรอบที่ 2</p>
+    <button style="margin-top:14px;padding:11px 26px;border:none;border-radius:999px;background:#3B82F6;color:#fff;font-weight:700;font-size:1rem;cursor:pointer" onclick="nextRound()">▶️ ไปรอบต่อไป</button>
+  </div>
+</div>
+
+<div id="finish">
+  <div class="card">
+    <div style="font-size:2.6rem">🎉</div>
+    <h2>เก่งมาก! เลือกถูกครบทุกข้อ</h2>
+    <p style="color:#666;font-size:.9rem">การเปรียบเทียบช่วยให้เราเลือกสิ่งของได้เหมาะสมกับสิ่งที่ต้องการ</p>
+    <button onclick="location.reload()">🔄 เล่นอีกครั้ง</button>
+  </div>
+</div>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const SIT = [{"cap": "วาดภาพแล้วอยากลบแก้ไขได้", "icon": "✏️", "ans": "ดินสอ", "audio": "ar-step1"}, {"cap": "ไปเที่ยวภูเขา ต้องใส่ของเยอะ", "icon": "⛰️", "ans": "กระเป๋าเป้", "audio": "ar-step2"}, {"cap": "หาหนังสือบนชั้นวาง", "icon": "📚", "ans": "มองจากบนลงล่าง", "audio": "ar-step3"}, {"cap": "เก็บของเล่นให้หาได้ง่าย", "icon": "🧸", "ans": "แยกตามประเภท", "audio": "ar-step4"}, {"cap": "นับสตรอว์เบอร์รีในตะกร้า", "icon": "🍓", "ans": "นับจากซ้ายไปขวา", "audio": "ar-step5"}, {"cap": "แอปเปิลกับสตรอว์เบอร์รี เหมือนกันที่…", "icon": "🍎🍓", "ans": "สี", "audio": "ar-step6"}, {"cap": "ช้างกับหนู ต่างกันที่…", "icon": "🐘🐭", "ans": "ขนาด", "audio": "ar-step7"}, {"cap": "ลูกฟุตบอลกับลูกบาส เหมือนกันที่…", "icon": "⚽🏀", "ans": "รูปทรง", "audio": "ar-step8"}, {"cap": "กรรไกรกับสีเทียน ต่างกันที่…", "icon": "✂️🖍️", "ans": "การใช้งาน", "audio": "ar-step9"}, {"cap": "เล่นเกมจับผิดภาพ ควรทำอย่างไร", "icon": "🧩", "ans": "เทียบทีละส่วน", "audio": "ar-step10"}];
+const PER_ROUND = 5, ROUNDS = Math.ceil(SIT.length / PER_ROUND);
+let round = 0, score = 0, total = PER_ROUND;
+const scoreEl = document.getElementById("score");
+const sceneEl = document.getElementById("scene"), trayEl = document.getElementById("tray");
+
+function shuffle(a){ a = [...a]; for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function startRound(){
+  const set = SIT.slice(round * PER_ROUND, (round + 1) * PER_ROUND);
+  score = 0; total = set.length; scoreEl.textContent = 0;
+  document.getElementById("round-no").textContent = round + 1;
+  sceneEl.innerHTML = set.map((s, i) => `
+    <div class="dropzone" data-answer="${s.ans}">
+      <span class="step-num">${i + 1}</span>
+      <span class="icon" style="font-size:44px">${s.icon}</span>
+      <span style="font-size:.7rem;font-weight:700;text-align:center">${s.cap}</span>
+      <span class="slot">วางที่นี่</span>
+    </div>`).join("");
+  trayEl.innerHTML = shuffle(set).map(s => `<div class="label-chip" data-name="${s.ans}" data-hover-audio="audio/${s.audio}.mp3">${s.icon.length > 2 ? "" : s.icon + " "}${s.ans}</div>`).join("");
+  trayEl.querySelectorAll(".label-chip").forEach(c => { makeDraggable(c); hoverAudio(c); });
+}
+function nextRound(){ document.getElementById("round-done").style.display = "none"; round++; startRound(); }
+
+function hoverAudio(chip){
+  chip.addEventListener("mouseenter", () => { if(chip.classList.contains("placed")) return; playAudio(chip.dataset.hoverAudio, chip); });
+  chip.addEventListener("mouseleave", () => { stopSpeaking(); });
+}
+
+function makeDraggable(chip){
+  chip.addEventListener("pointerdown", (e) => {
+    if(chip.classList.contains("placed")) return;
+    const name = chip.dataset.name;
+    const ghost = chip.cloneNode(true);
+    ghost.style.position = "fixed";
+    ghost.style.pointerEvents = "none";
+    ghost.style.zIndex = 999;
+    ghost.style.left = e.clientX + "px";
+    ghost.style.top = e.clientY + "px";
+    ghost.style.transform = "translate(-50%,-50%)";
+    document.body.appendChild(ghost);
+
+    let overZone = null;
+    const onMove = (ev) => {
+      ghost.style.left = ev.clientX + "px";
+      ghost.style.top = ev.clientY + "px";
+      overZone = null;
+      document.querySelectorAll(".dropzone").forEach(z => {
+        const r = z.getBoundingClientRect();
+        const inside = ev.clientX >= r.left && ev.clientX <= r.right && ev.clientY >= r.top && ev.clientY <= r.bottom;
+        z.style.background = inside && !z.classList.contains("correct") ? "#EEF1FB" : "";
+        if(inside) overZone = z;
+      });
+    };
+    const onUp = () => {
+      ghost.remove();
+      document.querySelectorAll(".dropzone").forEach(z => { if(!z.classList.contains("correct")) z.style.background = ""; });
+      if(overZone){
+        if(overZone.dataset.answer === name && !overZone.classList.contains("correct")){
+          overZone.classList.add("correct");
+          overZone.querySelector(".slot").textContent = name;
+          chip.classList.add("placed");
+          score++;
+          scoreEl.textContent = score;
+          if(score >= total){
+            if(round + 1 < ROUNDS){
+              setTimeout(() => {
+                document.getElementById("round-done").style.display = "flex";
+                speakText("เก่งมาก ลากถูกครบห้าข้อแล้ว ไปรอบต่อไปกันเลย", null);
+              }, 400);
+            } else {
+              setTimeout(() => {
+                document.getElementById("finish").style.display = "flex";
+                speakText("เก่งมาก เลือกถูกครบทุกข้อ การเปรียบเทียบช่วยให้เราเลือกสิ่งของได้เหมาะสมกับสิ่งที่ต้องการ", null);
+              }, 400);
+            }
+          }
+        } else if(overZone.dataset.answer !== name){
+          overZone.classList.add("wrong-flash");
+          setTimeout(() => overZone.classList.remove("wrong-flash"), 400);
+        }
+      }
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp);
+  });
+}
+startRound();
+</script>
+</body>
+</html>

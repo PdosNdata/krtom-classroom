@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การเปรียบเทียบ — ป.1 หน่วย 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:36px; } /* ป.1-3: เนื้อหา 36px */
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{
+    background:linear-gradient(135deg,#3B82F6,#8B5CF6);
+    color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  header h1{ margin:0; font-size:42px; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{
+    background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px;
+  }
+  .obj-box h2{ margin:0 0 10px; font-size:42px; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{
+    display:flex; align-items:center; gap:10px; font-size:42px;
+    background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff;
+    padding:10px 18px; border-radius:14px; margin-bottom:16px;
+  }
+  section.topic > h2 .num{
+    background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none;
+  }
+
+  .device-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .device-card{
+    background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px;
+    display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05);
+  }
+  .device-card .icon{ flex:none; width:56px; height:56px; display:flex; align-items:center; justify-content:center; }
+  .device-card .icon svg{ max-width:100%; max-height:100%; }
+  .device-card h3{ margin:0 0 4px; font-size:1rem; }
+  .device-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{
+    background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0;
+    font-size:.9rem;
+  }
+  .info-box b{ color:#047857; }
+
+  .fun-fact{
+    background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0;
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{
+    counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px;
+    background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem;
+  }
+  .steps li::before{
+    content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%);
+    width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem;
+  }
+
+  .summary-box{
+    background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px;
+    padding:20px 22px; margin-top:32px;
+  }
+  .summary-box h2{ margin:0 0 10px; font-size:42px; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{
+    background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem;
+  }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 5</h1>
+    <p>การเปรียบเทียบ · ป.1 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p1/cs/4/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div style="text-align:center; margin-bottom:20px">
+    <button class="tts-btn tts-large" data-audio-src="audio/know-full.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังใบความรู้ทั้งหมด</span></button>
+  </div>
+
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>บอกสิ่งที่ใช้เปรียบเทียบความเหมือนและความแตกต่างได้</li>
+      <li>เปรียบเทียบความเหมือนและความแตกต่างของสิ่งต่าง ๆ ได้</li>
+      <li>ค้นหาสิ่งของหรือสิ่งที่ต่างกันในภาพอย่างเป็นระบบได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> ความเหมือนและความแตกต่าง <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></h2>
+    <p>เมื่อมีของสองอย่าง เราดูได้ว่า <b>เหมือนกัน</b> หรือ <b>ต่างกัน</b> ที่ตรงไหน โดยสังเกตจาก</p>
+    <div class="device-grid">
+      <div class="device-card"><span class="icon" style="font-size:44px">🎨</span><div><h3>สี</h3><p>ดูว่าสีเหมือนกันหรือต่างกัน เช่น แอปเปิลสีแดง กับสตรอว์เบอร์รีสีแดง</p></div></div>
+      <div class="device-card"><span class="icon" style="font-size:44px">⚽</span><div><h3>รูปทรง</h3><p>ดูว่ารูปร่างเหมือนกันไหม เช่น ลูกฟุตบอลกับลูกบาสเกตบอลเป็นทรงกลม</p></div></div>
+      <div class="device-card"><span class="icon" style="font-size:44px">📏</span><div><h3>ขนาด</h3><p>ดูว่าใหญ่หรือเล็กต่างกันแค่ไหน เช่น ช้างตัวใหญ่ หนูตัวเล็ก</p></div></div>
+      <div class="device-card"><span class="icon" style="font-size:44px">✂️</span><div><h3>การใช้งาน</h3><p>ดูว่าใช้ทำอะไร เช่น กรรไกรใช้ตัด สีเทียนใช้ระบายสี</p></div></div>
+    </div>
+    <div class="info-box">💡 <b>ตัวอย่าง:</b> ดินสอกับปากกา <b>เหมือนกัน</b> ที่ใช้เขียน และมีรูปทรงเรียวยาว แต่ <b>ต่างกัน</b> ที่ดินสอลบได้ ส่วนปากกาเส้นคมชัดกว่า</div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> เลือกสิ่งของโดยการเปรียบเทียบ <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></h2>
+    <p>เราใช้การเปรียบเทียบช่วยตัดสินใจเลือกของได้ในชีวิตประจำวัน</p>
+    <ol class="steps">
+      <li>ดูว่าของที่จะเลือกมีอะไรบ้าง</li>
+      <li>เปรียบเทียบว่าเหมือนหรือต่างกันที่ตรงไหน</li>
+      <li>เลือกอันที่เหมาะกับสิ่งที่เราต้องการ</li>
+    </ol>
+    <div class="info-box">
+      ✏️ อยากวาดภาพแล้วลบแก้ได้ → เลือก <b>ดินสอ</b><br>
+      🎒 ไปเที่ยวภูเขาต้องใส่ของเยอะ → เลือก <b>กระเป๋าเป้</b> เพราะใส่ของได้มากกว่า<br>
+      🥛 ชอบรสผลไม้หรือรสเข้มข้น → เลือกนม <b>รสที่ชอบ</b>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> การค้นหาอย่างเป็นระบบ <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></h2>
+    <p>การค้นหาสิ่งของหรือหาจุดที่ต่างกันในภาพ ถ้าหาไปเรื่อย ๆ จะช้าและพลาดง่าย แต่ถ้าหา <b>อย่างเป็นระบบ</b> จะหาได้เร็วขึ้น</p>
+    <div class="device-grid">
+      <div class="device-card"><span class="icon" style="font-size:44px">⬇️</span><div><h3>บนลงล่าง</h3><p>เริ่มหาจากด้านบน แล้วไล่ลงมาทีละแถว</p></div></div>
+      <div class="device-card"><span class="icon" style="font-size:44px">⬆️</span><div><h3>ล่างขึ้นบน</h3><p>เริ่มหาจากด้านล่าง แล้วไล่ขึ้นไป</p></div></div>
+      <div class="device-card"><span class="icon" style="font-size:44px">➡️</span><div><h3>ซ้ายไปขวา</h3><p>ไล่ดูจากซ้ายไปขวาทีละแถว</p></div></div>
+      <div class="device-card"><span class="icon" style="font-size:44px">⬅️</span><div><h3>ขวาไปซ้าย</h3><p>ไล่ดูจากขวาไปซ้ายทีละแถว</p></div></div>
+    </div>
+    <div class="info-box">🔎 <b>ลองใช้:</b> หาหนังสือบนชั้นวางโดยมองจากบนลงล่าง หรือเกมจับผิดภาพ โดยเทียบทีละส่วนของภาพสองภาพ</div>
+    <div class="info-box">📦 <b>จัดเก็บให้หาง่าย:</b> เก็บเสื้อผ้า ของเล่น หรือหนังสือ โดยแยกตามสีหรือประเภทการใช้งาน เวลาหาจะเจอเร็ว</div>
+  </section>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>เปรียบเทียบความเหมือนและความแตกต่างได้จาก สี รูปทรง ขนาด และการใช้งาน</li>
+      <li>การเปรียบเทียบช่วยให้เลือกสิ่งของได้เหมาะสมกับที่ต้องการ</li>
+      <li>การค้นหาอย่างเป็นระบบ (เช่น บนลงล่าง ซ้ายไปขวา) ทำให้หาได้เร็วและครบถ้วน</li>
+    </ul>
+  </div>
+
+  <div style="text-align:center; font-size:.42rem; color:#64748B; margin-top:20px">
+    ที่มา: ปรับเรียบเรียงจากสื่อการสอนวิชาเทคโนโลยี ป.1 ของ DLTV (ครูสิปปกร ศรีพรหมทอง) · ดูต้นฉบับได้ที่ dltv.ac.th
+  </div>
+
+  <div class="nav-row"><a href="../../index.html#/unit/p1/cs/4/worksheet">ไปทำใบงานต่อ →</a></div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=4"></script>
+</body>
+</html>

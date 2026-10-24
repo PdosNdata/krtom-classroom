@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
@@ -13,9 +13,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=74">
+<link rel="stylesheet" href="assets/css/style.css?v=78">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script>
+/* จดจำการเข้าสู่ระบบ (เลือกเอง): ถ้าผู้ใช้ติ๊ก "จดจำ" ไว้ตอนล็อกอิน เปิดแท็บใหม่/กลับมาจากหน้าเกมแล้วไม่ต้องล็อกอินซ้ำ (หมดอายุใน 12 ชั่วโมง) */
+(function(){
+  try{
+    if(sessionStorage.getItem("loggedInUserName")) return;
+    var r = JSON.parse(localStorage.getItem("krtomRemember") || "null");
+    if(!r || !r.ts || Date.now() - r.ts > 12 * 3600 * 1000){ localStorage.removeItem("krtomRemember"); return; }
+    Object.keys(r.ss || {}).forEach(function(k){ if(r.ss[k] != null) sessionStorage.setItem(k, r.ss[k]); });
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 
@@ -68,6 +79,9 @@
           <span>🧑‍🎓 นักเรียน</span>
         </label>
       </div>
+      <label class="login-remember" style="display:flex;align-items:center;gap:8px;justify-content:center;margin:8px 0 0;font-size:.85rem;cursor:pointer">
+        <input type="checkbox" id="login-remember" style="width:20px;height:20px"> <span>จดจำการเข้าสู่ระบบในเครื่องนี้ <small style="opacity:.7">(ใช้เฉพาะเครื่องส่วนตัว)</small></span>
+      </label>
       <div class="login-error" id="login-error"></div>
       <button type="button" class="login-submit" onclick="submitLogin()">
         <img class="submit-btn-img" src="assets/images/login-btn-submit.webp" alt="ตกลง"
@@ -143,12 +157,12 @@
   </div>
 </div>
 
-<script src="assets/js/data.js?v=15"></script>
+<script src="assets/js/data.js?v=16"></script>
 <script src="assets/js/contents.js?v=8"></script>
 <script src="assets/js/standards.js?v=3"></script>
 <script src="assets/js/flow.js?v=4"></script>
 <script src="assets/js/reports.js?v=2"></script>
-<script src="assets/js/app.js?v=70"></script>
+<script src="assets/js/app.js?v=96"></script>
 <script>
   function openLoginModal(){ document.getElementById("login-modal").classList.add("show"); }
   function closeLoginModal(){ document.getElementById("login-modal").classList.remove("show"); }
@@ -254,6 +268,13 @@
 
   function loginSuccess(name){
     try{ sessionStorage.setItem("loggedInUserName", name); }catch(e){}
+    try{
+      const cb = document.getElementById("login-remember");
+      if(cb && cb.checked){
+        const ss = {}; ["loggedInUserName","loggedInRole","loggedInStudentGrade","krtomStudentToken","krtomTeacherToken"].forEach(k => { ss[k] = sessionStorage.getItem(k); });
+        localStorage.setItem("krtomRemember", JSON.stringify({ ts: Date.now(), ss }));
+      } else { localStorage.removeItem("krtomRemember"); }
+    }catch(e){}
     setHeaderLoggedInUser(name);
     document.getElementById("login-gate").classList.add("logged-in");
   }
@@ -330,7 +351,7 @@
         let tk = null;
         try{ tk = sessionStorage.getItem("krtomTeacherToken"); }catch(e){}
         const done = () => {
-          try{ sessionStorage.removeItem("loggedInUserName"); sessionStorage.removeItem("krtomTeacherToken"); sessionStorage.removeItem("krtomStudentToken"); sessionStorage.removeItem("krtomFlowLocal"); sessionStorage.removeItem("loggedInRole"); }catch(e){}
+          try{ sessionStorage.removeItem("loggedInUserName"); sessionStorage.removeItem("krtomTeacherToken"); sessionStorage.removeItem("krtomStudentToken"); sessionStorage.removeItem("krtomFlowLocal"); sessionStorage.removeItem("loggedInRole"); localStorage.removeItem("krtomRemember"); }catch(e){}
           location.reload();
         };
         const sb = getSupabase();

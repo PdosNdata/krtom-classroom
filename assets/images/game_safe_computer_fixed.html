@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>นักวิ่งตัวจิ๋ว พิชิตโลกคอมพิวเตอร์ปลอดภัย</title>
+<style>
+@font-face{
+  font-family:'TH Sarabun New';
+  src:local('TH Sarabun New'),local('THSarabunNew'),url('./THSarabunNew.ttf') format('truetype');
+  font-weight:100 900;font-style:normal;font-display:swap
+}
+:root{--ink:#16345c;--blue:#218ee8;--green:#22c55e;--gold:#ffd34d;--pink:#ff6fae}
+*{box-sizing:border-box}body{margin:0;font-family:'TH Sarabun New','TH SarabunPSK',Tahoma,sans-serif;color:var(--ink);background:radial-gradient(ellipse at top,#e1fbff 0,#bdeaff 48%,#f8fdff 100%);min-height:100vh}
+button{font:inherit;cursor:pointer;touch-action:manipulation} .app{max-width:1180px;margin:auto;padding:18px}
+.hero{position:relative;overflow:hidden;border:4px solid #fff;border-radius:30px;padding:22px 24px 18px;background:linear-gradient(125deg,#126cc1,#23b9e9 56%,#8be7d1);box-shadow:0 14px 0 #227fc126,0 22px 45px #28628c24;color:#fff}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:#ffffff20}.hero:before{width:270px;height:270px;right:-40px;top:-140px}.hero:after{width:170px;height:170px;left:35%;bottom:-135px}
+.hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:16px}.brand-icon{font-size:clamp(42px,6vw,76px);filter:drop-shadow(0 5px 2px #004a813d)}
+h1{font-size:clamp(29px,4.5vw,48px);line-height:1.18;margin:0;font-weight:800;text-shadow:0 3px 0 #07569b}.hero p{margin:8px 0 0;font-size:clamp(13px,2vw,17px);color:#effcff}.hero-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.stat-chip{background:#ffffff25;border:1px solid #ffffff6b;border-radius:15px;padding:9px 13px;font-weight:700;white-space:nowrap}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;margin-top:17px}.side,.main-card{background:#ffffffd9;border:2px solid #fff;border-radius:25px;box-shadow:0 9px 25px #1d63931b;padding:17px}.section-title{display:flex;align-items:center;gap:8px;font-weight:800;font-size:23px;margin:0 0 12px}
+.characters{display:grid;grid-template-columns:1fr 1fr;gap:9px}.character{border:3px solid #e1edf9;border-radius:20px;padding:10px 4px 12px;background:linear-gradient(#f7fcff,#e9f7ff);color:#315071;font-weight:700;transition:.18s;box-shadow:0 4px 0 #dceaf5}.character .person{display:block;font-size:62px;line-height:1.2;filter:drop-shadow(0 5px 2px #193c5020)}.character small{display:block;font-size:12px}.character.selected{border-color:#2e9cf0;background:linear-gradient(#dff6ff,#c4ebff);box-shadow:0 4px 0 #5cb7f3,0 0 0 3px #43b2f522;transform:translateY(-2px)}
+.mission{margin-top:15px;padding:13px;border-radius:17px;background:#fff8dc;border:1px solid #ffe9a0}.mission b{display:block;margin-bottom:4px}.mission p{font-size:13px;margin:0;color:#6e5a2d;line-height:1.6}.mini-rules{display:grid;gap:9px;margin-top:14px}.rule{display:flex;gap:9px;align-items:center;font-size:18px;color:#4a6480}.rule span{font-size:23px}
+.main-card{padding:14px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:2px 2px 12px}.toolbar .section-title{margin:0}.toolbar-actions{display:flex;gap:7px}.btn{border:0;border-radius:14px;padding:10px 15px;font-weight:800;box-shadow:0 4px 0 #00000016;transition:transform .12s,filter .12s}.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #00000016}.btn-start{color:white;background:linear-gradient(#42e879,#13b852);border:2px solid #b4ffd0;text-shadow:0 1px #087b34;box-shadow:0 5px 0 #119747,0 7px 12px #14ad4c30}.btn-gold{background:linear-gradient(#ffe98b,#ffc02d);color:#694200}.btn-light{background:#eaf5ff;color:#315579}
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:11px}.hud-card{display:flex;align-items:center;gap:8px;border-radius:15px;padding:9px 10px;background:linear-gradient(135deg,#edf8ff,#f8fcff);border:1px solid #d7eafa}.hud-icon{font-size:24px}.hud-label{font-size:15px;color:#66809a}.hud-value{font-weight:800;font-size:24px;line-height:1.15}
+.stage{position:relative;overflow:hidden;border-radius:21px;border:3px solid white;background:#83dafa;box-shadow:inset 0 0 0 1px #a7eaff,0 5px 15px #236b9d22}.stage canvas{display:block;width:100%;height:auto;touch-action:manipulation}
+.overlay{position:absolute;inset:0;background:#102c4b83;backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:15px;z-index:4}.overlay.hidden{display:none}.dialog{max-width:470px;width:100%;border:3px solid #fff;border-radius:24px;padding:22px;background:linear-gradient(145deg,#fff,#edf9ff);text-align:center;box-shadow:0 12px 35px #062b4a4d}.dialog .big{font-size:50px;line-height:1.25}.dialog h2{margin:4px 0 6px;font-size:25px;color:#14548c}.dialog p{margin:0 0 14px;color:#52708b;font-size:19px;line-height:1.7}.dialog .btn{margin:3px}.answer-list{display:grid;gap:8px}.answer{background:#f4faff;border:2px solid #d7e9f7;border-radius:13px;padding:10px;text-align:left;color:#274d71;font-weight:600}.answer:hover{background:#e1f4ff;border-color:#67baf3}.feedback{font-size:19px;font-weight:700;min-height:25px;margin:9px 0}
+.touch-controls{display:none;gap:10px;justify-content:space-between;margin-top:10px}.touch-controls button{border:2px solid white;border-radius:17px;background:linear-gradient(#effaff,#c9edff);color:#1d6095;font-size:22px;font-weight:800;width:31%;padding:10px;box-shadow:0 4px 0 #91c9e7}
+.tipbar{margin-top:12px;display:flex;align-items:center;gap:10px;background:#e9fff0;border:1px solid #bcefc9;border-radius:16px;padding:11px 13px;color:#246842;font-size:13px;line-height:1.5}.tipbar strong{white-space:nowrap}
+.footer{text-align:center;color:#5a7a97;font-size:12px;padding:15px 0 4px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.side{order:2}.main-card{order:1}.side{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side .section-title{grid-column:1/-1;margin-bottom:0}.mission{margin-top:0}.mini-rules{margin-top:0}.hero-inner{align-items:flex-start;flex-direction:column}.hero-stats{justify-content:flex-start}.hud-card{padding:8px 6px}.hud-icon{font-size:20px}.hud-value{font-size:16px}}
+@media(max-width:520px){.app{padding:9px}.hero{padding:17px;border-radius:22px}.brand{align-items:flex-start;gap:9px}.brand-icon{font-size:40px}.hero-stats{gap:5px}.stat-chip{font-size:16px;padding:7px 9px}.side{padding:12px;grid-template-columns:1fr}.side .section-title{grid-column:auto}.main-card{padding:10px}.hud{grid-template-columns:repeat(2,1fr)}.toolbar{align-items:flex-start}.toolbar-actions{width:100%}.toolbar-actions .btn{flex:1}.touch-controls{display:flex}.character .person{font-size:52px}}
+</style></head>
+<body><div class="app">
+<header class="hero"><div class="hero-inner"><div class="brand"><div class="brand-icon">🛡️</div><div><h1>นักวิ่งตัวจิ๋ว<br>พิชิตโลกคอมพิวเตอร์ปลอดภัย</h1><p>วิ่งเก็บไอเทม • หลบสิ่งเสี่ยง • ตอบคำถาม • เก่งดิจิทัลอย่างปลอดภัย</p></div></div><div class="hero-stats"><div class="stat-chip">🏫 ห้องเรียนดิจิทัล</div><div class="stat-chip">⭐ 5 ไอเทมภารกิจ</div></div></div></header>
+<div class="layout">
+<aside class="side"><h2 class="section-title">🧑‍🎓 เลือกฮีโร่ของคุณ</h2><div class="characters"><button class="character selected" id="boyPick"><span class="person">👦🏻</span>ต้นกล้า<small>นักเรียนชาย</small></button><button class="character" id="girlPick"><span class="person">👧🏻</span>ใบหม่อน<small>นักเรียนหญิง</small></button></div>
+<div class="mission"><b>🎯 ภารกิจของเรา</b><p>เก็บไอเทมความปลอดภัยให้ครบ 5 ชิ้น พร้อมตอบคำถามเพื่อสะสมคะแนนพิเศษ</p></div>
+<div class="mini-rules"><div class="rule"><span>⏻</span><div><b>ปิดเครื่องให้ถูกวิธี</b><br>บันทึกงานแล้วเลือก Shut down</div></div><div class="rule"><span>🔌</span><div><b>ระวังอุปกรณ์ไฟฟ้า</b><br>ไม่จับสายชำรุดหรือมือเปียก</div></div><div class="rule"><span>🥤</span><div><b>โต๊ะคอมต้องแห้ง</b><br>วางอาหารและน้ำให้ห่างเครื่อง</div></div></div>
+</aside>
+<main class="main-card"><div class="toolbar"><h2 class="section-title">🌈 สนามผจญภัย</h2><div class="toolbar-actions"><button class="btn btn-start" id="startBtn">▶ เริ่มเกม</button><button class="btn btn-gold" id="pauseBtn">Ⅱ พัก</button><button class="btn btn-light" id="resetBtn">↻ ใหม่</button></div></div>
+<div class="hud"><div class="hud-card"><span class="hud-icon">❤️</span><div><div class="hud-label">พลังชีวิต</div><div class="hud-value" id="lives">3</div></div></div><div class="hud-card"><span class="hud-icon">🪙</span><div><div class="hud-label">คะแนน</div><div class="hud-value" id="score">0</div></div></div><div class="hud-card"><span class="hud-icon">⭐</span><div><div class="hud-label">ไอเทม</div><div class="hud-value"><span id="items">0</span>/5</div></div></div><div class="hud-card"><span class="hud-icon">⏱️</span><div><div class="hud-label">เวลาเล่น</div><div class="hud-value"><span id="time">0</span> วิ</div></div></div></div>
+<div class="stage"><canvas id="game" width="960" height="420" aria-label="เกมวิ่งเก็บไอเทม"></canvas><div class="overlay" id="startOverlay"><div class="dialog"><div class="big">🏃🏻‍♀️💨</div><h2>พร้อมออกผจญภัยหรือยัง?</h2><p>เลือกตัวละครของคุณ แล้วกระโดดเก็บไอเทมดี ๆ<br>หลบสิ่งอันตรายและเรียนรู้การใช้คอมพิวเตอร์อย่างปลอดภัย!</p><button class="btn btn-start" id="overlayStart">เริ่มผจญภัย 🚀</button></div></div><div class="overlay hidden" id="quizOverlay"><div class="dialog"><div class="big">🧠✨</div><h2 id="qTitle">คำถามความปลอดภัย</h2><p id="qText"></p><div class="answer-list" id="answers"></div><div class="feedback" id="feedback"></div><button class="btn btn-start" id="continueBtn" style="display:none">ไปต่อ ➜</button></div></div><div class="overlay hidden" id="endOverlay"><div class="dialog"><div class="big" id="endEmoji">🏆</div><h2 id="endTitle">ยอดเยี่ยม!</h2><p id="endText"></p><button class="btn btn-start" id="playAgain">เล่นอีกครั้ง 🔄</button></div></div></div>
+<div class="touch-controls"><button id="leftHint">↔ วิ่งอัตโนมัติ</button><button id="jumpBtn">⬆ กระโดด</button><button id="pauseTouch">Ⅱ พักเกม</button></div>
+<div class="tipbar"><span style="font-size:24px">💡</span><div><strong>เคล็ดลับฮีโร่:</strong> กด <b>Space</b> / <b>↑</b> หรือแตะปุ่มกระโดดเพื่อข้ามสิ่งกีดขวาง เก็บไอเทมให้ครบและตอบคำถามให้ถูกต้อง!</div></div>
+</main></div><footer class="footer">สื่อการเรียนรู้วิชาวิทยาการคำนวณ • ออกแบบเพื่อเรียนรู้ผ่านการเล่น</footer></div>
+<script>
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),$=id=>document.getElementById(id);
+let gender='boy',running=false,paused=false,gameOver=false,quizOpen=false;
+let player={x:125,y:294,vy:0,w:46,h:62,onGround:true};
+let obstacles=[],collectibles=[],score=0,lives=3,items=0,elapsed=0,last=0,spawn=0,collectSpawn=0,speed=5,frame=0,quizIndex=0,particles=[];
+const questions=[
+{q:'เมื่อจะปิดคอมพิวเตอร์ ควรทำอย่างไร?',a:['กดปิดปลั๊กทันที','บันทึกงาน แล้วเลือกคำสั่ง Shut down','ดึงสายไฟออก'],correct:1,why:'ถูกต้อง! บันทึกงานก่อน แล้วเลือก Shut down ผ่านระบบ'},
+{q:'ข้อใดเป็นการใช้อุปกรณ์อย่างปลอดภัย?',a:['จับปลั๊กตอนมือเปียก','วางแก้วน้ำบนคอมพิวเตอร์','มือแห้งและจับอุปกรณ์อย่างระมัดระวัง'],correct:2,why:'เยี่ยมมาก! มือแห้งและระมัดระวังช่วยลดอันตราย'},
+{q:'ถ้าพบสายไฟชำรุด ควรทำอย่างไร?',a:['หยุดใช้และแจ้งครูหรือผู้ใหญ่','ลองจับดูว่ายังมีไฟไหม','ใช้ต่อไปตามปกติ'],correct:0,why:'ถูกต้อง! หยุดใช้และแจ้งผู้ใหญ่ ไม่ซ่อมเอง'},
+{q:'ระหว่างใช้คอมพิวเตอร์ ควรทำอย่างไร?',a:['กินขนมเหนือแป้นพิมพ์','วางเครื่องดื่มข้างคอมพิวเตอร์','วางอาหารและเครื่องดื่มให้ห่างจากอุปกรณ์'],correct:2,why:'ถูกต้อง! น้ำและอาหารอาจทำให้อุปกรณ์เสียหาย'},
+{q:'ก่อนปิดเครื่อง ควรทำสิ่งใดก่อน?',a:['บันทึกงานและปิดโปรแกรมอย่างเหมาะสม','ถอดสายทุกเส้นขณะเครื่องทำงาน','เดินออกไปโดยไม่บันทึกงาน'],correct:0,why:'เก่งมาก! บันทึกงานก่อนปิดเครื่องช่วยป้องกันข้อมูลสูญหาย'}
+];
+function rounded(x,y,w,h,r,color){ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()}
+function cloud(x,y,s){ctx.fillStyle='#ffffffbd';ctx.beginPath();ctx.arc(x,y,18*s,0,7);ctx.arc(x+20*s,y-9*s,25*s,0,7);ctx.arc(x+46*s,y,19*s,0,7);ctx.fill()}
+function drawBackground(){
+ let g=ctx.createLinearGradient(0,0,0,420);g.addColorStop(0,'#61ccff');g.addColorStop(.6,'#d9f8ff');g.addColorStop(1,'#f5ffff');ctx.fillStyle=g;ctx.fillRect(0,0,960,420);
+ for(let i=0;i<5;i++)cloud(((i*240-frame*.24)%1100+1100)%1100-50,60+(i%2)*40,.85);
+ // distant hills
+ ctx.fillStyle='#8ee1ad';ctx.beginPath();ctx.moveTo(0,260);ctx.quadraticCurveTo(180,180,360,255);ctx.quadraticCurveTo(580,175,760,245);ctx.quadraticCurveTo(870,200,960,238);ctx.lineTo(960,350);ctx.lineTo(0,350);ctx.fill();
+ // school building
+ ctx.fillStyle='#ffe4ad';ctx.fillRect(540,145,280,143);ctx.fillStyle='#f4a46f';ctx.beginPath();ctx.moveTo(520,147);ctx.lineTo(680,87);ctx.lineTo(840,147);ctx.fill();ctx.fillStyle='#fff3d8';ctx.fillRect(650,214,60,74);
+ ctx.fillStyle='#68c8f5';for(let x=560;x<805;x+=51)for(let y=166;y<218;y+=34){rounded(x,y,31,23,4,'#62c9f2');ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x+15,y);ctx.lineTo(x+15,y+23);ctx.moveTo(x,y+11);ctx.lineTo(x+31,y+11);ctx.stroke()}
+ // flag
+ ctx.fillStyle='#8d6b50';ctx.fillRect(680,45,4,46);ctx.fillStyle='#ed4d57';ctx.fillRect(684,48,34,8);ctx.fillStyle='#fff';ctx.fillRect(684,56,34,8);ctx.fillStyle='#2873bd';ctx.fillRect(684,64,34,8);ctx.fillStyle='#fff';ctx.fillRect(684,72,34,8);ctx.fillStyle='#ed4d57';ctx.fillRect(684,80,34,8);
+ // trees
+ for(let x of [70,470,885]){ctx.fillStyle='#95623e';ctx.fillRect(x,220,19,128);ctx.fillStyle='#28b96d';ctx.beginPath();ctx.arc(x+9,205,43,0,7);ctx.fill();ctx.fillStyle='#62d987';ctx.beginPath();ctx.arc(x-8,192,25,0,7);ctx.fill();ctx.beginPath();ctx.arc(x+27,190,24,0,7);ctx.fill()}
+ // ground
+ ctx.fillStyle='#4cc86d';ctx.fillRect(0,340,960,80);ctx.fillStyle='#25a951';ctx.fillRect(0,340,960,12);
+ for(let x=-(frame*speed*.4%48);x<1000;x+=48){ctx.fillStyle='#bb8355';ctx.fillRect(x,354,39,25);ctx.fillStyle='#9b6746';ctx.fillRect(x+9,383,31,22);ctx.fillStyle='#d5a06b';ctx.fillRect(x+4,358,13,5)}
+ // flowers
+ for(let x=30;x<960;x+=113){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,335,4,0,7);ctx.arc(x+5,331,4,0,7);ctx.arc(x+9,336,4,0,7);ctx.fill();ctx.fillStyle='#ffd44d';ctx.beginPath();ctx.arc(x+5,335,3,0,7);ctx.fill()}
+}
+function drawPlayer(){
+ let x=player.x,y=player.y;ctx.fillStyle='#2c65853b';ctx.beginPath();ctx.ellipse(x+22,343,29,7,0,0,7);ctx.fill();
+ // backpack
+ rounded(x-4,y+23,14,27,5,'#e9a24d');rounded(x-2,y+26,9,15,3,'#f7c06c');
+ // legs
+ ctx.strokeStyle='#f3bd8e';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x+14,y+44);ctx.lineTo(x+11,y+56);ctx.moveTo(x+31,y+44);ctx.lineTo(x+36,y+55);ctx.stroke();
+ rounded(x+2,y+53,17,8,4,'#29415d');rounded(x+28,y+52,18,8,4,'#29415d');
+ // uniform shirt
+ rounded(x+5,y+18,34,29,7,'#fff');ctx.fillStyle='#d6edff';ctx.fillRect(x+8,y+22,27,4);ctx.fillStyle='#244f91';ctx.fillRect(x+19,y+20,7,13);
+ if(gender==='girl'){ctx.fillStyle='#254f91';ctx.beginPath();ctx.moveTo(x+5,y+39);ctx.lineTo(x+39,y+39);ctx.lineTo(x+46,y+56);ctx.lineTo(x-2,y+56);ctx.fill();ctx.fillStyle='#ff6da8';ctx.beginPath();ctx.moveTo(x+22,y+23);ctx.lineTo(x+15,y+29);ctx.lineTo(x+22,y+34);ctx.lineTo(x+29,y+29);ctx.fill()}
+ else {ctx.fillStyle='#315c9c';ctx.fillRect(x+7,y+40,30,7)}
+ // arms
+ ctx.strokeStyle='#f3bd8e';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(x+7,y+26);ctx.lineTo(x,y+36);ctx.moveTo(x+37,y+26);ctx.lineTo(x+44,y+33);ctx.stroke();
+ // face and hair
+ ctx.fillStyle='#f4c49b';ctx.beginPath();ctx.arc(x+22,y+10,16,0,7);ctx.fill();ctx.fillStyle='#4c2b20';ctx.beginPath();ctx.arc(x+21,y+5,16,Math.PI,Math.PI*2);ctx.lineTo(x+38,y+13);ctx.lineTo(x+31,y+7);ctx.lineTo(x+10,y+10);ctx.fill();
+ if(gender==='girl'){ctx.beginPath();ctx.arc(x+7,y+15,9,0,7);ctx.fill();ctx.fillStyle='#ff6ba4';ctx.beginPath();ctx.arc(x+36,y-1,6,0,7);ctx.fill()}
+ ctx.fillStyle='#183655';ctx.beginPath();ctx.arc(x+17,y+11,2,0,7);ctx.arc(x+28,y+11,2,0,7);ctx.fill();ctx.strokeStyle='#ad5645';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x+22,y+14,5,.2,2.8);ctx.stroke();
+}
+function drawObstacle(o){rounded(o.x,o.y,o.w,o.h,9,o.type==='wire'?'#ff8d5b':'#ef5367');ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.strokeRect(o.x+3,o.y+3,o.w-6,o.h-6);ctx.textAlign='center';ctx.font='bold 20px sans-serif';ctx.fillStyle='#fff';ctx.fillText(o.type==='wire'?'⚡':'!',o.x+o.w/2,o.y+o.h/2+7);if(o.type!=='wire'){ctx.fillStyle='#b83249';ctx.beginPath();ctx.arc(o.x+o.w/2,o.y+o.h/2,5,0,7);ctx.fill()}}
+function drawCollect(c){ctx.save();ctx.shadowColor='#ffbd21';ctx.shadowBlur=13;ctx.fillStyle='#ffd13b';ctx.beginPath();ctx.arc(c.x,c.y,16,0,7);ctx.fill();ctx.restore();ctx.strokeStyle='#e89a00';ctx.lineWidth=3;ctx.stroke();ctx.fillStyle='#fff4af';ctx.textAlign='center';ctx.font='bold 17px sans-serif';ctx.fillText(c.kind,c.x,c.y+6)}
+function render(){drawBackground();ctx.textAlign='left';ctx.fillStyle='#165681';ctx.font='bold 16px 'TH Sarabun New',Tahoma';ctx.fillText('🏫 โรงเรียนดิจิทัลแสนสนุก',18,28);obstacles.forEach(drawObstacle);collectibles.forEach(drawCollect);drawPlayer();particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life/30);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();ctx.globalAlpha=1});if(paused&&!quizOpen&&!gameOver){rounded(350,145,260,92,22,'#ffffffeb');ctx.fillStyle='#174a7b';ctx.textAlign='center';ctx.font='bold 28px 'TH Sarabun New',Tahoma';ctx.fillText('พักหายใจแป๊บ ⏸',480,199)}}
+function updateHud(){$('score').textContent=score;$('lives').textContent='❤️'.repeat(lives)||'0';$('items').textContent=items;$('time').textContent=Math.floor(elapsed)}
+function intersects(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function burst(x,y,color){for(let i=0;i<12;i++)particles.push({x,y,vx:(Math.random()-.5)*5,vy:(Math.random()-.8)*5,r:2+Math.random()*3,life:30,color})}
+function tick(ts){if(!last)last=ts;let dt=Math.min((ts-last)/16.67,2);last=ts;if(running&&!paused&&!gameOver&&!quizOpen){elapsed+=dt/60;frame+=dt;spawn+=dt;collectSpawn+=dt;speed=5+Math.min(elapsed*.055,3);player.vy+=.72*dt;player.y+=player.vy*dt;if(player.y>280){player.y=280;player.vy=0;player.onGround=true}
+if(spawn>Math.max(47,90-elapsed)){spawn=0;obstacles.push({x:990,y:300,w:37,h:39,type:Math.random()>.48?'wire':'risk',passed:false})}
+if(collectSpawn>54){collectSpawn=0;collectibles.push({x:990,y:242-Math.random()*75,w:28,h:28,kind:['✓','⚙','⏻','★','💾'][Math.floor(Math.random()*5)]})}
+obstacles.forEach(o=>o.x-=speed*dt);collectibles.forEach(c=>c.x-=speed*dt);for(let o of obstacles){if(!o.passed&&intersects({x:player.x+4,y:player.y+8,w:36,h:49},o)){o.passed=true;lives--;burst(player.x+20,player.y+20,'#ff6475');if(lives<=0)endGame(false)}}
+for(let i=collectibles.length-1;i>=0;i--){let c=collectibles[i];if(intersects({x:player.x,y:player.y,w:46,h:62},{x:c.x-12,y:c.y-12,w:24,h:24})){collectibles.splice(i,1);items++;score+=10;burst(c.x,c.y,'#ffce38');if(items>=5){endGame(true)} }}
+obstacles=obstacles.filter(o=>o.x>-60);collectibles=collectibles.filter(c=>c.x>-40);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=dt});particles=particles.filter(p=>p.life>0);
+if(quizIndex<questions.length&&elapsed>8+quizIndex*12)showQuiz();updateHud()}
+render();requestAnimationFrame(tick)}
+function showQuiz(){quizOpen=true;running=false;$('quizOverlay').classList.remove('hidden');let q=questions[quizIndex];$('qTitle').textContent='คำถามที่ '+(quizIndex+1)+' จาก '+questions.length;$('qText').textContent=q.q;$('answers').innerHTML='';$('feedback').textContent='';$('continueBtn').style.display='none';q.a.forEach((a,i)=>{let b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>{[...$('answers').children].forEach(x=>x.disabled=true);if(i===q.correct){score+=20;$('feedback').textContent='✅ '+q.why;$('feedback').style.color='#159447';burst(480,190,'#30cc73')}else{lives--;$('feedback').textContent='💡 คำตอบที่ถูก: '+q.a[q.correct];$('feedback').style.color='#d34655'}updateHud();$('continueBtn').style.display='inline-block'};$('answers').appendChild(b)})}
+$('continueBtn').onclick=()=>{$('quizOverlay').classList.add('hidden');quizOpen=false;quizIndex++;if(lives<=0){endGame(false)}else{running=true;paused=false}};
+function endGame(won){running=false;gameOver=true;$('endOverlay').classList.remove('hidden');$('endEmoji').textContent=won?'🏆🎉':'💪🌟';$('endTitle').textContent=won?'ยอดเยี่ยม! ภารกิจสำเร็จ':'ลองใหม่อีกครั้งนะ';$('endText').textContent=(won?'คุณเก็บไอเทมครบแล้ว! ':'ไม่เป็นไรนะ ฮีโร่ฝึกฝนใหม่ได้! ')+'คะแนน '+score+' คะแนน • ไอเทม '+items+'/5 • ใช้เวลา '+Math.floor(elapsed)+' วินาที';}
+function jump(){if(running&&!paused&&!quizOpen&&player.onGround){player.vy=-13;player.onGround=false;burst(player.x+20,player.y+56,'#fff')}}
+function reset(){running=false;paused=false;gameOver=false;quizOpen=false;player={x:125,y:280,vy:0,w:46,h:62,onGround:true};obstacles=[];collectibles=[];particles=[];score=0;lives=3;items=0;elapsed=0;last=0;spawn=0;collectSpawn=0;speed=5;frame=0;quizIndex=0;$('quizOverlay').classList.add('hidden');$('endOverlay').classList.add('hidden');$('startOverlay').classList.remove('hidden');$('pauseBtn').textContent='Ⅱ พัก';$('pauseTouch').textContent='Ⅱ พักเกม';updateHud();render()}
+function start(){if(gameOver)reset();$('startOverlay').classList.add('hidden');running=true;paused=false;last=0}
+$('boyPick').onclick=()=>{gender='boy';$('boyPick').classList.add('selected');$('girlPick').classList.remove('selected');render()};$('girlPick').onclick=()=>{gender='girl';$('girlPick').classList.add('selected');$('boyPick').classList.remove('selected');render()};
+$('startBtn').onclick=start;$('overlayStart').onclick=start;$('playAgain').onclick=reset;$('resetBtn').onclick=reset;
+function togglePause(){if(running){paused=!paused;$('pauseBtn').textContent=paused?'▶ ต่อ':'Ⅱ พัก';$('pauseTouch').textContent=paused?'▶ เล่นต่อ':'Ⅱ พักเกม'}}
+$('pauseBtn').onclick=togglePause;$('pauseTouch').onclick=togglePause;$('jumpBtn').onclick=jump;$('leftHint').onclick=()=>{};window.addEventListener('keydown',e=>{if(['Space','ArrowUp','KeyW'].includes(e.code)){e.preventDefault();jump()}if(e.code==='Escape')togglePause()});canvas.addEventListener('pointerdown',jump);
+updateHud();render();requestAnimationFrame(tick);
+</script></body></html>

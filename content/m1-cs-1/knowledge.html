@@ -27,12 +27,27 @@
   section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
   section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
 
-  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-bottom:16px; }
   .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
   .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
-  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card > div{ min-width:0; }
+  .concept-card h3{ overflow-wrap:anywhere; margin:0 0 4px; font-size:1rem; }
   .concept-card p{ margin:0; font-size:.86rem; color:#555; }
 
+  .ex-card{ background:#fff; border:1px solid #E6E8F0; border-top:6px solid var(--ec,#3B82F6); border-radius:16px; padding:14px 16px; margin:12px 0; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .ex-card h3{ margin:0 0 8px; font-size:1.05rem; }
+  .ex-seq{ --ec:#3B82F6; } .ex-sel{ --ec:#F59E0B; } .ex-loop{ --ec:#10B981; }
+  .exfull{ background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; margin:8px 0; }
+  .exfull > summary{ cursor:pointer; padding:10px 14px; font-weight:700; font-size:.92rem; list-style-position:inside; }
+  .exfull[open] > summary{ border-bottom:1px solid #E2E8F0; background:#EFF6FF; border-radius:12px 12px 0 0; }
+  .exbody{ padding:10px 16px 14px; font-size:.9rem; line-height:1.65; }
+  .exh{ font-weight:800; margin-bottom:6px; }
+  .exbody .step{ margin:6px 0; } .exbody .ind{ padding-left:1.4em; } .kw{ color:#EF4444; font-weight:600; }
+  .exbody .code{ background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:8px 14px; font-family:Consolas,"Courier New",monospace; font-size:.85rem; line-height:1.7; margin-top:4px; }
+  .fcwrap{ text-align:center; background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:6px; margin-top:4px; }
+  a.tryit{ display:inline-block; margin-top:6px; padding:8px 18px; border-radius:999px; background:linear-gradient(135deg,#4C97FF,#9966FF); color:#fff; font-weight:700; text-decoration:none; box-shadow:0 4px 0 rgba(0,0,0,.18); }
+  a.tryit:hover{ filter:brightness(1.08); }
+  svg.fc{ width:100%; max-width:380px; height:auto; }
   .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
   .info-box b{ color:#047857; }
   .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
@@ -93,12 +108,19 @@
       <li><b>เขียนโปรแกรม</b> (Programming) — เขียนชุดคำสั่งด้วยภาษาโปรแกรม</li>
       <li><b>ทดสอบโปรแกรม</b> (Testing) — ตรวจสอบความถูกต้อง แก้ไขข้อผิดพลาด</li>
     </ol>
-    <p><b>การวิเคราะห์ปัญหา</b> ประกอบด้วย 4 องค์ประกอบ</p>
+    <p><b>การวิเคราะห์ปัญหา (ข้อ 1–4)</b> ประกอบด้วย 4 องค์ประกอบ</p>
     <div class="concept-grid">
-      <div class="concept-card"><span class="icon">🎯</span><div><h3>วัตถุประสงค์</h3><p>โปรแกรมต้องการทำอะไร</p></div></div>
-      <div class="concept-card"><span class="icon">📥</span><div><h3>ข้อมูลนำเข้า (Input)</h3><p>รับข้อมูลอะไร ชนิดใด กำหนดตัวแปร</p></div></div>
-      <div class="concept-card"><span class="icon">⚙️</span><div><h3>การประมวลผล (Process)</h3><p>ใช้วิธีหรือสูตรคำนวณอะไร</p></div></div>
-      <div class="concept-card"><span class="icon">📤</span><div><h3>ข้อมูลนำออก (Output)</h3><p>ผลลัพธ์คืออะไร กำหนดตัวแปร</p></div></div>
+      <div class="concept-card"><span class="icon">🎯</span><div><h3>1. วัตถุประสงค์</h3><p>โปรแกรมต้องการทำอะไร</p></div></div>
+      <div class="concept-card"><span class="icon">📥</span><div><h3>2. ข้อมูลนำเข้า (Input)</h3><p>รับข้อมูลอะไร ชนิดใด กำหนดตัวแปร</p></div></div>
+      <div class="concept-card"><span class="icon">⚙️</span><div><h3>3. การประมวลผล (Process)</h3><p>ใช้วิธีหรือสูตรคำนวณอะไร</p></div></div>
+      <div class="concept-card"><span class="icon">📤</span><div><h3>4. ข้อมูลนำออก (Output)</h3><p>ผลลัพธ์คืออะไร กำหนดตัวแปร</p></div></div>
+    </div>
+    <p><b>จากนั้นออกแบบอัลกอริทึมและเขียนโปรแกรมต่อ (ข้อ 5–8)</b> เมื่อวิเคราะห์ปัญหาแล้ว ให้ทำต่อจนครบ 8 ขั้น</p>
+    <div class="concept-grid" id="steps58">
+      <div class="concept-card"><span class="icon">📝</span><div><h3>5. เขียนอัลกอริทึมแบบธรรมชาติ</h3><p>บอกขั้นตอนเป็นข้อความภาษาไทย เรียงจากเริ่มต้นจนจบ</p></div></div>
+      <div class="concept-card"><span class="icon">💻</span><div><h3>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</h3><p>ใช้คำสั่งสั้น ๆ เช่น START, INPUT, COMPUTE, DISPLAY, END</p></div></div>
+      <div class="concept-card"><span class="icon">🔷</span><div><h3>7. เขียนผังงาน (Flowchart)</h3><p>วาดสัญลักษณ์และลูกศรแสดงลำดับการทำงาน</p></div></div>
+      <div class="concept-card"><span class="icon">🧱</span><div><h3>8. เขียนโปรแกรม</h3><p>นำอัลกอริทึมไปเขียนเป็นโปรแกรม เช่น ต่อบล็อกใน <a href="blocks.html" target="_blank" rel="noopener">โค้ดจิ๊กซอว์</a></p></div></div>
     </div>
     <div class="info-box">
       💡 <b>ตัวอย่าง:</b> โปรแกรมหาพื้นที่สี่เหลี่ยมผืนผ้า — Input: width, length (จำนวนเต็ม) / Process: Area = width × length / Output: Area
@@ -123,6 +145,100 @@
       <div class="concept-card"><span class="icon">➡️</span><div><h3>เรียงลำดับ (Sequence)</h3><p>ทำเรียงทีละขั้น ไม่ข้าม ไม่ย้อนกลับ</p></div></div>
       <div class="concept-card"><span class="icon">🔀</span><div><h3>เงื่อนไข (Selection/Condition)</h3><p>ตัดสินใจ เลือกทำตามเงื่อนไขที่ตรวจสอบแล้ว</p></div></div>
       <div class="concept-card"><span class="icon">🔁</span><div><h3>ทำซ้ำ (Iteration/Loop)</h3><p>ทำงานเดิมซ้ำ โดยมีเงื่อนไขกำหนดจำนวนรอบ</p></div></div>
+    </div>
+    <div id="structure-examples">
+    <p><b>ตัวอย่างโครงสร้างการทำงาน อย่างละ 2 ตัวอย่าง</b> — แต่ละตัวอย่างทำครบตามกระบวนการ: วัตถุประสงค์ → ข้อมูลนำเข้า → วิธีประมวลผล → ข้อมูลนำออก → อัลกอริทึม (ธรรมชาติ / รหัสลำลอง / ผังงาน) กดที่ชื่อตัวอย่างเพื่อเปิดดู</p>
+    <div class="ex-card ex-seq"><h3>➡️ เรียงลำดับ (Sequence)</h3>
+      <details class="exfull" open>
+        <summary>ตัวอย่างที่ 1: แปรงฟัน</summary>
+        <div class="exbody">
+          <div class="exh">โปรแกรมช่วยจำขั้นตอนการแปรงฟัน</div>
+          <div class="step"><b>1. วัตถุประสงค์</b> <span class="kw">เพื่อแปรงฟันให้สะอาด</span></div>
+          <div class="step"><b>2. ข้อมูลนำเข้า</b> <div class="ind">แปรงสีฟัน ยาสีฟัน และน้ำสะอาด</div></div>
+          <div class="step"><b>3. วิธีประมวลผล</b> <div class="ind">บีบยาสีฟันลงบนแปรง แล้วแปรงฟันประมาณ 2 นาที</div></div>
+          <div class="step"><b>4. ข้อมูลนำออก</b> <span class="kw">ฟันสะอาด ปากสะอาด</span></div>
+          <div class="step"><b>5. เขียนอัลกอริทึมแบบธรรมชาติ</b> <div class=""><span class="kw">เริ่มต้น</span></div><div class=""><span class="kw">หยิบ</span>แปรงสีฟัน</div><div class=""><span class="kw">บีบ</span>ยาสีฟันลงบนแปรง</div><div class=""><span class="kw">แปรง</span>ฟันประมาณ 2 นาที</div><div class=""><span class="kw">บ้วน</span>ปาก</div><div class=""><span class="kw">จบ</span></div></div>
+          <div class="step"><b>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</b><div class="code"><span class="kw">START</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DO</span> หยิบแปรงสีฟัน<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DO</span> บีบยาสีฟัน<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DO</span> แปรงฟัน 2 นาที<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DO</span> บ้วนปาก<br><span class="kw">END</span></div></div>
+          <div class="step"><b>7. เขียนผังงาน (Flowchart)</b><div class="fcwrap"><svg class="fc" viewBox="0 0 300 388" role="img" aria-label="ผังงาน"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9A3412"/></marker></defs><rect x="85" y="10" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="150" y="32" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">เริ่มต้น</text><polyline points="150,44 150,70" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="45" y="70" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="150" y="96" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">หยิบแปรงสีฟัน</text><polyline points="150,112 150,138" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="45" y="138" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="150" y="164" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">บีบยาสีฟัน</text><polyline points="150,180 150,206" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="45" y="206" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="150" y="232" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แปรงฟัน 2 นาที</text><polyline points="150,248 150,274" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="45" y="274" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="150" y="300" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">บ้วนปาก</text><polyline points="150,316 150,342" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="342" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="150" y="364" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">จบ</text></svg></div></div>
+          <div class="step"><b>8. เขียนโปรแกรม โค้ดจิ๊กซอว์</b> ให้ระบบต่อบล็อกให้ แล้วกดธงเขียวเพื่อรันดูผล<br><a class="tryit" href="blocks.html?ex=ex-seq1" target="_blank" rel="noopener">🧱 เปิดโค้ดจิ๊กซอว์ — ระบบเขียนโปรแกรมให้</a></div>
+        </div>
+      </details>
+      <details class="exfull" >
+        <summary>ตัวอย่างที่ 2: หาพื้นที่สี่เหลี่ยมผืนผ้า</summary>
+        <div class="exbody">
+          <div class="exh">โปรแกรมคำนวณหาพื้นที่สี่เหลี่ยมผืนผ้า</div>
+          <div class="step"><b>1. วัตถุประสงค์</b> <span class="kw">เพื่อคำนวณหาพื้นที่สี่เหลี่ยมผืนผ้า</span></div>
+          <div class="step"><b>2. ข้อมูลนำเข้า</b> <div class="ind">width คือ ความกว้าง เป็นตัวเลข</div><div class="ind">length คือ ความยาว เป็นตัวเลข</div></div>
+          <div class="step"><b>3. วิธีประมวลผล</b> <div class="ind">สูตรพื้นที่ area = width × length</div></div>
+          <div class="step"><b>4. ข้อมูลนำออก</b> <span class="kw">แสดงพื้นที่สี่เหลี่ยมผืนผ้า</span></div>
+          <div class="step"><b>5. เขียนอัลกอริทึมแบบธรรมชาติ</b> <div class=""><span class="kw">เริ่มต้น</span></div><div class=""><span class="kw">รับ</span> ความกว้าง (width) เป็นตัวเลข</div><div class=""><span class="kw">รับ</span> ความยาว (length) เป็นตัวเลข</div><div class=""><span class="kw">คำนวณ</span> พื้นที่ area = width × length</div><div class=""><span class="kw">แสดง</span> ค่า area</div><div class=""><span class="kw">จบ</span></div></div>
+          <div class="step"><b>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</b><div class="code"><span class="kw">START</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">INPUT</span> width, length<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">COMPUTE</span> area = width * length<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DISPLAY</span> area<br><span class="kw">END</span></div></div>
+          <div class="step"><b>7. เขียนผังงาน (Flowchart)</b><div class="fcwrap"><svg class="fc" viewBox="0 0 300 320" role="img" aria-label="ผังงาน"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9A3412"/></marker></defs><rect x="85" y="10" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="150" y="32" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">เริ่มต้น</text><polyline points="150,44 150,70" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="63,70 255,70 237,112 45,112" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="150" y="96" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">รับ width, length</text><polyline points="150,112 150,138" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="45" y="138" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="150" y="164" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">area = width × length</text><polyline points="150,180 150,206" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="63,206 255,206 237,248 45,248" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="150" y="232" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แสดง area</text><polyline points="150,248 150,274" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="274" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="150" y="296" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">จบ</text></svg></div></div>
+          <div class="step"><b>8. เขียนโปรแกรม โค้ดจิ๊กซอว์</b> ให้ระบบต่อบล็อกให้ แล้วกดธงเขียวเพื่อรันดูผล<br><a class="tryit" href="blocks.html?ex=ex-seq2" target="_blank" rel="noopener">🧱 เปิดโค้ดจิ๊กซอว์ — ระบบเขียนโปรแกรมให้</a></div>
+        </div>
+      </details>
+    </div>
+    <div class="ex-card ex-sel"><h3>🔀 เงื่อนไข (Selection)</h3>
+      <details class="exfull" >
+        <summary>ตัวอย่างที่ 1: ตรวจผลสอบ</summary>
+        <div class="exbody">
+          <div class="exh">โปรแกรมตรวจผลสอบผ่านหรือไม่ผ่าน</div>
+          <div class="step"><b>1. วัตถุประสงค์</b> <span class="kw">เพื่อตรวจสอบว่านักเรียนสอบผ่านหรือไม่</span></div>
+          <div class="step"><b>2. ข้อมูลนำเข้า</b> <div class="ind">score คือ คะแนนสอบ เป็นตัวเลข</div></div>
+          <div class="step"><b>3. วิธีประมวลผล</b> <div class="ind">ตรวจสอบเงื่อนไข ถ้า score เท่ากับหรือมากกว่า 50 ถือว่าผ่าน ถ้าไม่ใช่ถือว่าไม่ผ่าน</div></div>
+          <div class="step"><b>4. ข้อมูลนำออก</b> <span class="kw">แสดงคำว่า ผ่าน หรือ ไม่ผ่าน</span></div>
+          <div class="step"><b>5. เขียนอัลกอริทึมแบบธรรมชาติ</b> <div class=""><span class="kw">เริ่มต้น</span></div><div class=""><span class="kw">รับ</span> คะแนนสอบ (score) เป็นตัวเลข</div><div class=""><span class="kw">ตรวจสอบ</span> ถ้า score เท่ากับหรือมากกว่า 50 ให้แสดง &quot;ผ่าน&quot;</div><div class=""><span class="kw">ไม่เช่นนั้น</span> ให้แสดง &quot;ไม่ผ่าน&quot;</div><div class=""><span class="kw">จบ</span></div></div>
+          <div class="step"><b>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</b><div class="code"><span class="kw">START</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">INPUT</span> score<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">IF</span> score &gt;= 50 <span class="kw">THEN</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DISPLAY</span> &quot;ผ่าน&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ELSE</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DISPLAY</span> &quot;ไม่ผ่าน&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ENDIF</span><br><span class="kw">END</span></div></div>
+          <div class="step"><b>7. เขียนผังงาน (Flowchart)</b><div class="fcwrap"><svg class="fc" viewBox="0 0 400 351" role="img" aria-label="ผังงาน"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9A3412"/></marker></defs><rect x="125" y="10" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="32" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">เริ่มต้น</text><polyline points="190,44 190,70" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="103,70 295,70 277,112 85,112" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="190" y="96" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">รับ score</text><polyline points="190,112 190,138" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="190,138 290,174 190,210 90,174" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><text x="190" y="179" text-anchor="middle" font-size="13" fill="#78350F" font-family="Sarabun,sans-serif" font-weight="600">score &gt;= 50 ?</text><polyline points="290,174 310,174 310,215" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><text x="294" y="169" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ใช่</text><polyline points="90,174 70,174 70,215" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><text x="56" y="169" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ไม่ใช่</text><polygon points="253,215 385,215 367,257 235,257" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="310" y="241" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แสดง &quot;ผ่าน&quot;</text><polygon points="23,215 135,215 117,257 5,257" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="70" y="241" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แสดง &quot;ไม่ผ่าน&quot;</text><polyline points="310,257 310,283 190,283" fill="none" stroke="#9A3412" stroke-width="2.5" /><polyline points="70,257 70,283 190,283" fill="none" stroke="#9A3412" stroke-width="2.5" /><polyline points="190,283 190,305" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="125" y="305" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="327" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">จบ</text></svg></div></div>
+          <div class="step"><b>8. เขียนโปรแกรม โค้ดจิ๊กซอว์</b> ให้ระบบต่อบล็อกให้ แล้วกดธงเขียวเพื่อรันดูผล<br><a class="tryit" href="blocks.html?ex=ex-sel1" target="_blank" rel="noopener">🧱 เปิดโค้ดจิ๊กซอว์ — ระบบเขียนโปรแกรมให้</a></div>
+        </div>
+      </details>
+      <details class="exfull" >
+        <summary>ตัวอย่างที่ 2: เลขคู่หรือเลขคี่</summary>
+        <div class="exbody">
+          <div class="exh">โปรแกรมตรวจว่าเป็นเลขคู่หรือเลขคี่</div>
+          <div class="step"><b>1. วัตถุประสงค์</b> <span class="kw">เพื่อตรวจสอบว่าจำนวนเต็มที่ใส่เป็นเลขคู่หรือเลขคี่</span></div>
+          <div class="step"><b>2. ข้อมูลนำเข้า</b> <div class="ind">n คือ จำนวนเต็มที่ผู้ใช้ใส่</div></div>
+          <div class="step"><b>3. วิธีประมวลผล</b> <div class="ind">นำ n หารเอาเศษด้วย 2 ถ้าเศษเป็น 0 เป็นเลขคู่ ถ้าเศษเป็น 1 เป็นเลขคี่</div></div>
+          <div class="step"><b>4. ข้อมูลนำออก</b> <span class="kw">แสดงคำว่า เลขคู่ หรือ เลขคี่</span></div>
+          <div class="step"><b>5. เขียนอัลกอริทึมแบบธรรมชาติ</b> <div class=""><span class="kw">เริ่มต้น</span></div><div class=""><span class="kw">รับ</span> จำนวนเต็ม n</div><div class=""><span class="kw">คำนวณ</span> เศษของ n หารด้วย 2</div><div class=""><span class="kw">ตรวจสอบ</span> ถ้าเศษเท่ากับ 0 ให้แสดง &quot;เลขคู่&quot;</div><div class=""><span class="kw">ไม่เช่นนั้น</span> ให้แสดง &quot;เลขคี่&quot;</div><div class=""><span class="kw">จบ</span></div></div>
+          <div class="step"><b>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</b><div class="code"><span class="kw">START</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">INPUT</span> n<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">COMPUTE</span> r = n mod 2<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">IF</span> r = 0 <span class="kw">THEN</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DISPLAY</span> &quot;เลขคู่&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ELSE</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DISPLAY</span> &quot;เลขคี่&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ENDIF</span><br><span class="kw">END</span></div></div>
+          <div class="step"><b>7. เขียนผังงาน (Flowchart)</b><div class="fcwrap"><svg class="fc" viewBox="0 0 400 419" role="img" aria-label="ผังงาน"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9A3412"/></marker></defs><rect x="125" y="10" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="32" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">เริ่มต้น</text><polyline points="190,44 190,70" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="103,70 295,70 277,112 85,112" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="190" y="96" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">รับ n</text><polyline points="190,112 190,138" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="138" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="164" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">r = n หารเอาเศษ 2</text><polyline points="190,180 190,206" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="190,206 290,242 190,278 90,242" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><text x="190" y="247" text-anchor="middle" font-size="13" fill="#78350F" font-family="Sarabun,sans-serif" font-weight="600">r = 0 ?</text><polyline points="290,242 310,242 310,283" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><text x="294" y="237" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ใช่</text><polyline points="90,242 70,242 70,283" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><text x="56" y="237" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ไม่ใช่</text><polygon points="253,283 385,283 367,325 235,325" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="310" y="309" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แสดง &quot;เลขคู่&quot;</text><polygon points="23,283 135,283 117,325 5,325" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="70" y="309" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แสดง &quot;เลขคี่&quot;</text><polyline points="310,325 310,351 190,351" fill="none" stroke="#9A3412" stroke-width="2.5" /><polyline points="70,325 70,351 190,351" fill="none" stroke="#9A3412" stroke-width="2.5" /><polyline points="190,351 190,373" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="125" y="373" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="395" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">จบ</text></svg></div></div>
+          <div class="step"><b>8. เขียนโปรแกรม โค้ดจิ๊กซอว์</b> ให้ระบบต่อบล็อกให้ แล้วกดธงเขียวเพื่อรันดูผล<br><a class="tryit" href="blocks.html?ex=ex-sel2" target="_blank" rel="noopener">🧱 เปิดโค้ดจิ๊กซอว์ — ระบบเขียนโปรแกรมให้</a></div>
+        </div>
+      </details>
+    </div>
+    <div class="ex-card ex-loop"><h3>🔁 ทำซ้ำ (Loop)</h3>
+      <details class="exfull" >
+        <summary>ตัวอย่างที่ 1: วาดสี่เหลี่ยมจัตุรัส (ทำซ้ำตามจำนวนรอบ)</summary>
+        <div class="exbody">
+          <div class="exh">โปรแกรมวาดสี่เหลี่ยมจัตุรัส</div>
+          <div class="step"><b>1. วัตถุประสงค์</b> <span class="kw">เพื่อวาดสี่เหลี่ยมจัตุรัสที่มีด้านยาวด้านละ 100 ก้าว</span></div>
+          <div class="step"><b>2. ข้อมูลนำเข้า</b> <div class="ind">จำนวนด้าน 4 ด้าน และตัวนับรอบ i เริ่มที่ 1</div></div>
+          <div class="step"><b>3. วิธีประมวลผล</b> <div class="ind">ทำซ้ำ 4 รอบ แต่ละรอบเดิน 100 ก้าว แล้วหมุนขวา 90 องศา</div></div>
+          <div class="step"><b>4. ข้อมูลนำออก</b> <span class="kw">ได้ภาพสี่เหลี่ยมจัตุรัสบนเวที</span></div>
+          <div class="step"><b>5. เขียนอัลกอริทึมแบบธรรมชาติ</b> <div class=""><span class="kw">เริ่มต้น</span></div><div class=""><span class="kw">กำหนด</span> i = 1</div><div class=""><span class="kw">ทำซ้ำ</span>ในขณะที่ i น้อยกว่าหรือเท่ากับ 4</div><div class="ind"><span class="kw">เดิน</span> 100 ก้าว แล้วหมุนขวา 90 องศา</div><div class="ind"><span class="kw">เพิ่ม</span>ค่า i อีก 1</div><div class=""><span class="kw">จบ</span></div></div>
+          <div class="step"><b>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</b><div class="code"><span class="kw">START</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">SET</span> i = 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">WHILE</span> i &lt;= 4 <span class="kw">DO</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DO</span> เดิน 100 ก้าว<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DO</span> หมุนขวา 90 องศา<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">COMPUTE</span> i = i + 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ENDWHILE</span><br><span class="kw">END</span></div></div>
+          <div class="step"><b>7. เขียนผังงาน (Flowchart)</b><div class="fcwrap"><svg class="fc" viewBox="0 0 380 516" role="img" aria-label="ผังงาน"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9A3412"/></marker></defs><rect x="125" y="10" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="32" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">เริ่มต้น</text><polyline points="190,44 190,70" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="70" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="96" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">i = 1</text><polyline points="190,112 190,138" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="190,138 290,174 190,210 90,174" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><text x="190" y="179" text-anchor="middle" font-size="13" fill="#78350F" font-family="Sarabun,sans-serif" font-weight="600">i &lt;= 4 ?</text><text x="202" y="228" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ใช่</text><polyline points="190,210 190,236" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="236" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="262" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">เดิน 100 ก้าว</text><polyline points="190,278 190,304" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="304" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="330" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">หมุนขวา 90 องศา</text><polyline points="190,346 190,372" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="372" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="398" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">i = i + 1</text><polyline points="85,393 40,393 40,174 90,174" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><text x="294" y="169" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ไม่ใช่</text><polyline points="290,174 345,174 345,446 190,446" fill="none" stroke="#9A3412" stroke-width="2.5" /><polyline points="190,446 190,470" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="125" y="470" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="492" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">จบ</text></svg></div></div>
+          <div class="step"><b>8. เขียนโปรแกรม โค้ดจิ๊กซอว์</b> ให้ระบบต่อบล็อกให้ แล้วกดธงเขียวเพื่อรันดูผล<br><a class="tryit" href="blocks.html?ex=ex-loop1" target="_blank" rel="noopener">🧱 เปิดโค้ดจิ๊กซอว์ — ระบบเขียนโปรแกรมให้</a></div>
+        </div>
+      </details>
+      <details class="exfull" >
+        <summary>ตัวอย่างที่ 2: หาผลรวม 1 ถึง 5 (ทำซ้ำตามเงื่อนไข)</summary>
+        <div class="exbody">
+          <div class="exh">โปรแกรมหาผลรวมของเลข 1 ถึง 5</div>
+          <div class="step"><b>1. วัตถุประสงค์</b> <span class="kw">เพื่อหาผลรวมของจำนวนเต็ม 1 + 2 + 3 + 4 + 5</span></div>
+          <div class="step"><b>2. ข้อมูลนำเข้า</b> <div class="ind">count คือ ตัวนับ เริ่มที่ 1</div><div class="ind">total คือ ผลรวม เริ่มที่ 0</div></div>
+          <div class="step"><b>3. วิธีประมวลผล</b> <div class="ind">ทำซ้ำในขณะที่ count น้อยกว่าหรือเท่ากับ 5 โดยบวก count เข้าใน total แล้วเพิ่ม count อีก 1</div></div>
+          <div class="step"><b>4. ข้อมูลนำออก</b> <span class="kw">แสดงค่า total (ได้ 15)</span></div>
+          <div class="step"><b>5. เขียนอัลกอริทึมแบบธรรมชาติ</b> <div class=""><span class="kw">เริ่มต้น</span></div><div class=""><span class="kw">กำหนด</span> total = 0 และ count = 1</div><div class=""><span class="kw">ทำซ้ำ</span>ในขณะที่ count น้อยกว่าหรือเท่ากับ 5</div><div class="ind"><span class="kw">คำนวณ</span> total = total + count</div><div class="ind"><span class="kw">เพิ่ม</span>ค่า count อีก 1</div><div class=""><span class="kw">แสดง</span> ค่า total</div><div class=""><span class="kw">จบ</span></div></div>
+          <div class="step"><b>6. เขียนอัลกอริทึมด้วยรหัสลำลอง</b><div class="code"><span class="kw">START</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">SET</span> total = 0<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">SET</span> count = 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">WHILE</span> count &lt;= 5 <span class="kw">DO</span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">COMPUTE</span> total = total + count<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">COMPUTE</span> count = count + 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">ENDWHILE</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">DISPLAY</span> total<br><span class="kw">END</span></div></div>
+          <div class="step"><b>7. เขียนผังงาน (Flowchart)</b><div class="fcwrap"><svg class="fc" viewBox="0 0 380 516" role="img" aria-label="ผังงาน"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9A3412"/></marker></defs><rect x="125" y="10" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="32" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">เริ่มต้น</text><polyline points="190,44 190,70" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="70" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="96" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">total = 0, count = 1</text><polyline points="190,112 190,138" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="190,138 290,174 190,210 90,174" fill="#FEF3C7" stroke="#B45309" stroke-width="2"/><text x="190" y="179" text-anchor="middle" font-size="13" fill="#78350F" font-family="Sarabun,sans-serif" font-weight="600">count &lt;= 5 ?</text><text x="202" y="228" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ใช่</text><polyline points="190,210 190,236" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="236" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="262" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">total = total + count</text><polyline points="190,278 190,304" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="85" y="304" width="210" height="42" fill="#fff" stroke="#1F2937" stroke-width="2"/><text x="190" y="330" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">count = count + 1</text><polyline points="85,325 40,325 40,174 90,174" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><text x="294" y="169" font-size="13" font-weight="700" fill="#B45309" font-family="Sarabun,sans-serif">ไม่ใช่</text><polyline points="290,174 345,174 345,378 190,378" fill="none" stroke="#9A3412" stroke-width="2.5" /><polyline points="190,378 190,402" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><polygon points="103,402 295,402 277,444 85,444" fill="#fff" stroke="#BE123C" stroke-width="2"/><text x="190" y="428" text-anchor="middle" font-size="14" fill="#7F1D1D" font-family="Sarabun,sans-serif" font-weight="600">แสดง total</text><polyline points="190,444 190,470" fill="none" stroke="#9A3412" stroke-width="2.5" marker-end="url(#ah)"/><rect x="125" y="470" width="130" height="34" rx="17" fill="#0EA5E9" stroke="#0369A1" stroke-width="2"/><text x="190" y="492" text-anchor="middle" font-size="15" fill="#fff" font-family="Sarabun,sans-serif" font-weight="600">จบ</text></svg></div></div>
+          <div class="step"><b>8. เขียนโปรแกรม โค้ดจิ๊กซอว์</b> ให้ระบบต่อบล็อกให้ แล้วกดธงเขียวเพื่อรันดูผล<br><a class="tryit" href="blocks.html?ex=ex-loop2" target="_blank" rel="noopener">🧱 เปิดโค้ดจิ๊กซอว์ — ระบบเขียนโปรแกรมให้</a></div>
+        </div>
+      </details>
+    </div>
+    <div class="info-box">💡 ลองสร้างตัวอย่างเหล่านี้ด้วยปุ่ม <b>🧱 โค้ดจิ๊กซอว์</b> ในแท็บเกม — ตัวอย่างสี่เหลี่ยมจัตุรัสและตรวจคะแนนมีให้โหลดในเมนู "ตัวอย่างโปรแกรม"</div>
     </div>
     <p>การทำซ้ำมี 3 ประเภท: ทำซ้ำตามจำนวนรอบที่ระบุ, ทำซ้ำในขณะที่เงื่อนไขเป็นจริง, ทำซ้ำจนกระทั่งเงื่อนไขเป็นจริง</p>
     <div class="info-box">
@@ -197,6 +313,80 @@
     </div>
   </section>
 
+  <section class="topic">
+    <h2><span class="num">6</span> ทำความรู้จัก Scratch และบล็อกคำสั่งเบื้องต้น
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic6.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic6-text">
+    <p><b>Scratch</b> เป็นภาษาโปรแกรมแบบบล็อก ผู้เขียนนำบล็อกคำสั่งมาวางต่อกันทีละคำสั่งตามขั้นตอนที่ต้องการ จึงเขียนง่ายและเห็นผลทันที เหมาะกับการฝึกคิดแก้ปัญหาเป็นขั้นตอน</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🟩</span><div><h3>เมื่อกดธงเขียว</h3><p>เริ่มการทำงานของโปรแกรม</p></div></div>
+      <div class="concept-card"><span class="icon">🚶</span><div><h3>เคลื่อนที่</h3><p>ให้ตัวละครเดินตามค่าที่กำหนด</p></div></div>
+      <div class="concept-card"><span class="icon">👕</span><div><h3>สลับชุดตัวละคร</h3><p>เปลี่ยนท่าทางไปชุดถัดไปหรือชุดที่ระบุ</p></div></div>
+      <div class="concept-card"><span class="icon">⏱️</span><div><h3>รอ … วินาที</h3><p>หยุดรอตามเวลาที่กำหนดก่อนทำคำสั่งต่อไป</p></div></div>
+    </div>
+    <div class="info-box">💡 <b>ตัวอย่าง ตั๊กแตนกระโดด:</b> ข้อมูลเข้า = ภาพตั๊กแตน 6 ท่า · ข้อมูลออก = ภาพตั๊กแตนทำท่ากระโดด<br>รหัสลำลอง: เริ่มต้น → กำหนดภาพตั๊กแตน 6 ท่า → ทำซ้ำไม่รู้จบ (แสดงท่าถัดไป) → จบ</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">7</span> การวนซ้ำและตัวแปร
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic7.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic7-text">
+    <p><b>การวนซ้ำ</b> ใช้เมื่อต้องทำคำสั่งเดิมหลายครั้ง ช่วยให้โปรแกรมสั้นลงและทำงานมีประสิทธิภาพขึ้น วนซ้ำได้สองแบบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">♾️</span><div><h3>วนซ้ำไม่รู้จบ (forever)</h3><p>ทำคำสั่งข้างในไปเรื่อย ๆ จนกว่าจะหยุดโปรแกรม</p></div></div>
+      <div class="concept-card"><span class="icon">🔢</span><div><h3>วนซ้ำตามจำนวนรอบ (repeat)</h3><p>ใช้เมื่อรู้จำนวนรอบที่แน่นอน</p></div></div>
+    </div>
+    <p><b>ตัวแปร (Variable)</b> คือชื่อที่ตั้งขึ้นเพื่อเก็บค่าหรือข้อมูล ณ เวลาหนึ่งเก็บได้หนึ่งค่า และเปลี่ยนค่าได้ ควรตั้งชื่อให้สื่อความหมาย บล็อกที่เกี่ยวข้อง ได้แก่ กำหนดค่า เปลี่ยนค่าเพิ่มหรือลด แสดงและซ่อนตัวแปรบนเวที</p>
+    <div class="info-box" style="font-family:Consolas,monospace;line-height:1.7">ปัญหา: แมวร้องเหมียวตามจำนวนรอบที่กำหนด<br>เริ่มต้น<br>1. กำหนดตัวแปร time เป็น 2<br>2. ทำซ้ำ time รอบ<br>&nbsp;&nbsp;&nbsp;2.1 เล่นเสียงเหมียว 1 ครั้ง<br>จบ</div>
+    <div class="info-box">💡 <b>วาดรูปหลายเหลี่ยมด้านเท่า:</b> มุมภายนอกรวมกันเท่ากับ 360 องศา จึงหมุนด้านละ 360 ÷ จำนวนด้าน เช่น สี่เหลี่ยมจัตุรัสหมุน 90 องศา สามเหลี่ยมด้านเท่าหมุน 120 องศา</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">8</span> การรับค่า คำนวณ และแสดงผลใน Scratch
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic8.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic8-text">
+    <p>โปรแกรมคำนวณอย่างง่ายทำงานเป็น 3 ช่วง: <b>รับค่า → คำนวณ → แสดงผล</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">⌨️</span><div><h3>ถามและรอคำตอบ</h3><p>รับข้อมูลจากผู้ใช้ เก็บไว้ในค่า "คำตอบ"</p></div></div>
+      <div class="concept-card"><span class="icon">➕</span><div><h3>ตัวดำเนินการ + − × ÷</h3><p>นำมาซ้อนกับบล็อกอื่นเพื่อคำนวณ</p></div></div>
+      <div class="concept-card"><span class="icon">💬</span><div><h3>พูด / พูดเป็นเวลา</h3><p>แสดงผลลัพธ์หรือข้อความออกทางตัวละคร</p></div></div>
+    </div>
+    <div class="info-box">💡 <b>ตัวอย่าง ยกกำลังสองของจำนวนเต็ม:</b> ข้อมูลเข้า = จำนวนเต็มใด ๆ · ข้อมูลออก = ผลของจำนวนนั้นยกกำลังสอง<br>เริ่มต้น → รับค่าจำนวนเต็ม → คำนวณ x × x → แสดงผลลัพธ์ → จบ</div>
+    <div class="info-box">💡 <b>ตัวอย่าง แปลงอุณหภูมิ:</b> C = (F − 32) × 5 ÷ 9 เช่น F = 212 ได้ C = 100 ควรทดสอบด้วยค่าที่รู้ผลแน่นอนก่อนเสมอ</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">9</span> การทำงานแบบทางเลือก
+      <button class="tts-btn tts-ghost" style="margin-left:auto" data-audio-src="audio/know-topic9.mp3">
+        <span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span>
+      </button>
+    </h2>
+    <div id="topic9-text">
+    <p><b>การทำงานแบบทางเลือก</b> คือการตรวจสอบเงื่อนไขก่อน แล้วตัดสินใจเลือกทำคำสั่งอย่างใดอย่างหนึ่ง</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">☝️</span><div><h3>ทางเลือกเดียว (if … then)</h3><p>ถ้าเงื่อนไขเป็นจริง จึงทำคำสั่ง ไม่จริงก็ข้ามไป</p></div></div>
+      <div class="concept-card"><span class="icon">✌️</span><div><h3>สองทางเลือก (if … then … else)</h3><p>จริงทำอย่างหนึ่ง ไม่จริงทำอีกอย่างหนึ่ง</p></div></div>
+    </div>
+    <p><b>ตัวดำเนินการเปรียบเทียบ</b> ที่ใช้ตั้งเงื่อนไข: <b>=</b> เท่ากับ · <b>&gt;</b> มากกว่า · <b>&lt;</b> น้อยกว่า</p>
+    <div class="info-box">💡 <b>ตัวอย่าง:</b> ถ้าคะแนนสอบมากกว่า 80 ให้ตัวละครพูดว่า "ได้รางวัลพิเศษ"<br>เริ่มต้น → รับค่าคะแนนสอบ → ถ้าคะแนน &gt; 80 พูดว่า ได้รางวัลพิเศษ → จบ</div>
+    <div class="info-box">💡 <b>เลขคู่หรือเลขคี่:</b> นำจำนวนมาหารเอาเศษด้วย 2 ถ้าเศษเป็น 0 เป็นเลขคู่ ถ้าเศษเป็น 1 เป็นเลขคี่ (ใช้บล็อก mod)</div>
+    </div>
+  </section>
+
+  <p class="hint" style="text-align:center;color:#64748B;font-size:.8rem">📚 หัวข้อที่ 6–9 เรียบเรียงจากแนวสื่อ DLTV วิทยาการคำนวณ ม.1 หน่วยที่ 2 การโปรแกรม (dltv.ac.th)</p>
+
   <div class="fun-fact">
     <span class="emoji">💻</span>
     <div><b>รู้หรือไม่?</b> โปรแกรมคำนวณที่เราใช้ในชีวิตจริง เช่น โปรแกรมคำนวณดัชนีมวลกาย (BMI) หรือโปรแกรมสมการการเคลื่อนที่ ก็เริ่มจากอัลกอริทึมง่าย ๆ แบบนี้</div>
@@ -210,6 +400,8 @@
       <li>โครงสร้างโปรแกรม: เรียงลำดับ เงื่อนไข ทำซ้ำ</li>
       <li>เขียนโปรแกรม: Coding → Compile → Run และทดสอบ Black Box / White Box</li>
       <li>ภาษาที่รู้จัก: C, Scratch, Python, Java</li>
+      <li>Scratch: ต่อบล็อกคำสั่งตามลำดับ · วนซ้ำ (forever / repeat) และตัวแปรช่วยให้โปรแกรมสั้นลง</li>
+      <li>โปรแกรมคำนวณ: รับค่า → คำนวณ → แสดงผล · ทางเลือกใช้ if … then (… else) กับ = &gt; &lt;</li>
     </ul>
   </div>
   </div>
