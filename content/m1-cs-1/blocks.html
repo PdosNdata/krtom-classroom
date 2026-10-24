@@ -39,7 +39,11 @@
   /* ───── พื้นที่เขียนโปรแกรม ───── */
   #ws{ flex:1; overflow:auto; position:relative; background:
         linear-gradient(#0000000a 1px,transparent 1px) 0 0/24px 24px, linear-gradient(90deg,#0000000a 1px,transparent 1px) 0 0/24px 24px, #FBFCFF; }
-  #wsin{ position:relative; min-width:1400px; min-height:1000px; }
+  #wssizer{ position:relative; width:1400px; height:1000px; }
+  #wsin{ position:absolute; left:0; top:0; width:1400px; height:1000px; transform-origin:0 0; }
+  .zoombar{ margin-left:auto; display:flex; align-items:center; gap:4px; }
+  .zoombar button{ min-width:30px; font-weight:800; }
+  #zlabel{ min-width:46px; text-align:center; font-weight:700; }
   .script{ position:absolute; display:block; min-width:40px; }
   #wshint{ position:absolute; left:40px; top:60px; color:#94A3B8; font-weight:700; text-align:center; pointer-events:none; line-height:1.6; }
   .wsbar{ display:flex; gap:6px; align-items:center; padding:6px 8px; border-bottom:1px solid var(--bd); background:#F8FAFF; font-size:.8rem; flex-wrap:wrap; }
@@ -149,7 +153,7 @@
       <button id="sh-png">🖼️ บันทึกภาพผลบนเวที (.png)</button>
     </div>
   </div>
-  <a href="../../index.html#/unit/m1/cs/1/game">← กลับหน้าหน่วย</a>
+  <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิดแท็บนี้</a>
 </header>
 <div id="viewbar">👀 กำลังดูโปรแกรมที่แชร์มา — <button id="viewedit">✏️ คัดลอกไปแก้ไขต่อ</button></div>
 
@@ -163,10 +167,10 @@
     <div class="wsbar">
       <span>🧩 พื้นที่เขียนโปรแกรม</span>
       <button id="tidy">จัดเรียง</button>
-      <button id="clearws">ลบทั้งหมด</button>
+      <button id="clearws">ลบทั้งหมด</button><span class="zoombar"><button id="zout" title="ซูมออก">−</button><span id="zlabel">100%</span><button id="zin" title="ซูมเข้า">+</button><button id="zfit" title="ปรับให้เห็นบล็อกทั้งหมด">⤢ พอดีจอ</button><button id="z100" title="กลับเป็น 100%">100%</button></span>
       <span style="color:#94A3B8">คลิกที่ชุดบล็อก = รันชุดนั้น · ลากไปวางที่คลังบล็อก = ลบ</span>
     </div>
-    <div id="ws"><div id="wsin"><div id="wshint">ลากบล็อกจากด้านซ้ายมาวางที่นี่<br>เริ่มด้วย 🟨 "เมื่อกดธงเขียว" แล้วต่อบล็อกข้างล่าง</div></div></div>
+    <div id="ws"><div id="wssizer"><div id="wsin"><div id="wshint">ลากบล็อกจากด้านซ้ายมาวางที่นี่<br>เริ่มด้วย 🟨 "เมื่อกดธงเขียว" แล้วต่อบล็อกข้างล่าง</div></div></div></div>
   </div>
 
   <div id="right">
@@ -277,6 +281,7 @@ const CATS = [
 
 let VARS = [];                       // รายชื่อตัวแปร
 const wsin = $("#wsin"), ws = $("#ws");
+let ZM = 1;
 
 /* ---------- สร้างบล็อกใน DOM ---------- */
 function makeSlot(def, val){
@@ -435,8 +440,8 @@ function startDrag(e){
     if(par.classList.contains("script") && !par.querySelector(":scope > .blk")) par.remove();
   }
   const box = el("div", "dragbox"); list.forEach(x => box.append(x)); document.body.append(box);
-  box.style.left = r.left + "px"; box.style.top = r.top + "px";
-  d.box = box; d.list = list; d.ox = d.sx - r.left; d.oy = d.sy - r.top;
+  box.style.left = r.left + "px"; box.style.top = r.top + "px"; box.style.transformOrigin = "0 0"; box.style.transform = "scale(" + ZM + ")";
+  d.box = box; d.list = list; d.ox = (d.sx - r.left) * (d.fromPal ? ZM : 1); d.oy = (d.sy - r.top) * (d.fromPal ? ZM : 1);
   document.body.classList.add("dragging"); hint();
 }
 function clearHot(){ document.querySelectorAll(".inp.hot").forEach(x => x.classList.remove("hot")); ins.style.display = "none"; }
@@ -468,7 +473,7 @@ function findTarget(e){
       if(i > 0 && kids[i - 1].classList.contains("cap")) continue;
       if(lastCap && i < kids.length) continue;
       let x, y;
-      if(i === 0){ x = cr.left; y = cr.top; } else { const q = kids[i - 1].getBoundingClientRect(); x = q.left; y = q.bottom - 6; }
+      if(i === 0){ x = cr.left; y = cr.top; } else { const q = kids[i - 1].getBoundingClientRect(); x = q.left; y = q.bottom - 6 * ZM; }
       const dist = Math.hypot(r.left - x, r.top - y);
       if(dist < bd){ bd = dist; best = { type:"stack", c, i, x, y, kids }; }
     }
@@ -493,7 +498,7 @@ function endDrag(d, e){
     const ref = t.kids[t.i] || null; d.list.forEach(x => t.c.insertBefore(x, ref));
   }else if(!isRep(first)){
     const inWs = e.clientX >= ws.getBoundingClientRect().left && e.clientX <= ws.getBoundingClientRect().right;
-    if(inWs){ const sc = newScript(r.left - wr.left, r.top - wr.top); d.list.forEach(x => sc.append(x)); }
+    if(inWs){ const sc = newScript((r.left - wr.left) / ZM, (r.top - wr.top) / ZM); d.list.forEach(x => sc.append(x)); }
   }
   hint(); save();
 }
@@ -673,7 +678,7 @@ $("#spr").onchange = setSprite; $("#rot").onchange = renderSprite;
 
 /* ---------- แถบเครื่องมือ ---------- */
 $("#clearws").onclick = () => { if(!allScripts().length || confirm("ลบบล็อกทั้งหมดในพื้นที่เขียนโปรแกรม?")){ allScripts().forEach(s => s.remove()); hint(); save(); } };
-$("#tidy").onclick = () => { let y = 16; allScripts().forEach(sc => { sc.style.left = "16px"; sc.style.top = y + "px"; y += sc.getBoundingClientRect().height + 20; }); save(); };
+$("#tidy").onclick = () => { let y = 16; allScripts().forEach(sc => { sc.style.left = "16px"; sc.style.top = y + "px"; y += sc.getBoundingClientRect().height / ZM + 20; }); save(); };
 
 /* ---------- ตัวอย่างโปรแกรม (ภารกิจ) ---------- */
 const B = (t, a = [], s = []) => ({ t, a, s });
@@ -721,6 +726,31 @@ $("#sample").onchange = function(){
   toast("โหลดตัวอย่างแล้ว — กด 🟩 ธงเขียว เพื่อรัน");
 };
 
+
+
+/* ---------- ซูมพื้นที่เขียนโปรแกรม ---------- */
+function setZoom(z, ax, ay){
+  z = Math.max(.4, Math.min(2, z)); const old = ZM; if(Math.abs(z - old) < 1e-3) return;
+  const wr = ws.getBoundingClientRect(); ax = ax ?? wr.width / 2; ay = ay ?? wr.height / 2;
+  const cx = (ws.scrollLeft + ax) / old, cy = (ws.scrollTop + ay) / old;
+  ZM = z; wsin.style.transform = "scale(" + z + ")"; $("#wssizer").style.width = 1400 * z + "px"; $("#wssizer").style.height = 1000 * z + "px";
+  ws.scrollLeft = cx * z - ax; ws.scrollTop = cy * z - ay; $("#zlabel").textContent = Math.round(z * 100) + "%";
+}
+function fitZoom(){
+  const sc = allScripts(); if(!sc.length) return setZoom(1);
+  const base = wsin.getBoundingClientRect(); let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  sc.forEach(e => { const r = e.getBoundingClientRect(); x0 = Math.min(x0, (r.left - base.left) / ZM); y0 = Math.min(y0, (r.top - base.top) / ZM); x1 = Math.max(x1, (r.right - base.left) / ZM); y1 = Math.max(y1, (r.bottom - base.top) / ZM); });
+  const wr = ws.getBoundingClientRect(), z = Math.min(1.5, (wr.width - 50) / (x1 - x0 + 60), (wr.height - 50) / (y1 - y0 + 60));
+  ZM = 1; wsin.style.transform = "scale(1)"; $("#wssizer").style.width = "1400px"; $("#wssizer").style.height = "1000px"; setZoom(z, 0, 0); ws.scrollLeft = Math.max(0, (x0 - 30) * ZM); ws.scrollTop = Math.max(0, (y0 - 30) * ZM);
+}
+$("#zin").onclick = () => setZoom(ZM * 1.2); $("#zout").onclick = () => setZoom(ZM / 1.2); $("#z100").onclick = () => setZoom(1); $("#zfit").onclick = fitZoom;
+ws.addEventListener("wheel", e => { if(!(e.ctrlKey || e.metaKey)) return; e.preventDefault(); const wr = ws.getBoundingClientRect(); setZoom(ZM * (e.deltaY < 0 ? 1.1 : 1 / 1.1), e.clientX - wr.left, e.clientY - wr.top); }, { passive:false });
+document.addEventListener("keydown", e => {
+  if(e.target.closest("input,textarea,select")) return;
+  if((e.ctrlKey || e.metaKey) && (e.key === "+" || e.key === "=")){ e.preventDefault(); $("#zin").click(); }
+  if((e.ctrlKey || e.metaKey) && e.key === "-"){ e.preventDefault(); $("#zout").click(); }
+  if((e.ctrlKey || e.metaKey) && e.key === "0"){ e.preventDefault(); setZoom(1); }
+});
 
 /* ---------- ส่ง / แชร์โปรแกรม ---------- */
 const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
@@ -785,11 +815,15 @@ try{
 }catch(e){ toast("เปิดลิงก์โปรแกรมไม่ได้ — ลิงก์อาจไม่ครบ"); }
 try{
   const qs = new URLSearchParams(location.search), ex = qs.get("ex"), back = qs.get("back");
-  if(back && /^worksheet[\w-]*\.html$/.test(back)){ const a = document.querySelector("header a"); a.textContent = "← กลับไปใบงาน"; a.href = back; }
+  if(back && /^worksheet[\w-]*\.html$/.test(back)){ const a = document.querySelector("header a"); a.textContent = "✖ ปิดแท็บ กลับไปใบงาน"; a.href = back; }
   if(ex && SAMPLES[ex] && !VIEW){ loadJSON(JSON.parse(JSON.stringify(SAMPLES[ex]))); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
     toast(ex === "blank" ? "เริ่มจากกระดานว่าง — ลากบล็อกมาต่อใต้ \"เมื่อกดธงเขียว\" แล้วกด 🟩 ธงเขียว" : "ระบบเขียนโปรแกรม \"" + (EXNAME[ex] || EXNAME2[ex] || ex) + "\" ให้แล้ว — กด 🟩 ธงเขียว เพื่อรัน"); }
 }catch(e){}
 window.__blocks = { SAMPLES, loadJSON, wsToJSON, S, runScriptsList, hatLists, stopAll };   // สำหรับทดสอบ
+
+/* ปุ่มบนขวา: ปิดแท็บนี้ (แท็บเดิมยังเปิดค้างอยู่) ถ้าปิดไม่ได้ ให้ไปหน้าแรก/ใบงาน */
+(function(){ const bl = document.getElementById("backlink"); if(!bl) return;
+  bl.addEventListener("click", e => { e.preventDefault(); const to = bl.getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); }); })();
 </script>
 </body>
 </html>

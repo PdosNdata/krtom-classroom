@@ -37,6 +37,9 @@
   .jig .row{ display:flex; gap:10px; flex-wrap:wrap; }
   .jig a{ display:inline-block; padding:9px 20px; border-radius:999px; font-weight:800; font-size:.92rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#4C97FF,#9966FF); box-shadow:0 4px 0 rgba(0,0,0,.2); }
   .jig a.alt{ background:#fff; color:#5B21B6; border:2px solid #C4B5FD; box-shadow:none; }
+  .pbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#10B981,#0EA5E9); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .jbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#4C97FF,#9966FF); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .fcbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#0EA5E9,#6366F1); box-shadow:0 4px 0 rgba(0,0,0,.2); }
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
   @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
 </style>
@@ -96,17 +99,20 @@
     </div>
     <div class="field">
       <label for="f5"><span class="fn">6</span> เขียนอัลกอริทึมด้วยรหัสลำลอง</label>
-      <div class="hint">ใช้ START / INPUT / IF … THEN … ELSE / DISPLAY / END</div>
+      <div class="hint">ใช้ START / INPUT / IF … THEN … ELSE / DISPLAY / END · กดปุ่ม <b>📤 ส่ง / คัดลอก ▾ → ส่งรหัสลำลองไปใบงาน</b> ในโปรแกรมเขียนรหัสลำลอง ระบบจะใส่รหัสและลิงก์ในช่องนี้ให้เอง</div>
+      <a class="pbtn" href="pseudocode.html?ex=blank&back=worksheet-2-4.html" target="_blank" rel="noopener">📝 เปิดโปรแกรมเขียนรหัสลำลอง</a>
       <textarea id="f5" rows="6" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
     </div>
     <div class="field">
       <label for="f6"><span class="fn">7</span> เขียนผังงาน (Flowchart)</label>
-      <div class="hint">ระบุสัญลักษณ์ ◇ และเส้นทาง ใช่ / ไม่ใช่</div>
+      <div class="hint">ระบุสัญลักษณ์ ◇ และเส้นทาง ใช่ / ไม่ใช่ · กดปุ่ม <b>📤 ส่ง / คัดลอก ▾ → ส่งผังงานไปใบงาน</b> ในโปรแกรมวาดผังงาน ระบบจะใส่ลิงก์และลำดับผังงานในช่องนี้ให้เอง</div>
+      <a class="fcbtn" href="flowchart.html?ex=blank&back=worksheet-2-4.html" target="_blank" rel="noopener">🔷 เปิดโปรแกรมวาดผังงาน</a>
       <textarea id="f6" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
     </div>
     <div class="field">
       <label for="f7"><span class="fn">8</span> เขียนโปรแกรม โค้ดจิ๊กซอว์</label>
       <div class="hint">บล็อก ถ้า…แล้ว…ไม่เช่นนั้น และผลทดสอบ 125 กับ 110 · กดปุ่ม <b>📤 ส่ง / คัดลอก ▾ → ส่งโปรแกรมไปใบงาน</b> ในโค้ดจิ๊กซอว์ ระบบจะใส่ลิงก์และรายการบล็อกในช่องนี้ให้เอง (หรือวางลิงก์ที่คัดลอกมา)</div>
+      <a class="jbtn" href="blocks.html?ex=blank&back=worksheet-2-4.html" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a>
       <textarea id="f7" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
     </div>
     <div class="meter"><i id="bar"></i></div>

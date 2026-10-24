@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เขียนรหัสลำลอง — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; --bd:#D9DEEA; --mono:Consolas,"Courier New","Sarabun",monospace; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; background:#EEF1F8; color:#1F2430; }
+  body{ display:flex; flex-direction:column; }
+  header{ background:linear-gradient(135deg,#10B981,#0EA5E9); color:#fff; padding:8px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:1.15rem; flex:1; min-width:200px; }
+  header a, header button, header select{ color:#fff; background:rgba(255,255,255,.22); border:none; padding:6px 14px; border-radius:999px; font:inherit; font-size:.85rem; text-decoration:none; cursor:pointer; }
+  header select option{ color:#1F2430; }
+  #viewbar{ display:none; background:#FEF9C3; border-bottom:1px solid #FDE047; padding:6px 14px; font-size:.85rem; font-weight:700; }
+  #viewbar button{ font:inherit; font-size:.8rem; border:none; background:#3B82F6; color:#fff; border-radius:999px; padding:3px 12px; cursor:pointer; margin-left:8px; }
+  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:320px; }
+  #sharemenu.open{ display:block; }
+  #sharemenu button{ display:block; width:100%; text-align:left; background:none !important; color:#1F2430 !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; }
+  #sharemenu button:hover{ background:#EEF2FF !important; } #sharemenu button[disabled]{ opacity:.4; cursor:not-allowed; }
+
+  #app{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 340px; gap:8px; padding:8px; }
+  .panel{ background:#fff; border:1px solid var(--bd); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; min-height:0; }
+  .panel h3{ margin:0; padding:8px 12px; font-size:.85rem; background:#F8FAFF; border-bottom:1px solid var(--bd); display:flex; align-items:center; gap:8px; }
+  .tools{ display:flex; flex-wrap:wrap; gap:6px; padding:8px; border-bottom:1px solid var(--bd); background:#F8FAFF; }
+  .tools button{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:4px 10px; font:inherit; font-size:.78rem; font-weight:700; cursor:pointer; font-family:var(--mono); }
+  .tools button:hover{ background:#EEF2FF; border-color:#6366F1; }
+  .tools .sep{ width:1px; background:var(--bd); margin:0 2px; }
+  .tools button.act{ font-family:inherit; background:#10B981; border-color:#059669; color:#fff; }
+  .tools button.act2{ font-family:inherit; background:#6366F1; border-color:#4F46E5; color:#fff; }
+
+  #edwrap{ position:relative; flex:1; min-height:240px; display:flex; background:#FBFCFF; }
+  #gutter{ flex:none; width:44px; padding:12px 6px 12px 0; text-align:right; font:17px/26px var(--mono); color:#94A3B8; background:#F1F5F9; border-right:1px solid var(--bd); overflow:hidden; white-space:pre; user-select:none; }
+  #gutter .bad{ color:#DC2626; font-weight:800; background:#FEE2E2; }
+  #codebox{ position:relative; flex:1; min-width:0; }
+  #hl, #code{ position:absolute; inset:0; margin:0; padding:12px 14px; font:17px/26px var(--mono); white-space:pre; tab-size:4; letter-spacing:0; word-spacing:0; border:0; }
+  #hl{ overflow:hidden; pointer-events:none; color:#1F2430; }
+  #code{ overflow:auto; background:transparent; color:transparent; caret-color:#111; resize:none; outline:none; }
+  #code::selection{ background:rgba(99,102,241,.28); color:transparent; }
+  #hl .kw{ color:#DC2626; font-weight:700; } #hl .str{ color:#15803D; } #hl .num{ color:#2563EB; } #hl .cm{ color:#94A3B8; font-style:italic; }
+  #hl .err{ background:rgba(254,202,202,.7); border-radius:3px; }
+  #hl .cur{ background:rgba(253,224,71,.55); }
+
+  #right{ display:flex; flex-direction:column; gap:8px; min-height:0; overflow:auto; }
+  #out{ font:15px/1.6 var(--mono); padding:10px 12px; min-height:110px; max-height:230px; overflow:auto; background:#0F172A; color:#E2E8F0; white-space:pre-wrap; }
+  #out .in{ color:#FDE68A; } #out .err{ color:#FCA5A5; } #out .act{ color:#93C5FD; } #out .ok{ color:#86EFAC; } #out .dim{ color:#94A3B8; }
+  #inbar{ display:none; padding:8px; border-top:1px solid var(--bd); gap:6px; background:#FEF9C3; }
+  #inbar input{ flex:1; font:inherit; border:2px solid #FDE047; border-radius:8px; padding:4px 8px; min-width:0; }
+  #inbar button{ border:none; background:#F59E0B; color:#fff; font:inherit; font-weight:800; border-radius:8px; padding:4px 14px; cursor:pointer; }
+  #vars{ padding:6px 12px 10px; font-size:.8rem; color:#475569; }
+  #vars span{ display:inline-block; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:0 8px; margin:2px 4px 2px 0; font-family:var(--mono); }
+  #check{ padding:8px 12px 10px; font-size:.82rem; line-height:1.6; max-height:260px; overflow:auto; }
+  #check .ok{ color:#047857; } #check .bad{ color:#B45309; } #check .tip{ color:#475569; }
+  .help{ padding:8px 12px 12px; font-size:.8rem; line-height:1.7; color:#475569; }
+  .help code{ background:#F1F5F9; border-radius:4px; padding:0 5px; font-family:var(--mono); color:#B91C1C; font-weight:700; }
+  #toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#1F2937; color:#fff; padding:8px 18px; border-radius:999px; font-size:.85rem; display:none; z-index:3000; }
+  @media (max-width:980px){ html,body{ height:auto; } #app{ grid-template-columns:1fr; } #edwrap{ min-height:340px; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<header>
+  <h1>📝 เขียนรหัสลำลอง (Pseudocode)</h1>
+  <select id="sample">
+    <option value="">📂 โหลดตัวอย่างรหัสลำลอง…</option>
+    <option value="ex-seq1">เรียงลำดับ 1: แปรงฟัน</option>
+    <option value="ex-seq2">เรียงลำดับ 2: พื้นที่สี่เหลี่ยมผืนผ้า</option>
+    <option value="ex-sel1">เงื่อนไข 1: ตรวจผลสอบ</option>
+    <option value="ex-sel2">เงื่อนไข 2: เลขคู่หรือเลขคี่</option>
+    <option value="ex-loop1">ทำซ้ำ 1: วาดสี่เหลี่ยมจัตุรัส</option>
+    <option value="ex-loop2">ทำซ้ำ 2: ผลรวม 1 ถึง 5</option>
+  </select>
+  <div style="position:relative">
+    <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
+    <div id="sharemenu">
+      <button id="sh-ws">📥 ส่งรหัสลำลองไปใบงาน (ใส่ในช่องข้อ 6)</button>
+      <button id="sh-link">🔗 คัดลอกลิงก์รหัสลำลอง (ส่งให้ครูเปิดดู)</button>
+      <button id="sh-text">📝 คัดลอกเป็นข้อความ</button>
+      <button id="sh-txt">💾 บันทึกเป็นไฟล์ .txt</button>
+    </div>
+  </div>
+  <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิดแท็บนี้</a>
+</header>
+<div id="viewbar">👀 กำลังดูรหัสลำลองที่แชร์มา — <button id="viewedit">✏️ คัดลอกไปแก้ไขต่อ</button></div>
+
+<div id="app">
+  <div class="panel">
+    <h3>✍️ เขียนรหัสลำลอง <span style="font-weight:400;color:#64748B">(พิมพ์เอง หรือกดปุ่มคำสั่งเพื่อแทรก)</span></h3>
+    <div class="tools" id="tools"></div>
+    <div id="edwrap"><div id="gutter">1</div><div id="codebox"><pre id="hl" aria-hidden="true"></pre><textarea id="code" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="START&#10;    INPUT …&#10;    COMPUTE …&#10;    DISPLAY …&#10;END"></textarea></div></div>
+    <div id="inbar"><span id="inq" style="font-weight:700;align-self:center">INPUT</span><input id="inval" autocomplete="off"><button id="inok">ตกลง</button></div>
+  </div>
+  <div id="right">
+    <div class="panel"><h3>▶ ผลการทดลองรัน</h3><div id="out"><span class="dim">กดปุ่ม "▶ ทดลองรัน" เพื่อให้คอมพิวเตอร์ทำตามรหัสลำลองของคุณ</span></div><div id="vars"></div></div>
+    <div class="panel"><h3>✅ ตรวจรหัสลำลอง</h3><div id="check"><span class="tip">กดปุ่ม "✅ ตรวจรหัส" เพื่อตรวจความถูกต้อง</span></div></div>
+    <div class="panel"><h3>📖 คำสั่งที่ใช้ได้</h3>
+      <div class="help">
+        <code>START</code> / <code>END</code> เริ่มต้น / จบ<br>
+        <code>INPUT</code> a, b รับค่า<br>
+        <code>SET</code> x = 0 กำหนดค่า · <code>COMPUTE</code> x = a + b คำนวณ<br>
+        <code>DISPLAY</code> x หรือ "ข้อความ" แสดงผล<br>
+        <code>DO</code> ทำอะไรสักอย่าง (ข้อความ)<br>
+        <code>IF</code> เงื่อนไข <code>THEN</code> … <code>ELSE</code> … <code>ENDIF</code><br>
+        <code>WHILE</code> เงื่อนไข <code>DO</code> … <code>ENDWHILE</code><br>
+        เครื่องหมาย: + − * / mod  = &lt;&gt; &gt; &lt; &gt;= &lt;=  AND OR NOT<br>
+        ขึ้นต้น <code>//</code> = หมายเหตุ (ไม่ทำงาน)
+      </div></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const code = $("#code"), hl = $("#hl"), gutter = $("#gutter");
+const toast = (t) => { const e = $("#toast"); e.textContent = t; e.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = "none", 2600); };
+let VIEW = false, errLines = new Set(), saveT = 0;
+const save = () => { if(VIEW) return; clearTimeout(saveT); saveT = setTimeout(() => { try{ localStorage.setItem("krtomPseudo:m1/cs/1", code.value); }catch(e){} }, 300); };
+
+/* ---------- ไฮไลต์ + เลขบรรทัด ---------- */
+const KW = /\b(START|END|INPUT|SET|COMPUTE|DISPLAY|DO|IF|THEN|ELSE|ENDIF|WHILE|ENDWHILE|AND|OR|NOT|mod)\b/gi;
+const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function paint(){
+  const ls = code.value.split("\n");
+  hl.innerHTML = ls.map((l, i) => {
+    let h;
+    const cm = l.search(/\/\/|#/);
+    const main = cm >= 0 ? l.slice(0, cm) : l, tail = cm >= 0 ? l.slice(cm) : "";
+    h = esc(main).replace(/("[^"]*"|“[^”]*”)/g, '<span class="str">$1</span>').replace(/(^|[^\w"])(\d+(?:\.\d+)?)(?![\w"])/g, '$1<span class="num">$2</span>');
+    h = h.replace(/(<span class="str">.*?<\/span>)|\b(START|END|INPUT|SET|COMPUTE|DISPLAY|DO|IF|THEN|ELSE|ENDIF|WHILE|ENDWHILE|AND|OR|NOT)\b/g, (m, s1, k) => s1 ? s1 : '<span class="kw">' + k + "</span>");
+    if(tail) h += '<span class="cm">' + esc(tail) + "</span>";
+    return errLines.has(i + 1) ? '<span class="err">' + (h || " ") + "</span>" : h;
+  }).join("\n") + "\n";
+  gutter.innerHTML = ls.map((_, i) => errLines.has(i + 1) ? '<span class="bad">' + (i + 1) + "</span>" : (i + 1)).join("\n");
+  sync();
+}
+function sync(){ hl.scrollTop = code.scrollTop; hl.scrollLeft = code.scrollLeft; gutter.scrollTop = code.scrollTop; }
+code.addEventListener("scroll", sync);
+code.addEventListener("input", () => { errLines.clear(); paint(); save(); });
+
+/* ---------- แก้ไข: ย่อหน้าอัตโนมัติ / Tab ---------- */
+const IND = "    ";
+code.addEventListener("keydown", e => {
+  if(VIEW) return;
+  const v = code.value, s = code.selectionStart, en = code.selectionEnd;
+  if(e.key === "Tab"){
+    e.preventDefault();
+    if(s === en && !e.shiftKey){ ins(IND); return; }
+    const a = v.lastIndexOf("\n", s - 1) + 1; let b = v.indexOf("\n", en); if(b < 0) b = v.length;
+    const blk = v.slice(a, b).split("\n").map(l => e.shiftKey ? l.replace(/^( {1,4}|\t)/, "") : IND + l).join("\n");
+    code.setRangeText(blk, a, b, "select"); code.dispatchEvent(new Event("input")); return;
+  }
+  if(e.key === "Enter" && !e.ctrlKey){
+    e.preventDefault();
+    const a = v.lastIndexOf("\n", s - 1) + 1, line = v.slice(a, s), ind = line.match(/^\s*/)[0];
+    const more = /(\bTHEN|\bELSE|\bDO|^\s*START)\s*$/i.test(line.replace(/\/\/.*$/, "")) ? IND : "";
+    ins("\n" + ind + more);
+  }
+});
+function ins(t, caretBack = 0){
+  const s = code.selectionStart, en = code.selectionEnd; code.setRangeText(t, s, en, "end");
+  if(caretBack){ code.selectionStart = code.selectionEnd = code.selectionStart - caretBack; }
+  code.focus(); code.dispatchEvent(new Event("input"));
+}
+function curIndent(){ const v = code.value, a = v.lastIndexOf("\n", code.selectionStart - 1) + 1; return v.slice(a).match(/^\s*/)[0]; }
+function snippet(parts){
+  if(VIEW) return;
+  const v = code.value, s = code.selectionStart, a = v.lastIndexOf("\n", s - 1) + 1; let b = v.indexOf("\n", s); if(b < 0) b = v.length;
+  const line = v.slice(a, b), base = line.match(/^\s*/)[0], blank = line.trim() === "";
+  let rep = parts.map(l => base + l).join("\n"), start = a, end = b;
+  if(!blank){ rep = "\n" + rep; start = end = b; }
+  const idx = rep.indexOf("¦"); rep = rep.replace("¦", "");
+  code.setRangeText(rep, start, end, "end"); code.selectionStart = code.selectionEnd = start + (idx >= 0 ? idx : rep.length);
+  code.focus(); code.dispatchEvent(new Event("input"));
+}
+
+/* ---------- ปุ่มแทรกคำสั่ง ---------- */
+const TOOLS = [
+  ["START", () => snippet(["START", IND + "¦", "END"])],
+  ["INPUT", () => snippet(["INPUT ¦"])], ["SET", () => snippet(["SET ¦ = "])], ["COMPUTE", () => snippet(["COMPUTE ¦ = "])], ["DISPLAY", () => snippet(["DISPLAY ¦"])], ["DO", () => snippet(["DO ¦"])],
+  ["|", null],
+  ["IF…ELSE", () => snippet(["IF ¦ THEN", IND + "", "ELSE", IND + "", "ENDIF"])],
+  ["IF", () => snippet(["IF ¦ THEN", IND + "", "ENDIF"])],
+  ["WHILE", () => snippet(["WHILE ¦ DO", IND + "", "ENDWHILE"])],
+  ["END", () => snippet(["END"])]
+];
+const tools = $("#tools");
+TOOLS.forEach(([n, f]) => { if(!f){ const s = document.createElement("span"); s.className = "sep"; tools.append(s); return; } const b = document.createElement("button"); b.textContent = n; b.title = "แทรกคำสั่ง " + n; b.onclick = f; tools.append(b); });
+[["✨ จัดรูปแบบ", "act2", formatCode], ["✅ ตรวจรหัส", "act2", runCheck], ["▶ ทดลองรัน", "act", runProg], ["🗑️ ล้าง", "", () => { if(!code.value.trim() || confirm("ล้างรหัสลำลองทั้งหมด?")){ code.value = ""; errLines.clear(); paint(); save(); } }]].forEach(([n, c, f]) => {
+  const b = document.createElement("button"); b.textContent = n; if(c) b.className = c; b.onclick = f; tools.append(b); });
+
+/* ---------- แยกบรรทัดเป็นคำสั่ง ---------- */
+const stripCm = (l) => l.replace(/\/\/.*$/, "").replace(/(^|\s)#.*$/, "").trim();
+function parseLine(raw){
+  const t = stripCm(raw); if(!t) return null;
+  let m;
+  if((m = t.match(/^(START|END|ELSE|ENDIF|ENDWHILE)$/i))) return { k:m[1].toUpperCase() };
+  if((m = t.match(/^(INPUT)\s+(.+)$/i))) return { k:"INPUT", a:m[2].split(/[,،]/).map(x => x.trim()).filter(Boolean) };
+  if((m = t.match(/^(SET|COMPUTE)\s+([^=\s]+)\s*=\s*(.+)$/i))) return { k:"SET", v:m[2], e:m[3] };
+  if((m = t.match(/^([A-Za-z_ก-๙][A-Za-z0-9_ก-๙]*)\s*=\s*(.+)$/))) return { k:"SET", v:m[1], e:m[2], bare:true };
+  if((m = t.match(/^DISPLAY\s+(.+)$/i))) return { k:"DISPLAY", e:m[1] };
+  if((m = t.match(/^DO\s+(.+)$/i))) return { k:"DO", a:m[1] };
+  if((m = t.match(/^IF\s+(.+?)\s+THEN$/i))) return { k:"IF", e:m[1] };
+  if((m = t.match(/^WHILE\s+(.+?)\s+DO$/i))) return { k:"WHILE", e:m[1] };
+  return { k:"?", t };
+}
+
+/* ---------- จัดรูปแบบ ---------- */
+function formatCode(){
+  if(VIEW) return; let d = 0; const out = [];
+  code.value.split("\n").forEach(raw => {
+    const t = raw.trim(); if(!t){ out.push(""); return; }
+    const p = parseLine(t.replace(/^\/\/.*/, "x")), k = p && p.k;
+    if(["END", "ENDIF", "ENDWHILE"].includes(k)) d = Math.max(0, d - 1);
+    const dd = k === "ELSE" ? Math.max(0, d - 1) : d;
+    out.push(IND.repeat(k === "START" || k === "END" ? 0 : dd) + t);
+    if(k === "START") d = 1; if(["IF", "WHILE", "ELSE"].includes(k)) d += 1;
+    if(k === "ELSE") d = dd + 1;
+  });
+  code.value = out.join("\n"); errLines.clear(); paint(); save(); toast("จัดรูปแบบย่อหน้าให้แล้ว");
+}
+
+/* ---------- นิพจน์ ---------- */
+const TOK = /"[^"]*"|“[^”]*”|'[^']*'|\d+(?:\.\d+)?|[A-Za-z_ก-๙][A-Za-z0-9_ก-๙]*|<>|>=|<=|≥|≤|[-+*\/%()=<>×÷−]|\s+|./g;
+function toJS(e, known){
+  const out = [], used = [];
+  for(const t of e.match(TOK) || []){
+    if(/^\s+$/.test(t)) continue;
+    if(/^["“'].*["”']$/.test(t)) { out.push(JSON.stringify(t.slice(1, -1))); continue; }
+    if(/^\d/.test(t)) { out.push(t); continue; }
+    if(/^[A-Za-z_ก-๙]/.test(t)){
+      const u = t.toUpperCase();
+      if(u === "MOD") out.push("%"); else if(u === "AND") out.push("&&"); else if(u === "OR") out.push("||"); else if(u === "NOT") out.push("!");
+      else if(u === "TRUE") out.push("true"); else if(u === "FALSE") out.push("false");
+      else { used.push(t); if(known && !known.has(t)) throw { unknown:t }; out.push("$v[" + JSON.stringify(t) + "]"); }
+      continue;
+    }
+    const map = { "=":"==", "<>":"!=", "≥":">=", "≤":"<=", "×":"*", "÷":"/", "−":"-" };
+    if(["+", "-", "*", "/", "%", "(", ")", ">", "<", ">=", "<=", "=", "<>", "≥", "≤", "×", "÷", "−"].includes(t)) out.push(map[t] || t);
+    else throw { bad:t };
+  }
+  return { js:out.join(" "), used };
+}
+const evalExpr = (e, vars) => { const { js } = toJS(e, new Set(Object.keys(vars))); const r = new Function("$v", "return (" + js + ");")(vars); return r; };
+const show = (v) => typeof v === "number" ? String(+v.toFixed(8)) : typeof v === "boolean" ? (v ? "จริง" : "เท็จ") : String(v);
+
+/* ---------- ตรวจรหัส ---------- */
+function analyze(){
+  const lines = code.value.split("\n"), res = [], bad = new Set(), P = lines.map(parseLine);
+  const add = (type, t, ln) => { res.push([type, t, ln]); if(type === "bad" && ln) bad.add(ln); };
+  const sig = P.map((p, i) => p ? i : -1).filter(i => i >= 0);
+  if(!sig.length) return { res:[["bad", "ยังไม่ได้เขียนรหัสลำลอง"]], bad };
+  const first = P[sig[0]], last = P[sig[sig.length - 1]];
+  const starts = sig.filter(i => P[i].k === "START"), ends = sig.filter(i => P[i].k === "END");
+  first.k === "START" && starts.length === 1 ? add("ok", "ขึ้นต้นด้วย START (1 จุด)") : add("bad", starts.length > 1 ? "มี START มากกว่า 1 จุด" : "ต้องขึ้นต้นด้วย START", sig[0] + 1);
+  last.k === "END" && ends.length === 1 ? add("ok", "ลงท้ายด้วย END") : add("bad", ends.length > 1 ? "มี END มากกว่า 1 จุด" : "ต้องลงท้ายด้วย END", sig[sig.length - 1] + 1);
+  const stack = [], defined = new Set(); let usedUndefined = 0, hasIn = false, hasOut = false, unknownKw = 0, badIndent = 0;
+  sig.forEach(i => {
+    const p = P[i], ln = i + 1;
+    if(p.k === "?"){ add("bad", `บรรทัด ${ln}: ไม่รู้จักคำสั่ง "${p.t.split(/\s/)[0]}"`, ln); unknownKw++; return; }
+    if(p.k === "INPUT"){ hasIn = true; p.a.forEach(v => { if(!/^[A-Za-z_ก-๙][A-Za-z0-9_ก-๙]*$/.test(v)) add("bad", `บรรทัด ${ln}: ชื่อตัวแปร "${v}" ใช้ไม่ได้`, ln); defined.add(v); }); return; }
+    if(p.k === "SET"){ try{ toJS(p.e, defined); }catch(x){ if(x.unknown){ add("bad", `บรรทัด ${ln}: ใช้ตัวแปร "${x.unknown}" ก่อนกำหนดค่า (INPUT / SET)`, ln); usedUndefined++; } else add("bad", `บรรทัด ${ln}: นิพจน์ไม่ถูกต้อง`, ln); } defined.add(p.v); if(p.bare) add("tip", `บรรทัด ${ln}: ควรเขียน SET หรือ COMPUTE นำหน้า`); return; }
+    if(p.k === "DISPLAY"){ hasOut = true; return; }
+    if(p.k === "IF" || p.k === "WHILE"){ stack.push([p.k, ln, false]); try{ toJS(p.e, defined); }catch(x){ if(x.unknown){ add("bad", `บรรทัด ${ln}: ใช้ตัวแปร "${x.unknown}" ก่อนกำหนดค่า`, ln); usedUndefined++; } else add("bad", `บรรทัด ${ln}: เงื่อนไขไม่ถูกต้อง`, ln); } return; }
+    if(p.k === "ELSE"){ const t = stack[stack.length - 1]; if(!t || t[0] !== "IF"){ add("bad", `บรรทัด ${ln}: ELSE ต้องอยู่ใน IF`, ln); } else if(t[2]) add("bad", `บรรทัด ${ln}: IF นี้มี ELSE ซ้ำ`, ln); else t[2] = true; return; }
+    if(p.k === "ENDIF" || p.k === "ENDWHILE"){ const need = p.k === "ENDIF" ? "IF" : "WHILE", t = stack.pop(); if(!t || t[0] !== need) add("bad", `บรรทัด ${ln}: ${p.k} ไม่มี ${need} คู่กัน`, ln); }
+  });
+  stack.forEach(t => add("bad", `บรรทัด ${t[1]}: ${t[0]} ยังไม่มี ${t[0] === "IF" ? "ENDIF" : "ENDWHILE"} ปิด`, t[1]));
+  // เช็กย่อหน้า: บรรทัดในเนื้อหาควรเยื้องเข้า
+  lines.forEach((raw, i) => { const p = P[i]; if(!p || ["START", "END"].includes(p.k)) return; if(sig[0] < i && i < sig[sig.length - 1] && !/^\s+/.test(raw)) badIndent++; });
+  if(badIndent) add("tip", `มี ${badIndent} บรรทัดที่ยังไม่ได้ย่อหน้า — กดปุ่ม "✨ จัดรูปแบบ" ให้ดูอ่านง่าย`);
+  if(!res.some(r => r[0] === "bad")){ if(unknownKw === 0) add("ok", "รูปแบบคำสั่งถูกต้องทุกบรรทัด"); if(stack.length === 0) add("ok", "IF / WHILE ปิดครบถ้วน"); if(usedUndefined === 0) add("ok", "ตัวแปรทุกตัวมีค่าก่อนนำไปใช้"); }
+  if(!hasIn) add("tip", "ยังไม่มีคำสั่ง INPUT — ถ้าโจทย์ต้องรับค่า อย่าลืมใส่");
+  if(!hasOut) add("tip", "ยังไม่มีคำสั่ง DISPLAY — ถ้าโจทย์ต้องแสดงผล อย่าลืมใส่");
+  if(!res.some(r => r[0] === "bad")) res.push(["ok", "🎉 รหัสลำลองถูกต้องตามรูปแบบ — ลองกด ▶ ทดลองรัน ดูผลลัพธ์"]);
+  return { res, bad };
+}
+function runCheck(){ const { res, bad } = analyze(); errLines = bad; paint(); $("#check").innerHTML = res.map(([c, t]) => `<div class="${c}">${c === "ok" ? "✅ " : c === "bad" ? "⚠️ " : "💡 "}${esc(t)}</div>`).join(""); return !res.some(r => r[0] === "bad"); }
+
+/* ---------- ทดลองรัน ---------- */
+let RUNID = 0, inRes = null;
+const out = $("#out");
+const say = (t, c = "") => { const d = document.createElement("div"); if(c) d.className = c; d.textContent = t; out.append(d); out.scrollTop = out.scrollHeight; };
+function askInput(name){
+  return new Promise((res, rej) => { inRes = { res, rej }; $("#inbar").style.display = "flex"; $("#inq").textContent = "INPUT " + name + " ="; $("#inval").value = ""; $("#inval").focus(); });
+}
+function submitIn(){ if(!inRes) return; const v = $("#inval").value; $("#inbar").style.display = "none"; const r = inRes; inRes = null; say("  ← " + name2 + " = " + v, "in"); r.res(v); }
+let name2 = "";
+$("#inok").onclick = submitIn; $("#inval").addEventListener("keydown", e => { if(e.key === "Enter") submitIn(); });
+const conv = (s) => { const t = String(s).trim(); return t !== "" && isFinite(Number(t)) ? Number(t) : t; };
+async function runProg(){
+  const my = ++RUNID; if(inRes){ inRes.rej("stop"); inRes = null; $("#inbar").style.display = "none"; }
+  out.innerHTML = ""; $("#vars").innerHTML = "";
+  const { res, bad } = analyze(); errLines = bad; paint();
+  const fatal = res.filter(r => r[0] === "bad"); if(fatal.length){ say("ยังรันไม่ได้ — แก้ข้อผิดพลาดก่อน:", "err"); fatal.slice(0, 5).forEach(f => say("  • " + f[1], "err")); $("#check").innerHTML = res.map(([c, t]) => `<div class="${c}">${c === "ok" ? "✅ " : c === "bad" ? "⚠️ " : "💡 "}${esc(t)}</div>`).join(""); return; }
+  const lines = code.value.split("\n"), P = lines.map(parseLine);
+  // สร้างโครงสร้างบล็อก
+  const prog = []; const stack = [prog];
+  P.forEach((p, i) => { if(!p) return; p.ln = i + 1; const cur = stack[stack.length - 1];
+    if(p.k === "IF"){ p.t = []; p.f = []; cur.push(p); stack.push(p.t); stack.cur = stack.cur || []; (stack.owners = stack.owners || []).push(p); }
+    else if(p.k === "WHILE"){ p.t = []; cur.push(p); stack.push(p.t); (stack.owners = stack.owners || []).push(p); }
+    else if(p.k === "ELSE"){ const o = stack.owners[stack.owners.length - 1]; stack[stack.length - 1] = o.f; }
+    else if(p.k === "ENDIF" || p.k === "ENDWHILE"){ stack.pop(); stack.owners.pop(); }
+    else if(!["START", "END"].includes(p.k)) cur.push(p); });
+  const vars = {}; let steps = 0;
+  say("▶ เริ่มทำงาน", "ok");
+  const fail = (p, msg) => { throw { msg:`บรรทัด ${p.ln}: ${msg}` }; };
+  const ev = (p, e) => { try{ return evalExpr(e, vars); }catch(x){ if(x.unknown) fail(p, `ไม่รู้จักตัวแปร "${x.unknown}"`); if(x.bad) fail(p, `เครื่องหมาย "${x.bad}" ใช้ไม่ได้`); if(x.msg) throw x; fail(p, "นิพจน์ไม่ถูกต้อง"); } };
+  async function exec(list){
+    for(const p of list){
+      if(my !== RUNID) throw "stop"; if(++steps > 20000) throw { msg:"ทำงานเกิน 20,000 ขั้น — วนซ้ำไม่รู้จบหรือเปล่า? (ตรวจเงื่อนไข WHILE และการเพิ่มค่า)" };
+      if(steps % 300 === 0) await new Promise(r => setTimeout(r, 0));
+      if(p.k === "INPUT"){ for(const n of p.a){ name2 = n; const v = await askInput(n); if(my !== RUNID) throw "stop"; vars[n] = conv(v); } }
+      else if(p.k === "SET"){ vars[p.v] = ev(p, p.e); }
+      else if(p.k === "DISPLAY"){
+        const parts = p.e.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/); let txt = [];
+        for(const part of parts){ try{ txt.push(show(evalExpr(part, vars))); }catch(x){ if(x.unknown || x.bad) txt.push(part.trim().replace(/^["“'](.*)["”']$/, "$1")); else fail(p, "แสดงผลไม่ได้"); } }
+        say("📤 " + txt.join(" "));
+      }
+      else if(p.k === "DO"){ say("▸ " + p.a, "act"); }
+      else if(p.k === "IF"){ await exec(ev(p, p.e) ? p.t : p.f); }
+      else if(p.k === "WHILE"){ while(ev(p, p.e)){ await exec(p.t); if(my !== RUNID) throw "stop"; if(++steps > 20000) throw { msg:"ทำงานเกิน 20,000 ขั้น — วนซ้ำไม่รู้จบหรือเปล่า?" }; } }
+    }
+  }
+  try{ await exec(prog); say("■ จบการทำงาน", "ok"); }
+  catch(x){ if(x === "stop") return; say("✖ " + (x.msg || x), "err"); }
+  $("#vars").innerHTML = Object.keys(vars).length ? "<b>ค่าตัวแปรตอนจบ:</b> " + Object.entries(vars).map(([k, v]) => `<span>${esc(k)} = ${esc(show(v))}</span>`).join("") : "";
+}
+
+/* ---------- ตัวอย่าง ---------- */
+const SAMPLES = {
+  "ex-seq1":  ["START", "    DO หยิบแปรงสีฟัน", "    DO บีบยาสีฟัน", "    DO แปรงฟัน 2 นาที", "    DO บ้วนปาก", "END"],
+  "ex-seq2":  ["START", "    INPUT width, length", "    COMPUTE area = width * length", "    DISPLAY area", "END"],
+  "ex-sel1":  ["START", "    INPUT score", "    IF score >= 50 THEN", '        DISPLAY "ผ่าน"', "    ELSE", '        DISPLAY "ไม่ผ่าน"', "    ENDIF", "END"],
+  "ex-sel2":  ["START", "    INPUT n", "    COMPUTE r = n mod 2", "    IF r = 0 THEN", '        DISPLAY "เลขคู่"', "    ELSE", '        DISPLAY "เลขคี่"', "    ENDIF", "END"],
+  "ex-loop1": ["START", "    SET i = 1", "    WHILE i <= 4 DO", "        DO เดิน 100 ก้าว", "        DO หมุนขวา 90 องศา", "        COMPUTE i = i + 1", "    ENDWHILE", "END"],
+  "ex-loop2": ["START", "    SET total = 0", "    SET count = 1", "    WHILE count <= 5 DO", "        COMPUTE total = total + count", "        COMPUTE count = count + 1", "    ENDWHILE", "    DISPLAY total", "END"]
+};
+function setCode(t){ code.value = t; errLines.clear(); paint(); save(); out.innerHTML = '<span class="dim">กดปุ่ม "▶ ทดลองรัน" เพื่อให้คอมพิวเตอร์ทำตามรหัสลำลองของคุณ</span>'; $("#vars").innerHTML = ""; }
+$("#sample").onchange = function(){ const k = this.value; this.value = ""; if(!k) return; if(code.value.trim() && !confirm("โหลดตัวอย่างจะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return; setCode(SAMPLES[k].join("\n")); toast("โหลดตัวอย่างแล้ว — กด ✅ ตรวจรหัส หรือ ▶ ทดลองรัน"); };
+
+/* ---------- ส่ง / แชร์ ---------- */
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
+if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = "✖ ปิดแท็บ กลับไปใบงาน"; }
+$("#backlink").addEventListener("click", e => { e.preventDefault(); const to = $("#backlink").getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); });
+const b64e = (t) => btoa(unescape(encodeURIComponent(t))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const b64d = (t) => decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/"))));
+const shareURL = () => { const u = new URL("pseudocode.html", location.href); u.search = ""; u.searchParams.set("c", b64e(code.value)); return u.href; };
+async function copyText(t){ try{ await navigator.clipboard.writeText(t); return true; }catch(e){ const a = document.createElement("textarea"); a.value = t; a.style.cssText = "position:fixed;opacity:0"; document.body.append(a); a.select(); let ok = false; try{ ok = document.execCommand("copy"); }catch(_){} a.remove(); return ok; } }
+const menu = $("#sharemenu");
+$("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
+document.addEventListener("click", () => menu.classList.remove("open"));
+if(!BACK){ $("#sh-ws").disabled = true; $("#sh-ws").title = "เปิดโปรแกรมนี้จากปุ่มในใบงาน จึงจะส่งไปใบงานได้"; }
+$("#sh-link").onclick = async () => { if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์รหัสลำลองแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-text").onclick = async () => toast((await copyText(code.value)) ? "คัดลอกรหัสลำลองแล้ว" : "คัดลอกไม่สำเร็จ");
+$("#sh-txt").onclick = () => { const a = document.createElement("a"); a.download = "รหัสลำลอง.txt"; a.href = URL.createObjectURL(new Blob(["﻿" + code.value], { type:"text/plain;charset=utf-8" })); a.click(); };
+$("#sh-ws").onclick = () => {
+  if(!BACK) return; if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง");
+  const key = "krtomws:m1/cs/1:" + BACK[2], txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + shareURL();
+  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < 8) arr.push(""); arr[5] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งรหัสลำลองไปที่ข้อ 6 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
+  catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
+};
+$("#viewedit").onclick = () => { VIEW = false; code.readOnly = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); save(); toast("คัดลอกรหัสไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };
+
+/* ---------- เริ่มต้น ---------- */
+try{ const d = localStorage.getItem("krtomPseudo:m1/cs/1"); if(d) code.value = d; }catch(e){}
+try{
+  const c = QS.get("c"), ex = QS.get("ex");
+  if(c){ VIEW = true; code.value = b64d(c); code.readOnly = true; $("#viewbar").style.display = "block"; }
+  else if(ex && SAMPLES[ex]){ code.value = SAMPLES[ex].join("\n"); toast("ระบบเขียนรหัสลำลองตัวอย่างให้แล้ว — กด ✅ ตรวจรหัส หรือ ▶ ทดลองรัน"); }
+  else if(ex === "blank"){ if(!code.value.trim()) code.value = "START\n    \nEND"; }
+}catch(e){ toast("เปิดรหัสลำลองจากลิงก์ไม่ได้ — ลิงก์อาจไม่ครบ"); }
+paint();
+window.__pc = { analyze, SAMPLES, setCode, formatCode, get code(){ return code.value; } };
+</script>
+</body>
+</html>

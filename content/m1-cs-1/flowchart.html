@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>วาดผังงาน — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:16px; --bd:#D9DEEA; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; background:#EEF1F8; color:#1F2430; }
+  body{ display:flex; flex-direction:column; }
+  header{ background:linear-gradient(135deg,#0EA5E9,#6366F1); color:#fff; padding:8px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:1.15rem; flex:1; min-width:200px; }
+  header a, header button, header select{ color:#fff; background:rgba(255,255,255,.22); border:none; padding:6px 14px; border-radius:999px; font:inherit; font-size:.85rem; text-decoration:none; cursor:pointer; }
+  header select option{ color:#1F2430; }
+  #viewbar{ display:none; background:#FEF9C3; border-bottom:1px solid #FDE047; padding:6px 14px; font-size:.85rem; font-weight:700; }
+  #viewbar button{ font:inherit; font-size:.8rem; border:none; background:#3B82F6; color:#fff; border-radius:999px; padding:3px 12px; cursor:pointer; margin-left:8px; }
+  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:310px; }
+  #sharemenu.open{ display:block; }
+  #sharemenu button{ display:block; width:100%; text-align:left; background:none !important; color:#1F2430 !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; }
+  #sharemenu button:hover{ background:#EEF2FF !important; } #sharemenu button[disabled]{ opacity:.4; cursor:not-allowed; }
+
+  #app{ flex:1; min-height:0; display:grid; grid-template-columns:200px 1fr 270px; gap:8px; padding:8px; }
+  .panel{ background:#fff; border:1px solid var(--bd); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; min-height:0; }
+  .panel h3{ margin:0; padding:8px 12px; font-size:.85rem; background:#F8FAFF; border-bottom:1px solid var(--bd); }
+  #app > .panel:first-child{ overflow-y:auto; }
+  #pal{ padding:10px; flex:none; display:flex; flex-direction:column; gap:10px; overflow:auto; }
+  .pitem{ cursor:grab; touch-action:none; user-select:none; border:2px dashed #CBD5E1; border-radius:12px; padding:6px; text-align:center; font-size:.8rem; font-weight:700; background:#fff; }
+  .pitem:hover{ border-color:#6366F1; background:#EEF2FF; }
+  .pitem svg{ width:100%; height:46px; display:block; margin-bottom:2px; }
+  .tip{ font-size:.78rem; color:#64748B; line-height:1.6; padding:0 12px 12px; }
+  #cvwrap{ flex:1; overflow:auto; position:relative; background:linear-gradient(#0000000a 1px,transparent 1px) 0 0/24px 24px, linear-gradient(90deg,#0000000a 1px,transparent 1px) 0 0/24px 24px, #FBFCFF; }
+  #cv{ display:block; width:1600px; height:1600px; touch-action:none; }
+  .bar{ display:flex; gap:6px; align-items:center; padding:6px 8px; border-bottom:1px solid var(--bd); background:#F8FAFF; font-size:.8rem; flex-wrap:wrap; }
+  .bar button{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:3px 10px; font:inherit; font-size:.78rem; cursor:pointer; }
+  #edit{ position:absolute; display:none; z-index:10; font:inherit; font-size:15px; font-weight:700; text-align:center; border:2px solid #6366F1; border-radius:10px; padding:4px; resize:none; background:#fff; }
+  #check{ padding:10px 12px; font-size:.82rem; line-height:1.6; overflow:auto; }
+  #check .tip{ color:#475569; } #check .ok{ color:#047857; } #check .bad{ color:#B45309; } #check .tl{ margin:2px 0; }
+  #checkbtn{ margin:10px 12px 0; padding:8px; border:none; border-radius:10px; background:#6366F1; color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+  .zoombar{ margin-left:auto; display:flex; align-items:center; gap:4px; }
+  .zoombar button{ min-width:30px; font-weight:800; }
+  #zlabel{ min-width:46px; text-align:center; font-weight:700; }
+  #ctx{ display:none; position:fixed; z-index:4000; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.25); padding:6px; width:236px; font-size:.82rem; }
+  #ctx .it{ display:block; width:100%; text-align:left; background:none; border:none; font:inherit; padding:6px 10px; border-radius:8px; cursor:pointer; color:#1F2430; }
+  #ctx .it:hover{ background:#EEF2FF; } #ctx .it.danger{ color:#B91C1C; }
+  #ctx .hd{ font-size:.72rem; font-weight:800; color:#64748B; padding:6px 10px 2px; }
+  #ctx .sw{ display:flex; flex-wrap:wrap; gap:6px; padding:2px 8px 6px; }
+  #ctx .sw i{ width:24px; height:24px; border-radius:50%; cursor:pointer; border:3px solid; display:block; box-sizing:border-box; }
+  #ctx .sw i:hover{ transform:scale(1.15); }
+  #ctx .sz{ display:flex; gap:6px; padding:2px 8px 6px; align-items:center; }
+  #ctx .sz button{ flex:1; border:1px solid var(--bd); background:#fff; border-radius:8px; padding:4px 0; font:inherit; font-weight:800; cursor:pointer; }
+  #ctx .sz button:hover{ background:#EEF2FF; } #ctx .sz span{ min-width:44px; text-align:center; font-weight:700; }
+  #toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#1F2937; color:#fff; padding:8px 18px; border-radius:999px; font-size:.85rem; display:none; z-index:3000; }
+  .node text{ font-family:"Sarabun",sans-serif; font-size:15px; font-weight:700; pointer-events:none; }
+  .node.sel .shape{ stroke:#6366F1 !important; stroke-width:4 !important; }
+  .tether{ stroke:#6366F1; stroke-width:1.6; stroke-dasharray:3 3; pointer-events:none; }
+  .rz{ fill:#fff; stroke:#6366F1; stroke-width:2.5; }
+  .rz:hover{ fill:#6366F1; }
+  .handle{ fill:#6366F1; stroke:#fff; stroke-width:2; cursor:crosshair; opacity:0; }
+  .node:hover .handle, .node.sel .handle, svg.connecting .handle{ opacity:1; }
+  .edge{ fill:none; stroke:#9A3412; stroke-width:2.6; }
+  .edge.sel{ stroke:#6366F1; stroke-width:4; }
+  .edgehit{ fill:none; stroke:transparent; stroke-width:16; cursor:pointer; }
+  .elabel{ font-family:"Sarabun",sans-serif; font-size:14px; font-weight:800; fill:#B45309; cursor:pointer; paint-order:stroke; stroke:#FBFCFF; stroke-width:4px; }
+  @media (max-width:980px){
+    html,body{ height:auto; } #app{ grid-template-columns:1fr; } #pal{ flex-direction:row; flex-wrap:wrap; } .pitem{ width:120px; }
+    #cvwrap{ min-height:480px; }
+  }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<header>
+  <h1>🔷 วาดผังงาน (Flowchart)</h1>
+  <select id="sample">
+    <option value="">📂 โหลดตัวอย่างผังงาน…</option>
+    <option value="ex-seq1">เรียงลำดับ 1: แปรงฟัน</option>
+    <option value="ex-seq2">เรียงลำดับ 2: พื้นที่สี่เหลี่ยมผืนผ้า</option>
+    <option value="ex-sel1">เงื่อนไข 1: ตรวจผลสอบ</option>
+    <option value="ex-sel2">เงื่อนไข 2: เลขคู่หรือเลขคี่</option>
+    <option value="ex-loop1">ทำซ้ำ 1: วาดสี่เหลี่ยมจัตุรัส</option>
+    <option value="ex-loop2">ทำซ้ำ 2: ผลรวม 1 ถึง 5</option>
+  </select>
+  <div style="position:relative">
+    <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
+    <div id="sharemenu">
+      <button id="sh-ws">📥 ส่งผังงานไปใบงาน (ใส่ในช่องข้อ 7)</button>
+      <button id="sh-link">🔗 คัดลอกลิงก์ผังงาน (ส่งให้ครูเปิดดู)</button>
+      <button id="sh-text">📝 คัดลอกเป็นข้อความอธิบายผังงาน</button>
+      <button id="sh-png">🖼️ บันทึกเป็นรูปภาพ (.png)</button>
+    </div>
+  </div>
+  <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิดแท็บนี้</a>
+</header>
+<div id="viewbar">👀 กำลังดูผังงานที่แชร์มา — <button id="viewedit">✏️ คัดลอกไปแก้ไขต่อ</button></div>
+
+<div id="app">
+  <div class="panel">
+    <h3>🧰 รูปทรงผังงาน</h3>
+    <div id="pal"></div>
+    <div class="tip">ลากรูปทรงไปวางในกระดาน หรือคลิกเพื่อเพิ่ม (มีครบ 13 รูปทรง + เส้นลูกศร ตามตารางสัญลักษณ์ผังงาน)<br>• ดับเบิลคลิกรูปทรง = แก้ข้อความ<br>• ชี้ที่รูปทรง จะมีจุดสีม่วง → ลากจากจุดไปที่รูปทรงอื่นเพื่อต่อลูกศร<br>• คลิกข้อความ ใช่/ไม่ใช่ เพื่อแก้<br>• คลิกรูปทรงแล้ว<b>ลากที่มุมสี่เหลี่ยมเล็ก ๆ</b> = ขยาย/ย่อขนาด (กด Shift ค้างเพื่อคงสัดส่วน)<br>• คลิกลูกศรแล้วดึง<b>ที่จับสี่เหลี่ยมตรงกลางเส้น</b>ออก/เข้า = ลูกศรหนา/บาง (หัวลูกศรขยายตาม)<br>• คลิกขวาที่รูปทรง = เปลี่ยนสี / ขนาด / ทำซ้ำ / ลบ<br>• ซูม: ปุ่ม + − หรือกด Ctrl ค้างแล้วหมุนลูกกลิ้งเมาส์<br>• กด Delete เพื่อลบ · Ctrl+Z เพื่อย้อนกลับ</div>
+  </div>
+  <div class="panel">
+    <div class="bar"><span>🧩 กระดานวาดผังงาน</span><button id="del">🗑️ ลบที่เลือก</button><button id="undo">↶ ย้อนกลับ</button><button id="clear">ลบทั้งหมด</button><span class="zoombar"><button id="zout" title="ซูมออก">−</button><span id="zlabel">100%</span><button id="zin" title="ซูมเข้า">+</button><button id="zfit" title="ปรับให้พอดีจอ">⤢ พอดีจอ</button><button id="z100" title="กลับเป็น 100%">100%</button></span></div>
+    <div id="cvwrap">
+      <svg id="cv" viewBox="0 0 1600 1600" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ah" viewBox="0 0 9 9" markerWidth="3.6" markerHeight="3.6" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,4.5 L0,9 Z" fill="#9A3412"/></marker>
+        <marker id="ahs" viewBox="0 0 9 9" markerWidth="3.6" markerHeight="3.6" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,4.5 L0,9 Z" fill="#6366F1"/></marker></defs>
+        <g id="edges"></g><g id="nodes"></g><g id="tmp"></g>
+      </svg>
+      <textarea id="edit" rows="2"></textarea>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>✅ ตรวจผังงาน</h3>
+    <button id="checkbtn">ตรวจผังงานของฉัน</button>
+    <div id="check">กดปุ่มด้านบนเพื่อตรวจว่าผังงานครบถ้วนหรือไม่</div>
+  </div>
+</div>
+<div id="ctx"></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+const S = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); if(parent) parent.append(e); return e; };
+const cv = $("#cv"), gN = $("#nodes"), gE = $("#edges"), gT = $("#tmp"), wrap = $("#cvwrap"), editBox = $("#edit");
+
+/* ---------- ข้อมูลผังงาน ---------- */
+let D = { nodes:[], edges:[] }, sel = null, uid = 1, VIEW = false;
+const KIND = {
+  term: { name:"เริ่มต้น / สิ้นสุด", en:"Terminal",           fill:"#BBF7D0", stroke:"#16A34A", color:"#14532D" },
+  proc: { name:"กระบวนการ",        en:"Process",            fill:"#BFDBFE", stroke:"#2563EB", color:"#1E3A8A" },
+  io:   { name:"รับข้อมูล / แสดงผล", en:"Input/Output",       fill:"#DDD6FE", stroke:"#7C3AED", color:"#3B0764" },
+  dec:  { name:"การตัดสินใจ",       en:"Decision",           fill:"#FDE68A", stroke:"#D97706", color:"#78350F" },
+  conn: { name:"จุดเชื่อมต่อ",       en:"Connector",          fill:"#FBCFE8", stroke:"#DB2777", color:"#831843" },
+  off:  { name:"ตัวเชื่อมต่างหน้า",  en:"Off-page Connector", fill:"#BFDBFE", stroke:"#1D4ED8", color:"#1E3A8A" },
+  pre:  { name:"กระบวนการย่อยที่กำหนดไว้แล้ว", en:"Predefined Process", fill:"#DDD6FE", stroke:"#6D28D9", color:"#3B0764" },
+  doc:  { name:"เอกสาร",           en:"Document",           fill:"#BBF7D0", stroke:"#16A34A", color:"#14532D" },
+  db:   { name:"ฐานข้อมูล / ที่เก็บข้อมูล", en:"Database / Data Storage", fill:"#FBCFE8", stroke:"#BE185D", color:"#831843" },
+  man:  { name:"รับข้อมูลจากแป้นพิมพ์", en:"Manual Input",      fill:"#FED7AA", stroke:"#EA580C", color:"#7C2D12" },
+  disp: { name:"แสดงผลบนจอภาพ",       en:"Display",            fill:"#A5F3FC", stroke:"#0891B2", color:"#164E63" },
+  prep: { name:"เตรียมการทำงาน",      en:"Preparation",        fill:"#D9F99D", stroke:"#65A30D", color:"#365314" },
+  store:{ name:"แหล่งเก็บข้อมูลออนไลน์", en:"Online Storage",   fill:"#FECACA", stroke:"#DC2626", color:"#7F1D1D" }
+};
+const lines = (t) => String(t || "").split("\n");
+function size(n){ const b = baseSize(n), m = n.s || 1; return { w:n.rw || b.w * m, h:n.rh || b.h * m }; }
+function baseSize(n){
+  const w0 = Math.max(...lines(n.t).map(l => l.length), 4) * 9.5 + 44, h0 = 40 + (lines(n.t).length - 1) * 18;
+  if(n.k === "dec") return { w:Math.min(300, Math.max(150, w0 + 50)), h:Math.max(78, h0 + 36) };
+  if(n.k === "conn") return { w:52, h:52 };
+  if(n.k === "off") return { w:Math.min(180, Math.max(104, w0 * .85)), h:Math.max(88, h0 + 36) };
+  if(n.k === "pre") return { w:Math.min(320, Math.max(150, w0 + 30)), h:h0 + 4 };
+  if(n.k === "doc") return { w:Math.min(300, Math.max(130, w0)), h:h0 + 18 };
+  if(n.k === "db") return { w:Math.min(300, Math.max(130, w0)), h:Math.max(66, h0 + 26) };
+  return { w:Math.min(300, Math.max(120, w0)), h:h0 + 4 };
+}
+const nodeById = (id) => D.nodes.find(n => n.id === id);
+const snap = []; function push(){ snap.push(JSON.stringify(D)); if(snap.length > 60) snap.shift(); save(); }
+function toast(t){ const e = $("#toast"); e.textContent = t; e.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = "none", 2600); }
+let saveT = 0; function save(){ if(VIEW) return; clearTimeout(saveT); saveT = setTimeout(() => { try{ localStorage.setItem("krtomFlow:m1/cs/1", JSON.stringify(D)); }catch(e){} }, 300); }
+
+/* ---------- เส้นทางลูกศร ---------- */
+function anchor(n, side){ const z = size(n); return side === "t" ? [n.x, n.y - z.h / 2] : side === "b" ? [n.x, n.y + z.h / 2] : side === "l" ? [n.x - z.w / 2, n.y] : [n.x + z.w / 2, n.y]; }
+function route(e){
+  const a = nodeById(e.a), b = nodeById(e.b); if(!a || !b) return [];
+  const [x1, y1] = anchor(a, e.sa), [x2, y2] = anchor(b, e.sb), za = size(a), zb = size(b);
+  if(e.sa === "b" && e.sb === "t"){
+    if(y2 > y1 + 24){ if(Math.abs(x1 - x2) < 2) return [[x1, y1], [x2, y2]]; const ym = (y1 + y2) / 2; return [[x1, y1], [x1, ym], [x2, ym], [x2, y2]]; }
+    const xo = Math.max(x1 + za.w / 2, x2 + zb.w / 2) + 40; return [[x1, y1], [x1, y1 + 24], [xo, y1 + 24], [xo, y2 - 24], [x2, y2 - 24], [x2, y2]];
+  }
+  if(e.sa === "b" && (e.sb === "l" || e.sb === "r")){
+    const xo = e.sb === "l" ? Math.min(x1 - za.w / 2, x2) - 36 : Math.max(x1 + za.w / 2, x2) + 36;
+    if(y2 > y1 + 24 && (e.sb === "l" ? x2 > x1 : x2 < x1)) return [[x1, y1], [x1, y2], [x2, y2]];
+    return [[x1, y1], [x1, y1 + 24], [xo, y1 + 24], [xo, y2], [x2, y2]];
+  }
+  if((e.sa === "l" || e.sa === "r") && e.sb === "t"){
+    const out = e.sa === "r" ? 1 : -1;
+    if((x2 - x1) * out > 20 && y2 > y1) return [[x1, y1], [x2, y1], [x2, y2]];
+    const xo = x1 + out * 56; return [[x1, y1], [xo, y1], [xo, y2 - 26], [x2, y2 - 26], [x2, y2]];
+  }
+  if((e.sa === "l" || e.sa === "r") && (e.sb === "l" || e.sb === "r")){ const ym = (x1 + x2) / 2; return [[x1, y1], [ym, y1], [ym, y2], [x2, y2]]; }
+  if(e.sa === "t") return [[x1, y1], [x1, y1 - 24], [x2, y1 - 24], [x2, y2]];
+  return [[x1, y1], [x2, y1], [x2, y2]];
+}
+const path = (pts) => "M" + pts.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" L");
+
+/* ---------- วาด ---------- */
+function shapeEl(n, g){
+  const z = size(n), k0 = KIND[n.k], k = { ...k0, fill:n.fc || k0.fill, stroke:n.sc || k0.stroke }, w = z.w, h = z.h, m = n.s || 1, s = { fill:k.fill, stroke:k.stroke, "stroke-width":2.5, class:"shape" };
+  if(n.k === "term") S("rect", { ...s, x:-w / 2, y:-h / 2, width:w, height:h, rx:h / 2 }, g);
+  else if(n.k === "proc") S("rect", { ...s, x:-w / 2, y:-h / 2, width:w, height:h }, g);
+  else if(n.k === "io"){ const sk = 16; S("polygon", { ...s, points:`${-w / 2 + sk},${-h / 2} ${w / 2},${-h / 2} ${w / 2 - sk},${h / 2} ${-w / 2},${h / 2}` }, g); }
+  else if(n.k === "dec") S("polygon", { ...s, points:`0,${-h / 2} ${w / 2},0 0,${h / 2} ${-w / 2},0` }, g);
+  else if(n.k === "conn") S("circle", { ...s, r:w / 2 }, g);
+  else if(n.k === "off") S("polygon", { ...s, points:`${-w / 2},${-h / 2} ${w / 2},${-h / 2} ${w / 2},${h * .12} 0,${h / 2} ${-w / 2},${h * .12}` }, g);
+  else if(n.k === "pre"){ S("rect", { ...s, x:-w / 2, y:-h / 2, width:w, height:h }, g); [-1, 1].forEach(sd => S("line", { x1:sd * (w / 2 - 14), y1:-h / 2, x2:sd * (w / 2 - 14), y2:h / 2, stroke:k.stroke, "stroke-width":2.5 }, g)); }
+  else if(n.k === "man") S("polygon", { ...s, points:`${-w / 2},${-h / 2 + h * .24} ${w / 2},${-h / 2} ${w / 2},${h / 2} ${-w / 2},${h / 2}` }, g);
+  else if(n.k === "disp"){ const k = Math.min(h / 2, w * .22); S("path", { ...s, d:`M${-w / 2},0 L${-w / 2 + k},${-h / 2} H${w / 2 - k} Q${w / 2},${-h / 2} ${w / 2},0 Q${w / 2},${h / 2} ${w / 2 - k},${h / 2} H${-w / 2 + k} Z` }, g); }
+  else if(n.k === "prep"){ const k = Math.max(16, Math.min(h * .6, w * .14)); S("polygon", { ...s, points:`${-w / 2},0 ${-w / 2 + k},${-h / 2} ${w / 2 - k},${-h / 2} ${w / 2},0 ${w / 2 - k},${h / 2} ${-w / 2 + k},${h / 2}` }, g); }
+  else if(n.k === "store"){ const k = Math.min(h * .35, w * .2); S("path", { ...s, d:`M${-w / 2 + k},${-h / 2} H${w / 2} Q${w / 2 - k},0 ${w / 2},${h / 2} H${-w / 2 + k} Q${-w / 2},0 ${-w / 2 + k},${-h / 2} Z` }, g); }
+  else if(n.k === "doc"){ const y1 = h / 2 - 9; S("path", { ...s, d:`M${-w / 2},${-h / 2} H${w / 2} V${y1} Q${w / 4},${y1 + 18} 0,${y1} T${-w / 2},${y1} Z` }, g); }
+  else if(n.k === "db"){ const ry = 11; S("path", { ...s, d:`M${-w / 2},${-h / 2 + ry} A${w / 2},${ry} 0 0 1 ${w / 2},${-h / 2 + ry} V${h / 2 - ry} A${w / 2},${ry} 0 0 1 ${-w / 2},${h / 2 - ry} Z` }, g); S("path", { d:`M${-w / 2},${-h / 2 + ry} A${w / 2},${ry} 0 0 0 ${w / 2},${-h / 2 + ry}`, fill:"none", stroke:k.stroke, "stroke-width":2.5 }, g); }
+  const ls = lines(n.t), t = S("text", { "text-anchor":"middle", fill:k.color, style:`font-size:${(15 * m).toFixed(1)}px` }, g);
+  ls.forEach((l, i) => { const ts = S("tspan", { x:0, y:((i - (ls.length - 1) / 2) * 18 + 5 + (n.k === "db" ? 6 : n.k === "off" ? -6 : 0)) * m }, t); ts.textContent = l; });
+}
+function render(){
+  gN.innerHTML = ""; gE.innerHTML = "";
+  D.edges.forEach(e => {
+    const pts = route(e); if(pts.length < 2) return;
+    const d = path(pts), g = S("g", { "data-edge":e.id }, gE);
+    const isSel = sel && sel.type === "e" && sel.id === e.id, ew = e.w || 1;
+    S("path", { d, class:"edge" + (isSel ? " sel" : ""), style:`stroke-width:${(2.6 * ew).toFixed(1)}px`, "marker-end":isSel ? "url(#ahs)" : "url(#ah)" }, g);
+    S("path", { d, class:"edgehit", style:`stroke-width:${Math.max(16, 2.6 * ew + 12).toFixed(0)}px` }, g);
+    if(isSel && !VIEW){
+      // ที่จับปรับขนาด: อยู่ห่างจากเส้นตรงกลาง — ดึงออก = หนาขึ้น ดึงเข้า = บางลง
+      let bi = 0, bl = -1; for(let i = 0; i < pts.length - 1; i++){ const L = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]); if(L > bl){ bl = L; bi = i; } }
+      const a = pts[bi], b = pts[bi + 1], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, horiz = Math.abs(b[0] - a[0]) >= Math.abs(b[1] - a[1]), dist = 14 * (ew - .5);
+      const hx = horiz ? mx : mx + dist, hy = horiz ? my - dist : my;
+      S("line", { x1:mx, y1:my, x2:hx, y2:hy, class:"tether" }, g);
+      S("rect", { class:"rz", x:hx - 7, y:hy - 7, width:14, height:14, rx:7, style:`cursor:${horiz ? "ns" : "ew"}-resize`, "data-erz":e.id, "data-mx":mx, "data-my":my, "data-horiz":horiz ? 1 : 0 }, g);
+    }
+    if(e.l){ const m = pts[Math.min(1, pts.length - 1)], p0 = pts[0], lx = (p0[0] + m[0]) / 2 + (m[0] === p0[0] ? 14 : 0), ly = (p0[1] + m[1]) / 2 - (m[1] === p0[1] ? 8 : -2);
+      const t = S("text", { x:lx, y:ly, class:"elabel", "data-elabel":e.id, "text-anchor":"middle" }, g); t.textContent = e.l; }
+  });
+  D.nodes.forEach(n => {
+    const g = S("g", { class:"node" + (sel && sel.type === "n" && sel.id === n.id ? " sel" : ""), transform:`translate(${n.x},${n.y})`, "data-node":n.id }, gN);
+    shapeEl(n, g);
+    const z = size(n);
+    [["t", 0, -z.h / 2], ["b", 0, z.h / 2], ["l", -z.w / 2, 0], ["r", z.w / 2, 0]].forEach(([sd, hx, hy]) => S("circle", { class:"handle", cx:hx, cy:hy, r:7, "data-handle":sd }, g));
+    if(!VIEW && sel && sel.type === "n" && sel.id === n.id)
+      [[-1, -1, "nwse"], [1, -1, "nesw"], [-1, 1, "nesw"], [1, 1, "nwse"]].forEach(([sx, sy, cur]) => S("rect", { class:"rz", x:sx * z.w / 2 - 6, y:sy * z.h / 2 - 6, width:12, height:12, rx:3, style:`cursor:${cur}-resize`, "data-resize":"1" }, g));
+  });
+}
+
+/* ---------- เพิ่ม / ลบ ---------- */
+function addNode(k, x, y, t){
+  const hasStart = D.nodes.some(n => n.k === "term" && /^เริ่ม/.test(n.t));
+  const def = { term:hasStart ? "จบ" : "เริ่มต้น", io:"รับค่า …", proc:"ประมวลผล …", dec:"เงื่อนไข ?", conn:"A", off:"ไปหน้า 2", pre:"เรียกใช้ฟังก์ชัน ( )", doc:"พิมพ์รายงาน", db:"บันทึกข้อมูล", man:"รับค่าจากแป้นพิมพ์", disp:"แสดงผลบนจอ", prep:"เตรียมค่าเริ่มต้น", store:"ที่เก็บข้อมูล" };
+  const n = { id:"n" + (uid++), k, x:Math.round(x), y:Math.round(y), t:t ?? def[k] }; D.nodes.push(n); return n;
+}
+function smartPos(){
+  if(!D.nodes.length) return [400, 70];
+  const last = D.nodes[D.nodes.length - 1], z = size(last); return [last.x, last.y + z.h / 2 + 60];
+}
+function delSel(){
+  if(!sel || VIEW) return;
+  if(sel.type === "n"){ D.nodes = D.nodes.filter(n => n.id !== sel.id); D.edges = D.edges.filter(e => e.a !== sel.id && e.b !== sel.id); }
+  else D.edges = D.edges.filter(e => e.id !== sel.id);
+  sel = null; push(); render();
+}
+function undo(){ if(VIEW || snap.length < 2) return toast("ย้อนกลับไม่ได้แล้ว"); snap.pop(); D = JSON.parse(snap[snap.length - 1]); sel = null; render(); save(); }
+$("#del").onclick = delSel; $("#undo").onclick = undo;
+$("#clear").onclick = () => { if(!D.nodes.length || confirm("ลบผังงานทั้งหมด?")){ D = { nodes:[], edges:[] }; sel = null; push(); render(); } };
+document.addEventListener("keydown", e => {
+  if(e.target.closest("input,textarea,select")) return;
+  if(e.key === "Delete" || e.key === "Backspace"){ e.preventDefault(); delSel(); }
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z"){ e.preventDefault(); undo(); }
+});
+
+/* ---------- ตำแหน่งเมาส์ -> พิกัด SVG ---------- */
+function pt(e){ const m = cv.getScreenCTM().inverse(), p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m); return [p.x, p.y]; }
+function nodeAt(x, y, except){
+  for(let i = D.nodes.length - 1; i >= 0; i--){ const n = D.nodes[i]; if(n.id === except) continue; const z = size(n); if(Math.abs(x - n.x) <= z.w / 2 + 6 && Math.abs(y - n.y) <= z.h / 2 + 6) return n; }
+  return null;
+}
+
+/* ---------- ลากรูปทรง / ต่อเส้น ---------- */
+let DR = null, lastTap = { id:null, t:0, x:0, y:0 };
+cv.addEventListener("pointerdown", e => {
+  if(e.button !== 0 || VIEW && false) return;
+  const h = e.target.closest("[data-handle]"), nd = e.target.closest("[data-node]"), lb = e.target.closest("[data-elabel]"), ed = e.target.closest("[data-edge]");
+  hideEdit();
+  const erz = e.target.closest("[data-erz]");
+  if(erz && !VIEW){ const ed = D.edges.find(z => z.id === erz.dataset.erz); sel = { type:"e", id:ed.id }; DR = { mode:"ewidth", ed, mx:+erz.dataset.mx, my:+erz.dataset.my, horiz:erz.dataset.horiz === "1", moved:false }; e.preventDefault(); return; }
+  const rz = e.target.closest("[data-resize]");
+  if(rz && nd && !VIEW){ const n = nodeById(nd.dataset.node); DR = { mode:"resize", n, moved:false }; e.preventDefault(); return; }
+  if(h && nd && !VIEW){ const n = nodeById(nd.dataset.node); sel = { type:"n", id:n.id }; DR = { mode:"conn", n, side:h.dataset.handle, tmp:null }; cv.classList.add("connecting"); render(); e.preventDefault(); return; }
+  if(lb && !VIEW){ const ed2 = D.edges.find(x => x.id === lb.dataset.elabel); const v = prompt("ข้อความบนลูกศร (เช่น ใช่ / ไม่ใช่) — เว้นว่างเพื่อลบ", ed2.l || ""); if(v !== null){ ed2.l = v.trim(); push(); render(); } return; }
+  if(nd){
+    const n = nodeById(nd.dataset.node); sel = { type:"n", id:n.id }; const [x, y] = pt(e), now = Date.now();
+    // ดับเบิลคลิก: ตรวจเองจากเวลา (เพราะ render() สร้างรูปทรงใหม่ทุกครั้ง ทำให้เหตุการณ์ dblclick ของเบราว์เซอร์ไม่เสถียร)
+    if(!VIEW && lastTap.id === n.id && now - lastTap.t < 450 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 12){ lastTap = { id:null, t:0, x:0, y:0 }; render(); e.preventDefault(); setTimeout(() => openEdit(n), 0); return; }
+    lastTap = { id:n.id, t:now, x:e.clientX, y:e.clientY };
+    DR = { mode:"move", n, dx:n.x - x, dy:n.y - y, moved:false }; render(); e.preventDefault(); return;
+  }
+  if(ed){ sel = { type:"e", id:ed.dataset.edge }; render(); return; }
+  sel = null; render();
+});
+cv.addEventListener("dblclick", e => { if(VIEW || editing) return; const [x, y] = pt(e), n = nodeAt(x, y, null); if(n) openEdit(n); });
+document.addEventListener("pointermove", e => {
+  if(!DR) return;
+  const [x, y] = pt(e);
+  if(DR.mode === "move" && !VIEW){ DR.n.x = Math.max(60, Math.round((x + DR.dx) / 4) * 4); DR.n.y = Math.max(30, Math.round((y + DR.dy) / 4) * 4); DR.moved = true; render(); }
+  if(DR.mode === "ewidth"){
+    const dist = DR.horiz ? Math.max(0, DR.my - y) : Math.max(0, x - DR.mx);
+    DR.ed.w = Math.max(.5, Math.min(6, +(0.5 + dist / 14).toFixed(2))); if(Math.abs(DR.ed.w - 1) < .08) DR.ed.w = 1; DR.moved = true; render();
+  }
+  if(DR.mode === "resize"){
+    const n = DR.n, mn = n.k === "conn" ? [34, 34] : n.k === "dec" ? [90, 50] : [60, 30];
+    let w = Math.max(mn[0], Math.min(700, Math.round(Math.abs(x - n.x) * 2 / 4) * 4)), h = Math.max(mn[1], Math.min(500, Math.round(Math.abs(y - n.y) * 2 / 4) * 4));
+    if(n.k === "conn" || e.shiftKey){ const z0 = DR.z0 || (DR.z0 = size(n)), r = Math.max(w / z0.w, h / z0.h); w = n.k === "conn" ? Math.max(w, h) : Math.round(z0.w * r); h = n.k === "conn" ? w : Math.round(z0.h * r); }
+    n.rw = w; n.rh = h; DR.moved = true; render();
+  }
+  if(DR.mode === "conn"){
+    gT.innerHTML = ""; const [x1, y1] = anchor(DR.n, DR.side);
+    S("path", { d:`M${x1},${y1} L${x},${y}`, stroke:"#6366F1", "stroke-width":3, "stroke-dasharray":"6 5", fill:"none" }, gT);
+    document.querySelectorAll(".node").forEach(g => g.style.opacity = 1);
+    const t = nodeAt(x, y, DR.n.id); DR.target = t; if(t){ const z = size(t); S("rect", { x:t.x - z.w / 2 - 5, y:t.y - z.h / 2 - 5, width:z.w + 10, height:z.h + 10, rx:10, fill:"none", stroke:"#6366F1", "stroke-width":3 }, gT); }
+  }
+});
+document.addEventListener("pointerup", e => {
+  if(!DR) return; const d = DR; DR = null; gT.innerHTML = ""; cv.classList.remove("connecting");
+  if((d.mode === "move" || d.mode === "resize" || d.mode === "ewidth") && d.moved){ if(d.mode === "ewidth" && d.ed.w === 1) delete d.ed.w; push(); }
+  if(d.mode === "conn"){
+    const [x, y] = pt(e), t = d.target || nodeAt(x, y, d.n.id);
+    if(!t) return;
+    let sb; const [x1, y1] = anchor(d.n, d.side), z = size(t);
+    // ถ้าปล่อยใกล้จุดจับของปลายทาง ใช้ด้านนั้น มิฉะนั้นเลือกอัตโนมัติ
+    const sides = ["t", "b", "l", "r"].map(s => [s, Math.hypot(anchor(t, s)[0] - x, anchor(t, s)[1] - y)]).sort((p, q) => p[1] - q[1])[0];
+    if(sides[1] < 16) sb = sides[0];
+    else if(t.y > y1 + 10) sb = "t"; else if(t.y < y1 - 10) sb = (t.x <= d.n.x ? "l" : "r"); else sb = t.x > d.n.x ? "l" : "r";
+    if(D.edges.some(ed => ed.a === d.n.id && ed.b === t.id && ed.sa === d.side && ed.sb === sb)) return;
+    const out = D.edges.filter(ed => ed.a === d.n.id).length;
+    const ed = { id:"e" + (uid++), a:d.n.id, sa:d.side, b:t.id, sb, l:d.n.k === "dec" ? (out === 0 ? "ใช่" : out === 1 ? "ไม่ใช่" : "") : "" };
+    D.edges.push(ed); sel = { type:"e", id:ed.id }; push(); render();
+  }
+});
+
+
+/* ---------- ซูม ---------- */
+let ZM = 1;
+function setZoom(z, ax, ay){
+  z = Math.max(.35, Math.min(2.5, z)); const old = ZM; if(Math.abs(z - old) < 1e-3) return;
+  const wr = wrap.getBoundingClientRect(); ax = ax ?? wr.width / 2; ay = ay ?? wr.height / 2;
+  const cx = (wrap.scrollLeft + ax) / old, cy = (wrap.scrollTop + ay) / old;      // จุดที่อยู่ใต้ตำแหน่งซูม
+  ZM = z; cv.style.width = 1600 * z + "px"; cv.style.height = 1600 * z + "px";
+  wrap.scrollLeft = cx * z - ax; wrap.scrollTop = cy * z - ay; $("#zlabel").textContent = Math.round(z * 100) + "%"; hideCtx();
+}
+function fitZoom(){
+  if(!D.nodes.length) return setZoom(1);
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; D.nodes.forEach(n => { const z = size(n); x0 = Math.min(x0, n.x - z.w / 2); x1 = Math.max(x1, n.x + z.w / 2); y0 = Math.min(y0, n.y - z.h / 2); y1 = Math.max(y1, n.y + z.h / 2); });
+  const wr = wrap.getBoundingClientRect(), z = Math.min(1.5, (wr.width - 50) / (x1 - x0 + 80), (wr.height - 50) / (y1 - y0 + 80));
+  ZM = 1; cv.style.width = "1600px"; cv.style.height = "1600px"; setZoom(z, 0, 0); wrap.scrollLeft = (x0 - 40) * ZM; wrap.scrollTop = (y0 - 40) * ZM;
+}
+$("#zin").onclick = () => setZoom(ZM * 1.2); $("#zout").onclick = () => setZoom(ZM / 1.2); $("#z100").onclick = () => setZoom(1); $("#zfit").onclick = fitZoom;
+wrap.addEventListener("wheel", e => { if(!(e.ctrlKey || e.metaKey)) return; e.preventDefault(); const wr = wrap.getBoundingClientRect(); setZoom(ZM * (e.deltaY < 0 ? 1.1 : 1 / 1.1), e.clientX - wr.left, e.clientY - wr.top); }, { passive:false });
+document.addEventListener("keydown", e => {
+  if(e.target.closest("input,textarea,select")) return;
+  if((e.ctrlKey || e.metaKey) && (e.key === "+" || e.key === "=")){ e.preventDefault(); $("#zin").click(); }
+  if((e.ctrlKey || e.metaKey) && e.key === "-"){ e.preventDefault(); $("#zout").click(); }
+  if((e.ctrlKey || e.metaKey) && e.key === "0"){ e.preventDefault(); setZoom(1); }
+});
+
+/* ---------- เมนูคลิกขวา (เปลี่ยนสี / ขนาด / ทำซ้ำ / ลบ) ---------- */
+const ctx = $("#ctx");
+const SWATCH = [["#BBF7D0", "#16A34A", "เขียว"], ["#BFDBFE", "#2563EB", "ฟ้า"], ["#DDD6FE", "#7C3AED", "ม่วง"], ["#FDE68A", "#D97706", "เหลือง"], ["#FBCFE8", "#DB2777", "ชมพู"], ["#FED7AA", "#EA580C", "ส้ม"], ["#FECACA", "#DC2626", "แดง"], ["#E5E7EB", "#4B5563", "เทา"], ["#FFFFFF", "#1F2937", "ขาว"]];
+function hideCtx(){ ctx.style.display = "none"; ctx.innerHTML = ""; }
+function showCtx(e, html, bind){
+  ctx.innerHTML = html; ctx.style.display = "block";
+  const w = ctx.offsetWidth, h = ctx.offsetHeight; ctx.style.left = Math.min(e.clientX, innerWidth - w - 8) + "px"; ctx.style.top = Math.min(e.clientY, innerHeight - h - 8) + "px"; bind(ctx);
+}
+function nodeMenu(e, n){
+  const m = n.s || 1;
+  const html = `<div class="hd">${KIND[n.k].name}</div>
+    <button class="it" data-a="edit">✏️ แก้ไขข้อความ</button>
+    <div class="hd">🎨 เปลี่ยนสี</div>
+    <div class="sw">${SWATCH.map((c, i) => `<i data-a="color" data-i="${i}" title="${c[2]}" style="background:${c[0]};border-color:${c[1]}"></i>`).join("")}<i data-a="color" data-i="-1" title="สีเดิม" style="background:linear-gradient(135deg,#fff 45%,#EF4444 46%,#EF4444 54%,#fff 55%);border-color:#94A3B8"></i></div>
+    <div class="hd">↔️ เปลี่ยนขนาด</div>
+    <div class="sz"><button data-a="smaller">−</button><span id="szl">${Math.round(m * 100)}%</span><button data-a="bigger">+</button><button data-a="size1" style="flex:2">ปกติ</button></div>
+    <button class="it" data-a="dup">📄 ทำซ้ำรูปทรงนี้</button>
+    <button class="it danger" data-a="del">🗑️ ลบรูปทรงนี้</button>`;
+  showCtx(e, html, c => c.onclick = ev => {
+    const b = ev.target.closest("[data-a]"); if(!b) return; const a = b.dataset.a;
+    if(a === "edit"){ hideCtx(); render(); setTimeout(() => openEdit(n), 0); return; }
+    if(a === "color"){ const i = +b.dataset.i; if(i < 0){ delete n.fc; delete n.sc; } else { n.fc = SWATCH[i][0]; n.sc = SWATCH[i][1]; } push(); render(); return; }
+    if(a === "smaller" || a === "bigger" || a === "size1"){
+      n.s = a === "size1" ? 1 : Math.max(.5, Math.min(2.5, +((n.s || 1) + (a === "bigger" ? .15 : -.15)).toFixed(2))); delete n.rw; delete n.rh;
+      const v = n.s; if(v === 1) delete n.s; push(); render(); const l = $("#szl"); if(l) l.textContent = Math.round(v * 100) + "%"; return;
+    }
+    if(a === "dup"){ const c = { ...n, id:"n" + (uid++), x:n.x + 40, y:n.y + 40 }; D.nodes.push(c); sel = { type:"n", id:c.id }; push(); hideCtx(); render(); return; }
+    if(a === "del"){ hideCtx(); delSel(); }
+  });
+}
+function edgeMenu(e, ed){
+  showCtx(e, `<div class="hd">ลูกศร</div><button class="it" data-a="lbl">✏️ แก้ข้อความบนลูกศร (ใช่ / ไม่ใช่)</button>
+    <div class="hd">↔️ ปรับขนาดลูกศร (ความหนา)</div>
+    <div class="sz"><button data-a="thin">−</button><span id="ewl">${Math.round((ed.w || 1) * 100)}%</span><button data-a="thick">+</button><button data-a="w1" style="flex:2">ปกติ</button></div>
+    <button class="it danger" data-a="del">🗑️ ลบลูกศรนี้</button>`, c => c.onclick = ev => {
+    const b = ev.target.closest("[data-a]"); if(!b) return; const a = b.dataset.a;
+    if(a === "thin" || a === "thick" || a === "w1"){ ed.w = a === "w1" ? 1 : Math.max(.5, Math.min(6, +((ed.w || 1) + (a === "thick" ? .25 : -.25)).toFixed(2))); const v = ed.w; if(v === 1) delete ed.w; push(); render(); const l = $("#ewl"); if(l) l.textContent = Math.round(v * 100) + "%"; return; }
+    hideCtx();
+    if(b.dataset.a === "lbl"){ const v = prompt("ข้อความบนลูกศร (เช่น ใช่ / ไม่ใช่) — เว้นว่างเพื่อลบ", ed.l || ""); if(v !== null){ ed.l = v.trim(); push(); render(); } }
+    else delSel();
+  });
+}
+cv.addEventListener("contextmenu", e => {
+  e.preventDefault(); if(VIEW) return; hideEdit();
+  const nd = e.target.closest("[data-node]"), ed = e.target.closest("[data-edge]"), [x, y] = pt(e), hit = nd ? nodeById(nd.dataset.node) : nodeAt(x, y, null);
+  if(hit){ sel = { type:"n", id:hit.id }; render(); nodeMenu(e, hit); }
+  else if(ed){ sel = { type:"e", id:ed.dataset.edge }; render(); edgeMenu(e, D.edges.find(z => z.id === ed.dataset.edge)); }
+  else hideCtx();
+});
+document.addEventListener("pointerdown", e => { if(!e.target.closest("#ctx")) hideCtx(); }, true);
+document.addEventListener("keydown", e => { if(e.key === "Escape") hideCtx(); });
+wrap.addEventListener("scroll", hideCtx);
+
+/* ---------- แก้ข้อความ ---------- */
+let editing = null;
+function openEdit(n){
+  editing = n; const z = size(n), r = cv.getBoundingClientRect(), wr = wrap.getBoundingClientRect(), sc = r.width / 1600;
+  const w = Math.max(160, z.w * sc);
+  editBox.style.display = "block"; editBox.value = n.t; editBox.style.width = w + "px"; editBox.style.height = Math.max(46, z.h * sc) + "px";
+  editBox.style.left = (n.x * sc - w / 2 + (r.left - wr.left) + wrap.scrollLeft) + "px"; editBox.style.top = (n.y * sc - Math.max(46, z.h * sc) / 2 + (r.top - wr.top) + wrap.scrollTop) + "px";
+  editBox.focus(); editBox.select();
+}
+function hideEdit(){ if(!editing) return; const t = editBox.value.replace(/\s+$/, ""); if(t && t !== editing.t){ editing.t = t; push(); } editing = null; editBox.style.display = "none"; render(); }
+editBox.addEventListener("blur", hideEdit);
+editBox.addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); editBox.blur(); } if(e.key === "Escape"){ editBox.value = editing ? editing.t : ""; editBox.blur(); } });
+
+/* ---------- แถบรูปทรง ---------- */
+const pal = $("#pal");
+setTimeout(() => { const t = document.createElement("div"); t.className = "pitem"; t.style.cursor = "default"; t.innerHTML = '<svg viewBox="0 0 120 46"><line x1="12" y1="23" x2="100" y2="23" stroke="#1F2937" stroke-width="3"/><path d="M100,15 L114,23 L100,31 Z" fill="#1F2937"/></svg>เส้นลูกศร<div style="font-weight:400;font-size:.7rem;color:#64748B">(Flow Line) — ลากจากจุดสีม่วงของรูปทรง</div>'; pal.append(t); }, 0);
+function miniShape(k){
+  const s = document.createElementNS(NS, "svg"); s.setAttribute("viewBox", "0 0 120 46"); const c = KIND[k], at = { fill:c.fill, stroke:c.stroke, "stroke-width":2.5 };
+  if(k === "term") S("rect", { ...at, x:8, y:8, width:104, height:30, rx:15 }, s);
+  if(k === "proc") S("rect", { ...at, x:8, y:8, width:104, height:30 }, s);
+  if(k === "io") S("polygon", { ...at, points:"22,8 112,8 98,38 8,38" }, s);
+  if(k === "dec") S("polygon", { ...at, points:"60,3 114,23 60,43 6,23" }, s);
+  if(k === "conn") S("circle", { ...at, cx:60, cy:23, r:19 }, s);
+  if(k === "off") S("polygon", { ...at, points:"36,4 84,4 84,27 60,43 36,27" }, s);
+  if(k === "pre"){ S("rect", { ...at, x:8, y:8, width:104, height:30 }, s); [22, 98].forEach(x => S("line", { x1:x, y1:8, x2:x, y2:38, stroke:c.stroke, "stroke-width":2.5 }, s)); }
+  if(k === "doc") S("path", { ...at, d:"M8,6 H112 V34 Q86,46 60,34 T8,34 Z" }, s);
+  if(k === "man") S("polygon", { ...at, points:"8,15 112,6 112,38 8,38" }, s);
+  if(k === "disp") S("path", { ...at, d:"M8,23 L28,7 H90 Q112,7 112,23 Q112,39 90,39 H28 Z" }, s);
+  if(k === "prep") S("polygon", { ...at, points:"8,23 26,7 94,7 112,23 94,39 26,39" }, s);
+  if(k === "store") S("path", { ...at, d:"M26,7 H112 Q98,23 112,39 H26 Q8,23 26,7 Z" }, s);
+  if(k === "db"){ S("path", { ...at, d:"M18,12 A42,7 0 0 1 102,12 V34 A42,7 0 0 1 18,34 Z" }, s); S("path", { d:"M18,12 A42,7 0 0 0 102,12", fill:"none", stroke:c.stroke, "stroke-width":2.5 }, s); }
+  return s;
+}
+let PD = null;
+Object.keys(KIND).forEach(k => {
+  const it = document.createElement("div"); it.className = "pitem"; it.append(miniShape(k)); it.append(KIND[k].name); const en = document.createElement("div"); en.style.cssText = "font-weight:400;font-size:.7rem;color:#64748B"; en.textContent = "(" + KIND[k].en + ")"; it.append(en); pal.append(it);
+  it.addEventListener("pointerdown", e => { if(VIEW) return; e.preventDefault(); PD = { k, sx:e.clientX, sy:e.clientY, moved:false, ghost:null }; });
+});
+document.addEventListener("pointermove", e => {
+  if(!PD) return;
+  if(!PD.moved && Math.hypot(e.clientX - PD.sx, e.clientY - PD.sy) > 6){ PD.moved = true; PD.ghost = miniShape(PD.k); PD.ghost.style.cssText = "position:fixed;width:120px;height:46px;z-index:3000;pointer-events:none;opacity:.8"; document.body.append(PD.ghost); }
+  if(PD.ghost){ PD.ghost.style.left = (e.clientX - 60) + "px"; PD.ghost.style.top = (e.clientY - 23) + "px"; }
+});
+document.addEventListener("pointerup", e => {
+  if(!PD) return; const p = PD; PD = null; if(p.ghost) p.ghost.remove();
+  let x, y;
+  if(p.moved){ const r = wrap.getBoundingClientRect(); if(e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return; [x, y] = pt(e); }
+  else [x, y] = smartPos();
+  const n = addNode(p.k, x, y); sel = { type:"n", id:n.id }; push(); render(); setTimeout(() => openEdit(n), 30);
+});
+
+/* ---------- ตรวจผังงาน ---------- */
+function check(){
+  const out = [], ok = (t) => out.push(["ok", "✅ " + t]), bad = (t) => out.push(["bad", "⚠️ " + t]);
+  if(!D.nodes.length) return [["bad", "⚠️ ยังไม่ได้วาดผังงาน"]];
+  const starts = D.nodes.filter(n => n.k === "term" && /^เริ่ม/.test(n.t)), ends = D.nodes.filter(n => n.k === "term" && /^(จบ|สิ้นสุด)/.test(n.t));
+  starts.length === 1 ? ok("มีจุดเริ่มต้น 1 จุด") : bad(starts.length ? "มีจุดเริ่มต้นมากกว่า 1 จุด" : "ยังไม่มีสัญลักษณ์ ⬭ \"เริ่มต้น\"");
+  ends.length >= 1 ? ok("มีจุดจบ") : bad("ยังไม่มีสัญลักษณ์ ⬭ \"จบ\"");
+  const outE = (id) => D.edges.filter(e => e.a === id), inE = (id) => D.edges.filter(e => e.b === id);
+  let miss = 0;
+  D.nodes.forEach(n => {
+    const label = `"${lines(n.t)[0]}"`;
+    if(!n.t.trim()) { bad("มีรูปทรงที่ยังไม่มีข้อความ"); return; }
+    if(n.k === "conn" || n.k === "off") return;   // จุดเชื่อมต่อ: ไม่บังคับลูกศรเข้า/ออก
+    if(ends.includes(n)){ if(outE(n.id).length) bad(`${label} เป็นจุดจบ ไม่ควรมีลูกศรออก`); if(!inE(n.id).length) { bad(`${label} ยังไม่มีลูกศรเข้า`); miss++; } return; }
+    if(!starts.includes(n) && !inE(n.id).length){ bad(`${label} ยังไม่มีลูกศรเข้า`); miss++; }
+    const o = outE(n.id);
+    if(n.k === "dec"){ const ls = o.map(e => e.l); if(o.length !== 2) { bad(`${label} (เงื่อนไข) ต้องมีลูกศรออก 2 เส้น (ใช่ / ไม่ใช่)`); miss++; } else if(!(ls.includes("ใช่") && ls.includes("ไม่ใช่"))){ bad(`${label} ลูกศรออกต้องเขียนกำกับ "ใช่" และ "ไม่ใช่"`); miss++; } }
+    else if(o.length === 0){ bad(`${label} ยังไม่มีลูกศรออก`); miss++; } else if(o.length > 1 && !starts.includes(n)){ bad(`${label} มีลูกศรออกมากกว่า 1 เส้น (ใช้ ◇ เมื่อต้องแยกทาง)`); miss++; }
+  });
+  if(starts.length === 1){
+    const seen = new Set(), st = [starts[0].id]; while(st.length){ const id = st.pop(); if(seen.has(id)) continue; seen.add(id); outE(id).forEach(e => st.push(e.b)); }
+    const un = D.nodes.filter(n => !seen.has(n.id)); un.length ? bad(`มี ${un.length} รูปทรงที่เดินตามลูกศรจากจุดเริ่มต้นไปไม่ถึง`) : ok("ทุกรูปทรงเดินถึงได้จากจุดเริ่มต้น");
+  }
+  if(D.nodes.some(n => n.k === "io")) ok("ใช้สัญลักษณ์ ▱ รับค่า/แสดงผล"); else out.push(["tip", "💡 ผังงานนี้ยังไม่มีสัญลักษณ์ ▱ รับค่า/แสดงผล — ถ้าโจทย์มีการรับหรือแสดงค่า อย่าลืมใส่"]);
+  if(!out.some(o => o[0] === "bad")) out.push(["ok", "🎉 ผังงานครบถ้วน!"]);
+  return out;
+}
+$("#checkbtn").onclick = () => { $("#check").innerHTML = check().map(([c, t]) => `<div class="tl ${c}">${t.replace(/</g, "&lt;")}</div>`).join(""); };
+
+/* ---------- ตัวอย่างผังงาน (ระบบวาดให้) ---------- */
+function auto(spec){
+  D = { nodes:[], edges:[] }; uid = 1; const CX = 330; let y = 60;
+  const place = (k, t, x) => { const n = addNode(k, x ?? CX, 0, t), z = size(n); n.y = Math.round(y + z.h / 2); y += z.h + 46; return n; };
+  const link = (a, b, sa = "b", sb = "t", l = "") => D.edges.push({ id:"e" + (uid++), a:a.id, sa, b:b.id, sb, l });
+  const chain = (arr, prev) => { arr.forEach(([k, t]) => { const n = place(k, t); if(prev) link(prev, n); prev = n; }); return prev; };
+  let last = chain(spec.pre, null);
+  if(spec.type === "lin"){ /* เรียงลำดับล้วน */ }
+  if(spec.type === "if"){
+    const d = place("dec", spec.cond); link(last, d); const yy = y;
+    const yes = addNode(spec.yes[0], CX + 190, 0, spec.yes[1]), no = addNode(spec.no[0], CX - 190, 0, spec.no[1]); yes.y = no.y = Math.round(yy + 24); y = yy + size(yes).h + 50;
+    link(d, yes, "r", "t", "ใช่"); link(d, no, "l", "t", "ไม่ใช่");
+    const e = place("term", "จบ"); link(yes, e); link(no, e); return;
+  }
+  if(spec.type === "while"){
+    const d = place("dec", spec.cond); link(last, d); let p = d, first = true;
+    spec.body.forEach(([k, t]) => { const n = place(k, t); link(p, n, "b", "t", first ? "ใช่" : ""); first = false; p = n; });
+    link(p, d, "b", "l"); last = d;
+    const post = []; spec.post.forEach(([k, t]) => { const n = place(k, t); if(post.length === 0) link(d, n, "r", "t", "ไม่ใช่"); else link(post[post.length - 1], n); post.push(n); }); return;
+  }
+  chain(spec.post || [], last);
+}
+const T = (t) => ["term", t], IO = (t) => ["io", t], P = (t) => ["proc", t];
+const SAMPLES = {
+  "ex-seq1":  { type:"lin", pre:[T("เริ่มต้น"), P("หยิบแปรงสีฟัน"), P("บีบยาสีฟัน"), P("แปรงฟัน 2 นาที"), P("บ้วนปาก")], post:[T("จบ")] },
+  "ex-seq2":  { type:"lin", pre:[T("เริ่มต้น"), IO("รับ width, length"), P("area = width × length"), IO("แสดง area")], post:[T("จบ")] },
+  "ex-sel1":  { type:"if", pre:[T("เริ่มต้น"), IO("รับ score")], cond:"score >= 50 ?", yes:["io", 'แสดง "ผ่าน"'], no:["io", 'แสดง "ไม่ผ่าน"'] },
+  "ex-sel2":  { type:"if", pre:[T("เริ่มต้น"), IO("รับ n"), P("r = n หารเอาเศษ 2")], cond:"r = 0 ?", yes:["io", 'แสดง "เลขคู่"'], no:["io", 'แสดง "เลขคี่"'] },
+  "ex-loop1": { type:"while", pre:[T("เริ่มต้น"), P("i = 1")], cond:"i <= 4 ?", body:[P("เดิน 100 ก้าว"), P("หมุนขวา 90 องศา"), P("i = i + 1")], post:[T("จบ")] },
+  "ex-loop2": { type:"while", pre:[T("เริ่มต้น"), P("total = 0, count = 1")], cond:"count <= 5 ?", body:[P("total = total + count"), P("count = count + 1")], post:[IO("แสดง total"), T("จบ")] }
+};
+function loadSample(k){ auto(SAMPLES[k]); sel = null; push(); render(); }
+$("#sample").onchange = function(){
+  const k = this.value; this.value = ""; if(!k) return;
+  if(D.nodes.length && !confirm("โหลดตัวอย่างจะแทนที่ผังงานที่วาดไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return;
+  loadSample(k); toast("โหลดตัวอย่างแล้ว — ลองลากย้ายรูปทรง หรือกดตรวจผังงาน");
+};
+
+/* ---------- ส่ง / แชร์ ---------- */
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
+if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = "✖ ปิดแท็บ กลับไปใบงาน"; }
+const b64e = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/")))));
+function shareURL(){ const u = new URL("flowchart.html", location.href); u.search = ""; u.searchParams.set("f", b64e(D)); return u.href; }
+function outline(){
+  if(!D.nodes.length) return "(ยังไม่ได้วาดผังงาน)";
+  const start = D.nodes.find(n => n.k === "term" && /^เริ่ม/.test(n.t)) || D.nodes[0], order = [], seen = new Set(), st = [start.id];
+  while(st.length){ const id = st.shift(); if(seen.has(id)) continue; seen.add(id); order.push(id); D.edges.filter(e => e.a === id).forEach(e => st.push(e.b)); }
+  D.nodes.forEach(n => { if(!seen.has(n.id)) order.push(n.id); });
+  const no = (id) => order.indexOf(id) + 1, sym = { term:"⬭", io:"▱", proc:"▭", dec:"◇", conn:"●", off:"⬇", pre:"▯", doc:"📄", db:"🛢", man:"⌨", disp:"🖥", prep:"⬡", store:"⊂" };
+  return order.map(id => { const n = nodeById(id), o = D.edges.filter(e => e.a === id), tx = lines(n.t).join(" ");
+    const nx = n.k === "dec" ? o.map(e => `${e.l || "ไป"} → ข้อ ${no(e.b)}`).join(" | ") : o.map(e => "ข้อ " + no(e.b)).join(", ");
+    return `${no(id)}. ${sym[n.k]} ${tx}` + (nx ? `   →  ${nx}` : ""); }).join("\n");
+}
+async function copyText(t){ try{ await navigator.clipboard.writeText(t); return true; }catch(e){ const a = document.createElement("textarea"); a.value = t; a.style.cssText = "position:fixed;opacity:0"; document.body.append(a); a.select(); let ok = false; try{ ok = document.execCommand("copy"); }catch(_){} a.remove(); return ok; } }
+const menu = $("#sharemenu");
+$("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
+document.addEventListener("click", () => menu.classList.remove("open"));
+if(!BACK){ $("#sh-ws").disabled = true; $("#sh-ws").title = "เปิดโปรแกรมนี้จากปุ่มในใบงาน จึงจะส่งไปใบงานได้"; }
+$("#sh-link").onclick = async () => { if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์ผังงานแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-text").onclick = async () => toast((await copyText(outline())) ? "คัดลอกข้อความอธิบายผังงานแล้ว" : "คัดลอกไม่สำเร็จ");
+$("#sh-ws").onclick = () => {
+  if(!BACK) return; if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน");
+  const key = "krtomws:m1/cs/1:" + BACK[2], txt = "ลิงก์ผังงาน (ครูกดเปิดดูได้):\n" + shareURL() + "\n\nลำดับในผังงาน:\n" + outline();
+  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < 8) arr.push(""); arr[6] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งผังงานไปที่ข้อ 7 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
+  catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
+};
+$("#sh-png").onclick = () => {
+  if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน");
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; D.nodes.forEach(n => { const z = size(n); x0 = Math.min(x0, n.x - z.w / 2); x1 = Math.max(x1, n.x + z.w / 2); y0 = Math.min(y0, n.y - z.h / 2); y1 = Math.max(y1, n.y + z.h / 2); });
+  D.edges.forEach(e => route(e).forEach(p => { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }));
+  x0 -= 30; y0 -= 30; x1 += 30; y1 += 30; const W = x1 - x0, H = y1 - y0, was = sel; sel = null; render();
+  const clone = cv.cloneNode(true); clone.querySelectorAll(".handle, .edgehit, .rz, .tether").forEach(e => e.remove());
+  clone.setAttribute("viewBox", `${x0} ${y0} ${W} ${H}`); clone.setAttribute("width", W * 2); clone.setAttribute("height", H * 2); clone.style.cssText = ""; clone.setAttribute("width", W * 2); clone.setAttribute("height", H * 2); clone.removeAttribute("class");
+  const st = document.createElementNS(NS, "style"); st.textContent = ".node text{font-family:'Sarabun',sans-serif;font-size:15px;font-weight:700}.edge{fill:none;stroke:#9A3412;stroke-width:2.6}.elabel{font-family:'Sarabun',sans-serif;font-size:14px;font-weight:800;fill:#B45309}"; clone.prepend(st);
+  sel = was; render();
+  const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type:"image/svg+xml;charset=utf-8" })), img = new Image();
+  img.onload = () => { const c = document.createElement("canvas"); c.width = W * 2; c.height = H * 2; const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0); URL.revokeObjectURL(url);
+    const a = document.createElement("a"); a.download = "ผังงาน.png"; a.href = c.toDataURL("image/png"); a.click(); };
+  img.onerror = () => toast("บันทึกภาพไม่สำเร็จ"); img.src = url;
+};
+$("#viewedit").onclick = () => { VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); push(); toast("คัดลอกผังงานไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };
+
+/* ---------- เริ่มต้น ---------- */
+try{ const d = JSON.parse(localStorage.getItem("krtomFlow:m1/cs/1") || "null"); if(d && d.nodes){ D = d; uid = 1 + Math.max(0, ...D.nodes.map(n => +n.id.slice(1)), ...D.edges.map(e => +e.id.slice(1))); } }catch(e){}
+try{
+  const f = QS.get("f"), ex = QS.get("ex");
+  if(f){ VIEW = true; D = b64d(f); uid = 1000; $("#viewbar").style.display = "block"; }
+  else if(ex && SAMPLES[ex]){ loadSample(ex); toast("ระบบวาดผังงานตัวอย่างให้แล้ว — ลองลากย้ายรูปทรง หรือกดตรวจผังงาน"); }
+  else if(ex === "blank"){ D = { nodes:[], edges:[] }; }
+}catch(e){ toast("เปิดผังงานจากลิงก์ไม่ได้ — ลิงก์อาจไม่ครบ"); }
+snap.push(JSON.stringify(D)); render();
+window.__fc = { get D(){ return D; }, set D(v){ D = v; render(); }, SAMPLES, loadSample, check, outline, route, size, addNode };
+
+/* ปุ่มบนขวา: ปิดแท็บนี้ (แท็บเดิมยังเปิดค้างอยู่) ถ้าปิดไม่ได้ ให้ไปหน้าแรก/ใบงาน */
+(function(){ const bl = document.getElementById("backlink"); if(!bl) return;
+  bl.addEventListener("click", e => { e.preventDefault(); const to = bl.getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); }); })();
+</script>
+</body>
+</html>

@@ -237,7 +237,9 @@ const READY_CONTENT = {
     quiz:      { href:"content/m1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game:      { href:"content/m1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[ { key:"scratch-m1-1", href:"content/m1-cs-1/game-scratch.html", label:"🧩 เกมพลิกไพ่ บล็อกคำสั่ง Scratch" },
-                   { key:"blocks-m1-1", href:"content/m1-cs-1/blocks.html", label:"🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)" } ] }
+                   { key:"blocks-m1-1", href:"content/m1-cs-1/blocks.html", label:"🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)" },
+                   { key:"flowchart-m1-1", href:"content/m1-cs-1/flowchart.html", label:"🔷 วาดผังงาน (Flowchart)" },
+                   { key:"pseudocode-m1-1", href:"content/m1-cs-1/pseudocode.html", label:"📝 เขียนรหัสลำลอง (Pseudocode)" } ] }
   },
   "m1/cs/2": {
     knowledge: { href:"content/m1-cs-2/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
@@ -485,6 +487,28 @@ function renderHome(){
     </div>
 
     ${groupHtml}
+
+    <div class="group-block group-extras">
+      <div class="group-title">🧰 โปรแกรมเสริม</div>
+      <p class="extras-lead">เครื่องมือช่วยเรียนวิทยาการคำนวณ (เหมาะกับ ม.1–ม.3 และใช้ประกอบใบงาน) — <b>คลิกเข้าไปใช้ได้ทุกครั้งที่ต้องการวาดหรือเขียนโปรแกรม</b> ไม่ต้องเลือกหน่วยก่อน</p>
+      <div class="extras-grid">
+        <a class="extra-card extra-flow" href="content/m1-cs-1/flowchart.html" target="_blank" rel="noopener">
+          <span class="extra-head"><span class="extra-ico">🔷</span><b>วาดผังงาน (Flowchart)</b></span>
+          <small>ลากสัญลักษณ์ผังงานครบ 13 แบบ (เริ่มต้น/สิ้นสุด · กระบวนการ · รับข้อมูล/แสดงผล · รับจากแป้นพิมพ์ · ตัดสินใจ · แสดงบนจอภาพ · เอกสาร · เตรียมการ · กระบวนการย่อย · ที่เก็บข้อมูล · ฐานข้อมูล · จุดเชื่อมต่อ · ตัวเชื่อมต่างหน้า) ต่อเส้นลูกศร ตรวจผังงาน และส่งงานเข้าใบงาน</small>
+          <span class="extra-go">คลิกเพื่อวาด ➜</span>
+        </a>
+        <a class="extra-card extra-pseudo" href="content/m1-cs-1/pseudocode.html" target="_blank" rel="noopener">
+          <span class="extra-head"><span class="extra-ico">📝</span><b>เขียนรหัสลำลอง (Pseudocode)</b></span>
+          <small>พิมพ์รหัสลำลอง START · INPUT · COMPUTE · DISPLAY · IF · WHILE · END มีตัวไฮไลต์สี ปุ่มแทรกคำสั่ง ตรวจรหัส และ <b>ทดลองรันให้เห็นผลลัพธ์จริง</b> พร้อมส่งงานเข้าใบงาน</small>
+          <span class="extra-go">คลิกเพื่อเขียน ➜</span>
+        </a>
+        <a class="extra-card extra-block" href="content/m1-cs-1/blocks.html" target="_blank" rel="noopener">
+          <span class="extra-head"><span class="extra-ico">🧱</span><b>โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)</b></span>
+          <small>ต่อบล็อกคำสั่งรูปจิ๊กซอว์เหมือน Scratch สั่งตัวละครนักเรียนเดิน วาดรูป ถามตอบ ทำซ้ำ ใช้ตัวแปรและเงื่อนไข มีตัวอย่างโปรแกรมให้โหลด และส่งงานเข้าใบงาน</small>
+          <span class="extra-go">คลิกเพื่อเขียน ➜</span>
+        </a>
+      </div>
+    </div>
 
     <div class="hero">
       <h1>🕶️ เกม AR สำหรับ ป.1–3</h1>
@@ -984,11 +1008,13 @@ function renderTabContent(tab, grade, subject, unit, idx){
   });
 }
 
+const NEW_TAB_TOOLS = /\/(blocks|flowchart|pseudocode)\.html$/;   // โปรแกรมเสริม (โค้ดจิ๊กซอว์ / วาดผังงาน): เปิดในแท็บใหม่
 function actionBtn(href, key, label, cls){
   const list = [].concat(ACTION_BTN_IMG[key] || []);
-  if(!list.length) return `<a class="btn ${cls}" href="${href}">${label}</a>`;
+  const tb = NEW_TAB_TOOLS.test(href) ? ' target="_blank" rel="noopener"' : "";
+  if(!list.length) return `<a class="btn ${cls}" href="${href}"${tb}>${label}</a>`;
   return `
-    <a class="btn ${cls} action-btn" href="${href}">
+    <a class="btn ${cls} action-btn" href="${href}"${tb}>
       <img class="action-btn-img" src="${list[0]}" data-alt="${list.slice(1).join(",")}" alt="${label}"
            onload="this.closest('.action-btn').classList.add('has-actionimg'); this.nextElementSibling.style.display='none';"
            onerror="var a=this.dataset.alt?this.dataset.alt.split(','):[]; if(a.length){ this.dataset.alt=a.slice(1).join(','); this.src=a[0]; } else this.style.display='none';">

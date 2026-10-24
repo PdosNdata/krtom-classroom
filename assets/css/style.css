@@ -788,3 +788,21 @@ html.mid-text{ font-size:24px; }
 .flow-panel:has(.flow-path){ max-width:1040px; }
 .flow-panel .flow-bonus{ max-width:640px; margin-left:auto; margin-right:auto; }
 @media (min-width:761px){ .flow-path{ margin-bottom:22px; } .flow-path .path-cell .flow-step{ font-size:.9rem; } }
+
+/* ===== หน้าแรก: โปรแกรมเสริม (ต่อจากมัธยมต้น) ===== */
+.group-extras{ margin-top:10px; }
+.home-page .group-extras .group-title{ background:linear-gradient(135deg,#0EA5E9,#6366F1); }
+.extras-lead{ margin:0 4px 14px; color:#475569; line-height:1.6; }
+.extras-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,430px),1fr)); gap:20px; }
+.extra-card{ display:flex; flex-direction:column; align-items:stretch; gap:12px; padding:22px 24px; border-radius:26px; text-decoration:none; color:#fff; position:relative; overflow:hidden;
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.55), 0 8px 0 var(--ed), 0 18px 28px rgba(0,0,0,.18); transition:transform .18s cubic-bezier(.2,.9,.3,1.3); }
+.extra-card:hover{ transform:translateY(-5px); } .extra-card:active{ transform:translateY(6px); }
+.extra-flow{ background:linear-gradient(135deg,#38BDF8,#6366F1); --ed:#3730A3; }
+.extra-block{ background:linear-gradient(135deg,#A78BFA,#EC4899); --ed:#9D174D; }
+.extra-head{ display:flex; align-items:center; gap:16px; }
+.extra-head b{ font-size:1.2em; line-height:1.25; text-shadow:0 2px 0 rgba(0,0,0,.2); }
+.extra-ico{ flex:none; width:72px; height:72px; border-radius:50%; background:rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center; font-size:2.4rem; box-shadow:inset 0 -6px 10px rgba(0,0,0,.15); }
+.extra-card small{ font-size:.66em; font-weight:500; line-height:1.55; opacity:.96; }
+.extra-go{ align-self:flex-start; background:#fff; color:#4338CA; font-weight:800; padding:8px 20px; border-radius:999px; font-size:.8em; box-shadow:0 4px 0 rgba(0,0,0,.18); white-space:nowrap; }
+
+.extra-pseudo{ background:linear-gradient(135deg,#34D399,#0EA5E9); --ed:#0F766E; }
