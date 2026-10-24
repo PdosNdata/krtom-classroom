@@ -7,3 +7,6 @@ __pycache__/
 .claude/
 student.xlsx
 ~$student.xlsx
+
+# ไฟล์ PDF ลิขสิทธิ์ของ DLTV (เก็บใช้ในเครื่องเท่านั้น ไม่ขึ้น repo)
+dltv/
