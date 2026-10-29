@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 2.8: ตัวแปร ตะกร้าผลไม้ — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; --c1:#4ADE80; --c2:#15803D; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  .kindbar{ display:inline-block; padding:3px 14px; border-radius:999px; color:#fff; font-weight:800; font-size:.82rem; margin-bottom:8px; }
+  .prob{ background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:10px 14px; margin-top:10px; font-size:.9rem; line-height:1.6; }
+  .legend{ background:#F8FAFC; border-radius:12px; padding:8px 12px; margin-top:10px; font-size:.82rem; color:#475569; line-height:1.7; }
+  .jig{ border-left:6px solid #9966FF; } .jig p{ margin:0 0 10px; }
+  .jig .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .jig a{ display:inline-block; padding:9px 20px; border-radius:999px; font-weight:800; font-size:.92rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#4C97FF,#9966FF); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .jig a.alt{ background:#fff; color:#5B21B6; border:2px solid #C4B5FD; box-shadow:none; }
+  .pbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#10B981,#0EA5E9); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .jbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#4C97FF,#9966FF); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .fcbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#0EA5E9,#6366F1); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  .sec{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:18px 20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .sec h2{ margin:0 0 6px; font-size:1.1rem; display:flex; align-items:center; gap:10px; } .sec h2 .pt{ margin-left:auto; font-size:.78rem; background:#ECFDF5; color:#047857; border-radius:99px; padding:2px 12px; }
+  .sec p.d{ margin:0 0 10px; color:#475569; font-size:.88rem; }
+  .code{ background:#0F172A; color:#E2E8F0; border-radius:12px; padding:10px 16px; font-family:Consolas,"Courier New",monospace; font-size:.88rem; line-height:1.75; margin:6px 0 10px; }
+  .code .ln{ color:#64748B; margin-right:12px; } .code .kw{ color:#FCA5A5; font-weight:700; } .code .nm{ color:#93C5FD; }
+  .q{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:7px 0; border-top:1px dashed #E2E8F0; font-size:.92rem; }
+  .q .no{ flex:none; width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; font-weight:800; font-size:.8rem; display:flex; align-items:center; justify-content:center; }
+  .q .t{ flex:1; min-width:200px; } .q input[type=text], .q select{ font:inherit; border:2px solid #CBD5E1; border-radius:10px; padding:3px 10px; min-width:90px; background:#fff; }
+  .q input[type=text]{ width:90px; text-align:center; font-weight:700; } .q select{ max-width:100%; }
+  .q.ok input,.q.ok select{ border-color:#10B981; background:#F0FDF4; } .q.bad input,.q.bad select{ border-color:#F59E0B; background:#FFFBEB; }
+  .q .mk{ width:1.6em; text-align:center; } .q .hn{ flex-basis:100%; margin-left:36px; font-size:.8rem; color:#B45309; }
+  .toolrow{ display:flex; gap:10px; flex-wrap:wrap; margin:6px 0; } .toolrow a{ display:inline-block; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.2); } .toolrow a.p{ background:linear-gradient(135deg,#10B981,#0EA5E9); } .toolrow a.j{ background:linear-gradient(135deg,#4C97FF,#9966FF); } .toolrow a.s{ background:linear-gradient(135deg,#22C55E,#0EA5E9); }
+  .tip2{ background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:8px 14px; font-size:.86rem; margin:6px 0 10px; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<header>
+  <div><h1>🧺 ใบงานที่ 2.8 ตัวแปร</h1><p>ตัวแปร = ตะกร้าผลไม้ · ม.1 หน่วยที่ 2 · ระบบตรวจให้อัตโนมัติ</p></div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">ใบงานนี้ฝึกเรื่อง <b>ตัวแปร</b> ซึ่งเปรียบเหมือน <b>ตะกร้าที่มีป้ายชื่อ</b> ใส่ผลไม้ (ค่า) ได้ครั้งละหนึ่งอย่างและเปลี่ยนค่าได้ มี 5 ตอน รวม <b>21 คะแนน</b> ตอบแล้วกด "🔍 ให้ระบบตรวจ" ดูผลและแก้ไขได้ไม่จำกัดครั้ง</p>
+    <div class="tip2">📚 ทบทวนก่อนทำ: <b>ใบความรู้หัวข้อ 7</b> · <a href="variable-slides.html" target="_blank" rel="noopener">🧺 สไลด์ตัวแปร (ตะกร้าผลไม้)</a> · <a href="game-variable.html" target="_blank" rel="noopener" style="display:inline-block;padding:6px 18px;border-radius:999px;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;font-weight:800;font-size:.85rem;text-decoration:none;box-shadow:0 4px 0 rgba(0,0,0,.18)">🎮 เล่นเกมค่าตัวแปร (เก็บผลไม้ใส่ตะกร้า)</a> <a href="game-variable-jump.html" target="_blank" rel="noopener" style="display:inline-block;padding:6px 18px;border-radius:999px;background:linear-gradient(135deg,#22C55E,#0EA5E9);color:#fff;font-weight:800;font-size:.85rem;text-decoration:none;box-shadow:0 4px 0 rgba(0,0,0,.18)">🏃 เล่นเกมกระโดด (สไตล์มาริโอ้)</a></div>
+  </div>
+  <div class="card" id="form">
+    <div class="sec"><h2>🔎 ตอนที่ 1 ติดตามค่าของตัวแปร <span class="pt">5 คะแนน</span></h2><p class="d">อ่านรหัสลำลองแล้วบอกค่าของตัวแปรทีละขั้น (เริ่มจากบรรทัดที่ 1)</p>
+    <div class="code"><div><span class="ln">1</span><span class="kw">SET</span> apple = 0</div><div><span class="ln">2</span><span class="kw">COMPUTE</span> apple = apple + 1</div><div><span class="ln">3</span><span class="kw">COMPUTE</span> apple = apple + 1</div><div><span class="ln">4</span><span class="kw">SET</span> orange = 5</div><div><span class="ln">5</span><span class="kw">COMPUTE</span> apple = apple + orange</div><div><span class="ln">6</span><span class="kw">COMPUTE</span> orange = orange - 2</div><div><span class="ln">7</span><span class="kw">SET</span> total = apple + orange</div></div>
+    <div class="q" data-k="num" data-a="2" data-hint="ลองไล่ทีละบรรทัดด้วยกระดาษ จดค่า apple และ orange หลังทำแต่ละคำสั่ง"><span class="no">1</span><span class="t">หลังทำบรรทัดที่ 3 ค่า <b>apple</b> เป็นเท่าใด</span><input type="text" inputmode="numeric" autocomplete="off"><span class="mk"></span></div>
+    <div class="q" data-k="num" data-a="7" data-hint="ลองไล่ทีละบรรทัดด้วยกระดาษ จดค่า apple และ orange หลังทำแต่ละคำสั่ง"><span class="no">2</span><span class="t">หลังทำบรรทัดที่ 5 ค่า <b>apple</b> เป็นเท่าใด</span><input type="text" inputmode="numeric" autocomplete="off"><span class="mk"></span></div>
+    <div class="q" data-k="num" data-a="3" data-hint="ลองไล่ทีละบรรทัดด้วยกระดาษ จดค่า apple และ orange หลังทำแต่ละคำสั่ง"><span class="no">3</span><span class="t">หลังทำบรรทัดที่ 6 ค่า <b>orange</b> เป็นเท่าใด</span><input type="text" inputmode="numeric" autocomplete="off"><span class="mk"></span></div>
+    <div class="q" data-k="num" data-a="7" data-hint="ลองไล่ทีละบรรทัดด้วยกระดาษ จดค่า apple และ orange หลังทำแต่ละคำสั่ง"><span class="no">4</span><span class="t">หลังทำบรรทัดที่ 6 ค่า <b>apple</b> เป็นเท่าใด (ค่าไหนไม่ถูกเปลี่ยนบ้าง?)</span><input type="text" inputmode="numeric" autocomplete="off"><span class="mk"></span></div>
+    <div class="q" data-k="num" data-a="10" data-hint="ลองไล่ทีละบรรทัดด้วยกระดาษ จดค่า apple และ orange หลังทำแต่ละคำสั่ง"><span class="no">5</span><span class="t">หลังทำบรรทัดที่ 7 ค่า <b>total</b> เป็นเท่าใด</span><input type="text" inputmode="numeric" autocomplete="off"><span class="mk"></span></div>
+    </div>
+    <div class="sec"><h2>🏷️ ตอนที่ 2 ตั้งชื่อตัวแปร <span class="pt">6 คะแนน</span></h2><p class="d">เลือกว่าชื่อตัวแปรแต่ละชื่อ ใช้ได้หรือไม่ (กฎ: ไม่ขึ้นต้นด้วยตัวเลข · ไม่เว้นวรรค · ควรสื่อความหมาย)</p>
+    <div class="q" data-k="sel" data-a="g" data-hint="ชื่อนี้ใช้ได้และบอกว่าเก็บอะไร"><span class="no">1</span><span class="t"><code style="background:#F1F5F9;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;font-weight:700">คะแนน</code></span><select><option value="">— เลือก —</option><option value="g">ใช้ได้ และสื่อความหมาย</option><option value="w">ใช้ได้ แต่ไม่สื่อความหมาย</option><option value="n">ใช้ไม่ได้</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="n" data-hint="ชื่อตัวแปรห้ามขึ้นต้นด้วยตัวเลข"><span class="no">2</span><span class="t"><code style="background:#F1F5F9;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;font-weight:700">1score</code></span><select><option value="">— เลือก —</option><option value="g">ใช้ได้ และสื่อความหมาย</option><option value="w">ใช้ได้ แต่ไม่สื่อความหมาย</option><option value="n">ใช้ไม่ได้</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="n" data-hint="ชื่อตัวแปรห้ามเว้นวรรค (ใช้ _ แทน เช่น my_name)"><span class="no">3</span><span class="t"><code style="background:#F1F5F9;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;font-weight:700">my name</code></span><select><option value="">— เลือก —</option><option value="g">ใช้ได้ และสื่อความหมาย</option><option value="w">ใช้ได้ แต่ไม่สื่อความหมาย</option><option value="n">ใช้ไม่ได้</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="g" data-hint="ไม่เว้นวรรค ใช้ _ ได้ และสื่อความหมาย"><span class="no">4</span><span class="t"><code style="background:#F1F5F9;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;font-weight:700">total_price</code></span><select><option value="">— เลือก —</option><option value="g">ใช้ได้ และสื่อความหมาย</option><option value="w">ใช้ได้ แต่ไม่สื่อความหมาย</option><option value="n">ใช้ไม่ได้</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="w" data-hint="ใช้ได้ แต่ดูแล้วไม่รู้ว่าเก็บอะไร ควรตั้งชื่อสื่อความหมาย เช่น count"><span class="no">5</span><span class="t"><code style="background:#F1F5F9;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;font-weight:700">x</code></span><select><option value="">— เลือก —</option><option value="g">ใช้ได้ และสื่อความหมาย</option><option value="w">ใช้ได้ แต่ไม่สื่อความหมาย</option><option value="n">ใช้ไม่ได้</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="g" data-hint="ชื่อนี้ใช้ได้และบอกว่าเก็บอะไร"><span class="no">6</span><span class="t"><code style="background:#F1F5F9;border-radius:6px;padding:1px 8px;font-family:Consolas,monospace;font-weight:700">age</code></span><select><option value="">— เลือก —</option><option value="g">ใช้ได้ และสื่อความหมาย</option><option value="w">ใช้ได้ แต่ไม่สื่อความหมาย</option><option value="n">ใช้ไม่ได้</option></select><span class="mk"></span></div>
+    </div>
+    <div class="sec"><h2>🔗 ตอนที่ 3 จับคู่คำสั่งกับความหมาย <span class="pt">4 คะแนน</span></h2><p class="d">เลือกความหมายที่ตรงกับคำสั่งแต่ละคำสั่ง</p>
+    <div class="q" data-k="sel" data-a="a" data-hint="ทบทวนใบความรู้หัวข้อ 7–8 เรื่องคำสั่งที่ใช้กับตัวแปร"><span class="no">1</span><span class="t"><code style="background:#0F172A;color:#FCA5A5;border-radius:6px;padding:1px 10px;font-family:Consolas,monospace;font-weight:800">SET</code></span><select><option value="">— เลือก —</option><option value="a">กำหนดค่าให้ตัวแปร</option><option value="b">คำนวณแล้วเก็บผล / เปลี่ยนค่าตัวแปร</option><option value="c">รับค่าจากผู้ใช้เก็บลงตัวแปร</option><option value="d">แสดงค่าตัวแปรหรือข้อความ</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="b" data-hint="ทบทวนใบความรู้หัวข้อ 7–8 เรื่องคำสั่งที่ใช้กับตัวแปร"><span class="no">2</span><span class="t"><code style="background:#0F172A;color:#FCA5A5;border-radius:6px;padding:1px 10px;font-family:Consolas,monospace;font-weight:800">COMPUTE</code></span><select><option value="">— เลือก —</option><option value="a">กำหนดค่าให้ตัวแปร</option><option value="b">คำนวณแล้วเก็บผล / เปลี่ยนค่าตัวแปร</option><option value="c">รับค่าจากผู้ใช้เก็บลงตัวแปร</option><option value="d">แสดงค่าตัวแปรหรือข้อความ</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="c" data-hint="ทบทวนใบความรู้หัวข้อ 7–8 เรื่องคำสั่งที่ใช้กับตัวแปร"><span class="no">3</span><span class="t"><code style="background:#0F172A;color:#FCA5A5;border-radius:6px;padding:1px 10px;font-family:Consolas,monospace;font-weight:800">INPUT</code></span><select><option value="">— เลือก —</option><option value="a">กำหนดค่าให้ตัวแปร</option><option value="b">คำนวณแล้วเก็บผล / เปลี่ยนค่าตัวแปร</option><option value="c">รับค่าจากผู้ใช้เก็บลงตัวแปร</option><option value="d">แสดงค่าตัวแปรหรือข้อความ</option></select><span class="mk"></span></div>
+    <div class="q" data-k="sel" data-a="d" data-hint="ทบทวนใบความรู้หัวข้อ 7–8 เรื่องคำสั่งที่ใช้กับตัวแปร"><span class="no">4</span><span class="t"><code style="background:#0F172A;color:#FCA5A5;border-radius:6px;padding:1px 10px;font-family:Consolas,monospace;font-weight:800">DISPLAY</code></span><select><option value="">— เลือก —</option><option value="a">กำหนดค่าให้ตัวแปร</option><option value="b">คำนวณแล้วเก็บผล / เปลี่ยนค่าตัวแปร</option><option value="c">รับค่าจากผู้ใช้เก็บลงตัวแปร</option><option value="d">แสดงค่าตัวแปรหรือข้อความ</option></select><span class="mk"></span></div>
+    </div>
+    <div class="sec"><h2>📝 ตอนที่ 4 เขียนรหัสลำลองใช้ตัวแปร <span class="pt">3 คะแนน</span></h2>
+      <p class="d"><b>โจทย์:</b> ตะกร้าแอปเปิลมีแอปเปิลอยู่ <b>3 ผล</b> ให้ผู้ใช้ใส่จำนวนผลที่หยิบเพิ่ม (ตัวแปร <code>n</code>) แล้วแสดงจำนวนแอปเปิลในตะกร้าทั้งหมด (ตัวแปร <code>apple</code>) — ระบบจะรันรหัสของคุณกับค่าทดสอบ 3 ค่า</p>
+      <div class="toolrow"><a class="p" href="pseudocode.html?ex=blank&back=worksheet-2-8.html" target="_blank" rel="noopener">📝 เปิดโปรแกรมเขียนรหัสลำลอง</a></div>
+      <div class="hintline" style="font-size:.8rem;color:#64748B;margin:0 0 4px">เขียนตรงนี้ หรือเขียนในโปรแกรมแล้วกด 📤 ส่ง / คัดลอก → ส่งไปใบงาน ระบบจะใส่ในช่องนี้ให้</div>
+      <textarea id="pc" rows="8" placeholder="START&#10;    ...&#10;END"></textarea>
+      <div class="q" id="pcres" style="border:none;display:none"></div>
+    </div>
+    <div class="sec"><h2>🧱 ตอนที่ 5 ต่อบล็อกในโค้ดจิ๊กซอว์ <span class="pt">3 คะแนน</span></h2>
+      <p class="d"><b>โจทย์:</b> ตะกร้ามีแอปเปิล <b>3 ผล</b> ให้ถามว่าหยิบเพิ่มกี่ผล แล้ว <b>พูด</b> จำนวนแอปเปิลทั้งหมด โดยใช้ตัวแปร <code>apple</code> (กำหนดค่าเริ่มต้น → เปลี่ยนค่า → พูดค่าตัวแปร)</p>
+      <div class="toolrow"><a class="j" href="blocks.html?ex=blank&back=worksheet-2-8.html" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a></div>
+      <div class="hintline" style="font-size:.8rem;color:#64748B;margin:0 0 4px">ต่อบล็อกเสร็จแล้วกด 📤 ส่ง / คัดลอก → ส่งไปใบงาน ระบบจะใส่ลิงก์ในช่องนี้ให้ (หรือวางลิงก์ที่คัดลอกมา)</div>
+      <textarea id="bk" rows="4" placeholder="ลิงก์โปรแกรมโค้ดจิ๊กซอว์..."></textarea>
+      <div class="q" id="bkres" style="border:none;display:none"></div>
+    </div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/16 ข้อ</div>
+    <div class="chk" id="checkres"></div>
+    <div class="actions">
+      <button class="btn" id="checkbtn" style="background:linear-gradient(135deg,#6366F1,#0EA5E9)">🔍 ให้ระบบตรวจ</button>
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script src="../../assets/js/wscheck.js?v=1"></script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const U = { g:"m1", s:"cs", i:1 }, N = 8, TOTAL = 21;
+const KEY = "krtomws:m1/cs/1:8", KEY2 = "krtomws:m1/cs/1:8x", DONE = "krtomws-done:m1/cs/1:8";
+const items = [...document.querySelectorAll(".q[data-k]")];
+const pc = document.getElementById("pc"), bk = document.getElementById("bk");
+const val = (q) => (q.querySelector("input,select").value || "").trim();
+
+// ── บันทึกร่าง ──  (ช่องรหัสลำลอง/ลิงก์โปรแกรม ใช้คีย์เดียวกับเครื่องมือที่ส่งงานมา: ช่อง 6 และ 8)
+function saveAll(){ try{ localStorage.setItem(KEY2, JSON.stringify(items.map(val))); const arr = JSON.parse(localStorage.getItem(KEY) || "[]"); while(arr.length < 8) arr.push(""); arr[5] = pc.value; arr[7] = bk.value; localStorage.setItem(KEY, JSON.stringify(arr)); }catch(e){} refresh(); }
+try{ const sv = JSON.parse(localStorage.getItem(KEY2) || "[]"); items.forEach((q, i) => { if(sv[i]) q.querySelector("input,select").value = sv[i]; });
+  const a = JSON.parse(localStorage.getItem(KEY) || "[]"); if(a[5]) pc.value = a[5]; if(a[7]) bk.value = a[7]; }catch(e){}
+items.forEach(q => q.querySelector("input,select").addEventListener("input", saveAll)); [pc, bk].forEach(x => x.addEventListener("input", saveAll));
+window.addEventListener("storage", e => { if(e.key !== KEY) return; try{ const a = JSON.parse(e.newValue || "[]"); if(a[5] != null && pc.value !== a[5]) pc.value = a[5]; if(a[7] != null && bk.value !== a[7]) bk.value = a[7]; refresh(); }catch(_){} });
+
+const answeredCount = () => items.filter(q => val(q)).length + (pc.value.trim().length >= 20 ? 1 : 0) + (bk.value.trim().length >= 20 ? 1 : 0);
+const TOTAL_Q = items.length + 2;
+function refresh(){ const n = answeredCount(); document.getElementById("bar").style.width = (n / TOTAL_Q * 100) + "%"; document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL_Q + " ข้อ"; }
+document.getElementById("meter-t").textContent = "ตอบแล้ว 0/" + TOTAL_Q + " ข้อ"; refresh();
+
+// ── ตรวจ ──
+function mark(q, ok){ q.classList.toggle("ok", ok); q.classList.toggle("bad", !ok); q.querySelector(".mk").textContent = ok ? "✅" : "⚠️"; let h = q.querySelector(".hn"); if(!ok){ if(!h){ h = document.createElement("div"); h.className = "hn"; q.append(h); } h.textContent = "💡 " + q.dataset.hint; } else if(h) h.remove(); }
+function checkAll(){
+  let score = 0; const lines = [];
+  items.forEach(q => { const ok = val(q) === q.dataset.a || (q.dataset.k === "num" && val(q) !== "" && Number(val(q)) === Number(q.dataset.a)); mark(q, ok); if(ok) score++; });
+  // ตอน 4: รันรหัสลำลอง
+  const res4 = document.getElementById("pcres"); res4.style.display = "block"; res4.style.flexDirection = "column"; res4.style.alignItems = "flex-start"; let s4 = 0; const m4 = [];
+  const raw = pc.value, cut = raw.search(/\nลิงก์รหัสลำลอง/), code = cut >= 0 ? raw.slice(0, cut) : raw;
+  if(code.trim().length < 8) m4.push("ยังไม่ได้เขียนรหัสลำลอง");
+  else { const errs = WSCheck.analyzeCode(code); if(errs.length) errs.slice(0, 4).forEach(e => m4.push(e));
+    else [[[2], 5], [[0], 3], [[10], 13]].forEach(([inp, want]) => { try{ const r = WSCheck.runCode(code, inp), nums = (r.text.match(/-?\d+(\.\d+)?/g) || []).map(Number); if(nums.includes(want)) s4++; else m4.push(`ใส่ n = ${inp[0]} ควรแสดงจำนวนแอปเปิล ${want} ผล`); }catch(e){ m4.push("รันรหัสไม่สำเร็จ: " + (e.message || "ผิดพลาด")); } }); }
+  res4.innerHTML = (s4 === 3 ? "✅ รหัสลำลองผ่านการทดสอบทั้ง 3 ค่า" : "⚠️ ผ่าน " + s4 + "/3 ค่าทดสอบ") + (m4.length ? "<ul style='margin:4px 0 0 1.2em;color:#92400E;font-size:.85rem'>" + [...new Set(m4)].map(x => "<li>" + x.replace(/</g, "&lt;") + "</li>").join("") + "</ul>" : ""); res4.className = "q " + (s4 === 3 ? "ok" : "bad");
+  score += s4;
+  // ตอน 5: ตรวจบล็อก
+  const res5 = document.getElementById("bkres"); res5.style.display = "block"; res5.style.flexDirection = "column"; res5.style.alignItems = "flex-start"; let s5 = 0; const m5 = []; const U2 = WSCheck.util;
+  const bb = WSCheck.blocksFromText(bk.value);
+  if(bk.value.trim().length < 20) m5.push("ยังไม่ได้ส่งโปรแกรมจากโค้ดจิ๊กซอว์");
+  else if(!bb) m5.push("ไม่พบลิงก์โปรแกรม — ให้กด 📤 ส่ง / คัดลอก → ส่งไปใบงาน จากโค้ดจิ๊กซอว์");
+  else { const b = bb.bs;
+    if((bb.d.vars || []).length && U2.has(b, "set") && U2.hasStr(b, "3")) s5++; else m5.push("ต้องสร้างตัวแปร และใช้บล็อก \"กำหนด … เป็น 3\" (ค่าเริ่มต้นแอปเปิล 3 ผล)");
+    if(U2.has(b, "ask") && (U2.has(b, "change") || U2.has(b, "add"))) s5++; else m5.push("ต้องถามจำนวนที่หยิบเพิ่ม แล้ว \"เปลี่ยน … ทีละ\" (หรือบวก) ค่าตัวแปร");
+    if(b.some(x => (x.t === "say" || x.t === "sayfor") && x.a && x.a[0] && typeof x.a[0] === "object")) s5++; else m5.push("ต้องใช้บล็อก \"พูด\" โดยลากตัวแปรมาวางในช่อง เพื่อแสดงจำนวนแอปเปิล"); }
+  res5.innerHTML = (s5 === 3 ? "✅ โปรแกรมครบทั้ง 3 ข้อ" : "⚠️ ผ่าน " + s5 + "/3 ข้อ") + (m5.length ? "<ul style='margin:4px 0 0 1.2em;color:#92400E;font-size:.85rem'>" + m5.map(x => "<li>" + x + "</li>").join("") + "</ul>" : ""); res5.className = "q " + (s5 === 3 ? "ok" : "bad");
+  score += s5;
+  const box = document.getElementById("checkres"); box.style.display = "block";
+  box.innerHTML = '<h3>🔍 ผลการตรวจโดยระบบ</h3><div class="big">' + (score === TOTAL ? "🎉 " : "") + score + " / " + TOTAL + ' คะแนน</div><div class="foot">ข้อที่ขึ้น ⚠️ มีคำใบ้ใต้ข้อนั้น — แก้ไขแล้วกด "ให้ระบบตรวจ" ซ้ำได้ · เป็นการตรวจเบื้องต้นโดยระบบ ครูตรวจอีกครั้ง</div>';
+  return { score, max:TOTAL };
+}
+document.getElementById("checkbtn").onclick = () => { const r = checkAll(); document.getElementById("checkres").scrollIntoView({ behavior:"smooth", block:"nearest" }); };
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), n = answeredCount();
+  if(n < TOTAL_Q){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (ตอบแล้ว " + n + "/" + TOTAL_Q + " ข้อ)"; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    const r = checkAll();
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", r.score, TOTAL);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว · ระบบตรวจเบื้องต้นได้ ' + r.score + '/' + r.max + ' คะแนน <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){ this.disabled = false; st.style.color = "#DC2626"; st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ"); }
+};
+</script>
+<script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/outcomes.js?v=2"></script>
+</body>
+</html>

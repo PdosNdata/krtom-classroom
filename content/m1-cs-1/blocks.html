@@ -147,7 +147,7 @@
   <div style="position:relative">
     <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
     <div id="sharemenu">
-      <button id="sh-ws">📥 ส่งโปรแกรมไปใบงาน (ใส่ในช่องข้อ 8)</button>
+      <button id="sh-ws">📥 ส่งโปรแกรมไปใบงาน / แบบทดสอบ (ใส่ในช่องข้อ 8)</button>
       <button id="sh-link">🔗 คัดลอกลิงก์โปรแกรม (ส่งให้ครูเปิดดู)</button>
       <button id="sh-text">📝 คัดลอกเป็นข้อความคำสั่ง</button>
       <button id="sh-png">🖼️ บันทึกภาพผลบนเวที (.png)</button>
@@ -753,7 +753,8 @@ document.addEventListener("keydown", e => {
 });
 
 /* ---------- ส่ง / แชร์โปรแกรม ---------- */
-const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
+const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
 const b64e = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/")))));
 function shareURL(){ const u = new URL("blocks.html", location.href); u.search = ""; u.searchParams.set("p", b64e(wsToJSON())); return u.href; }
@@ -794,10 +795,10 @@ $("#sh-png").onclick = () => {
 $("#sh-ws").onclick = () => {
   if(!BACK) return;
   if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก");
-  const key = "krtomws:m1/cs/1:" + BACK[2];
+  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz");
   const txt = "ลิงก์โปรแกรม (ครูกดเปิดดูได้):\n" + shareURL() + "\n\nบล็อกที่ใช้:\n" + programText();
   try{
-    const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < 8) arr.push(""); arr[7] = txt;
+    const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < PART * 8) arr.push(""); arr[(PART - 1) * 8 + 7] = txt;
     localStorage.setItem(key, JSON.stringify(arr));
     toast("ส่งโปรแกรมไปที่ข้อ 8 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง");
   }catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
@@ -815,7 +816,7 @@ try{
 }catch(e){ toast("เปิดลิงก์โปรแกรมไม่ได้ — ลิงก์อาจไม่ครบ"); }
 try{
   const qs = new URLSearchParams(location.search), ex = qs.get("ex"), back = qs.get("back");
-  if(back && /^worksheet[\w-]*\.html$/.test(back)){ const a = document.querySelector("header a"); a.textContent = "✖ ปิดแท็บ กลับไปใบงาน"; a.href = back; }
+  if(back && /^(worksheet[\w-]*|quiz)\.html$/.test(back)){ const a = document.querySelector("header a"); a.textContent = back === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; a.href = back; }
   if(ex && SAMPLES[ex] && !VIEW){ loadJSON(JSON.parse(JSON.stringify(SAMPLES[ex]))); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
     toast(ex === "blank" ? "เริ่มจากกระดานว่าง — ลากบล็อกมาต่อใต้ \"เมื่อกดธงเขียว\" แล้วกด 🟩 ธงเขียว" : "ระบบเขียนโปรแกรม \"" + (EXNAME[ex] || EXNAME2[ex] || ex) + "\" ให้แล้ว — กด 🟩 ธงเขียว เพื่อรัน"); }
 }catch(e){}

@@ -18,9 +18,13 @@
   header select option{ color:#1F2430; }
   #viewbar{ display:none; background:#FEF9C3; border-bottom:1px solid #FDE047; padding:6px 14px; font-size:.85rem; font-weight:700; }
   #viewbar button{ font:inherit; font-size:.8rem; border:none; background:#3B82F6; color:#fff; border-radius:999px; padding:3px 12px; cursor:pointer; margin-left:8px; }
-  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:310px; }
+  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:330px; }
   #sharemenu.open{ display:block; }
   #sharemenu button{ display:block; width:100%; text-align:left; background:none !important; color:#1F2430 !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; }
+  #sharemenu a{ display:block; text-align:left; color:#B91C1C !important; background:none !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; text-decoration:none; cursor:pointer; }
+  #sharemenu a:hover,#sharemenu button:hover{ background:#EEF2FF !important; }
+  #sharemenu hr{ border:none; border-top:1px solid var(--bd); margin:4px 2px; }
+  #sharemenu kbd{ float:right; font:inherit; font-size:.72rem; color:#64748B; }
   #sharemenu button:hover{ background:#EEF2FF !important; } #sharemenu button[disabled]{ opacity:.4; cursor:not-allowed; }
 
   #app{ flex:1; min-height:0; display:grid; grid-template-columns:200px 1fr 270px; gap:8px; padding:8px; }
@@ -37,6 +41,13 @@
   .bar{ display:flex; gap:6px; align-items:center; padding:6px 8px; border-bottom:1px solid var(--bd); background:#F8FAFF; font-size:.8rem; flex-wrap:wrap; }
   .bar button{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:3px 10px; font:inherit; font-size:.78rem; cursor:pointer; }
   #edit{ position:absolute; display:none; z-index:10; font:inherit; font-size:15px; font-weight:700; text-align:center; border:2px solid #6366F1; border-radius:10px; padding:4px; resize:none; background:#fff; }
+  .panel:last-child{ overflow-y:auto; } #check{ flex:none; max-height:none; }
+  #langs{ display:flex; gap:6px; margin:8px 12px 0; }
+  #langs button{ flex:1; padding:6px; border:2px solid #C7D2FE; border-radius:10px; background:#fff; font:inherit; font-weight:700; cursor:pointer; }
+  #langs button.on{ background:#6366F1; border-color:#6366F1; color:#fff; }
+  #genbtn,#copybtn{ margin:8px 12px 0; padding:8px; border:none; border-radius:10px; background:#10B981; color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+  #copybtn{ background:#64748B; margin-bottom:12px; }
+  #code{ margin:8px 12px 0; padding:10px; background:#0F172A; color:#E2E8F0; border-radius:10px; font:12.5px/1.55 Consolas,"Courier New",monospace; white-space:pre-wrap; word-break:break-word; min-height:60px; }
   #check{ padding:10px 12px; font-size:.82rem; line-height:1.6; overflow:auto; }
   #check .tip{ color:#475569; } #check .ok{ color:#047857; } #check .bad{ color:#B45309; } #check .tl{ margin:2px 0; }
   #checkbtn{ margin:10px 12px 0; padding:8px; border:none; border-radius:10px; background:#6366F1; color:#fff; font:inherit; font-weight:800; cursor:pointer; }
@@ -50,6 +61,9 @@
   #ctx .sw{ display:flex; flex-wrap:wrap; gap:6px; padding:2px 8px 6px; }
   #ctx .sw i{ width:24px; height:24px; border-radius:50%; cursor:pointer; border:3px solid; display:block; box-sizing:border-box; }
   #ctx .sw i:hover{ transform:scale(1.15); }
+  #ctx .shp{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:2px 6px 6px; }
+  #ctx .shp button{ border:2px solid transparent; background:#F8FAFC; border-radius:8px; padding:2px; cursor:pointer; line-height:0; }
+  #ctx .shp button:hover{ background:#EEF2FF; border-color:#A5B4FC; } #ctx .shp button.on{ border-color:#6366F1; background:#E0E7FF; }
   #ctx .sz{ display:flex; gap:6px; padding:2px 8px 6px; align-items:center; }
   #ctx .sz button{ flex:1; border:1px solid var(--bd); background:#fff; border-radius:8px; padding:4px 0; font:inherit; font-weight:800; cursor:pointer; }
   #ctx .sz button:hover{ background:#EEF2FF; } #ctx .sz span{ min-width:44px; text-align:center; font-weight:700; }
@@ -85,15 +99,21 @@
     <option value="ex-loop2">ทำซ้ำ 2: ผลรวม 1 ถึง 5</option>
   </select>
   <div style="position:relative">
-    <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
+    <button id="sharebtn">📁 ไฟล์ ▾</button>
     <div id="sharemenu">
-      <button id="sh-ws">📥 ส่งผังงานไปใบงาน (ใส่ในช่องข้อ 7)</button>
+      <button id="f-save">💾 บันทึก<kbd>Ctrl+S</kbd></button>
+      <button id="f-saveas">📄 บันทึกเป็น…</button>
+      <button id="f-open">📂 เปิด…<kbd>Ctrl+O</kbd></button>
+      <input type="file" id="f-input" accept=".json,application/json" hidden>
+      <hr>
+      <button id="sh-ws">📥 ส่งผังงานไปใบงาน / แบบทดสอบ (ใส่ในช่องข้อ 7)</button>
       <button id="sh-link">🔗 คัดลอกลิงก์ผังงาน (ส่งให้ครูเปิดดู)</button>
       <button id="sh-text">📝 คัดลอกเป็นข้อความอธิบายผังงาน</button>
       <button id="sh-png">🖼️ บันทึกเป็นรูปภาพ (.png)</button>
+      <hr>
+      <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิด</a>
     </div>
   </div>
-  <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิดแท็บนี้</a>
 </header>
 <div id="viewbar">👀 กำลังดูผังงานที่แชร์มา — <button id="viewedit">✏️ คัดลอกไปแก้ไขต่อ</button></div>
 
@@ -118,6 +138,11 @@
     <h3>✅ ตรวจผังงาน</h3>
     <button id="checkbtn">ตรวจผังงานของฉัน</button>
     <div id="check">กดปุ่มด้านบนเพื่อตรวจว่าผังงานครบถ้วนหรือไม่</div>
+    <h3 style="margin-top:10px">💻 แปลงเป็นโค้ด</h3>
+    <div id="langs"><button type="button" data-l="py" class="on">🐍 Python</button><button type="button" data-l="js">🟨 JavaScript</button></div>
+    <button id="genbtn">สร้างโค้ดจากผังงานของฉัน</button>
+    <pre id="code">เลือกภาษา แล้วกดปุ่มด้านบน ระบบจะแปลงผังงานเป็นโค้ดให้</pre>
+    <button id="copybtn">📋 คัดลอกโค้ด</button>
   </div>
 </div>
 <div id="ctx"></div>
@@ -364,10 +389,26 @@ function showCtx(e, html, bind){
   ctx.innerHTML = html; ctx.style.display = "block";
   const w = ctx.offsetWidth, h = ctx.offsetHeight; ctx.style.left = Math.min(e.clientX, innerWidth - w - 8) + "px"; ctx.style.top = Math.min(e.clientY, innerHeight - h - 8) + "px"; bind(ctx);
 }
+function thumb(k, f, st){
+  const a = `fill="${f}" stroke="${st}" stroke-width="2" stroke-linejoin="round"`;
+  const T = {
+    term:`<rect x="3" y="6" width="34" height="16" rx="8" ${a}/>`, proc:`<rect x="3" y="5" width="34" height="18" ${a}/>`,
+    io:`<polygon points="9,5 37,5 31,23 3,23" ${a}/>`, dec:`<polygon points="20,2 38,14 20,26 2,14" ${a}/>`,
+    conn:`<circle cx="20" cy="14" r="10" ${a}/>`, off:`<polygon points="5,4 35,4 35,15 20,25 5,15" ${a}/>`,
+    pre:`<rect x="3" y="5" width="34" height="18" ${a}/><path d="M9,5V23M31,5V23" stroke="${st}" stroke-width="2"/>`,
+    doc:`<path d="M4,4H36V20Q28,27 20,20T4,20Z" ${a}/>`,
+    db:`<path d="M5,7A15,4 0 0 1 35,7V21A15,4 0 0 1 5,21Z" ${a}/><path d="M5,7A15,4 0 0 0 35,7" fill="none" stroke="${st}" stroke-width="2"/>`,
+    man:`<polygon points="3,9 37,3 37,24 3,24" ${a}/>`, disp:`<path d="M3,14L11,4H29Q37,4 37,14Q37,24 29,24H11Z" ${a}/>`,
+    prep:`<polygon points="3,14 11,4 29,4 37,14 29,24 11,24" ${a}/>`, store:`<path d="M10,4H37Q31,14 37,24H10Q4,14 10,4Z" ${a}/>`
+  };
+  return T[k] || "";
+}
 function nodeMenu(e, n){
   const m = n.s || 1;
   const html = `<div class="hd">${KIND[n.k].name}</div>
     <button class="it" data-a="edit">✏️ แก้ไขข้อความ</button>
+    <div class="hd">🔀 เปลี่ยนเป็นรูปทรงอื่น (กดรูปที่ต้องการ)</div>
+    <div class="shp">${Object.keys(KIND).map(k => `<button type="button" data-a="shape" data-k="${k}" title="${KIND[k].name}" class="${k === n.k ? "on" : ""}"><svg viewBox="0 0 40 28" width="40" height="28">${thumb(k, n.fc || KIND[k].fill, n.sc || KIND[k].stroke)}</svg></button>`).join("")}</div>
     <div class="hd">🎨 เปลี่ยนสี</div>
     <div class="sw">${SWATCH.map((c, i) => `<i data-a="color" data-i="${i}" title="${c[2]}" style="background:${c[0]};border-color:${c[1]}"></i>`).join("")}<i data-a="color" data-i="-1" title="สีเดิม" style="background:linear-gradient(135deg,#fff 45%,#EF4444 46%,#EF4444 54%,#fff 55%);border-color:#94A3B8"></i></div>
     <div class="hd">↔️ เปลี่ยนขนาด</div>
@@ -376,6 +417,7 @@ function nodeMenu(e, n){
     <button class="it danger" data-a="del">🗑️ ลบรูปทรงนี้</button>`;
   showCtx(e, html, c => c.onclick = ev => {
     const b = ev.target.closest("[data-a]"); if(!b) return; const a = b.dataset.a;
+    if(a === "shape"){ const k = b.dataset.k; if(!KIND[k] || k === n.k){ hideCtx(); return; } if(n.k === "conn" || k === "conn"){ delete n.rw; delete n.rh; } n.k = k; push(); hideCtx(); render(); return; }
     if(a === "edit"){ hideCtx(); render(); setTimeout(() => openEdit(n), 0); return; }
     if(a === "color"){ const i = +b.dataset.i; if(i < 0){ delete n.fc; delete n.sc; } else { n.fc = SWATCH[i][0]; n.sc = SWATCH[i][1]; } push(); render(); return; }
     if(a === "smaller" || a === "bigger" || a === "size1"){
@@ -384,7 +426,7 @@ function nodeMenu(e, n){
     }
     if(a === "dup"){ const c = { ...n, id:"n" + (uid++), x:n.x + 40, y:n.y + 40 }; D.nodes.push(c); sel = { type:"n", id:c.id }; push(); hideCtx(); render(); return; }
     if(a === "del"){ hideCtx(); delSel(); }
-  });
+  }); 
 }
 function edgeMenu(e, ed){
   showCtx(e, `<div class="hd">ลูกศร</div><button class="it" data-a="lbl">✏️ แก้ข้อความบนลูกศร (ใช่ / ไม่ใช่)</button>
@@ -489,6 +531,120 @@ function check(){
 }
 $("#checkbtn").onclick = () => { $("#check").innerHTML = check().map(([c, t]) => `<div class="tl ${c}">${t.replace(/</g, "&lt;")}</div>`).join(""); };
 
+/* ---------- แปลงผังงานเป็นโค้ด (Python / JavaScript) ---------- */
+const CG = (function(){
+  const TH = /[฀-๿]/, ID = /^[A-Za-z_]\w*$/;
+  const flat = (t) => lines(t).map(s => s.trim()).filter(Boolean).join(" ");
+  const quotes = (s) => s.replace(/[“”„]/g, '"').replace(/[‘’]/g, "'");
+  const mathTxt = (s) => quotes(s).replace(/×/g, "*").replace(/÷/g, "/").replace(/−/g, "-").replace(/หารเอาเศษ/g, "%").replace(/≥/g, ">=").replace(/≤/g, "<=").replace(/≠/g, "!=");
+
+  // แปลงข้อความในรูปทรงเป็นคำสั่งกลาง (ไม่ผูกกับภาษา)
+  function classify(n){
+    const t = flat(n.t); if(!t) return [];
+    let m;
+    if((m = /^รับ(?:ค่า)?\s*(.+)$/.exec(t))){
+      const vs = m[1].split(/\s*(?:,|และ|\s)\s*/).filter(Boolean);
+      if(vs.length && vs.every(v => ID.test(v))) return vs.map(v => ({ t:"in", v }));
+    }
+    if((m = /^(?:แสดง|พิมพ์|ส่งออก)(?:ผล|ค่า)?\s*(.+)$/.exec(t))){
+      const raw = quotes(m[1]);
+      const parts = raw.match(/"[^"]*"|'[^']*'|[^,]+/g) || [];
+      const args = parts.map(p => p.trim()).filter(Boolean).map(p => /^["']/.test(p) ? p : (ID.test(p) || !TH.test(p) ? mathTxt(p) : JSON.stringify(p)));
+      if(args.length) return [{ t:"out", a:args }];
+    }
+    const segs = t.split(/\s*,\s*(?=[A-Za-z_]\w*\s*=[^=])/);
+    if(segs.every(sg => /^[A-Za-z_]\w*\s*=[^=]/.test(sg))){
+      const st = segs.map(sg => { const i = sg.indexOf("="); return { t:"set", v:sg.slice(0, i).trim(), e:mathTxt(sg.slice(i + 1).trim()) }; });
+      if(st.every(x => !TH.test(x.e))) return st;
+    }
+    return [{ t:"cmt", x:t }];
+  }
+  function cond(txt){
+    let c = mathTxt(flat(txt)).replace(/\s*\?\s*$/, "").trim();
+    c = c.replace(/(?<![<>!=])=(?!=)/g, "==");
+    if(TH.test(c.replace(/และ|หรือ/g, ""))) return { raw:c, bad:true, orig:flat(txt) };
+    return { raw:c, bad:false, orig:flat(txt) };
+  }
+
+  function build(startId, stops){
+    const nodeBy = (id) => D.nodes.find(n => n.id === id), outE = (id) => D.edges.filter(e => e.a === id);
+    const next = (id) => { const o = outE(id)[0]; return o ? o.b : null; };
+    const reach = (from, target) => { const seen = new Set(), st = [from]; while(st.length){ const id = st.pop(); if(id === target) return true; if(!id || seen.has(id)) continue; seen.add(id); outE(id).forEach(e => st.push(e.b)); } return false; };
+    const mergeOf = (a, b) => { const A = [], seen = new Set(), q = [a]; while(q.length){ const id = q.shift(); if(!id || seen.has(id)) continue; seen.add(id); A.push(id); outE(id).forEach(e => q.push(e.b)); } const rb = new Set(), q2 = [b]; while(q2.length){ const id = q2.shift(); if(!id || rb.has(id)) continue; rb.add(id); outE(id).forEach(e => q2.push(e.b)); } return A.find(id => rb.has(id)) || null; };
+    const list = []; let cur = startId, guard = 0;
+    while(cur && !stops.has(cur) && guard++ < 400){
+      const n = nodeBy(cur); if(!n) break;
+      if(n.k === "dec"){
+        const o = outE(cur), yes = o.find(e => e.l === "ใช่") || o[0], no = o.find(e => e.l === "ไม่ใช่") || o.find(e => e !== yes);
+        const c = cond(n.t), yb = yes ? yes.b : null, nb = no ? no.b : null;
+        const yl = yb && reach(yb, cur), nl = nb && reach(nb, cur), st2 = new Set([...stops, cur]);
+        if(yl && !nl){ list.push({ t:"while", c, neg:false, body:build(yb, st2) }); cur = nb; }
+        else if(nl && !yl){ list.push({ t:"while", c, neg:true, body:build(nb, st2) }); cur = yb; }
+        else if(yl && nl){ list.push({ t:"cmt", x:"วนซ้ำซ้อนกันเกินไป แปลงต่อไม่ได้" }); cur = null; }
+        else{
+          const mg = yb && nb ? mergeOf(yb, nb) : null, st3 = mg ? new Set([...stops, mg]) : stops;
+          list.push({ t:"if", c, yes:yb ? build(yb, st3) : [], no:nb ? build(nb, st3) : [] }); cur = mg;
+        }
+        continue;
+      }
+      if(n.k === "term"){ if(/^(จบ|สิ้นสุด)/.test(n.t)) break; cur = next(cur); continue; }
+      if(n.k !== "conn" && n.k !== "off") classify(n).forEach(s => list.push(s));
+      cur = next(cur);
+    }
+    return list;
+  }
+
+  function render(stmts, lang){
+    const py = lang === "py", I = py ? "    " : "  ", vars = [];
+    const note = (v) => { if(!vars.includes(v)) vars.push(v); };
+    const cnd = (c, neg) => {
+      let x = c.raw; if(py) x = x.replace(/&&/g, " and ").replace(/\|\|/g, " or ").replace(/\bและ\b/g, " and ").replace(/\bหรือ\b/g, " or "); else x = x.replace(/\bและ\b/g, " && ").replace(/\bหรือ\b/g, " || ");
+      if(c.bad) x = py ? "True" : "true";
+      if(neg) x = py ? `not (${x})` : `!(${x})`;
+      return { x, tail: c.bad ? (py ? `  # เงื่อนไขเดิม: ${c.orig}` : ` // เงื่อนไขเดิม: ${c.orig}`) : "" };
+    };
+    const cm = (t) => (py ? "# " : "// ") + t;
+    const go = (list, d) => {
+      const pad = I.repeat(d), out = [];
+      list.forEach(s => {
+        if(s.t === "in"){ note(s.v); out.push(py ? `${pad}${s.v} = float(input("${s.v} = "))` : `${pad}${s.v} = Number(prompt("${s.v} = "));`); }
+        else if(s.t === "out") out.push(py ? `${pad}print(${s.a.join(", ")})` : `${pad}console.log(${s.a.join(", ")});`);
+        else if(s.t === "set"){ note(s.v); out.push(py ? `${pad}${s.v} = ${s.e}` : `${pad}${s.v} = ${s.e};`); }
+        else if(s.t === "cmt") out.push(pad + cm(s.x));
+        else if(s.t === "while"){
+          const c = cnd(s.c, s.neg), b = go(s.body, d + 1);
+          if(py) out.push(`${pad}while ${c.x}:${c.tail}`, ...(b.length ? b : [pad + I + "pass"]));
+          else out.push(`${pad}while (${c.x}) {${c.tail}`, ...b, `${pad}}`);
+        }else if(s.t === "if"){
+          const c = cnd(s.c, false), y = go(s.yes, d + 1), n = go(s.no, d + 1);
+          if(py){ out.push(`${pad}if ${c.x}:${c.tail}`, ...(y.length ? y : [pad + I + "pass"])); if(n.length) out.push(`${pad}else:`, ...n); }
+          else{ out.push(`${pad}if (${c.x}) {${c.tail}`, ...y, `${pad}}` + (n.length ? " else {" : "")); if(n.length) out.push(...n, `${pad}}`); }
+        }
+      });
+      return out;
+    };
+    const body = go(stmts, 0);
+    const head = py ? ["# โค้ด Python สร้างจากผังงานของฉัน"] : ["// โค้ด JavaScript สร้างจากผังงานของฉัน (รันในคอนโซลของเบราว์เซอร์ได้)"];
+    if(!py && vars.length) head.push(`let ${vars.join(", ")};`);
+    return [...head, ...body].join("\n");
+  }
+
+  function generate(lang){
+    const starts = D.nodes.filter(n => n.k === "term" && /^เริ่ม/.test(n.t));
+    if(!D.nodes.length) return "ยังไม่ได้วาดผังงาน";
+    if(starts.length !== 1) return "ต้องมีสัญลักษณ์ \"เริ่มต้น\" 1 จุดก่อน จึงจะแปลงเป็นโค้ดได้";
+    const e = D.edges.find(x => x.a === starts[0].id); if(!e) return "ลากลูกศรออกจาก \"เริ่มต้น\" ก่อน จึงจะแปลงเป็นโค้ดได้";
+    return render(build(e.b, new Set()), lang);
+  }
+  return { generate };
+})();
+let codeLang = "py";
+function showCode(){ $("#code").textContent = CG.generate(codeLang); $("#langs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.l === codeLang)); }
+$("#langs").onclick = (e) => { const b = e.target.closest("button[data-l]"); if(!b) return; codeLang = b.dataset.l; showCode(); };
+$("#genbtn").onclick = showCode;
+$("#copybtn").onclick = () => { const t = $("#code").textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast("คัดลอกโค้ดแล้ว"), () => { const r = document.createRange(); r.selectNodeContents($("#code")); getSelection().removeAllRanges(); getSelection().addRange(r); toast("เลือกโค้ดไว้แล้ว กด Ctrl+C เพื่อคัดลอก"); }); };
+window.__cg = CG;
+
 /* ---------- ตัวอย่างผังงาน (ระบบวาดให้) ---------- */
 function auto(spec){
   D = { nodes:[], edges:[] }; uid = 1; const CX = 330; let y = 60;
@@ -528,10 +684,27 @@ $("#sample").onchange = function(){
 };
 
 /* ---------- ส่ง / แชร์ ---------- */
-const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
-if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = "✖ ปิดแท็บ กลับไปใบงาน"; }
+const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
+if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
 const b64e = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/")))));
+const SB_RPC = "https://dhufwdxxfbahovnmjgrc.supabase.co/rest/v1/rpc/", SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
+async function sbCall(fn, body){
+  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 5000);
+  try{ const r = await fetch(SB_RPC + fn, { method:"POST", signal:ac.signal, headers:{ "Content-Type":"application/json", apikey:SB_KEY, Authorization:"Bearer " + SB_KEY }, body:JSON.stringify(body) }); if(!r.ok) throw new Error(r.status); return await r.json(); }
+  finally{ clearTimeout(tm); }
+}
+// ลิงก์สั้น: เก็บผังงานในฐานข้อมูลแล้วได้รหัส 6 ตัว — ถ้าทำไม่ได้ (ออฟไลน์/ยังไม่ติดตั้ง SQL) ใช้ลิงก์ยาวแทน
+async function shareLink(){
+  const key = JSON.stringify(D);
+  if(shareLink.k === key && shareLink.u) return shareLink.u;
+  try{
+    const code = await sbCall("krtom_flow_share_put", { p_data:D });
+    if(typeof code === "string" && /^[A-Z0-9]{6}$/.test(code)){ const u = new URL("flowchart.html", location.href); u.search = ""; u.searchParams.set("s", code); shareLink.k = key; shareLink.u = u.href; return u.href; }
+  }catch(e){}
+  return shareURL();
+}
 function shareURL(){ const u = new URL("flowchart.html", location.href); u.search = ""; u.searchParams.set("f", b64e(D)); return u.href; }
 function outline(){
   if(!D.nodes.length) return "(ยังไม่ได้วาดผังงาน)";
@@ -548,12 +721,12 @@ const menu = $("#sharemenu");
 $("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
 document.addEventListener("click", () => menu.classList.remove("open"));
 if(!BACK){ $("#sh-ws").disabled = true; $("#sh-ws").title = "เปิดโปรแกรมนี้จากปุ่มในใบงาน จึงจะส่งไปใบงานได้"; }
-$("#sh-link").onclick = async () => { if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์ผังงานแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-link").onclick = async () => { if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน"); toast("กำลังสร้างลิงก์..."); toast((await copyText(await shareLink())) ? "คัดลอกลิงก์ผังงานแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
 $("#sh-text").onclick = async () => toast((await copyText(outline())) ? "คัดลอกข้อความอธิบายผังงานแล้ว" : "คัดลอกไม่สำเร็จ");
-$("#sh-ws").onclick = () => {
+$("#sh-ws").onclick = async () => {
   if(!BACK) return; if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน");
-  const key = "krtomws:m1/cs/1:" + BACK[2], txt = "ลิงก์ผังงาน (ครูกดเปิดดูได้):\n" + shareURL() + "\n\nลำดับในผังงาน:\n" + outline();
-  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < 8) arr.push(""); arr[6] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งผังงานไปที่ข้อ 7 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
+  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz"), txt = "ลิงก์ผังงาน (ครูกดเปิดดูได้):\n" + await shareLink() + "\n\nลำดับในผังงาน:\n" + outline();
+  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < PART * 8) arr.push(""); arr[(PART - 1) * 8 + 6] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งผังงานไปที่ข้อ 7 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
   catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
 };
 $("#sh-png").onclick = () => {
@@ -581,9 +754,61 @@ try{
   else if(ex === "blank"){ D = { nodes:[], edges:[] }; }
 }catch(e){ toast("เปิดผังงานจากลิงก์ไม่ได้ — ลิงก์อาจไม่ครบ"); }
 snap.push(JSON.stringify(D)); render();
+(async () => {
+  const sc = QS.get("s"); if(!sc || QS.get("f")) return;
+  try{
+    const d = await sbCall("krtom_flow_share_get", { p_code:sc });
+    if(!d || !Array.isArray(d.nodes)) return toast("ไม่พบผังงานตามลิงก์นี้ — ตรวจรหัสลิงก์อีกครั้ง");
+    VIEW = true; D = d; uid = 1000; $("#viewbar").style.display = "block"; snap.length = 0; snap.push(JSON.stringify(D)); render();
+  }catch(e){ toast("เปิดผังงานจากลิงก์ไม่ได้ — ตรวจอินเทอร์เน็ตแล้วลองใหม่"); }
+})();
 window.__fc = { get D(){ return D; }, set D(v){ D = v; render(); }, SAMPLES, loadSample, check, outline, route, size, addNode };
 
-/* ปุ่มบนขวา: ปิดแท็บนี้ (แท็บเดิมยังเปิดค้างอยู่) ถ้าปิดไม่ได้ ให้ไปหน้าแรก/ใบงาน */
+/* ---------- เมนูไฟล์: บันทึก / บันทึกเป็น / เปิด ---------- */
+let fileHandle = null;
+const fileJSON = () => JSON.stringify({ app:"krtom-flowchart", v:1, nodes:D.nodes, edges:D.edges });
+function loadFromText(txt){
+  const d = JSON.parse(txt);
+  if(!d || !Array.isArray(d.nodes) || !Array.isArray(d.edges) || d.nodes.some(n => !n || !n.id || !KIND[n.k])) throw new Error("bad");
+  D = { nodes:d.nodes, edges:d.edges }; uid = 1 + Math.max(0, ...D.nodes.map(n => +String(n.id).slice(1) || 0), ...D.edges.map(e => +String(e.id).slice(1) || 0));
+  VIEW = false; $("#viewbar").style.display = "none"; sel = null; push(); render();
+}
+async function saveAs(){
+  if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน");
+  const name = "ผังงาน-" + new Date().toISOString().slice(0, 10) + ".json";
+  try{
+    if(window.showSaveFilePicker){
+      const h = await showSaveFilePicker({ suggestedName:name, types:[{ description:"ผังงาน (.json)", accept:{ "application/json":[".json"] } }] });
+      const w = await h.createWritable(); await w.write(fileJSON()); await w.close(); fileHandle = h; return toast("บันทึกไฟล์ " + h.name + " แล้ว ✅");
+    }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([fileJSON()], { type:"application/json" })); a.download = name; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    toast("บันทึกไฟล์ " + name + " แล้ว (ดูในโฟลเดอร์ดาวน์โหลด) ✅");
+  }catch(e){ if(e && e.name === "AbortError") return; toast("บันทึกไฟล์ไม่สำเร็จ"); }
+}
+async function saveFile(){
+  if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน");
+  if(fileHandle){ try{ const w = await fileHandle.createWritable(); await w.write(fileJSON()); await w.close(); return toast("บันทึกทับ " + fileHandle.name + " แล้ว ✅"); }catch(e){ fileHandle = null; } }
+  try{ if(!VIEW) localStorage.setItem("krtomFlow:m1/cs/1", JSON.stringify(D)); }catch(e){}
+  await saveAs();
+}
+async function openFile(){
+  if(D.nodes.length && !confirm("เปิดไฟล์ใหม่จะแทนที่ผังงานที่วาดอยู่ตอนนี้ (กดย้อนกลับ Ctrl+Z ได้) ต้องการเปิดไหม?")) return;
+  try{
+    if(window.showOpenFilePicker){
+      const [h] = await showOpenFilePicker({ types:[{ description:"ผังงาน (.json)", accept:{ "application/json":[".json"] } }] });
+      loadFromText(await (await h.getFile()).text()); fileHandle = h; return toast("เปิดไฟล์ " + h.name + " แล้ว");
+    }
+    $("#f-input").click();
+  }catch(e){ if(e && e.name === "AbortError") return; toast("เปิดไฟล์ไม่ได้ — ต้องเป็นไฟล์ผังงาน (.json) ที่บันทึกจากหน้านี้"); }
+}
+$("#f-input").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if(!f) return; try{ loadFromText(await f.text()); fileHandle = null; toast("เปิดไฟล์ " + f.name + " แล้ว"); }catch(_){ toast("เปิดไฟล์ไม่ได้ — ต้องเป็นไฟล์ผังงาน (.json) ที่บันทึกจากหน้านี้"); } };
+$("#f-save").onclick = saveFile; $("#f-saveas").onclick = saveAs; $("#f-open").onclick = openFile;
+document.addEventListener("keydown", e => {
+  if(!(e.ctrlKey || e.metaKey) || e.shiftKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName)) return;
+  const k = e.key.toLowerCase(); if(k === "s"){ e.preventDefault(); saveFile(); } else if(k === "o"){ e.preventDefault(); openFile(); }
+});
+
+/* เมนูไฟล์ > ปิด: ปิดแท็บนี้ (แท็บเดิมยังเปิดค้างอยู่) ถ้าปิดไม่ได้ ให้ไปหน้าแรก/ใบงาน */
 (function(){ const bl = document.getElementById("backlink"); if(!bl) return;
   bl.addEventListener("click", e => { e.preventDefault(); const to = bl.getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); }); })();
 </script>

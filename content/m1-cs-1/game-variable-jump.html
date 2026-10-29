@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>เกมกระโดด ค่าตัวแปร — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:18px; }
+  *{ box-sizing:border-box; } html,body{ margin:0; min-height:100%; background:#0B3D2E; color:#1F2430; }
+  body{ display:flex; flex-direction:column; min-height:100vh; }
+  header{ background:linear-gradient(135deg,#F59E0B,#EF4444); color:#fff; padding:8px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:1.1rem; flex:1; min-width:180px; } header a, header button{ color:#fff; background:rgba(255,255,255,.24); border:none; padding:6px 14px; border-radius:999px; font:inherit; font-size:.85rem; text-decoration:none; cursor:pointer; }
+  #wrap{ flex:1; max-width:1100px; width:100%; margin:0 auto; padding:8px 10px 12px; display:flex; flex-direction:column; gap:8px; }
+  #lv{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; } #lv button{ border:none; border-radius:999px; padding:6px 16px; font:inherit; font-weight:800; cursor:pointer; background:#fff; color:#334155; box-shadow:0 3px 0 rgba(0,0,0,.25); }
+  #lv button.on{ background:linear-gradient(135deg,#22C55E,#0EA5E9); color:#fff; } #lv button[disabled]{ opacity:.45; cursor:not-allowed; } #lv .stars{ font-size:.8em; margin-left:6px; }
+  #game{ position:relative; width:100%; aspect-ratio:16/9; background:#7DD3FC; border-radius:18px; overflow:hidden; border:3px solid #fff; box-shadow:0 10px 30px rgba(0,0,0,.4); container-type:inline-size; }
+  canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #hud{ position:absolute; left:0; right:0; top:0; display:flex; justify-content:space-between; gap:1.2cqw; padding:1.2cqw 1.4cqw; pointer-events:none; z-index:5; }
+  #prog{ background:rgba(15,23,42,.84); color:#E2E8F0; border-radius:1.4cqw; padding:.8cqw 1.6cqw; font:700 1.9cqw/1.55 Consolas,"Courier New",monospace; border:.25cqw solid #38BDF8; min-width:34cqw; }
+  #prog div{ opacity:.5; white-space:nowrap; } #prog div.done{ opacity:.85; } #prog div.done::after{ content:" ✓"; color:#86EFAC; } #prog div.cur{ opacity:1; background:#1E3A8A; border-radius:.8cqw; padding:0 .8cqw; margin:0 -.8cqw; } #prog .kw{ color:#FCA5A5; font-weight:800; } #prog .tg{ display:block; font:700 1.7cqw "Sarabun",sans-serif; color:#FDE68A; margin-top:.4cqw; opacity:1; }
+  #side{ display:flex; flex-direction:column; align-items:flex-end; gap:.8cqw; } #vars{ display:flex; gap:.8cqw; flex-wrap:wrap; justify-content:flex-end; } #vars span{ background:rgba(255,255,255,.95); border-radius:99px; padding:.2cqw 1.4cqw .2cqw .8cqw; font-weight:800; font-size:2cqw; color:#1E3A8A; display:flex; align-items:center; gap:.6cqw; box-shadow:0 .3cqw .6cqw rgba(0,0,0,.25); } #vars span img{ width:3.2cqw; height:auto; } #vars span.bump{ animation:bump .35s; } @keyframes bump{ 50%{ transform:scale(1.25); background:#FEF08A; } }
+  #hearts{ font-size:3cqw; filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.4)); }
+  #msg{ position:absolute; left:50%; top:30%; transform:translateX(-50%); z-index:6; background:rgba(15,23,42,.92); color:#fff; font-weight:800; font-size:2.6cqw; padding:1cqw 2.6cqw; border-radius:99px; display:none; text-align:center; max-width:92%; pointer-events:none; }
+  .ov{ position:absolute; inset:0; z-index:8; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#fff; padding:3cqw; background:linear-gradient(135deg,rgba(15,118,110,.93),rgba(14,165,233,.93)); }
+  .ov .big{ font-size:5cqw; font-weight:800; line-height:1.2; text-shadow:0 .4cqw 0 rgba(0,0,0,.22); } .ov .sub{ font-size:2.3cqw; margin:1cqw 0 1.6cqw; max-width:80%; } .ov .st{ font-size:6cqw; margin:.6cqw 0; }
+  .ov button{ border:none; border-radius:99px; background:#fff; color:#0F766E; font:inherit; font-weight:800; font-size:2.6cqw; padding:.8cqw 3cqw; cursor:pointer; margin:.5cqw; box-shadow:0 .5cqw 0 rgba(0,0,0,.22); }
+  #touch{ display:none; justify-content:space-between; padding:6px 4px 0; gap:10px; } #touch .g{ display:flex; gap:10px; } #touch button{ width:78px; height:64px; border-radius:18px; border:3px solid #fff; background:rgba(255,255,255,.2); color:#fff; font-size:28px; font-weight:800; touch-action:none; user-select:none; } #touch button.on{ background:rgba(250,204,21,.6); }
+  @media (pointer:coarse), (max-width:760px){ #touch{ display:flex; } }
+  .how{ color:#D1FAE5; font-size:.8rem; line-height:1.6; text-align:center; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<header><h1>🏃 เกมกระโดด ค่าตัวแปร · วิ่ง กระโดด เก็บผลไม้ตามคำสั่ง</h1><button id="fs">⛶ เต็มจอ</button><a href="../../index.html">🏠 กลับหน้าหลัก</a><a id="backlink" href="../../index.html#/unit/m1/cs/1/game" title="ปิดเกม">✖</a></header>
+<div id="wrap">
+  <div id="lv"></div>
+  <div id="game">
+    <canvas id="cv" width="960" height="540"></canvas>
+    <div id="hud"><div id="prog"></div><div id="side"><div id="hearts"></div><div id="vars"></div></div></div>
+    <div id="msg"></div>
+    <div class="ov" id="ov-start"><div class="big">🏃 เกมกระโดด ค่าตัวแปร</div><div class="sub">วิ่ง กระโดดข้ามหลุม เก็บผลไม้ให้ <b>ค่าตัวแปรตรงกับคำสั่ง</b> แล้ววิ่งไปที่ 🚩 ธงตะกร้าเพื่อตรวจ<br>ผลไม้เน่า 🤢 ทำให้ค่า <b>ลดลง 1</b></div><button id="go">▶ เริ่มเล่น</button></div>
+    <div class="ov" id="ov-win"><div class="big" id="wt">ผ่านด่านแล้ว!</div><div class="st" id="wst">⭐⭐⭐</div><div class="sub" id="wsub"></div><div><button id="wnext">ด่านถัดไป ▶</button><button id="wagain">เล่นอีกครั้ง</button></div></div>
+    <div class="ov" id="ov-lose" style="background:linear-gradient(135deg,rgba(127,29,29,.94),rgba(190,18,60,.94))"><div class="big">หัวใจหมดแล้ว 💔</div><div class="sub">ลองใหม่อีกครั้ง — ดูค่าตัวแปรและคำสั่งให้ดีก่อนวิ่งไปที่ธง</div><button id="lagain">↺ เล่นด่านนี้ใหม่</button></div>
+  </div>
+  <div id="touch"><div class="g"><button id="bL">◀</button><button id="bR">▶</button></div><div class="g"><button id="bJ">⤒ กระโดด</button></div></div>
+  <div class="how">⌨ ลูกศรซ้าย/ขวา (หรือ A/D) = วิ่ง · Space / ลูกศรขึ้น (หรือ W) = กระโดด (กดค้างกระโดดสูงขึ้น) · P = พัก · ผลไม้ที่ไม่ได้เก็บ ไม่นับ — เก็บให้ตรงกับคำสั่งแล้ววิ่งไปที่ธง 🚩</div>
+</div>
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+"use strict";
+const $ = (s) => document.getElementById(s);
+const cv = $("cv"), ctx = cv.getContext("2d"), W = 960, H = 540, GY = 470;      // GY = ระดับพื้นดิน
+const svgImg = (svg) => { const im = new Image(); im.src = "data:image/svg+xml;utf8," + encodeURIComponent(svg.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')); return im; };
+const IMG = { boy:svgImg(`<svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bSkin" x1="0" x2="1"><stop offset="0" stop-color="#FAD7B5"/><stop offset="1" stop-color="#EDB98B"/></linearGradient>
+    <linearGradient id="bShirt" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E2E8F0"/></linearGradient>
+    <linearGradient id="bShort" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset="1" stop-color="#1E3A8A"/></linearGradient>
+    <radialGradient id="bHead" cx=".4" cy=".35"><stop offset="0" stop-color="#FFE2C2"/><stop offset="1" stop-color="#F0B98A"/></radialGradient>
+  </defs>
+  <ellipse cx="60" cy="193" rx="34" ry="5" fill="rgba(0,0,0,.22)"/>
+  <g class="armL"><rect x="22" y="78" width="14" height="42" rx="7" fill="url(#bSkin)"/><circle cx="29" cy="122" r="8" fill="#F6CDA6"/></g>
+  <g class="legL"><rect x="40" y="132" width="16" height="42" rx="6" fill="url(#bSkin)"/><rect x="40" y="156" width="16" height="16" fill="#fff"/><rect x="40" y="160" width="16" height="3.5" fill="#1D4ED8"/><path d="M36,170 h24 q4,0 4,6 v6 h-28 v-6 q0,-6 0,-6 z" fill="#111827"/><path d="M38,172 h14" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></g>
+  <g class="legR"><rect x="64" y="132" width="16" height="42" rx="6" fill="url(#bSkin)"/><rect x="64" y="156" width="16" height="16" fill="#fff"/><rect x="64" y="160" width="16" height="3.5" fill="#1D4ED8"/><path d="M60,170 h24 q4,0 4,6 v6 h-28 v-6 q0,-6 0,-6 z" fill="#111827"/><path d="M62,172 h14" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></g>
+  <g class="bod">
+    <path d="M36,112 H84 L88,148 Q60,156 32,148 Z" fill="url(#bShort)"/><path d="M60,126 V150" stroke="#1E3A8A" stroke-width="2"/><rect x="36" y="110" width="48" height="7" rx="3" fill="#0F172A"/><rect x="55" y="110.5" width="10" height="6" rx="1.5" fill="#FACC15"/>
+    <path d="M34,76 Q34,70 42,68 H78 Q86,70 86,76 L88,116 H32 Z" fill="url(#bShirt)" stroke="#CBD5E1" stroke-width="1.6"/>
+    <path d="M44,68 L60,86 L76,68 Z" fill="#fff" stroke="#CBD5E1" stroke-width="1.6"/><path d="M44,68 L52,80 L60,86 Z M76,68 L68,80 L60,86 Z" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+    <g fill="#CBD5E1"><circle cx="60" cy="94" r="2"/><circle cx="60" cy="102" r="2"/></g>
+    <rect x="68" y="86" width="14" height="15" rx="2" fill="#fff" stroke="#94A3B8" stroke-width="1.4"/><circle cx="75" cy="92" r="3" fill="#EF4444"/><path d="M70,98 h10" stroke="#94A3B8" stroke-width="1.4"/>
+    <path d="M32,76 Q20,80 18,98 L34,102 Z M88,76 Q100,80 102,98 L86,102 Z" fill="url(#bShirt)" stroke="#CBD5E1" stroke-width="1.6"/>
+  </g>
+  <g class="armR"><rect x="84" y="94" width="14" height="30" rx="7" fill="url(#bSkin)"/><circle cx="91" cy="124" r="8" fill="#F6CDA6"/></g>
+  <g class="bod">
+    <rect x="52" y="60" width="16" height="14" rx="5" fill="#EDB98B"/>
+    <ellipse cx="31" cy="42" rx="6" ry="8" fill="#F0B98A"/><ellipse cx="89" cy="42" rx="6" ry="8" fill="#F0B98A"/><ellipse cx="31" cy="43" rx="3" ry="4.5" fill="#E8A87C"/><ellipse cx="89" cy="43" rx="3" ry="4.5" fill="#E8A87C"/>
+    <circle cx="60" cy="40" r="30" fill="url(#bHead)"/>
+    <path d="M30,38 Q28,8 60,8 Q92,8 90,38 Q84,22 60,20 Q36,22 30,38 Z" fill="#0F172A"/><path d="M40,16 Q52,9 66,12" stroke="#475569" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".75"/>
+    <path d="M40,30 Q46,26 52,29 M68,29 Q74,26 80,30" stroke="#1F2937" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="48" cy="39" rx="4.6" ry="5.8" fill="#0F172A"/><ellipse cx="72" cy="39" rx="4.6" ry="5.8" fill="#0F172A"/>
+    <circle cx="50" cy="37" r="1.8" fill="#fff"/><circle cx="74" cy="37" r="1.8" fill="#fff"/><circle cx="46.8" cy="41.5" r=".9" fill="#fff"/><circle cx="70.8" cy="41.5" r=".9" fill="#fff"/>
+    <path d="M59,45 q1.4,3 3,0" stroke="#D69A6B" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M47,52 Q60,64 73,52 Q60,58 47,52 Z" fill="#B91C1C"/><path d="M50,53 Q60,60 70,53" fill="#fff" opacity=".9"/><path d="M47,52 Q60,64 73,52" stroke="#9A3412" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="41" cy="50" rx="5.5" ry="3.2" fill="#FB7185" opacity=".5"/><ellipse cx="79" cy="50" rx="5.5" ry="3.2" fill="#FB7185" opacity=".5"/>
+  </g>
+</svg>`), apple:svgImg(`<svg viewBox="0 0 40 44"><defs><radialGradient id="gAp" cx=".35" cy=".3"><stop offset="0" stop-color="#FCA5A5"/><stop offset=".45" stop-color="#EF4444"/><stop offset="1" stop-color="#B91C1C"/></radialGradient></defs><path d="M20,12 C14,6 3,10 4,23 C5,35 13,42 20,40 C27,42 35,35 36,23 C37,10 26,6 20,12 Z" fill="url(#gAp)"/><ellipse cx="12" cy="19" rx="3.6" ry="6.4" fill="#fff" opacity=".42" transform="rotate(18 12 19)"/><path d="M20,12 Q20,6 23,2" stroke="#78350F" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22,7 Q30,0 36,6 Q29,11 22,7 Z" fill="#22C55E"/></svg>`), orange:svgImg(`<svg viewBox="0 0 40 44"><defs><radialGradient id="gOr" cx=".35" cy=".3"><stop offset="0" stop-color="#FED7AA"/><stop offset=".45" stop-color="#FB923C"/><stop offset="1" stop-color="#C2410C"/></radialGradient></defs><circle cx="20" cy="25" r="16" fill="url(#gOr)"/><ellipse cx="13" cy="19" rx="3.4" ry="5.4" fill="#fff" opacity=".4" transform="rotate(20 13 19)"/><g fill="#C2410C" opacity=".35"><circle cx="24" cy="22" r=".9"/><circle cx="18" cy="30" r=".9"/><circle cx="27" cy="31" r=".9"/><circle cx="22" cy="36" r=".9"/></g><path d="M20,9 q-1,-4 1,-6" stroke="#78350F" stroke-width="2" fill="none"/><path d="M21,8 Q29,1 34,6 Q28,11 21,8 Z" fill="#22C55E"/></svg>`), banana:svgImg(`<svg viewBox="0 0 40 44"><defs><linearGradient id="gBa" x1="0" x2="1"><stop offset="0" stop-color="#FEF08A"/><stop offset="1" stop-color="#EAB308"/></linearGradient></defs><path d="M6,12 Q8,36 30,38 Q36,38 36,32 Q22,34 14,10 Q10,4 6,12 Z" fill="url(#gBa)" stroke="#A16207" stroke-width="1.6" stroke-linejoin="round"/><path d="M8,14 Q12,30 28,35" stroke="#fff" stroke-width="1.6" fill="none" opacity=".5"/><rect x="3.6" y="5" width="6" height="6" rx="2" fill="#78350F" transform="rotate(-18 6 8)"/></svg>`), basket:svgImg(`<svg viewBox="0 0 130 92" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gBk" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#D97706"/></linearGradient></defs><path d="M16,40 Q65,-34 114,40" fill="none" stroke="#78350F" stroke-width="8" stroke-linecap="round"/><path d="M16,40 Q65,-30 114,40" fill="none" stroke="#B45309" stroke-width="3" stroke-linecap="round" opacity=".6"/><path d="M6,40 H124 L108,86 H22 Z" fill="url(#gBk)" stroke="#92400E" stroke-width="4" stroke-linejoin="round"/><g stroke="#B45309" stroke-width="3" fill="none" opacity=".75"><path d="M12,54 H118 M16,68 H114"/><path d="M34,42 L30,84 M52,42 L50,86 M70,42 L70,86 M88,42 L90,86 M106,42 L110,84" stroke-width="2.4"/></g><rect x="3" y="36" width="124" height="9" rx="4.5" fill="#92400E"/><rect x="3" y="36" width="124" height="3.5" rx="2" fill="#B45309"/></svg>`) };
+let boyUser = false;
+(function(){ const base = "../../assets/images/variable-slides/", exts = ["webp", "png"];
+  ["boy", "apple", "orange", "banana", "basket"].forEach(n => { let i = 0; const nx = () => { if(i >= exts.length) return; const im = new Image(); im.onload = () => { IMG[n] = im; if(n === "boy") boyUser = true; }; im.onerror = nx; im.src = base + n + "." + exts[i++] + "?v=1"; }; nx(); }); })();
+const NAMES = { apple:"แอปเปิล", orange:"ส้ม", banana:"กล้วย" };
+
+/* ───── ด่านและคำสั่ง ───── */
+const LV = [
+  { name:"ด่าน 1 · ตะกร้าแอปเปิล", vars:["apple"], cmds:["SET apple = 0", "COMPUTE apple = apple + 3", "COMPUTE apple = apple + 2"] },
+  { name:"ด่าน 2 · ตะกร้า 2 ใบ", vars:["apple", "orange"], cmds:["SET apple = 2", "SET orange = 4", "COMPUTE apple = apple + orange", "COMPUTE orange = orange - 1"] },
+  { name:"ด่าน 3 · ใช้ค่าตัวแปรอื่น", vars:["apple", "orange", "banana"], cmds:["SET banana = 1", "COMPUTE apple = banana + 3", "COMPUTE orange = apple - 2", "COMPUTE banana = banana + orange"] }
+];
+function parse(c){ const m = c.match(/^(SET|COMPUTE)\s+(\w+)\s*=\s*(.+)$/); return { op:m[1], v:m[2], e:m[3] }; }
+function evalCmd(c, st){ const p = parse(c); const js = p.e.replace(/[A-Za-z_]\w*/g, (w) => "(" + st[w] + ")"); if(!/^[\d\s+\-*/().]+$/.test(js)) throw new Error("bad"); return { v:p.v, val:Math.max(0, Math.round(Function('"use strict";return (' + js + ")")())) }; }
+const kw = (c) => c.replace(/^(SET|COMPUTE)\b/, '<span class="kw">$1</span>');
+let best = {}; try{ best = JSON.parse(localStorage.getItem("krtomVarMario") || "{}"); }catch(e){}
+
+/* ───── สร้างโลก ───── */
+const SEGW = 1500;
+let L = 0, world = null, P = null, lives = 3, vals = {}, segIdx = 0, camX = 0, state = "title", tt = 0, shake = 0;
+function rng(seed){ let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+function buildWorld(li){
+  const lv = LV[li], R = rng(li * 77 + 5), segs = [], slabs = [], plats = [];
+  const exp = {}; lv.vars.forEach(k => exp[k] = 0);
+  lv.cmds.forEach((cmd, si) => {
+    const x0 = si * SEGW, x1 = x0 + SEGW, r = evalCmd(cmd, exp), delta = r.val - exp[r.v], before = { ...exp }; exp[r.v] = r.val;
+    const sx = [[x0, x0 + 320]], pl = []; let cur = x0 + 320;
+    while(cur < x1 - 420){
+      const t = R();
+      if(t < .35){ sx.push([cur + 105, cur + 105 + 250]); cur += 355; }                                    // หลุม
+      else if(t < .7){ sx.push([cur, cur + 540]); pl.push([cur + 70, GY - 105, 150], [cur + 300, GY - 195, 150]); cur += 540; }   // ขั้นบันได
+      else { sx.push([cur + 115, cur + 115 + 260]); pl.push([cur + 10, GY - 100, 170]); cur += 375; }       // หลุม + แท่นลอย
+    }
+    sx.push([cur, x1]);
+    // จุดวางผลไม้
+    const spots = [];
+    sx.forEach(([a, b]) => { for(let x = a + 90; x < b - 260 + (b === x1 ? 0 : 130); x += 74) if(x > x0 + 230 && x < x1 - 300) spots.push([x, GY - 30]); });
+    pl.forEach(([x, y, w]) => { for(let xx = x + 40; xx < x + w - 20; xx += 56) if(xx > x0 + 230 && xx < x1 - 240) spots.push([xx, y - 32]); });
+    for(let i = spots.length - 1; i > 0; i--){ const j = Math.floor(R() * (i + 1)); [spots[i], spots[j]] = [spots[j], spots[i]]; }
+    const items = []; let sp = 0; const put = (k, rot) => { if(sp < spots.length){ const [x, y] = spots[sp++]; items.push({ k, rot, x, y, got:false, ph:R() * 6 }); } };
+    if(delta > 0){ for(let i = 0; i < delta + 2; i++) put(r.v, false); }
+    else if(delta < 0){ for(let i = 0; i < -delta + 1; i++) put(r.v, true); }
+    lv.vars.filter(k => k !== r.v).forEach(k => { for(let i = 0; i < 2; i++) put(k, false); });              // ตัวลวง: เก็บแล้วค่าอื่นเปลี่ยน
+    segs.push({ x0, x1, cmd, items, gate:x1 - 150, delta, v:r.v, want:{ ...exp }, start:{ ...before }, passed:false });
+    sx.forEach(s => slabs.push(s)); pl.forEach(p => plats.push(p));
+  });
+  return { segs, slabs, plats, W:lv.cmds.length * SEGW };
+}
+function start(li){
+  L = li; world = buildWorld(L); lives = 3; segIdx = 0; vals = {}; LV[L].vars.forEach(k => vals[k] = 0); P = { x:90, y:GY - 60, w:34, h:58, vx:0, vy:0, face:1, ground:false, coy:0, jumpHeld:false, anim:0 };
+  camX = 0; state = "play"; ["ov-start", "ov-win", "ov-lose"].forEach(i => $(i).style.display = "none"); drawLv(); renderHud(); say("ทำตามบรรทัดที่ 1 — แล้ววิ่งไปที่ธง 🚩");
+}
+function respawn(){ const s = world.segs[segIdx]; s.items.forEach(i => i.got = false); vals = { ...s.start }; P.x = s.x0 + 80; P.y = GY - 120; P.vx = P.vy = 0; renderHud(); }
+function hurt(txt){ lives--; shake = 14; if(window.sfx) sfx.lose(); renderHud(); if(lives <= 0){ state = "lost"; $("ov-lose").style.display = "flex"; return; } say(txt); respawn(); }
+
+/* ───── HUD ───── */
+function say(t, ok){ const e = $("msg"); e.textContent = t; e.style.display = "block"; e.style.background = ok === false ? "rgba(185,28,28,.94)" : ok ? "rgba(22,101,52,.94)" : "rgba(15,23,42,.92)"; clearTimeout(say.t); say.t = setTimeout(() => e.style.display = "none", 3000); }
+function renderHud(bump){
+  const lv = LV[L], s = world.segs[Math.min(segIdx, world.segs.length - 1)];
+  $("prog").innerHTML = lv.cmds.map((c, i) => `<div class="${i < segIdx ? "done" : i === segIdx ? "cur" : ""}">${i + 1}  ${kw(c)}</div>`).join("") + (segIdx < lv.cmds.length ? `<span class="tg">🎯 ${targetText(s)}</span>` : "");
+  $("vars").innerHTML = lv.vars.map(k => `<span class="${bump === k ? "bump" : ""}"><img src="${IMG[k].src}" alt="">${k} = ${vals[k]}</span>`).join("");
+  $("hearts").textContent = "❤️".repeat(Math.max(0, lives)) + "🖤".repeat(Math.max(0, 3 - lives));
+}
+function targetText(s){ const c = parse(s.cmd); return s.delta > 0 ? `เก็บ ${NAMES[s.v]} เพิ่ม ${s.delta} ผล (ให้ ${s.v} เป็น ${s.want[s.v]})` : s.delta < 0 ? `เก็บ ${NAMES[s.v]}เน่า ${-s.delta} ผล (ให้ ${s.v} เป็น ${s.want[s.v]})` : `ค่า ${s.v} ต้องเป็น ${s.want[s.v]} — ไม่ต้องเก็บอะไร ไปที่ธงได้เลย`; }
+function drawLv(){ $("lv").innerHTML = LV.map((l, i) => `<button data-i="${i}" class="${i === L ? "on" : ""}" ${i > 0 && !best[i - 1] && !location.search.includes("unlock") ? "disabled" : ""}>${l.name}<span class="stars">${best[i] ? "⭐".repeat(best[i]) : ""}</span></button>`).join(""); }
+$("lv").onclick = (e) => { const b = e.target.closest("button"); if(b && !b.disabled) start(+b.dataset.i); };
+
+/* ───── อินพุต ───── */
+const keys = {};
+addEventListener("keydown", (e) => { const k = e.key.toLowerCase(); if(["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(k)) e.preventDefault(); keys[k] = true; if(k === "p" && state !== "title") state = state === "pause" ? "play" : "pause"; });
+addEventListener("keyup", (e) => { keys[e.key.toLowerCase()] = false; });
+const left = () => keys.arrowleft || keys.a || keys.__L, right = () => keys.arrowright || keys.d || keys.__R, jumpK = () => keys[" "] || keys.arrowup || keys.w || keys.__J;
+[["bL", "__L"], ["bR", "__R"], ["bJ", "__J"]].forEach(([id, k]) => { const b = $(id); const on = (e) => { e.preventDefault(); keys[k] = true; b.classList.add("on"); }, off = (e) => { e.preventDefault(); keys[k] = false; b.classList.remove("on"); }; b.addEventListener("pointerdown", on); ["pointerup", "pointerleave", "pointercancel"].forEach(ev => b.addEventListener(ev, off)); });
+
+/* ───── ฟิสิกส์ ───── */
+const onSlab = (x) => world.slabs.some(([a, b]) => x + P.w > a + 6 && x < b - 6);
+function update(){
+  tt++; const p = P;
+  const dir = (right() ? 1 : 0) - (left() ? 1 : 0); p.vx += (dir * 4.5 - p.vx) * (p.ground ? .3 : .16); if(dir) p.face = dir; if(Math.abs(p.vx) < .05) p.vx = 0;
+  p.x = Math.max(world.segs[segIdx].x0 - 400 > 0 ? 0 : 0, Math.min(world.W - p.w, p.x + p.vx));
+  if(p.ground) p.coy = 6; else p.coy--;
+  if(jumpK() && !p.jumpHeld && p.coy > 0){ p.vy = -13; p.ground = false; p.coy = 0; p.jumpHeld = true; if(window.sfx) sfx.jump(); }
+  if(!jumpK()){ p.jumpHeld = false; if(p.vy < -4.5) p.vy = -4.5; }
+  p.vy += .62; if(p.vy > 15) p.vy = 15; const oldB = p.y + p.h; p.y += p.vy; p.ground = false;
+  // พื้นดิน (เฉพาะส่วนที่ไม่ใช่หลุม) และแท่นลอย (ลงจากด้านบนเท่านั้น)
+  if(p.vy >= 0){
+    if(onSlab(p.x) && oldB <= GY + 2 && p.y + p.h >= GY){ p.y = GY - p.h; p.vy = 0; p.ground = true; }
+    world.plats.forEach(([x, y, w]) => { if(p.x + p.w > x + 4 && p.x < x + w - 4 && oldB <= y + 2 && p.y + p.h >= y){ p.y = y - p.h; p.vy = 0; p.ground = true; } });
+  }
+  if(p.ground && Math.abs(p.vx) > 1.4 && tt % 16 === 0 && window.sfx) sfx.step();
+  p.anim += Math.abs(p.vx) * .075;
+  // ตกหลุม
+  if(p.y > H + 80){ hurt("ตกหลุม! กลับไปเริ่มส่วนนี้ใหม่ — ผลไม้และค่าตัวแปรกลับเป็นเหมือนเดิม"); return; }
+  // เก็บผลไม้
+  const s = world.segs[segIdx];
+  s.items.forEach(it => { if(it.got) return; if(Math.abs(p.x + p.w / 2 - it.x) < 28 && Math.abs(p.y + p.h / 2 - it.y) < 40){ it.got = true; vals[it.k] = Math.max(0, vals[it.k] + (it.rot ? -1 : 1)); if(window.sfx) (it.rot ? sfx.nope : sfx.coin)(); renderHud(it.k); say(it.rot ? `🤢 ผลไม้เน่า! ${it.k} ลดลง 1` : `${it.k} เพิ่มเป็น ${vals[it.k]}`, it.rot ? false : null); } });
+  // ธงตรวจคำสั่ง
+  if(p.x + p.w > s.gate && !s.passed) gate(s);
+  camX += (Math.max(0, Math.min(world.W - W, p.x - 340)) - camX) * .12;
+  if(shake > 0) shake--;
+}
+function gate(s){
+  const bad = LV[L].vars.filter(k => vals[k] !== s.want[k]);
+  if(!bad.length){ s.passed = true; if(window.sfx) sfx.correct(); say("✓ ถูกต้อง! " + s.cmd, true); segIdx++; if(segIdx >= LV[L].cmds.length){ renderHud(); setTimeout(win, 900); state = "wait"; return; } renderHud(); return; }
+  P.x = s.gate - 60; say("ยังไม่ถูก: " + bad.map(k => `${k} ตอนนี้ ${vals[k]} ควรเป็น ${s.want[k]}`).join(" · "), false); hurt("ลองใหม่! อ่านคำสั่งแล้วเก็บผลไม้ให้ตรง");
+}
+function win(){ const st = Math.max(1, lives); best[L] = Math.max(best[L] || 0, st); try{ localStorage.setItem("krtomVarMario", JSON.stringify(best)); }catch(e){} $("wst").textContent = "⭐".repeat(st) + "☆".repeat(3 - st); $("wt").textContent = L === LV.length - 1 ? "เก่งมาก! ผ่านครบทุกด่าน 🎉" : "ผ่านด่านแล้ว!"; $("wsub").textContent = "เหลือหัวใจ " + lives + " ดวง"; $("wnext").style.display = L === LV.length - 1 ? "none" : "inline-block"; $("ov-win").style.display = "flex"; state = "won"; if(window.sfx) sfx.win(); drawLv(); }
+
+/* ───── วาด ───── */
+function cloud(x, y, s){ ctx.fillStyle = "rgba(255,255,255,.92)"; [[0, 0, 26], [26, -9, 32], [58, 0, 24], [30, 9, 24]].forEach(c => { ctx.beginPath(); ctx.arc(x + c[0] * s, y + c[1] * s, c[2] * s, 0, 7); ctx.fill(); }); }
+function bgTree(x, y, s){ ctx.fillStyle = "#7A4E2A"; ctx.fillRect(x - 7 * s, y - 70 * s, 14 * s, 70 * s); ctx.fillStyle = "#2F9E4F"; [[0, -92, 40], [-28, -66, 30], [28, -66, 30]].forEach(c => { ctx.beginPath(); ctx.arc(x + c[0] * s, y + c[1] * s, c[2] * s, 0, 7); ctx.fill(); }); }
+function drawFruit(img, x, y, sz, rot, ph){
+  const bob = Math.sin(tt * .08 + ph) * 3; ctx.save(); ctx.translate(x, y + bob);
+  if(rot){ ctx.filter = "grayscale(.55) sepia(.8) hue-rotate(60deg) brightness(.6)"; ctx.globalAlpha = .95; }
+  else { ctx.shadowColor = "rgba(255,255,160,.9)"; ctx.shadowBlur = 12; }
+  const w = sz, h = sz * (img.naturalHeight / img.naturalWidth || 1); ctx.drawImage(img, -w / 2, -h / 2, w, h); ctx.restore();
+  if(rot){ ctx.font = "16px sans-serif"; ctx.fillText("🤢", x + 8, y - 12 + bob); }
+}
+function draw(){
+  ctx.save(); if(shake) ctx.translate((Math.random() - .5) * shake, (Math.random() - .5) * shake);
+  const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#60C3F5"); g.addColorStop(.65, "#BFEAFE"); g.addColorStop(1, "#DCFCE7"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "rgba(250,204,21,.95)"; ctx.beginPath(); ctx.arc(840, 90, 44, 0, 7); ctx.fill(); ctx.fillStyle = "rgba(250,204,21,.25)"; ctx.beginPath(); ctx.arc(840, 90, 66, 0, 7); ctx.fill();
+  for(let i = -1; i < 8; i++){ const x = ((i * 300 - camX * .2) % 2400 + 2400) % 2400 - 200; ctx.fillStyle = "#86EFAC"; ctx.beginPath(); ctx.ellipse(x + 150, GY + 10, 240, 120, 0, Math.PI, 0); ctx.fill(); }
+  for(let i = 0; i < 9; i++){ const x = ((i * 340 - camX * .4) % 2900 + 2900) % 2900 - 120; cloud(x, 70 + (i % 3) * 34, .9); }
+  for(let i = 0; i < 12; i++){ const x = ((i * 260 - camX * .6) % 3100 + 3100) % 3100 - 80; bgTree(x, GY - 6, .75); }
+  ctx.translate(-Math.round(camX), 0);
+  // พื้นดิน
+  world.slabs.forEach(([a, b]) => { ctx.fillStyle = "#8B5A2B"; ctx.fillRect(a, GY, b - a, H - GY); ctx.fillStyle = "#6F4520"; for(let x = a + 20; x < b - 10; x += 46) ctx.fillRect(x, GY + 34 + (x % 3) * 10, 16, 8); ctx.fillStyle = "#22C55E"; ctx.fillRect(a, GY - 2, b - a, 16); ctx.fillStyle = "#16A34A"; for(let x = a; x < b; x += 14) ctx.fillRect(x, GY + 10, 8, 6); ctx.fillStyle = "#86EFAC"; ctx.fillRect(a, GY - 2, b - a, 4); });
+  // แท่นลอย
+  world.plats.forEach(([x, y, w]) => { ctx.fillStyle = "#A16207"; rr(x, y, w, 20, 6); ctx.fillStyle = "#22C55E"; rr(x - 3, y - 6, w + 6, 12, 6); ctx.fillStyle = "#CA8A04"; ctx.fillRect(x + 8, y + 20, 8, 10); ctx.fillRect(x + w - 16, y + 20, 8, 10); });
+  // ผลไม้ + ธง
+  world.segs.forEach((s, si) => {
+    s.items.forEach(it => { if(!it.got) drawFruit(IMG[it.k], it.x, it.y, 40, it.rot, it.ph); });
+    const gx = s.gate + 20; ctx.fillStyle = "#475569"; ctx.fillRect(gx + 40, GY - 160, 6, 160);
+    ctx.fillStyle = s.passed ? "#22C55E" : "#EF4444"; ctx.beginPath(); const fy = s.passed ? GY - 158 : GY - 100; ctx.moveTo(gx + 46, fy); ctx.lineTo(gx + 96, fy + 18); ctx.lineTo(gx + 46, fy + 36); ctx.fill();
+    const bw = 92, bh = bw * (IMG.basket.naturalHeight / IMG.basket.naturalWidth || .7); ctx.drawImage(IMG.basket, gx - 40, GY - bh + 6, bw, bh);
+    ctx.fillStyle = "#fff"; ctx.strokeStyle = "#92400E"; ctx.lineWidth = 3; rr(gx - 44, GY - bh - 26, 100, 24, 8, true); ctx.fillStyle = "#92400E"; ctx.font = "700 14px Sarabun, sans-serif"; ctx.textAlign = "center"; ctx.fillText("ตรวจคำสั่ง " + (si + 1), gx + 6, GY - bh - 9); ctx.textAlign = "left";
+  });
+  // ผู้เล่น: แยกลำตัวกับขา แกว่งขาสลับ + โยกตัว เหมือนก้าวเดินจริง
+  const p = P, sw = boyUser ? 76 : 64, sh = boyUser ? 76 * (IMG.boy.naturalHeight / IMG.boy.naturalWidth || 1.1) : 94;
+  ctx.fillStyle = "rgba(0,0,0,.2)"; ctx.beginPath(); ctx.ellipse(p.x + p.w / 2, GY + 4, 22, 6, 0, 0, 7); ctx.fill();
+  drawBoy(p.x + p.w / 2, p.y + p.h, sw, sh);
+  ctx.restore();
+}
+function drawBoy(cx, fy, sw, sh){
+  const p = P, img = IMG.boy, iw = img.naturalWidth || 100, ih = img.naturalHeight || 110, HIP = .6, hy = ih * HIP, hipH = sh * HIP;
+  const run = p.ground && Math.abs(p.vx) > .6, ph = p.anim * 3.2, spd = Math.min(1, Math.abs(p.vx) / 4.5);
+  const bob = run ? Math.abs(Math.sin(ph)) * -5 * spd : 0, lean = run ? .09 * spd : (p.ground ? 0 : .06 * Math.sign(p.vy || 1));
+  ctx.save(); ctx.translate(cx, fy + bob); ctx.scale(p.face, 1);
+  const hipY = -sh * (1 - HIP) + 4;                                        // ตำแหน่งสะโพก (เทียบจากเท้า)
+  if(!run){ ctx.save(); ctx.rotate(lean * .6); ctx.drawImage(img, -sw / 2, -sh + 4, sw, sh); ctx.restore(); ctx.restore(); return; }   // ยืน/กระโดด: วาดทั้งตัวชิ้นเดียว ไม่แยกขา
+  for(let h = 0; h < 2; h++){                                              // ขา 2 ข้าง (ครึ่งซ้าย/ขวาของภาพส่วนล่าง)
+    let ang = 0, lift = 0;
+    if(run){ const s = Math.sin(ph + h * Math.PI); ang = s * .42 * spd; lift = Math.max(0, Math.cos(ph + h * Math.PI)) * 5 * spd; }
+    else if(!p.ground){ ang = (h ? -.3 : .32); lift = 4; }
+    const ovs = ih * .05, ovd = sh * .05, sx0 = Math.max(0, h * iw / 2 - iw * .04), sx1 = Math.min(iw, (h + 1) * iw / 2 + iw * .04), dxw = (sx1 - sx0) / iw * sw;
+    ctx.save(); ctx.translate((h ? 1 : -1) * sw / 4, hipY - ovd); ctx.rotate(ang);                  // หมุนรอบสะโพกของขาแต่ละข้าง ไม่ให้ฉีก
+    ctx.drawImage(img, sx0, hy - ovs, sx1 - sx0, ih - hy + ovs, sx0 / iw * sw - sw / 2 - (h ? 1 : -1) * sw / 4, -lift * .3, dxw, sh - hipH + ovd); ctx.restore();
+  }
+  ctx.save(); ctx.translate(0, hipY); ctx.rotate(lean);                    // ลำตัว+หัว โยกตามจังหวะ
+  const sway = run ? Math.sin(ph * 2) * .03 * spd : 0; ctx.rotate(sway);
+  ctx.drawImage(img, 0, 0, iw, hy, -sw / 2, -hipH + 0, sw, hipH); ctx.restore();
+  ctx.restore();
+}
+function rr(x, y, w, h, r, stroke){ ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); ctx.fill(); if(stroke) ctx.stroke(); }
+let last = 0, acc = 0;
+function loop(ts){ requestAnimationFrame(loop); if(!world){ return; } acc += Math.min(100, ts - last); last = ts; while(acc >= 16.67){ acc -= 16.67; if(state === "play") update(); } try{ draw(); }catch(e){ ctx.restore(); } }
+requestAnimationFrame(loop);
+
+/* ───── ปุ่ม/หน้าจอ ───── */
+$("go").onclick = () => start(L); $("wagain").onclick = () => start(L); $("wnext").onclick = () => start(L + 1); $("lagain").onclick = () => start(L);
+$("fs").onclick = () => { const g = $("game"); if(!document.fullscreenElement){ (g.requestFullscreen ? g.requestFullscreen() : Promise.reject()).catch(() => {}); } else document.exitFullscreen(); };
+$("backlink").addEventListener("click", (e) => { e.preventDefault(); window.close(); setTimeout(() => { location.href = "../../index.html#/unit/m1/cs/1/game"; }, 250); });
+world = buildWorld(0); P = { x:90, y:GY - 60, w:34, h:58, vx:0, vy:0, face:1, ground:true, coy:0, jumpHeld:false, anim:0 }; vals = { apple:0 }; state = "title"; $("ov-start").style.display = "flex"; drawLv(); renderHud();
+window.__vm = { start, update, get P(){ return P; }, get vals(){ return vals; }, get segIdx(){ return segIdx; }, get world(){ return world; }, get lives(){ return lives; }, keys, get state(){ return state; } };
+</script>
+<script src="../../assets/js/outcomes.js?v=2"></script>
+</body>
+</html>

@@ -57,6 +57,12 @@ const ACTION_BTN_IMG = {
   "cmaze-p1-2": "assets/images/btn-game-cmaze.webp?v=2",
   "tetris-p2-0": "assets/images/btn-tetris.webp",
   "tetris-p3-0": "assets/images/btn-tetris-p3-0.webp",
+  "scratch-m1-1": "assets/images/btn-game-scratch.webp",
+  "blocks-m1-1": "assets/images/btn-game-blocks.webp",
+  "flowchart-m1-1": "assets/images/btn-game-flowchart.webp",
+  "pseudocode-m1-1": "assets/images/btn-game-pseudocode.webp",
+  "varfruit-m1-1": "assets/images/btn-game-variable.webp",
+  "varjump-m1-1": "assets/images/btn-game-jump.webp",
   article: "assets/images/btn-article.webp",
   "anim-cartoon": "assets/images/btn-anim-p1-0.webp"
 };
@@ -233,13 +239,15 @@ const READY_CONTENT = {
   },
   "m1/cs/1": {
     knowledge: { href:"content/m1-cs-1/knowledge.html", title:"การออกแบบและการเขียนโปรแกรมเบื้องต้น" },
-    worksheet: { href:"content/m1-cs-1/worksheet.html", title:"ใบงานที่ 2.1–2.7 โครงสร้างการเขียนโปรแกรม 3 แบบ" },
-    quiz:      { href:"content/m1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    worksheet: { href:"content/m1-cs-1/worksheet.html", title:"ใบงานที่ 2.1–2.8 โครงสร้างการเขียนโปรแกรม 3 แบบ + ตัวแปร" },
+    quiz:      { href:"content/m1-cs-1/quiz.html", title:"แบบทดสอบหลังเรียน: ตอนที่ 1 ปรนัย 23 ข้อ + ตอนที่ 2 อัตนัย 3 โจทย์ (โครงสร้างละ 1 ข้อ ครบ 8 ขั้นตอน)" },
     game:      { href:"content/m1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[ { key:"scratch-m1-1", href:"content/m1-cs-1/game-scratch.html", label:"🧩 เกมพลิกไพ่ บล็อกคำสั่ง Scratch" },
                    { key:"blocks-m1-1", href:"content/m1-cs-1/blocks.html", label:"🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)" },
                    { key:"flowchart-m1-1", href:"content/m1-cs-1/flowchart.html", label:"🔷 วาดผังงาน (Flowchart)" },
-                   { key:"pseudocode-m1-1", href:"content/m1-cs-1/pseudocode.html", label:"📝 เขียนรหัสลำลอง (Pseudocode)" } ] }
+                   { key:"pseudocode-m1-1", href:"content/m1-cs-1/pseudocode.html", label:"📝 เขียนรหัสลำลอง (Pseudocode)" },
+                   { key:"varfruit-m1-1", href:"content/m1-cs-1/game-variable.html", label:"🎮 เกมค่าตัวแปร (เก็บผลไม้ใส่ตะกร้า)" },
+                   { key:"varjump-m1-1", href:"content/m1-cs-1/game-variable-jump.html", label:"🏃 เกมกระโดดค่าตัวแปร (สไตล์มาริโอ้)" } ] }
   },
   "m1/cs/2": {
     knowledge: { href:"content/m1-cs-2/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
@@ -1008,17 +1016,22 @@ function renderTabContent(tab, grade, subject, unit, idx){
   });
 }
 
-const NEW_TAB_TOOLS = /\/(blocks|flowchart|pseudocode)\.html$/;   // โปรแกรมเสริม (โค้ดจิ๊กซอว์ / วาดผังงาน): เปิดในแท็บใหม่
+const NEW_TAB_TOOLS = /\/(blocks|flowchart|pseudocode|game-variable|game-variable-jump)\.html$/;   // โปรแกรมเสริม (โค้ดจิ๊กซอว์ / วาดผังงาน): เปิดในแท็บใหม่
+// ปุ่มโปรแกรมเสริม/เกมที่ยังไม่มีรูปของครู: ใช้ปุ่มลูกอมสีสดแทน (รูปของครูมาก่อนเสมอ)
+const TOOL_BTN_COLOR = { "scratch-m1-1":"tb-purple", "varfruit-m1-1":"tb-orange", "varjump-m1-1":"tb-green", "blocks-m1-1":"tb-blue", "flowchart-m1-1":"tb-teal", "pseudocode-m1-1":"tb-pink" };
 function actionBtn(href, key, label, cls){
   const list = [].concat(ACTION_BTN_IMG[key] || []);
   const tb = NEW_TAB_TOOLS.test(href) ? ' target="_blank" rel="noopener"' : "";
+  const tc = TOOL_BTN_COLOR[key];
   if(!list.length) return `<a class="btn ${cls}" href="${href}"${tb}>${label}</a>`;
+  const m = label.match(/^(\S+)\s+(.*)$/);
+  const candy = tc ? `<span class="tb-ico">${m ? m[1] : "▶"}</span><span class="tb-txt">${m ? m[2] : label}</span><span class="tb-go">▶</span>` : `<span class="action-btn-coded">${label}</span>`;
   return `
-    <a class="btn ${cls} action-btn" href="${href}"${tb}>
+    <a class="btn ${cls} action-btn${tc ? " toolbtn " + tc : ""}" href="${href}"${tb}>
       <img class="action-btn-img" src="${list[0]}" data-alt="${list.slice(1).join(",")}" alt="${label}"
            onload="this.closest('.action-btn').classList.add('has-actionimg'); this.nextElementSibling.style.display='none';"
            onerror="var a=this.dataset.alt?this.dataset.alt.split(','):[]; if(a.length){ this.dataset.alt=a.slice(1).join(','); this.src=a[0]; } else this.style.display='none';">
-      <span class="action-btn-coded">${label}</span>
+      ${candy}
     </a>
   `;
 }

@@ -77,7 +77,7 @@
   <div style="position:relative">
     <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
     <div id="sharemenu">
-      <button id="sh-ws">📥 ส่งรหัสลำลองไปใบงาน (ใส่ในช่องข้อ 6)</button>
+      <button id="sh-ws">📥 ส่งรหัสลำลองไปใบงาน / แบบทดสอบ (ใส่ในช่องข้อ 6)</button>
       <button id="sh-link">🔗 คัดลอกลิงก์รหัสลำลอง (ส่งให้ครูเปิดดู)</button>
       <button id="sh-text">📝 คัดลอกเป็นข้อความ</button>
       <button id="sh-txt">💾 บันทึกเป็นไฟล์ .txt</button>
@@ -344,8 +344,9 @@ function setCode(t){ code.value = t; errLines.clear(); paint(); save(); out.inne
 $("#sample").onchange = function(){ const k = this.value; this.value = ""; if(!k) return; if(code.value.trim() && !confirm("โหลดตัวอย่างจะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return; setCode(SAMPLES[k].join("\n")); toast("โหลดตัวอย่างแล้ว — กด ✅ ตรวจรหัส หรือ ▶ ทดลองรัน"); };
 
 /* ---------- ส่ง / แชร์ ---------- */
-const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^worksheet-(\d)-(\d)\.html$/);
-if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = "✖ ปิดแท็บ กลับไปใบงาน"; }
+const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
+if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
 $("#backlink").addEventListener("click", e => { e.preventDefault(); const to = $("#backlink").getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); });
 const b64e = (t) => btoa(unescape(encodeURIComponent(t))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/"))));
@@ -360,8 +361,8 @@ $("#sh-text").onclick = async () => toast((await copyText(code.value)) ? "คั
 $("#sh-txt").onclick = () => { const a = document.createElement("a"); a.download = "รหัสลำลอง.txt"; a.href = URL.createObjectURL(new Blob(["﻿" + code.value], { type:"text/plain;charset=utf-8" })); a.click(); };
 $("#sh-ws").onclick = () => {
   if(!BACK) return; if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง");
-  const key = "krtomws:m1/cs/1:" + BACK[2], txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + shareURL();
-  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < 8) arr.push(""); arr[5] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งรหัสลำลองไปที่ข้อ 6 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
+  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz"), txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + shareURL();
+  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < PART * 8) arr.push(""); arr[(PART - 1) * 8 + 5] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งรหัสลำลองไปที่ข้อ 6 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
   catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
 };
 $("#viewedit").onclick = () => { VIEW = false; code.readOnly = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); save(); toast("คัดลอกรหัสไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };

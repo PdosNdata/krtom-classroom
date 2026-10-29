@@ -23,6 +23,7 @@
   #progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,#10B981,#3B82F6); transition:width .3s; }
 
   .mcq{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:18px 20px; margin-bottom:16px; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .mcq p.q .codeq{ display:block; margin:6px 0; padding:8px 12px; background:#F1F5F9; border-radius:10px; font-family:Consolas,'Courier New',monospace; font-size:.86rem; font-weight:600; line-height:1.6; }
   .mcq p.q{ font-weight:700; margin:0 0 10px; font-size:.94rem; }
   .mcq .choices{ display:flex; flex-direction:column; gap:8px; }
   .mcq label{ display:flex; align-items:center; gap:10px; padding:10px 14px; border:2px solid #E6E8F0; border-radius:12px; font-size:.88rem; cursor:pointer; }
@@ -37,6 +38,29 @@
   #result-card .big-score{ font-size:2.4rem; font-weight:800; margin:8px 0; }
   #result-card .msg{ font-size:1rem; color:#555; margin-bottom:14px; }
   #result-card button{ padding:11px 26px; border:none; border-radius:999px; background:#10B981; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .prob{ background:#FFFBEB; border:1px solid #FDE68A; border-radius:12px; padding:10px 14px; margin-top:10px; font-size:.9rem; line-height:1.6; }
+  .legend{ background:#F8FAFC; border-radius:12px; padding:8px 12px; margin-top:10px; font-size:.82rem; color:#475569; line-height:1.7; }
+  .pbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#10B981,#0EA5E9); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .jbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#4C97FF,#9966FF); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .fcbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#0EA5E9,#6366F1); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  .parthd{ margin:26px 0 8px; padding:6px 14px; background:#F8FAFC; border-radius:10px; font-size:1.05rem; }
+  .part1hd,.part2hd{ margin:22px 0 10px; padding:8px 16px; border-radius:12px; font-size:1.08rem; font-weight:800; color:#fff; }
+  .part1hd{ background:linear-gradient(135deg,#10B981,#3B82F6); } .part2hd{ background:linear-gradient(135deg,#F472B6,#BE185D); }
+  #part2 .field{ margin-bottom:18px; } #part2 .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; margin:6px 0; }
+  #part2 { --c1:#F472B6; --c2:#BE185D; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -45,29 +69,178 @@
 <header>
   <div>
     <h1>✅ แบบทดสอบท้ายหน่วย</h1>
-    <p>การออกแบบและการเขียนโปรแกรมเบื้องต้น · ม.1 หน่วยที่ 2 · ปรนัย 4 ตัวเลือก 10 ข้อ</p>
+    <p>การออกแบบและการเขียนโปรแกรมเบื้องต้น · ม.1 หน่วยที่ 2 · ตอนที่ 1 ปรนัย 23 ข้อ + ตอนที่ 2 อัตนัย 3 โจทย์</p>
   </div>
   <a href="../../index.html#/unit/m1/cs/1/quiz">← กลับหน้าหน่วย</a>
 </header>
 
 <main>
   <div id="progress">
-    ตอบแล้ว <span id="answered-count">0</span>/10 ข้อ
+    ตอบแล้ว <span id="answered-count">0</span>/23 ข้อ
     <div id="progress-bar"><div id="progress-fill"></div></div>
   </div>
 
+  <div class="part1hd">📝 ตอนที่ 1 ปรนัย 23 ข้อ</div>
   <form id="quiz-form"></form>
+
+  <div id="part2">
+    <div class="part2hd">✍️ ตอนที่ 2 แบบอัตนัย (3 โจทย์ · โครงสร้างละ 1 ข้อ)</div>
+    <div class="card intro" style="background:#fff;border:1px solid #E6E8F0;border-radius:18px;padding:16px 18px;margin-bottom:14px">
+      <p style="margin:0 0 6px"><b>คำชี้แจง</b> มี <b>3 ตอน</b> ตอนละ 1 โจทย์ ตรงกับโครงสร้างการเขียนโปรแกรมทั้ง 3 แบบ (เรียงลำดับ · เงื่อนไข · ทำซ้ำ) <b>แต่ละโจทย์ให้ทำครบตามกระบวนการ 8 ขั้นตอน</b> ได้แก่ วัตถุประสงค์ → ข้อมูลนำเข้า → วิธีประมวลผล → ข้อมูลนำออก → อัลกอริทึม 3 รูปแบบ (ธรรมชาติ / รหัสลำลอง / ผังงาน) → เขียนโปรแกรม รวม 24 ข้อ</p>
+      <div class="legend"><b>สัญลักษณ์ผังงาน:</b> ⬭ เริ่มต้น/จบ &nbsp;·&nbsp; ▱ รับค่า/แสดงผล &nbsp;·&nbsp; ▭ ประมวลผล &nbsp;·&nbsp; ◇ ตัดสินใจ (ใช่/ไม่ใช่) &nbsp;·&nbsp; ↓ ลูกศรแสดงลำดับ<br>🖨️ ถ้าต้องการวาดผังงานจริง ให้พิมพ์ใบงานแล้ววาดบนกระดาษ หรือบรรยายลำดับสัญลักษณ์ในช่องข้อ 7</div>
+    </div>
+<h2 class="parthd" style="border-left:8px solid #3B82F6">➡️ ตอนที่ 1 โครงสร้างเรียงลำดับ (Sequence)</h2>
+    <div class="prob">🧩 <b>โจทย์:</b> โปรแกรมหา <b>พื้นที่สามเหลี่ยม</b> โดยให้ผู้ใช้ใส่ความยาวฐานและความสูง แล้วแสดงพื้นที่ (สูตร พื้นที่ = ½ × ฐาน × สูง)</div>
+    <div class="field">
+      <label for="f0"><span class="fn">1</span> วัตถุประสงค์</label>
+      <div class="hint">เพื่อ… (หาพื้นที่สามเหลี่ยม)</div>
+      <textarea id="f0" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f1"><span class="fn">2</span> ข้อมูลนำเข้า (Input)</label>
+      <div class="hint">ตัวแปรที่รับเข้า (ฐาน, สูง) ชนิดข้อมูล</div>
+      <textarea id="f1" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f2"><span class="fn">3</span> วิธีประมวลผล (Process)</label>
+      <div class="hint">สูตรที่ใช้คำนวณ</div>
+      <textarea id="f2" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f3"><span class="fn">4</span> ข้อมูลนำออก (Output)</label>
+      <div class="hint">ตัวแปรผลลัพธ์ และการแสดงผล</div>
+      <textarea id="f3" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f4"><span class="fn">5</span> เขียนอัลกอริทึมแบบธรรมชาติ</label>
+      <div class="hint">เริ่มต้น → รับ → คำนวณ → แสดง → จบ</div>
+      <textarea id="f4" rows="5" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f5"><span class="fn">6</span> เขียนอัลกอริทึมด้วยรหัสลำลอง</label>
+      <div class="hint">ใช้ START / INPUT / COMPUTE / DISPLAY / END · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 1)</div>
+      <a class="pbtn" href="pseudocode.html?ex=blank&back=quiz.html&part=1" target="_blank" rel="noopener">📝 เปิดโปรแกรมเขียนรหัสลำลอง</a>
+      <textarea id="f5" rows="6" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f6"><span class="fn">7</span> เขียนผังงาน (Flowchart)</label>
+      <div class="hint">ระบุสัญลักษณ์ ⬭ ▱ ▭ และลูกศรเรียงลงมา · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 1)</div>
+      <a class="fcbtn" href="flowchart.html?ex=blank&back=quiz.html&part=1" target="_blank" rel="noopener">🔷 เปิดโปรแกรมวาดผังงาน</a>
+      <textarea id="f6" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f7"><span class="fn">8</span> เขียนโปรแกรม โค้ดจิ๊กซอว์</label>
+      <div class="hint">บล็อกที่ใช้ และผลทดสอบ ฐาน 10 สูง 6 · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 1)</div>
+      <a class="jbtn" href="blocks.html?ex=blank&back=quiz.html&part=1" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a>
+      <textarea id="f7" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <h2 class="parthd" style="border-left:8px solid #F59E0B">🔀 ตอนที่ 2 โครงสร้างเงื่อนไข (Selection)</h2>
+    <div class="prob">🧩 <b>โจทย์:</b> ร้านค้าให้ส่วนลด <b>10%</b> เมื่อซื้อสินค้า <b>ตั้งแต่ 500 บาทขึ้นไป</b> ถ้าไม่ถึง 500 บาท ไม่ลดราคา ออกแบบโปรแกรมรับยอดซื้อ แล้วแสดงราคาที่ต้องจ่าย</div>
+    <div class="field">
+      <label for="f8"><span class="fn">1</span> วัตถุประสงค์</label>
+      <div class="hint">เพื่อ… (คำนวณราคาที่ต้องจ่าย)</div>
+      <textarea id="f8" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f9"><span class="fn">2</span> ข้อมูลนำเข้า (Input)</label>
+      <div class="hint">ตัวแปรที่รับเข้า เช่น price (ยอดซื้อ)</div>
+      <textarea id="f9" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f10"><span class="fn">3</span> วิธีประมวลผล (Process)</label>
+      <div class="hint">เงื่อนไข (ตั้งแต่ 500 ขึ้นไป) และสูตรลด 10%</div>
+      <textarea id="f10" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f11"><span class="fn">4</span> ข้อมูลนำออก (Output)</label>
+      <div class="hint">ราคาที่ต้องจ่าย (มีลด / ไม่ลด)</div>
+      <textarea id="f11" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f12"><span class="fn">5</span> เขียนอัลกอริทึมแบบธรรมชาติ</label>
+      <div class="hint">เริ่มต้น → รับ → ถ้า … ไม่เช่นนั้น … → แสดง → จบ</div>
+      <textarea id="f12" rows="5" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f13"><span class="fn">6</span> เขียนอัลกอริทึมด้วยรหัสลำลอง</label>
+      <div class="hint">ใช้ IF … THEN … ELSE … ENDIF · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 2)</div>
+      <a class="pbtn" href="pseudocode.html?ex=blank&back=quiz.html&part=2" target="_blank" rel="noopener">📝 เปิดโปรแกรมเขียนรหัสลำลอง</a>
+      <textarea id="f13" rows="6" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f14"><span class="fn">7</span> เขียนผังงาน (Flowchart)</label>
+      <div class="hint">ระบุสัญลักษณ์ ◇ และเส้นทาง ใช่ / ไม่ใช่ · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 2)</div>
+      <a class="fcbtn" href="flowchart.html?ex=blank&back=quiz.html&part=2" target="_blank" rel="noopener">🔷 เปิดโปรแกรมวาดผังงาน</a>
+      <textarea id="f14" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f15"><span class="fn">8</span> เขียนโปรแกรม โค้ดจิ๊กซอว์</label>
+      <div class="hint">บล็อก ถ้า…ไม่เช่นนั้น และผลทดสอบ 600 / 500 / 499 · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 2)</div>
+      <a class="jbtn" href="blocks.html?ex=blank&back=quiz.html&part=2" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a>
+      <textarea id="f15" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <h2 class="parthd" style="border-left:8px solid #10B981">🔁 ตอนที่ 3 โครงสร้างทำซ้ำ (Loop)</h2>
+    <div class="prob">🧩 <b>โจทย์:</b> โปรแกรมแสดง <b>สูตรคูณแม่ 3</b> ตั้งแต่ 3 × 1 ถึง 3 × 5 (ได้ผลคูณ 3, 6, 9, 12, 15) โดยใช้การทำซ้ำและตัวแปรตัวนับ</div>
+    <div class="field">
+      <label for="f16"><span class="fn">1</span> วัตถุประสงค์</label>
+      <div class="hint">เพื่อ… (แสดงสูตรคูณแม่ 3)</div>
+      <textarea id="f16" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f17"><span class="fn">2</span> ข้อมูลนำเข้า (Input)</label>
+      <div class="hint">ตัวแปรตัวนับ เช่น i เริ่มที่เท่าไร</div>
+      <textarea id="f17" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f18"><span class="fn">3</span> วิธีประมวลผล (Process)</label>
+      <div class="hint">ทำซ้ำกี่รอบ แต่ละรอบทำอะไร</div>
+      <textarea id="f18" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f19"><span class="fn">4</span> ข้อมูลนำออก (Output)</label>
+      <div class="hint">ผลลัพธ์ที่แสดง</div>
+      <textarea id="f19" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f20"><span class="fn">5</span> เขียนอัลกอริทึมแบบธรรมชาติ</label>
+      <div class="hint">เริ่มต้น → กำหนด i → ทำซ้ำ … → จบ</div>
+      <textarea id="f20" rows="5" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f21"><span class="fn">6</span> เขียนอัลกอริทึมด้วยรหัสลำลอง</label>
+      <div class="hint">ใช้ SET / WHILE … DO / COMPUTE / ENDWHILE · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 3)</div>
+      <a class="pbtn" href="pseudocode.html?ex=blank&back=quiz.html&part=3" target="_blank" rel="noopener">📝 เปิดโปรแกรมเขียนรหัสลำลอง</a>
+      <textarea id="f21" rows="6" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f22"><span class="fn">7</span> เขียนผังงาน (Flowchart)</label>
+      <div class="hint">ระบุสัญลักษณ์ ◇ และลูกศรวนกลับ · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 3)</div>
+      <a class="fcbtn" href="flowchart.html?ex=blank&back=quiz.html&part=3" target="_blank" rel="noopener">🔷 เปิดโปรแกรมวาดผังงาน</a>
+      <textarea id="f22" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f23"><span class="fn">8</span> เขียนโปรแกรม โค้ดจิ๊กซอว์</label>
+      <div class="hint">บล็อก ทำซ้ำ + ตัวแปร และผลที่ได้ · กด <b>📤 ส่ง / คัดลอก → ส่งไปใบงาน</b> ในโปรแกรม ระบบจะใส่ในช่องนี้ให้ (ตอนที่ 3)</div>
+      <a class="jbtn" href="blocks.html?ex=blank&back=quiz.html&part=3" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a>
+      <textarea id="f23" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    
+    <div class="meter-t" id="e-meter">ตอบแล้ว 0/24 ข้อ</div>
+    <div class="chk" id="checkres"></div>
+    <div style="text-align:center;margin-top:10px"><button type="button" id="checkbtn" style="padding:10px 26px;border:none;border-radius:999px;background:linear-gradient(135deg,#6366F1,#0EA5E9);color:#fff;font:inherit;font-weight:800;cursor:pointer">🔍 ให้ระบบตรวจตอนที่ 2</button></div>
+  </div>
 
   <button id="submit-btn" onclick="submitQuiz()">📤 ส่งคำตอบ</button>
 
   <div id="result-card">
     <div style="font-size:2.4rem">🎉</div>
-    <div class="big-score" id="score-text">0/10</div>
+    <div class="big-score" id="score-text">0/47</div>
     <div class="msg" id="score-msg"></div>
     <button onclick="location.reload()">🔄 ทำใหม่อีกครั้ง</button>
   </div>
 </main>
 
+<script src="../../assets/js/wscheck.js?v=1"></script>
 <script src="../../assets/js/tts.js?v=2"></script>
 <script>
 function shuffleArray(arr){
@@ -93,7 +266,21 @@ const RAW_QUESTIONS = [
   { audio:"quiz-6", q:"ตัวแปลชุดคำสั่งให้เป็นภาษาคอมพิวเตอร์ เรียกว่าอะไร", choices:["คอมไพเลอร์ (Compiler)", "เบราว์เซอร์", "แฟลชไดรฟ์", "ไฟร์วอลล์"], correct:0 },
   { audio:"quiz-7", q:"การทดสอบโปรแกรมที่ดูเฉพาะข้อมูลนำเข้าและผลลัพธ์ เรียกว่าอะไร", choices:["Black Box Testing", "White Box Testing", "Run Testing", "Code Testing"], correct:0 },
   { audio:"quiz-8", q:"คำสั่งแสดงข้อความทางจอภาพในภาษาไพทอน คือข้อใด", choices:["print", "echo", "printf", "output"], correct:0 },
-  { audio:"quiz-9", q:"ภาษาโปรแกรมใดเป็นภาษาเชิงวัตถุที่มีคำกล่าวว่า เขียนครั้งเดียว รันได้ทุกที่", choices:["ภาษาจาวา (Java)", "ภาษาซี (C)", "สแครช (Scratch)", "ภาษาเครื่อง"], correct:0 }
+  { audio:"quiz-9", q:"ภาษาโปรแกรมใดเป็นภาษาเชิงวัตถุที่มีคำกล่าวว่า เขียนครั้งเดียว รันได้ทุกที่", choices:["ภาษาจาวา (Java)", "ภาษาซี (C)", "สแครช (Scratch)", "ภาษาเครื่อง"], correct:0 },
+  // ───── โจทย์โครงสร้างการเขียนโปรแกรม 3 แบบ (เรียงลำดับ · เงื่อนไข · ทำซ้ำ) ตามกระบวนการ 8 ขั้นตอน ─────
+  { audio:"quiz-10", q:"ข้อใดเรียงลำดับกระบวนการแก้ปัญหาด้วยโปรแกรม 8 ขั้นตอน ได้ถูกต้อง", choices:["วัตถุประสงค์ → ข้อมูลนำเข้า → วิธีประมวลผล → ข้อมูลนำออก → อัลกอริทึมแบบธรรมชาติ → รหัสลำลอง → ผังงาน → เขียนโปรแกรม", "ข้อมูลนำเข้า → วัตถุประสงค์ → วิธีประมวลผล → ข้อมูลนำออก → ผังงาน → รหัสลำลอง → อัลกอริทึมแบบธรรมชาติ → เขียนโปรแกรม", "วัตถุประสงค์ → เขียนโปรแกรม → ข้อมูลนำเข้า → วิธีประมวลผล → ข้อมูลนำออก → ผังงาน → รหัสลำลอง → อัลกอริทึมแบบธรรมชาติ", "เขียนโปรแกรม → ผังงาน → รหัสลำลอง → อัลกอริทึมแบบธรรมชาติ → ข้อมูลนำออก → วิธีประมวลผล → ข้อมูลนำเข้า → วัตถุประสงค์"], correct:0 },
+  { audio:"quiz-11", q:"ขั้นตอนที่ 5 \"เขียนอัลกอริทึมแบบธรรมชาติ\" คือข้อใด", choices:["บอกขั้นตอนเป็นข้อความภาษาไทย เรียงตั้งแต่เริ่มต้นจนจบ", "ใช้คำสั่ง START INPUT DISPLAY END", "วาดสัญลักษณ์และลูกศรแสดงลำดับการทำงาน", "ต่อบล็อกคำสั่งในโปรแกรม Scratch"], correct:0 },
+  { audio:"quiz-12", q:"ในผังงาน สัญลักษณ์รูปสี่เหลี่ยมขนมเปียกปูน (◇) ใช้ทำหน้าที่ใด", choices:["ตัดสินใจตามเงื่อนไข (ใช่ / ไม่ใช่)", "แสดงจุดเริ่มต้นหรือจุดสิ้นสุด", "รับข้อมูลหรือแสดงผลข้อมูล", "ประมวลผลหรือคำนวณค่า"], correct:0 },
+  { audio:"quiz-13", q:"โปรแกรมคำนวณพื้นที่สี่เหลี่ยมผืนผ้า ที่ทำงานตามลำดับ รับค่า → คำนวณ → แสดงผล จัดเป็นโครงสร้างการทำงานแบบใด", choices:["โครงสร้างเรียงลำดับ (Sequence)", "โครงสร้างเงื่อนไข (Selection)", "โครงสร้างทำซ้ำ (Loop)", "โครงสร้างตัวแปร"], correct:0 },
+  { audio:"quiz-14", q:"โปรแกรมหาพื้นที่สี่เหลี่ยมผืนผ้า ข้อมูลนำเข้า (Input) / วิธีประมวลผล (Process) / ข้อมูลนำออก (Output) ตามลำดับ คือข้อใด", choices:["width, length / area = width × length / area", "area / width + length / width", "area / area = width × length / width, length", "width, area / length = width × area / length"], correct:0 },
+  { audio:"quiz-15", q:"โจทย์: ผู้ที่สอบได้คะแนน<b>มากกว่า 80</b> จะได้รางวัลพิเศษ รหัสลำลองข้อใดถูกต้อง", choices:["START / INPUT score / IF score > 80 THEN / DISPLAY \"ได้รางวัลพิเศษ\" / ENDIF / END", "START / INPUT score / IF score &lt; 80 THEN / DISPLAY \"ได้รางวัลพิเศษ\" / ENDIF / END", "START / INPUT score / IF score = 80 THEN / DISPLAY \"ได้รางวัลพิเศษ\" / ENDIF / END", "START / INPUT score / IF score > 80 / DISPLAY \"ได้รางวัลพิเศษ\" / END"], correct:0 },
+  { audio:"quiz-16", q:"ในผังงานแบบเงื่อนไข ลูกศรที่ออกจากสัญลักษณ์ ◇ ต้องมีกี่เส้น และเขียนกำกับด้วยคำใด", choices:["2 เส้น กำกับว่า ใช่ และ ไม่ใช่", "1 เส้น กำกับว่า ใช่", "3 เส้น กำกับว่า ก ข ค", "2 เส้น กำกับว่า เริ่มต้น และ จบ"], correct:0 },
+  { audio:"quiz-17", q:"พิจารณารหัสลำลอง <span class=\"codeq\">INPUT n<br>COMPUTE r = n mod 2<br>IF r = 0 THEN<br>&nbsp;&nbsp;&nbsp;&nbsp;DISPLAY \"เลขคู่\"<br>ELSE<br>&nbsp;&nbsp;&nbsp;&nbsp;DISPLAY \"เลขคี่\"<br>ENDIF</span> ถ้าผู้ใช้ใส่ 7 โปรแกรมจะแสดงผลอะไร", choices:["เลขคี่", "เลขคู่", "0", "1"], correct:0 },
+  { audio:"quiz-18", q:"พิจารณารหัสลำลอง <span class=\"codeq\">SET total = 0<br>SET count = 1<br>WHILE count &lt;= 5 DO<br>&nbsp;&nbsp;&nbsp;&nbsp;COMPUTE total = total + count<br>&nbsp;&nbsp;&nbsp;&nbsp;COMPUTE count = count + 1<br>ENDWHILE<br>DISPLAY total</span> โปรแกรมแสดงค่า total เท่าใด", choices:["15", "5", "10", "6"], correct:0 },
+  { audio:"quiz-19", q:"ผังงานแบบทำซ้ำ (Loop) ต่างจากแบบเรียงลำดับอย่างไร", choices:["มีสัญลักษณ์ ◇ และมีลูกศรวนกลับไปตรวจเงื่อนไขซ้ำ", "ไม่มีจุดเริ่มต้นและจุดจบ", "ไม่ต้องใช้ลูกศร", "ใช้เฉพาะสัญลักษณ์รูปสี่เหลี่ยมด้านขนาน"], correct:0 },
+  { audio:"quiz-20", q:"ตัวแปรในโปรแกรมคอมพิวเตอร์ มีหน้าที่อย่างไร", choices:["เก็บข้อมูลไว้ใช้ในโปรแกรม และเปลี่ยนค่าได้", "เป็นคำสั่งแสดงข้อความทางจอภาพ", "เป็นสัญลักษณ์เริ่มต้นของผังงาน", "เก็บข้อมูลที่ไม่สามารถเปลี่ยนค่าได้"], correct:0 },
+  { audio:"quiz-21", q:"พิจารณาคำสั่ง <span class=\"codeq\">SET apple = 3<br>COMPUTE apple = apple + 2</span> เมื่อทำงานจบ ตัวแปร apple มีค่าเท่าใด", choices:["5", "2", "3", "32"], correct:0 },
+  { audio:"quiz-22", q:"พิจารณาคำสั่ง <span class=\"codeq\">SET a = 4<br>SET b = 6<br>COMPUTE a = a + b</span> เมื่อทำงานจบ ตัวแปร a และ b มีค่าเท่าใด", choices:["a = 10, b = 6", "a = 10, b = 10", "a = 4, b = 10", "a = 6, b = 6"], correct:0 },
 ];
 const QUESTIONS = shuffleArray(RAW_QUESTIONS.map(shuffleChoices));
 
@@ -127,6 +314,26 @@ document.querySelectorAll(".tts-btn[data-audio-src]").forEach(btn => {
   if(label) btn.dataset.ttsLabel = label.textContent;
   btn.addEventListener("click", () => playAudio(btn.dataset.audioSrc, btn));
 });
+
+
+/* ───── ตอนที่ 2 อัตนัย: บันทึกร่าง / รับงานจากโปรแกรมเครื่องมือ / ตรวจโดยระบบ ───── */
+const EKEY = "krtomws:m1/cs/1:quiz";
+const eboxes = [...document.querySelectorAll("#part2 textarea")];
+function eRefresh(){ const n = eboxes.filter(b => b.value.trim().length >= 8).length; document.getElementById("e-meter").textContent = "ตอบแล้ว " + n + "/24 ข้อ"; }
+try{ const sv = JSON.parse(localStorage.getItem(EKEY) || "[]"); eboxes.forEach((b, i) => { if(sv[i]) b.value = sv[i]; }); }catch(e){}
+eboxes.forEach(b => b.addEventListener("input", () => { try{ localStorage.setItem(EKEY, JSON.stringify(eboxes.map(x => x.value))); }catch(e){} eRefresh(); }));
+window.addEventListener("storage", e => { if(e.key !== EKEY) return; try{ const sv = JSON.parse(e.newValue || "[]"); eboxes.forEach((b, i) => { if(sv[i] != null && b.value !== sv[i]) b.value = sv[i]; }); eRefresh(); }catch(_){} });
+eRefresh();
+function showCheck(){
+  const box = document.getElementById("checkres"); if(!window.WSCheck) return null;
+  const r = WSCheck.run8(eboxes.map(b => b.value)); const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  box.style.display = "block";
+  box.innerHTML = '<h3>🔍 ผลการตรวจตอนที่ 2 โดยระบบ</h3><div class="big">' + r.score + " / " + r.max + ' ข้อ</div>' +
+    r.fields.map(f => '<div class="row"><span class="' + (f.ok ? "ok" : "bad") + '">' + (f.ok ? "✅" : "⚠️") + " " + f.label + " " + f.title + "</span>" + (f.ok ? "" : "<ul>" + f.msgs.map(m => "<li>" + esc(m) + "</li>").join("") + "</ul>") + (f.note ? '<div class="note">' + esc(f.note) + "</div>" : "") + "</div>").join("") +
+    '<div class="foot">เป็นการตรวจเบื้องต้นโดยระบบ — แก้ไขแล้วกดตรวจซ้ำได้ ครูจะตรวจอีกครั้ง</div>';
+  return r;
+}
+document.getElementById("checkbtn").onclick = () => { showCheck(); document.getElementById("checkres").scrollIntoView({ behavior:"smooth", block:"nearest" }); };
 
 function updateProgress(){
   const answered = document.querySelectorAll('.mcq input:checked').length;
@@ -162,12 +369,15 @@ function submitQuiz(){
   else if(pct >= 60) msg = "😊 ทำได้ดี! ลองทบทวนใบความรู้อีกครั้งนะ";
   else msg = "💪 ลองกลับไปอ่านใบความรู้แล้วทำใหม่อีกครั้งนะ";
 
-  document.getElementById("score-text").textContent = `${score}/${QUESTIONS.length}`;
-  document.getElementById("score-msg").textContent = msg + ` (${pct}%)`;
+  const es = showCheck() || { score:0, max:0 };
+  const tot = QUESTIONS.length + es.max, got = score + es.score;
+  document.getElementById("score-text").textContent = `${got}/${tot}`;
+  document.getElementById("score-msg").innerHTML = msg + ` (ปรนัย ${pct}%)<br><small style="font-size:.8rem;color:#64748B">ตอนที่ 1 ปรนัย ${score}/${QUESTIONS.length} · ตอนที่ 2 อัตนัย ${es.score}/${es.max} (ระบบตรวจเบื้องต้น ครูจะตรวจอีกครั้ง)</small>`;
   document.getElementById("result-card").classList.add("show");
   document.getElementById("result-card").scrollIntoView({behavior:"smooth"});
 }
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/outcomes.js?v=2"></script>
 </body>
 </html>

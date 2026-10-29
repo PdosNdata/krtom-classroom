@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมค่าตัวแปร: เก็บผลไม้ใส่ตะกร้า — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:18px; --bd:#D9DEEA; }
+  *{ box-sizing:border-box; } html,body{ margin:0; min-height:100%; background:#E8F5E9; color:#1F2430; }
+  body{ display:flex; flex-direction:column; min-height:100vh; }
+  header{ background:linear-gradient(135deg,#F59E0B,#EF4444); color:#fff; padding:8px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:1.15rem; flex:1; min-width:200px; } header a, header button{ color:#fff; background:rgba(255,255,255,.24); border:none; padding:6px 14px; border-radius:999px; font:inherit; font-size:.85rem; text-decoration:none; cursor:pointer; }
+  #wrap{ flex:1; max-width:1100px; width:100%; margin:0 auto; padding:10px 12px 16px; display:flex; flex-direction:column; gap:10px; }
+  #lv{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; } #lv button{ border:none; border-radius:999px; padding:7px 18px; font:inherit; font-weight:800; cursor:pointer; background:#fff; color:#334155; box-shadow:0 3px 0 rgba(0,0,0,.14); }
+  #lv button.on{ background:linear-gradient(135deg,#22C55E,#0EA5E9); color:#fff; } #lv button[disabled]{ opacity:.45; cursor:not-allowed; } #lv .stars{ font-size:.8em; margin-left:6px; }
+  #stat{ margin-left:auto; font-weight:800; color:#334155; font-size:.95rem; }
+
+  #stage{ position:relative; container-type:inline-size; width:100%; aspect-ratio:16/8.6; border-radius:22px; overflow:hidden; border:3px solid #fff; box-shadow:0 10px 26px rgba(0,0,0,.18); background:linear-gradient(#7DD3FC 0%,#BAE6FD 40%,#DCFCE7 41%); user-select:none; }
+  .sun{ position:absolute; right:5%; top:5%; width:10cqw; height:10cqw; border-radius:50%; background:radial-gradient(circle,#FEF08A,#FACC15); box-shadow:0 0 0 2cqw rgba(250,204,21,.25); }
+  .cloud{ position:absolute; font-size:8cqw; opacity:.95; } .c1{ left:4%; top:3%; } .c2{ left:50%; top:8%; font-size:6cqw; }
+  .hill{ position:absolute; border-radius:50% 50% 0 0; } .h1{ left:-8%; bottom:38%; width:62%; height:30%; background:#86EFAC; } .h2{ right:-10%; bottom:38%; width:70%; height:36%; background:#4ADE80; }
+  .grass{ position:absolute; left:0; right:0; bottom:0; height:44%; background:linear-gradient(#22C55E,#16A34A); } .lane{ position:absolute; left:0; right:0; bottom:3%; height:20%; background:rgba(250,204,21,.22); border-radius:50%; }
+  .tree{ position:absolute; bottom:39%; width:20cqw; aspect-ratio:300/380; cursor:pointer; z-index:2; transition:transform .15s; } .tree:hover{ transform:scale(1.04); } .tree > svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 .8cqw .6cqw rgba(0,0,0,.18)); }
+  .tree .fr{ position:absolute; width:4.4cqw; animation:sway 4s ease-in-out infinite; transform-origin:50% 0; filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.3)); } .tree .fr:nth-child(odd){ animation-delay:-1.4s; } @keyframes sway{ 0%,100%{ transform:rotate(-3deg); } 50%{ transform:rotate(3deg); } }
+  .tree .fr svg,.tree .fr img, .carry svg,.carry img, .flyer svg,.flyer img, .bk .fruits svg,.bk .fruits img{ width:100%; height:auto; display:block; }
+  .tree .nm{ position:absolute; left:50%; bottom:3%; transform:translateX(-50%); background:#fff; border-radius:999px; padding:.1em .8em; font-weight:800; font-size:1.9cqw; color:#166534; white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,.2); }
+  .bk{ position:absolute; bottom:7%; width:14cqw; cursor:pointer; z-index:3; transition:transform .15s; } .bk:hover{ transform:scale(1.04); } .bk.shake{ animation:shake .4s; } @keyframes shake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-1.2cqw); } 75%{ transform:translateX(1.2cqw); } }
+  .bk .tag{ position:absolute; left:50%; top:-4.6cqw; transform:translateX(-50%); background:#FEF3C7; border:.3cqw solid #D97706; border-radius:1cqw; padding:.1em .7em; font-size:2.2cqw; font-weight:800; color:#92400E; white-space:nowrap; z-index:6; }
+  .bk .fruits{ position:absolute; left:14%; right:14%; bottom:50%; height:7cqw; display:flex; flex-wrap:wrap-reverse; justify-content:center; align-items:flex-end; z-index:6; } .bk .fruits span{ width:3.4cqw; animation:pop .3s ease-out; } @keyframes pop{ from{ transform:scale(.2); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .bk .bsvg{ position:relative; z-index:5; } .bk .bsvg svg,.bk .bsvg img{ width:100%; height:auto; display:block; }
+  .bk .val{ position:absolute; right:-1.2cqw; bottom:-1cqw; z-index:8; min-width:4.8cqw; height:4.8cqw; padding:0 .9cqw; border-radius:99px; background:#2563EB; color:#fff; font-weight:800; font-size:2.7cqw; display:flex; align-items:center; justify-content:center; border:.4cqw solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.3); } .bk .val.bump{ animation:bump .45s; } @keyframes bump{ 0%{ transform:scale(1); } 40%{ transform:scale(1.5); background:#F59E0B; } 100%{ transform:scale(1); } }
+  .boy{ position:absolute; width:12cqw; z-index:7; pointer-events:none; transition:left .55s cubic-bezier(.4,.1,.2,1), bottom .55s cubic-bezier(.4,.1,.2,1); } .boy .in{ transition:transform .2s; transform-origin:50% 100%; } .boy.flip .in{ transform:scaleX(-1); }
+  .boy svg,.boy img{ width:100%; height:auto; display:block; overflow:visible; } .boy .legL,.boy .legR,.boy .armL,.boy .armR{ transform-box:fill-box; transform-origin:50% 0; }
+  .boy.walk .legL{ animation:legA .32s ease-in-out infinite alternate; } .boy.walk .legR{ animation:legB .32s ease-in-out infinite alternate; } .boy.walk .armL{ animation:legB .32s ease-in-out infinite alternate; } .boy.walk .armR{ animation:legA .32s ease-in-out infinite alternate; }
+  .boy.walk img{ animation:imgbob .32s ease-in-out infinite alternate; } @keyframes imgbob{ from{ transform:translateY(0) rotate(-2deg); } to{ transform:translateY(-1cqw) rotate(2deg); } }
+  @keyframes legA{ from{ transform:rotate(-20deg); } to{ transform:rotate(20deg); } } @keyframes legB{ from{ transform:rotate(20deg); } to{ transform:rotate(-20deg); } }
+  .carry{ position:absolute; left:50%; top:-4.6cqw; width:4.4cqw; transform:translateX(-50%); display:none; filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.3)); } .boy.has .carry{ display:block; animation:pop .25s; }
+  .flyer{ position:absolute; width:4.4cqw; z-index:9; pointer-events:none; transition:transform .5s cubic-bezier(.3,.8,.4,1); }
+  #msg{ position:absolute; left:50%; top:3%; transform:translateX(-50%); z-index:12; background:rgba(15,23,42,.9); color:#fff; font-weight:700; font-size:2.3cqw; padding:.8cqw 2.2cqw; border-radius:99px; display:none; max-width:90%; text-align:center; }
+  #win{ position:absolute; inset:0; z-index:14; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; background:linear-gradient(135deg,rgba(34,197,94,.92),rgba(14,165,233,.92)); color:#fff; padding:3cqw; } #win .big{ font-size:5.4cqw; font-weight:800; } #win .st{ font-size:6cqw; margin:1cqw 0; } #win .sub{ font-size:2.6cqw; margin-bottom:2cqw; } #win button{ border:none; border-radius:99px; background:#fff; color:#15803D; font:inherit; font-weight:800; font-size:2.8cqw; padding:.8cqw 3cqw; cursor:pointer; margin:0 1cqw; box-shadow:0 .6cqw 0 rgba(0,0,0,.2); }
+
+  #panel{ display:grid; grid-template-columns:1.3fr 1fr; gap:10px; } @media (max-width:760px){ #panel{ grid-template-columns:1fr; } }
+  .card{ background:#fff; border:1px solid var(--bd); border-radius:18px; padding:12px 16px; box-shadow:0 4px 10px rgba(0,0,0,.05); } .card h3{ margin:0 0 6px; font-size:1rem; color:#15803D; }
+  #code{ background:#0F172A; color:#E2E8F0; border-radius:12px; padding:8px 10px; font:600 .95rem/1.7 Consolas,"Courier New",monospace; } #code div{ padding:1px 10px; border-radius:8px; border-left:4px solid transparent; opacity:.55; } #code div.done{ opacity:.9; } #code div.done::after{ content:" ✓"; color:#86EFAC; } #code div.cur{ opacity:1; background:#1E3A8A; border-left-color:#FACC15; } #code .kw{ color:#FCA5A5; font-weight:800; } #code .ln{ color:#64748B; margin-right:10px; }
+  #info{ font-size:.92rem; line-height:1.65; } #info .now{ background:#FEF9C3; border-radius:10px; padding:6px 10px; margin:4px 0; font-weight:700; } #info .chips span{ display:inline-block; margin:2px 6px 2px 0; padding:1px 12px; border-radius:99px; background:#DBEAFE; color:#1E3A8A; font-weight:800; }
+  #btns{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; } #btns button{ border:none; border-radius:999px; padding:9px 20px; font:inherit; font-weight:800; cursor:pointer; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.2); } #btns .go{ background:linear-gradient(135deg,#22C55E,#16A34A); } #btns .hint{ background:linear-gradient(135deg,#F59E0B,#EA580C); } #btns .rs{ background:#64748B; }
+  #btns button:active{ transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .how{ font-size:.82rem; color:#475569; line-height:1.6; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<header><h1>🎮 เกมค่าตัวแปร · เก็บผลไม้ใส่ตะกร้าตามคำสั่ง</h1><a id="backlink" href="game.html" title="ปิดแท็บนี้">✖ ปิดแท็บนี้</a></header>
+<div id="wrap">
+  <div id="lv"></div>
+  <div id="stage">
+    <div class="sun"></div><div class="cloud c1">☁️</div><div class="cloud c2">☁️</div><div class="hill h1"></div><div class="hill h2"></div><div class="grass"></div><div class="lane"></div>
+    <div id="trees"></div><div id="baskets"></div>
+    <div class="boy" id="boy"><div class="in" id="boyin"><svg viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bSkin" x1="0" x2="1"><stop offset="0" stop-color="#FAD7B5"/><stop offset="1" stop-color="#EDB98B"/></linearGradient>
+    <linearGradient id="bShirt" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E2E8F0"/></linearGradient>
+    <linearGradient id="bShort" x1="0" x2="1"><stop offset="0" stop-color="#1D4ED8"/><stop offset="1" stop-color="#1E3A8A"/></linearGradient>
+    <radialGradient id="bHead" cx=".4" cy=".35"><stop offset="0" stop-color="#FFE2C2"/><stop offset="1" stop-color="#F0B98A"/></radialGradient>
+  </defs>
+  <ellipse cx="60" cy="193" rx="34" ry="5" fill="rgba(0,0,0,.22)"/>
+  <g class="armL"><rect x="22" y="78" width="14" height="42" rx="7" fill="url(#bSkin)"/><circle cx="29" cy="122" r="8" fill="#F6CDA6"/></g>
+  <g class="legL"><rect x="40" y="132" width="16" height="42" rx="6" fill="url(#bSkin)"/><rect x="40" y="156" width="16" height="16" fill="#fff"/><rect x="40" y="160" width="16" height="3.5" fill="#1D4ED8"/><path d="M36,170 h24 q4,0 4,6 v6 h-28 v-6 q0,-6 0,-6 z" fill="#111827"/><path d="M38,172 h14" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></g>
+  <g class="legR"><rect x="64" y="132" width="16" height="42" rx="6" fill="url(#bSkin)"/><rect x="64" y="156" width="16" height="16" fill="#fff"/><rect x="64" y="160" width="16" height="3.5" fill="#1D4ED8"/><path d="M60,170 h24 q4,0 4,6 v6 h-28 v-6 q0,-6 0,-6 z" fill="#111827"/><path d="M62,172 h14" stroke="#4B5563" stroke-width="2" stroke-linecap="round"/></g>
+  <g class="bod">
+    <path d="M36,112 H84 L88,148 Q60,156 32,148 Z" fill="url(#bShort)"/><path d="M60,126 V150" stroke="#1E3A8A" stroke-width="2"/><rect x="36" y="110" width="48" height="7" rx="3" fill="#0F172A"/><rect x="55" y="110.5" width="10" height="6" rx="1.5" fill="#FACC15"/>
+    <path d="M34,76 Q34,70 42,68 H78 Q86,70 86,76 L88,116 H32 Z" fill="url(#bShirt)" stroke="#CBD5E1" stroke-width="1.6"/>
+    <path d="M44,68 L60,86 L76,68 Z" fill="#fff" stroke="#CBD5E1" stroke-width="1.6"/><path d="M44,68 L52,80 L60,86 Z M76,68 L68,80 L60,86 Z" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1"/>
+    <g fill="#CBD5E1"><circle cx="60" cy="94" r="2"/><circle cx="60" cy="102" r="2"/></g>
+    <rect x="68" y="86" width="14" height="15" rx="2" fill="#fff" stroke="#94A3B8" stroke-width="1.4"/><circle cx="75" cy="92" r="3" fill="#EF4444"/><path d="M70,98 h10" stroke="#94A3B8" stroke-width="1.4"/>
+    <path d="M32,76 Q20,80 18,98 L34,102 Z M88,76 Q100,80 102,98 L86,102 Z" fill="url(#bShirt)" stroke="#CBD5E1" stroke-width="1.6"/>
+  </g>
+  <g class="armR"><rect x="84" y="94" width="14" height="30" rx="7" fill="url(#bSkin)"/><circle cx="91" cy="124" r="8" fill="#F6CDA6"/></g>
+  <g class="bod">
+    <rect x="52" y="60" width="16" height="14" rx="5" fill="#EDB98B"/>
+    <ellipse cx="31" cy="42" rx="6" ry="8" fill="#F0B98A"/><ellipse cx="89" cy="42" rx="6" ry="8" fill="#F0B98A"/><ellipse cx="31" cy="43" rx="3" ry="4.5" fill="#E8A87C"/><ellipse cx="89" cy="43" rx="3" ry="4.5" fill="#E8A87C"/>
+    <circle cx="60" cy="40" r="30" fill="url(#bHead)"/>
+    <path d="M30,38 Q28,8 60,8 Q92,8 90,38 Q84,22 60,20 Q36,22 30,38 Z" fill="#0F172A"/><path d="M40,16 Q52,9 66,12" stroke="#475569" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".75"/>
+    <path d="M40,30 Q46,26 52,29 M68,29 Q74,26 80,30" stroke="#1F2937" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="48" cy="39" rx="4.6" ry="5.8" fill="#0F172A"/><ellipse cx="72" cy="39" rx="4.6" ry="5.8" fill="#0F172A"/>
+    <circle cx="50" cy="37" r="1.8" fill="#fff"/><circle cx="74" cy="37" r="1.8" fill="#fff"/><circle cx="46.8" cy="41.5" r=".9" fill="#fff"/><circle cx="70.8" cy="41.5" r=".9" fill="#fff"/>
+    <path d="M59,45 q1.4,3 3,0" stroke="#D69A6B" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M47,52 Q60,64 73,52 Q60,58 47,52 Z" fill="#B91C1C"/><path d="M50,53 Q60,60 70,53" fill="#fff" opacity=".9"/><path d="M47,52 Q60,64 73,52" stroke="#9A3412" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="41" cy="50" rx="5.5" ry="3.2" fill="#FB7185" opacity=".5"/><ellipse cx="79" cy="50" rx="5.5" ry="3.2" fill="#FB7185" opacity=".5"/>
+  </g>
+</svg></div><div class="carry" id="carry"></div></div>
+    <div id="msg"></div>
+    <div id="win"><div class="big" id="wt">ผ่านด่านแล้ว!</div><div class="st" id="wstars">⭐⭐⭐</div><div class="sub" id="ws"></div><div><button id="wnext">ด่านถัดไป ▶</button><button id="wagain">เล่นด่านนี้อีกครั้ง</button></div></div>
+  </div>
+  <div id="panel">
+    <div class="card"><h3>📜 โปรแกรม (ทำทีละบรรทัดตามลำดับ)</h3><div id="code"></div><div id="btns"><button class="go" id="check">✔ ทำคำสั่งนี้เสร็จแล้ว (ตรวจ)</button><button class="hint" id="hint">💡 คำใบ้</button><button class="rs" id="reset">↺ เริ่มด่านใหม่</button></div></div>
+    <div class="card"><h3>🧺 ค่าของตัวแปรตอนนี้</h3><div id="info"></div>
+      <div class="how"><b>วิธีเล่น:</b> คลิก 🌳 ต้นไม้ = เดินไปหยิบผลไม้ 1 ผล · คลิก 🧺 ตะกร้า = ใส่ผลไม้ที่ถืออยู่ (ถ้ามือว่าง = หยิบออกจากตะกร้า) · คลิกต้นไม้ตอนถือผลไม้ = วางคืนต้นไม้ · ทำให้ค่าในตะกร้าตรงกับผลของคำสั่ง แล้วกด ✔</div></div>
+  </div>
+</div>
+<script src="../../assets/js/sfx.js?v=1"></script>
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const stage = $("#stage"), boy = $("#boy"), carry = $("#carry");
+let SVG_APPLE = `<svg viewBox="0 0 40 44"><defs><radialGradient id="gAp" cx=".35" cy=".3"><stop offset="0" stop-color="#FCA5A5"/><stop offset=".45" stop-color="#EF4444"/><stop offset="1" stop-color="#B91C1C"/></radialGradient></defs><path d="M20,12 C14,6 3,10 4,23 C5,35 13,42 20,40 C27,42 35,35 36,23 C37,10 26,6 20,12 Z" fill="url(#gAp)"/><ellipse cx="12" cy="19" rx="3.6" ry="6.4" fill="#fff" opacity=".42" transform="rotate(18 12 19)"/><path d="M20,12 Q20,6 23,2" stroke="#78350F" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M22,7 Q30,0 36,6 Q29,11 22,7 Z" fill="#22C55E"/></svg>`, SVG_ORANGE = `<svg viewBox="0 0 40 44"><defs><radialGradient id="gOr" cx=".35" cy=".3"><stop offset="0" stop-color="#FED7AA"/><stop offset=".45" stop-color="#FB923C"/><stop offset="1" stop-color="#C2410C"/></radialGradient></defs><circle cx="20" cy="25" r="16" fill="url(#gOr)"/><ellipse cx="13" cy="19" rx="3.4" ry="5.4" fill="#fff" opacity=".4" transform="rotate(20 13 19)"/><g fill="#C2410C" opacity=".35"><circle cx="24" cy="22" r=".9"/><circle cx="18" cy="30" r=".9"/><circle cx="27" cy="31" r=".9"/><circle cx="22" cy="36" r=".9"/></g><path d="M20,9 q-1,-4 1,-6" stroke="#78350F" stroke-width="2" fill="none"/><path d="M21,8 Q29,1 34,6 Q28,11 21,8 Z" fill="#22C55E"/></svg>`, SVG_BANANA = `<svg viewBox="0 0 40 44"><defs><linearGradient id="gBa" x1="0" x2="1"><stop offset="0" stop-color="#FEF08A"/><stop offset="1" stop-color="#EAB308"/></linearGradient></defs><path d="M6,12 Q8,36 30,38 Q36,38 36,32 Q22,34 14,10 Q10,4 6,12 Z" fill="url(#gBa)" stroke="#A16207" stroke-width="1.6" stroke-linejoin="round"/><path d="M8,14 Q12,30 28,35" stroke="#fff" stroke-width="1.6" fill="none" opacity=".5"/><rect x="3.6" y="5" width="6" height="6" rx="2" fill="#78350F" transform="rotate(-18 6 8)"/></svg>`, BASKET = `<svg viewBox="0 0 130 92" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gBk" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#D97706"/></linearGradient></defs><path d="M16,40 Q65,-34 114,40" fill="none" stroke="#78350F" stroke-width="8" stroke-linecap="round"/><path d="M16,40 Q65,-30 114,40" fill="none" stroke="#B45309" stroke-width="3" stroke-linecap="round" opacity=".6"/><path d="M6,40 H124 L108,86 H22 Z" fill="url(#gBk)" stroke="#92400E" stroke-width="4" stroke-linejoin="round"/><g stroke="#B45309" stroke-width="3" fill="none" opacity=".75"><path d="M12,54 H118 M16,68 H114"/><path d="M34,42 L30,84 M52,42 L50,86 M70,42 L70,86 M88,42 L90,86 M106,42 L110,84" stroke-width="2.4"/></g><rect x="3" y="36" width="124" height="9" rx="4.5" fill="#92400E"/><rect x="3" y="36" width="124" height="3.5" rx="2" fill="#B45309"/></svg>`, BOYSVG = $("#boyin").innerHTML;
+const TREE_SVG = `<svg viewBox="0 0 300 380" aria-hidden="true">
+        <defs>
+          <linearGradient id="gTrunk" x1="0" x2="1"><stop offset="0" stop-color="#7C2D12"/><stop offset=".45" stop-color="#B45309"/><stop offset="1" stop-color="#78350F"/></linearGradient>
+          <radialGradient id="gLeafD" cx=".35" cy=".3"><stop offset="0" stop-color="#22C55E"/><stop offset="1" stop-color="#166534"/></radialGradient>
+          <radialGradient id="gLeafM" cx=".35" cy=".3"><stop offset="0" stop-color="#4ADE80"/><stop offset="1" stop-color="#16A34A"/></radialGradient>
+        </defs>
+        <ellipse cx="150" cy="366" rx="95" ry="12" fill="rgba(0,0,0,.18)"/>
+        <path d="M128,372 Q132,300 134,232 L170,232 Q172,300 178,372 Q150,362 128,372 Z" fill="url(#gTrunk)"/>
+        <path d="M134,250 Q100,215 82,168 L98,162 Q116,205 140,226 Z M168,246 Q202,210 222,160 L206,154 Q188,200 164,224 Z" fill="url(#gTrunk)"/>
+        <path d="M145,262 Q142,300 146,350 M158,258 Q162,300 160,344 M138,312 Q134,330 130,350" stroke="#5B2108" stroke-width="3" fill="none" stroke-linecap="round" opacity=".45"/>
+        <path d="M128,372 q-14,4 -26,0 M178,372 q14,4 26,0" stroke="#78350F" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <g fill="url(#gLeafD)"><circle cx="78" cy="150" r="58"/><circle cx="222" cy="150" r="58"/><circle cx="150" cy="82" r="72"/><circle cx="104" cy="196" r="52"/><circle cx="198" cy="196" r="52"/><circle cx="150" cy="168" r="70"/></g>
+        <g fill="url(#gLeafM)"><circle cx="92" cy="128" r="40"/><circle cx="206" cy="132" r="42"/><circle cx="148" cy="66" r="50"/><circle cx="118" cy="176" r="38"/><circle cx="182" cy="178" r="38"/><circle cx="150" cy="130" r="44"/></g>
+        <g fill="#86EFAC" opacity=".55"><ellipse cx="112" cy="52" rx="26" ry="14" transform="rotate(-30 112 52)"/><ellipse cx="64" cy="112" rx="20" ry="11" transform="rotate(-40 64 112)"/><ellipse cx="226" cy="108" rx="22" ry="12" transform="rotate(30 226 108)"/><ellipse cx="150" cy="106" rx="24" ry="12"/></g>
+        <g fill="#15803D" opacity=".5"><ellipse cx="96" cy="212" rx="10" ry="5" transform="rotate(25 96 212)"/><ellipse cx="206" cy="214" rx="10" ry="5" transform="rotate(-25 206 214)"/><ellipse cx="150" cy="196" rx="11" ry="5"/><ellipse cx="62" cy="164" rx="9" ry="4.5" transform="rotate(-20 62 164)"/><ellipse cx="240" cy="168" rx="9" ry="4.5" transform="rotate(20 240 168)"/></g>
+      </svg>`;
+let FR = { apple:SVG_APPLE, orange:SVG_ORANGE, banana:SVG_BANANA };
+const NAMES = { apple:"แอปเปิล", orange:"ส้ม", banana:"กล้วย" };
+const TX = { apple:3, orange:40, banana:77 };          // ตำแหน่งแนวนอน (%) ของต้นไม้/ตะกร้า
+const POS = { apple:TX.apple + 4, orange:TX.orange + 4, banana:TX.banana + 4 };
+
+/* ───── ภาพของครู (ถ้ามี) แทนภาพที่วาดด้วยโค้ด ───── */
+(function(){
+  const base = "../../assets/images/variable-slides/", exts = ["webp", "png"];
+  const tryLoad = (n, ok) => { let i = 0; const nx = () => { if(i >= exts.length) return; const im = new Image(), src = base + n + "." + exts[i++] + "?v=1"; im.onload = () => ok(src); im.onerror = nx; im.src = src; }; nx(); };
+  const img = (src) => `<img src="${src}" alt="">`;
+  tryLoad("boy", (s) => { $("#boyin").innerHTML = img(s); boy.classList.add("userimg"); });
+  tryLoad("basket", (s) => { BASKET = img(s); draw(); });
+  ["apple", "orange", "banana"].forEach(n => tryLoad(n, (s) => { FR[n] = img(s); buildTrees(); draw(); }));
+})();
+
+/* ───── ด่าน ───── */
+const LV = [
+  { name:"ด่าน 1 · ตะกร้าแอปเปิล", vars:["apple"], cmds:["SET apple = 0", "COMPUTE apple = apple + 3", "COMPUTE apple = apple + 2"] },
+  { name:"ด่าน 2 · ตะกร้า 2 ใบ", vars:["apple", "orange"], cmds:["SET apple = 2", "SET orange = 4", "COMPUTE apple = apple + orange", "COMPUTE orange = orange - 1"] },
+  { name:"ด่าน 3 · ใช้ค่าของตัวแปรอื่น", vars:["apple", "orange", "banana"], cmds:["SET banana = 1", "COMPUTE apple = banana + 3", "COMPUTE orange = apple - 2", "COMPUTE banana = banana + orange"] }
+];
+let L = 0, idx = 0, state = {}, hand = null, busy = false, mistakes = 0, best = {};
+try{ best = JSON.parse(localStorage.getItem("krtomVarGame") || "{}"); }catch(e){}
+
+function parse(c){ const m = c.match(/^(SET|COMPUTE)\s+(\w+)\s*=\s*(.+)$/); return { op:m[1], v:m[2], e:m[3] }; }
+function evalCmd(c, st){ const p = parse(c); const js = p.e.replace(/[A-Za-z_]\w*/g, (w) => { if(!(w in st)) throw new Error("ไม่รู้จัก " + w); return "(" + st[w] + ")"; }); if(!/^[\d\s+\-*/().]+$/.test(js)) throw new Error("นิพจน์ไม่ถูกต้อง"); return { v:p.v, val:Math.round(Function('"use strict";return (' + js + ")")()) }; }
+const kwHtml = (c) => c.replace(/^(SET|COMPUTE)\b/, '<span class="kw">$1</span>');
+
+/* ───── วาดฉาก ───── */
+function buildTrees(){
+  $("#trees").innerHTML = ["apple", "orange", "banana"].map(k => `<div class="tree" data-k="${k}" style="left:${TX[k] - 1.5}%;${LV[L].vars.includes(k) ? "" : "opacity:.45;pointer-events:none;"}">${TREE_SVG}${[[18, 24], [42, 10], [66, 20], [28, 44], [56, 38], [74, 46]].map(([l, t]) => `<div class="fr" style="left:${l}%;top:${t}%">${FR[k]}</div>`).join("")}<div class="nm">ต้น${NAMES[k]}</div></div>`).join("");
+}
+function draw(bumpK){
+  $("#baskets").innerHTML = LV[L].vars.map(k => `<div class="bk" data-k="${k}" style="left:${TX[k] + 1}%"><div class="tag">${k}</div><div class="fruits">${Array.from({ length:Math.min(state[k] || 0, 10) }).map(() => `<span>${FR[k]}</span>`).join("")}</div><div class="bsvg">${BASKET}</div><div class="val${bumpK === k ? " bump" : ""}">${state[k] || 0}</div></div>`).join("");
+  $("#code").innerHTML = LV[L].cmds.map((c, i) => `<div class="${i < idx ? "done" : i === idx ? "cur" : ""}"><span class="ln">${i + 1}</span>${kwHtml(c)}</div>`).join("");
+  const exp = idx < LV[L].cmds.length ? evalCmd(LV[L].cmds[idx], expectedState()) : null;
+  $("#info").innerHTML = `<div class="chips">${LV[L].vars.map(k => `<span>${k} = ${state[k] || 0}</span>`).join("")}</div>` + (idx < LV[L].cmds.length ? `<div class="now">▶ ตอนนี้ต้องทำ: <code>${LV[L].cmds[idx]}</code></div><div>ถืออยู่: ${hand ? NAMES[hand] : "มือว่าง"}</div>` : "");
+  $("#stat").textContent = "พลาด " + mistakes + " ครั้ง";
+}
+// สถานะที่ควรเป็น "ก่อน" ทำคำสั่งปัจจุบัน (ตามที่โปรแกรมคำนวณมาทีละบรรทัด)
+function expectedState(){ const st = {}; LV[L].vars.forEach(k => st[k] = 0); for(let i = 0; i < idx; i++){ const r = evalCmd(LV[L].cmds[i], st); st[r.v] = r.val; } return st; }
+
+/* ───── เด็กเดิน + การกระทำ ───── */
+const msg = (t, ok) => { const e = $("#msg"); e.textContent = t; e.style.display = "block"; e.style.background = ok === false ? "rgba(185,28,28,.92)" : ok ? "rgba(22,101,52,.92)" : "rgba(15,23,42,.9)"; clearTimeout(msg.t); msg.t = setTimeout(() => e.style.display = "none", 2600); };
+function carryShow(){ boy.classList.toggle("has", !!hand); carry.innerHTML = hand ? FR[hand] : ""; }
+function walkTo(pct, bottom, flipTo, done){
+  const cur = parseFloat(boy.style.left || "40"), dir = pct >= cur ? 1 : -1; boy.classList.toggle("flip", dir < 0 && Math.abs(pct - cur) > 1);
+  boy.classList.add("walk"); boy.style.left = pct + "%"; boy.style.bottom = bottom + "%";
+  setTimeout(() => { boy.classList.remove("walk"); done && done(); }, 600);
+}
+function act(kind, k){
+  if(busy || idx >= LV[L].cmds.length) return; busy = true;
+  if(kind === "tree"){
+    walkTo(POS[k] - 2, 30, 0, () => {
+      if(!hand){ hand = k; carryShow(); if(window.sfx) sfx.pop(); }
+      else if(hand === k){ hand = null; carryShow(); if(window.sfx) sfx.pop(); msg("วางผล" + NAMES[k] + "คืนต้นไม้", true); }
+      else { msg("ถือ" + NAMES[hand] + "อยู่ — ต้องวางลงตะกร้าหรือคืนต้นไม้ก่อน", false); if(window.sfx) sfx.nope(); }
+      draw(); busy = false; });
+  }else{
+    walkTo(k === "apple" ? TX[k] + 16 : TX[k] - 9, 9, 0, () => {
+      if(hand === k){ const g = hand; hand = null; carryShow(); fly(g, k, () => { state[k] = (state[k] || 0) + 1; if(window.sfx) sfx.pop(); draw(k); busy = false; }); return; }
+      if(hand){ mistakes++; msg("ผิดตะกร้า! " + NAMES[hand] + "ต้องใส่ตะกร้า " + hand, false); const b = document.querySelector(`.bk[data-k="${k}"]`); b && b.classList.add("shake"); if(window.sfx) sfx.wrong(); }
+      else if((state[k] || 0) > 0){ state[k]--; hand = k; carryShow(); if(window.sfx) sfx.pop(); draw(k); }
+      else { msg("ตะกร้า " + k + " ว่างอยู่", false); if(window.sfx) sfx.nope(); }
+      draw(); busy = false; });
+  }
+}
+function fly(g, k, done){
+  const bk = document.querySelector(`.bk[data-k="${k}"]`), sr = stage.getBoundingClientRect(), a = carry.getBoundingClientRect() , b = bk.getBoundingClientRect();
+  const f = document.createElement("div"); f.className = "flyer"; f.innerHTML = FR[g]; f.style.left = (a.left - sr.left) + "px"; f.style.top = (a.top - sr.top) + "px"; stage.append(f);
+  requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transform = `translate(${b.left - a.left + b.width * .3}px, ${b.top - a.top + b.height * .15}px)`; }));
+  setTimeout(() => { f.remove(); done(); }, 520);
+}
+stage.addEventListener("click", (e) => { const t = e.target.closest(".tree"), b = e.target.closest(".bk"); if(t) act("tree", t.dataset.k); else if(b) act("bk", b.dataset.k); });
+document.addEventListener("keydown", (e) => { const ks = LV[L].vars; const n = "123456".indexOf(e.key); if(n < 0) return; const k = ["apple", "orange", "banana"][n % 3]; if(!ks.includes(k)) return; act(n < 3 ? "tree" : "bk", k); });
+
+/* ───── ตรวจคำสั่ง ───── */
+$("#check").onclick = () => {
+  if(busy || idx >= LV[L].cmds.length) return;
+  const st = expectedState(), r = evalCmd(LV[L].cmds[idx], st); st[r.v] = r.val;
+  const bad = LV[L].vars.filter(k => (state[k] || 0) !== st[k]);
+  if(hand){ msg("ยังถือ" + NAMES[hand] + "อยู่ — ใส่ตะกร้าหรือคืนต้นไม้ก่อน", false); return; }
+  if(bad.length){ mistakes++; if(window.sfx) sfx.wrong(); msg("ยังไม่ถูก: ตรวจค่า " + bad.map(k => `${k} (ตอนนี้ ${state[k] || 0}${k === r.v ? ", ควรเป็น " + r.val : ", ต้องคงเดิม " + st[k]})`).join(" · "), false); draw(); return; }
+  if(window.sfx) sfx.correct(); idx++; msg("ถูกต้อง! ✓", true); draw();
+  if(idx >= LV[L].cmds.length) setTimeout(win, 700);
+};
+$("#hint").onclick = () => { if(idx >= LV[L].cmds.length) return; const st = expectedState(), c = LV[L].cmds[idx], r = evalCmd(c, st), cur = state[r.v] || 0, d = r.val - cur;
+  msg(d === 0 ? `ค่า ${r.v} ควรเป็น ${r.val} อยู่แล้ว กด ✔ ได้เลย` : d > 0 ? `${r.v} ต้องเป็น ${r.val} → ตอนนี้ ${cur} หยิบ${NAMES[r.v]}เพิ่มอีก ${d} ผล` : `${r.v} ต้องเป็น ${r.val} → ตอนนี้ ${cur} หยิบออกจากตะกร้า ${-d} ผล แล้ววางคืนต้นไม้`); };
+function win(){
+  const st = mistakes === 0 ? 3 : mistakes <= 2 ? 2 : 1; best[L] = Math.max(best[L] || 0, st); try{ localStorage.setItem("krtomVarGame", JSON.stringify(best)); }catch(e){}
+  $("#wstars").textContent = "⭐".repeat(st) + "☆".repeat(3 - st); $("#wt").textContent = L === LV.length - 1 ? "เก่งมาก! ผ่านครบทุกด่าน 🎉" : "ผ่านด่านแล้ว!"; $("#ws").textContent = "พลาด " + mistakes + " ครั้ง";
+  $("#wnext").style.display = L === LV.length - 1 ? "none" : "inline-block"; $("#win").style.display = "flex"; if(window.sfx) sfx.win(); drawLv();
+}
+function drawLv(){ $("#lv").innerHTML = LV.map((l, i) => `<button data-i="${i}" class="${i === L ? "on" : ""}" ${i > 0 && !(best[i - 1]) && !location.search.includes("unlock") ? "disabled" : ""}>${l.name}<span class="stars">${best[i] ? "⭐".repeat(best[i]) : ""}</span></button>`).join("") + '<span id="stat"></span>'; }
+$("#lv").onclick = (e) => { const b = e.target.closest("button"); if(b && !b.disabled) start(+b.dataset.i); };
+function start(i){ L = i; idx = 0; state = {}; LV[L].vars.forEach(k => state[k] = 0); hand = null; busy = false; mistakes = 0; $("#win").style.display = "none"; boy.style.left = "36%"; boy.style.bottom = "20%"; boy.classList.remove("flip"); carryShow(); buildTrees(); drawLv(); draw(); msg("ทำตามโปรแกรมทีละบรรทัด — เริ่มจากบรรทัดที่ 1"); }
+$("#reset").onclick = () => start(L); $("#wagain").onclick = () => start(L); $("#wnext").onclick = () => start(L + 1);
+$("#backlink").addEventListener("click", (e) => { e.preventDefault(); window.close(); setTimeout(() => { location.href = "game.html"; }, 250); });
+start(0);
+window.__vg = { start, act, LV, get state(){ return state; }, get idx(){ return idx; } };
+</script>
+<script src="../../assets/js/outcomes.js?v=2"></script>
+</body>
+</html>

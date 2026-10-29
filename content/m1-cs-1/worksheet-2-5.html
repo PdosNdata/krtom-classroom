@@ -40,6 +40,13 @@
   .pbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#10B981,#0EA5E9); box-shadow:0 4px 0 rgba(0,0,0,.2); }
   .jbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#4C97FF,#9966FF); box-shadow:0 4px 0 rgba(0,0,0,.2); }
   .fcbtn{ display:inline-block; margin:6px 0 8px 38px; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; background:linear-gradient(135deg,#0EA5E9,#6366F1); box-shadow:0 4px 0 rgba(0,0,0,.2); }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
   @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
 </style>
@@ -62,7 +69,6 @@
     <p style="font-weight:400">ทำให้ครบตามกระบวนการแก้ปัญหา <b>8 ข้อ</b> ได้แก่ วัตถุประสงค์ → ข้อมูลนำเข้า → วิธีประมวลผล → ข้อมูลนำออก → อัลกอริทึม 3 รูปแบบ (ธรรมชาติ / รหัสลำลอง / ผังงาน) → เขียนโปรแกรม</p>
     <div class="prob">🧩 <b>โจทย์:</b> ในรายวิชาวิทยาการคำนวณมีข้อตกลงว่า <b>ผู้ที่สอบได้คะแนนมากกว่า 80 คะแนน จะได้รางวัลพิเศษ</b> ออกแบบโปรแกรมตรวจว่านักเรียนได้รางวัลพิเศษหรือไม่</div>
     <div class="legend"><b>สัญลักษณ์ผังงาน:</b> ⬭ เริ่มต้น/จบ &nbsp;·&nbsp; ▱ รับค่า/แสดงผล &nbsp;·&nbsp; ▭ ประมวลผล &nbsp;·&nbsp; ◇ ตัดสินใจ (ใช่/ไม่ใช่) &nbsp;·&nbsp; ↓ ลูกศรแสดงลำดับ<br>🖨️ ถ้าต้องการวาดผังงานจริง ให้พิมพ์ใบงานแล้ววาดบนกระดาษ หรือบรรยายลำดับสัญลักษณ์ในช่องข้อ 7</div>
-    <div class="example" style="margin-top:10px">📚 ดัดแปลงแนวกิจกรรมจากสื่อ DLTV วิทยาการคำนวณ ม.1 หน่วยที่ 2 การโปรแกรม (dltv.ac.th) — เรียบเรียงใหม่โดยครูผู้สอน</div>
   </div>
 
   <div class="card jig">
@@ -117,7 +123,9 @@
     </div>
     <div class="meter"><i id="bar"></i></div>
     <div class="meter-t" id="meter-t">ตอบแล้ว 0/8 ข้อ</div>
+    <div class="chk" id="checkres"></div>
     <div class="actions">
+      <button class="btn" id="checkbtn" style="background:linear-gradient(135deg,#6366F1,#0EA5E9)">🔍 ให้ระบบตรวจ</button>
       <button class="btn" id="submit">📤 ส่งใบงาน</button>
       <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
     </div>
@@ -125,6 +133,7 @@
   </div>
 </main>
 
+<script src="../../assets/js/wscheck.js?v=1"></script>
 <script src="../../assets/js/tts.js?v=2"></script>
 <script>
 const U = { g:"m1", s:"cs", i:1 }, N = 5, TOTAL = 8;
@@ -154,15 +163,31 @@ window.addEventListener("storage", e => {
   try{ const sv = JSON.parse(e.newValue || "[]"); boxes.forEach((b, i) => { if(sv[i] != null && b.value !== sv[i]) b.value = sv[i]; }); refresh(); }catch(_){}
 });
 
+
+// ───── ให้ระบบตรวจใบงาน (เบื้องต้น) ─────
+function showCheck(){
+  const box = document.getElementById("checkres"); if(!window.WSCheck){ return null; }
+  const r = WSCheck.run(N, boxes.map(b => b.value)); if(!r) return null;
+  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  box.style.display = "block";
+  box.innerHTML = '<h3>🔍 ผลการตรวจโดยระบบ</h3><div class="big">' + (r.score === r.max ? "🎉 " : "") + r.score + " / " + r.max + ' ข้อ</div>' +
+    r.fields.map((f, i) => '<div class="row"><span class="' + (f.ok ? "ok" : "bad") + '">' + (f.ok ? "✅" : "⚠️") + " ข้อ " + (i + 1) + " " + f.title + "</span>" +
+      (f.ok ? "" : "<ul>" + f.msgs.map(m => "<li>" + esc(m) + "</li>").join("") + "</ul>") + (f.note ? '<div class="note">' + esc(f.note) + "</div>" : "") + "</div>").join("") +
+    '<div class="foot">เป็นการตรวจเบื้องต้นโดยระบบ — แก้ไขแล้วกด "ให้ระบบตรวจ" ซ้ำได้ ครูจะตรวจอีกครั้ง</div>';
+  return r;
+}
+document.getElementById("checkbtn").onclick = () => { const r = showCheck(); if(r) document.getElementById("checkres").scrollIntoView({ behavior:"smooth", block:"nearest" }); };
+
 document.getElementById("submit").onclick = async function(){
   const st = document.getElementById("status"), n = answered();
   if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
   this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
   try{
-    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", n, TOTAL);
+    const rr = showCheck();
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, TOTAL);
     try{ localStorage.setItem(DONE, "1"); }catch(e){}
     st.style.color = "#059669";
-    st.innerHTML = '✅ ส่งใบงานแล้ว <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+    st.innerHTML = '✅ ส่งใบงานแล้ว' + (rr ? ' · ระบบตรวจเบื้องต้นได้ ' + rr.score + '/' + rr.max + ' ข้อ' : '') + ' <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
   }catch(e){
     this.disabled = false; st.style.color = "#DC2626";
     st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
@@ -170,5 +195,6 @@ document.getElementById("submit").onclick = async function(){
 };
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/outcomes.js?v=2"></script>
 </body>
 </html>

@@ -98,7 +98,7 @@
 </header>
 
 <main>
-  <p class="lead">เลือกทำใบงานทั้ง 7 ใบ ✨<small>ใบ 2.2–2.7 แบ่งตามโครงสร้าง: เรียงลำดับ · เงื่อนไข · ทำซ้ำ — แต่ละใบทำครบ 8 ข้อ</small></p>
+  <p class="lead">เลือกทำใบงานทั้ง 8 ใบ ✨<small>ใบ 2.2–2.7 แบ่งตามโครงสร้าง (เรียงลำดับ · เงื่อนไข · ทำซ้ำ) แต่ละใบทำครบ 8 ข้อ · ใบ 2.8 เรื่องตัวแปร</small></p>
   <div class="stack">
     <a class="wsbtn" href="worksheet-2-1.html" data-n="1" style="--c1:#38BDF8;--c2:#2563EB;--edge:#1E40AF;--glow:56,189,248">
       <img class="wsbtn-img" src="../../assets/images/btn-ws-m1-cs-1-1.webp" alt="ใบงานที่ 2.1"
@@ -212,6 +212,22 @@
         <span class="go">เริ่มทำ ➜</span>
       </span>
     </a>
+    <a class="wsbtn" href="worksheet-2-8.html" data-n="8" style="--c1:#4ADE80;--c2:#15803D;--edge:#14532D;--glow:74,222,128">
+      <img class="wsbtn-img" src="../../assets/images/btn-ws-m1-cs-1-8.webp" alt="ใบงานที่ 2.8"
+           onload="this.closest('.wsbtn').classList.add('has-img')" onerror="this.remove()">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="ghost-no">2.8</span>
+      <span class="orb"><span class="orb-in">🧺</span></span>
+      <span class="wsbtn-text">
+        <span class="wsbtn-kicker">ใบงานที่ 2.8</span>
+        <span class="wsbtn-title">ตัวแปร (ตะกร้าผลไม้)</span>
+        <span class="wsbtn-sub">ติดตามค่า · ตั้งชื่อ · จับคู่ · เขียนรหัส · ต่อบล็อก (21 คะแนน)</span>
+      </span>
+      <span class="wsbtn-side">
+        <span class="status" id="st-8">ยังไม่ได้ส่ง</span>
+        <span class="go">เริ่มทำ ➜</span>
+      </span>
+    </a>
   </div>
   <p class="note">🖨️ พิมพ์ใบงานเป็นกระดาษได้ที่หน้าใบงานแต่ละใบ (กด Ctrl+P)</p>
 </main>
@@ -220,7 +236,7 @@
 (function(){
   // แสดงสถานะ "ส่งแล้ว" ของแต่ละใบ (เก็บในเครื่องนี้)
   try{
-    for(let n = 2; n <= 7; n++){
+    for(let n = 2; n <= 8; n++){
       if(localStorage.getItem("krtomws-done:m1/cs/1:" + n)){
         const el = document.getElementById("st-" + n);
         if(el){ el.textContent = "✅ ส่งแล้ว"; el.classList.add("done"); }
