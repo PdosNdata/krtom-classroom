@@ -320,7 +320,17 @@ cv.addEventListener("dblclick", e => { if(VIEW || editing) return; const [x, y] 
 document.addEventListener("pointermove", e => {
   if(!DR) return;
   const [x, y] = pt(e);
-  if(DR.mode === "move" && !VIEW){ DR.n.x = Math.max(60, Math.round((x + DR.dx) / 4) * 4); DR.n.y = Math.max(30, Math.round((y + DR.dy) / 4) * 4); DR.moved = true; render(); }
+  if(DR.mode === "move" && !VIEW){
+    const n = DR.n; n.x = Math.max(60, Math.round((x + DR.dx) / 4) * 4); n.y = Math.max(30, Math.round((y + DR.dy) / 4) * 4); DR.moved = true;
+    // แม่เหล็ก: ดูดให้กึ่งกลางตรงกับรูปทรงอื่น (ลูกศรจะตรงเป๊ะ) ในรัศมี 12px
+    let bx = null, by = null;
+    D.nodes.forEach(o => { if(o === n) return; const dx = Math.abs(o.x - n.x), dy = Math.abs(o.y - n.y); if(dx <= 12 && (!bx || dx < bx.d)) bx = { d:dx, o }; if(dy <= 12 && (!by || dy < by.d)) by = { d:dy, o }; });
+    if(bx) n.x = bx.o.x; if(by) n.y = by.o.y;
+    render(); gT.innerHTML = "";
+    const g1 = (x1, y1, x2, y2) => S("path", { d:`M${x1},${y1} L${x2},${y2}`, stroke:"#EC4899", "stroke-width":2, "stroke-dasharray":"5 4", fill:"none" }, gT);
+    if(bx) g1(n.x, Math.min(n.y, bx.o.y) - 40, n.x, Math.max(n.y, bx.o.y) + 40);
+    if(by) g1(Math.min(n.x, by.o.x) - 60, n.y, Math.max(n.x, by.o.x) + 60, n.y);
+  }
   if(DR.mode === "ewidth"){
     const dist = DR.horiz ? Math.max(0, DR.my - y) : Math.max(0, x - DR.mx);
     DR.ed.w = Math.max(.5, Math.min(6, +(0.5 + dist / 14).toFixed(2))); if(Math.abs(DR.ed.w - 1) < .08) DR.ed.w = 1; DR.moved = true; render();
@@ -333,22 +343,27 @@ document.addEventListener("pointermove", e => {
   }
   if(DR.mode === "conn"){
     gT.innerHTML = ""; const [x1, y1] = anchor(DR.n, DR.side);
-    S("path", { d:`M${x1},${y1} L${x},${y}`, stroke:"#6366F1", "stroke-width":3, "stroke-dasharray":"6 5", fill:"none" }, gT);
     document.querySelectorAll(".node").forEach(g => g.style.opacity = 1);
-    const t = nodeAt(x, y, DR.n.id); DR.target = t; if(t){ const z = size(t); S("rect", { x:t.x - z.w / 2 - 5, y:t.y - z.h / 2 - 5, width:z.w + 10, height:z.h + 10, rx:10, fill:"none", stroke:"#6366F1", "stroke-width":3 }, gT); }
+    const t = nodeAt(x, y, DR.n.id); DR.target = t; let ex = x, ey = y, snapP = null;
+    if(t){ const sd = pickSide(DR.n, DR.side, t, x, y); snapP = anchor(t, sd); ex = snapP[0]; ey = snapP[1]; }
+    S("path", { d:`M${x1},${y1} L${ex},${ey}`, stroke:"#6366F1", "stroke-width":3, "stroke-dasharray":"6 5", fill:"none" }, gT);
+    if(t){ const z = size(t); S("rect", { x:t.x - z.w / 2 - 5, y:t.y - z.h / 2 - 5, width:z.w + 10, height:z.h + 10, rx:10, fill:"none", stroke:"#6366F1", "stroke-width":3 }, gT); S("circle", { cx:ex, cy:ey, r:9, fill:"#22C55E", stroke:"#fff", "stroke-width":3 }, gT); }
   }
 });
+// เลือกด้านปลายทางที่ลูกศรจะไปเกาะ: ใกล้จุดกึ่งกลางด้านไหนในรัศมี 30px "ดูด" เข้าด้านนั้น มิฉะนั้นเลือกอัตโนมัติ
+function pickSide(from, side, t, x, y){
+  const [x1, y1] = anchor(from, side);
+  const near = ["t", "b", "l", "r"].map(s => [s, Math.hypot(anchor(t, s)[0] - x, anchor(t, s)[1] - y)]).sort((p, q) => p[1] - q[1])[0];
+  if(near[1] < 30) return near[0];
+  if(t.y > y1 + 10) return "t"; if(t.y < y1 - 10) return t.x <= from.x ? "l" : "r"; return t.x > from.x ? "l" : "r";
+}
 document.addEventListener("pointerup", e => {
   if(!DR) return; const d = DR; DR = null; gT.innerHTML = ""; cv.classList.remove("connecting");
   if((d.mode === "move" || d.mode === "resize" || d.mode === "ewidth") && d.moved){ if(d.mode === "ewidth" && d.ed.w === 1) delete d.ed.w; push(); }
   if(d.mode === "conn"){
     const [x, y] = pt(e), t = d.target || nodeAt(x, y, d.n.id);
     if(!t) return;
-    let sb; const [x1, y1] = anchor(d.n, d.side), z = size(t);
-    // ถ้าปล่อยใกล้จุดจับของปลายทาง ใช้ด้านนั้น มิฉะนั้นเลือกอัตโนมัติ
-    const sides = ["t", "b", "l", "r"].map(s => [s, Math.hypot(anchor(t, s)[0] - x, anchor(t, s)[1] - y)]).sort((p, q) => p[1] - q[1])[0];
-    if(sides[1] < 16) sb = sides[0];
-    else if(t.y > y1 + 10) sb = "t"; else if(t.y < y1 - 10) sb = (t.x <= d.n.x ? "l" : "r"); else sb = t.x > d.n.x ? "l" : "r";
+    const sb = pickSide(d.n, d.side, t, x, y);
     if(D.edges.some(ed => ed.a === d.n.id && ed.b === t.id && ed.sa === d.side && ed.sb === sb)) return;
     const out = D.edges.filter(ed => ed.a === d.n.id).length;
     const ed = { id:"e" + (uid++), a:d.n.id, sa:d.side, b:t.id, sb, l:d.n.k === "dec" ? (out === 0 ? "ใช่" : out === 1 ? "ไม่ใช่" : "") : "" };
