@@ -34,6 +34,27 @@
   #palette h4{ margin:12px 0 6px; font-size:.8rem; color:#64748B; }
   .pitem{ margin:0 0 6px; }
   #palette .inp > input, #palette .inp > select{ pointer-events:none; }
+  #vdlg{ position:fixed; inset:0; z-index:6000; background:rgba(30,35,60,.55); display:flex; align-items:center; justify-content:center; padding:16px; animation:vfade .15s ease-out; }
+  @keyframes vfade{ from{ opacity:0; } to{ opacity:1; } } @keyframes vpop{ from{ transform:scale(.9) translateY(10px); opacity:0; } to{ transform:none; opacity:1; } }
+  #vdlg .vbox{ width:min(440px,100%); background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 18px 50px rgba(0,0,0,.35); border:4px solid #FF6B3D; animation:vpop .18s ease-out; }
+  #vdlg .vhead{ position:relative; background:#FF6B3D; color:#fff; text-align:center; font-weight:800; font-size:1.15rem; padding:12px 44px; }
+  #vdlg .vx{ position:absolute; right:10px; top:50%; transform:translateY(-50%); width:30px; height:30px; border:none; border-radius:50%; background:rgba(255,255,255,.25); color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+  #vdlg .vx:hover{ background:rgba(255,255,255,.45); }
+  #vdlg .vbody{ padding:18px 20px 6px; }
+  #vdlg label{ display:block; font-weight:800; color:#C2410C; margin-bottom:8px; } #vdlg label span{ font-weight:400; color:#9A6B55; font-size:.85em; }
+  #vdlg #vname{ width:100%; font:inherit; font-size:1.1rem; padding:10px 14px; border:3px solid #FDBA74; border-radius:12px; outline:none; background:#FFF7ED; color:#1F2430; }
+  #vdlg #vname:focus{ border-color:#FF6B3D; box-shadow:0 0 0 4px rgba(255,107,61,.2); }
+  #vdlg .vprev{ margin:14px 0 4px; text-align:center; }
+  #vdlg .vpill{ display:inline-block; background:#FF6B3D; color:#fff; font-weight:800; padding:5px 18px; border-radius:999px; border:2px solid #E5532A; box-shadow:0 3px 0 #E5532A; max-width:100%; overflow-wrap:anywhere; }
+  #vdlg .vpill.empty{ opacity:.45; }
+  #vdlg .vchips{ margin-top:10px; font-size:.85rem; color:#6B7280; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  #vdlg .vchip{ border:2px solid #FDBA74; background:#fff; color:#C2410C; font:inherit; font-size:.85rem; font-weight:700; padding:2px 12px; border-radius:999px; cursor:pointer; }
+  #vdlg .vchip:hover{ background:#FFEDD5; }
+  #vdlg .verr{ min-height:1.4em; margin-top:8px; color:#DC2626; font-weight:700; font-size:.88rem; }
+  #vdlg .vfoot{ display:flex; justify-content:flex-end; gap:10px; padding:8px 20px 18px; }
+  #vdlg .vfoot button{ font:inherit; font-weight:800; font-size:1rem; padding:9px 26px; border-radius:999px; cursor:pointer; }
+  #vdlg .vcancel{ background:#fff; color:#C2410C; border:3px solid #FDBA74; } #vdlg .vcancel:hover{ background:#FFF7ED; }
+  #vdlg .vok{ background:#FF6B3D; color:#fff; border:3px solid #E5532A; } #vdlg .vok:hover:not(:disabled){ background:#F25A2B; } #vdlg .vok:disabled{ opacity:.4; cursor:not-allowed; }
   #newvar{ border:2px dashed #FB923C; background:#FFF7ED; color:#C2410C; font:inherit; font-weight:700; font-size:.8rem; border-radius:10px; padding:4px 10px; cursor:pointer; margin-bottom:6px; }
 
   /* ───── พื้นที่เขียนโปรแกรม ───── */
@@ -385,11 +406,41 @@ function buildPalette(){
     ids.forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
   });
 }
+/* กล่องสร้างตัวแปร (สไตล์ Scratch) */
 function newVar(){
-  const n = (prompt("ตั้งชื่อตัวแปร (ควรสื่อความหมาย เช่น คะแนน, จำนวนรอบ)") || "").trim();
-  if(!n) return;
-  if(VARS.includes(n)) return toast("มีตัวแปรชื่อนี้แล้ว");
-  VARS.push(n); refreshVars(); save(); toast("สร้างตัวแปร \"" + n + "\" แล้ว");
+  if(document.getElementById("vdlg")) return;
+  const ov = el("div", ""); ov.id = "vdlg";
+  ov.innerHTML = `<div class="vbox" role="dialog" aria-modal="true" aria-label="ตัวแปรใหม่">
+    <div class="vhead">ตัวแปรใหม่<button type="button" class="vx" aria-label="ปิด">✕</button></div>
+    <div class="vbody">
+      <label for="vname">ตั้งชื่อตัวแปร <span>(ควรสื่อความหมาย)</span></label>
+      <input id="vname" maxlength="20" autocomplete="off" spellcheck="false" placeholder="เช่น คะแนน">
+      <div class="vprev"><span class="vpill" id="vpill">ชื่อตัวแปร</span></div>
+      <div class="vchips">ลองใช้: ${["คะแนน", "จำนวนรอบ", "ผลรวม", "อุณหภูมิ"].map(t => `<button type="button" class="vchip">${t}</button>`).join("")}</div>
+      <div class="verr" id="verr"></div>
+    </div>
+    <div class="vfoot"><button type="button" class="vcancel">ยกเลิก</button><button type="button" class="vok" disabled>ตกลง</button></div>
+  </div>`;
+  document.body.append(ov);
+  const inp = ov.querySelector("#vname"), ok = ov.querySelector(".vok"), err = ov.querySelector("#verr"), pill = ov.querySelector("#vpill");
+  const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
+  const check = () => {
+    const n = inp.value.trim(); pill.textContent = n || "ชื่อตัวแปร"; pill.classList.toggle("empty", !n);
+    const dup = n && VARS.includes(n); err.textContent = dup ? "มีตัวแปรชื่อ \"" + n + "\" อยู่แล้ว ลองตั้งชื่ออื่น" : "";
+    ok.disabled = !n || dup; return !ok.disabled;
+  };
+  const done = () => {
+    if(!check()) return; const n = inp.value.trim();
+    VARS.push(n); refreshVars(); save(); close(); toast("สร้างตัวแปร \"" + n + "\" แล้ว");
+    if(window.sfx && sfx.coin) try{ sfx.coin(); }catch(e){}
+  };
+  function onKey(e){ if(e.key === "Escape"){ e.stopPropagation(); close(); } else if(e.key === "Enter" && document.activeElement === inp){ e.preventDefault(); done(); } }
+  document.addEventListener("keydown", onKey, true);
+  inp.addEventListener("input", check); ok.onclick = done;
+  ov.querySelector(".vcancel").onclick = close; ov.querySelector(".vx").onclick = close;
+  ov.addEventListener("pointerdown", e => { if(e.target === ov) close(); });
+  ov.querySelectorAll(".vchip").forEach(b => b.onclick = () => { inp.value = b.textContent; check(); inp.focus(); });
+  check(); setTimeout(() => inp.focus(), 30);
 }
 function refreshVars(){
   const top = $("#palette").scrollTop; buildPalette(); $("#palette").scrollTop = top;
