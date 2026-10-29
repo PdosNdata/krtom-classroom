@@ -58,6 +58,12 @@
   #vars{ padding:6px 12px 10px; font-size:.8rem; color:#475569; }
   #vars span{ display:inline-block; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:0 8px; margin:2px 4px 2px 0; font-family:var(--mono); }
   #check{ padding:8px 12px 10px; font-size:.82rem; line-height:1.6; max-height:260px; overflow:auto; }
+  #langs{ display:flex; gap:6px; margin:8px 12px 0; }
+  #langs button{ flex:1; padding:6px; border:2px solid #C7D2FE; border-radius:10px; background:#fff; font:inherit; font-weight:700; cursor:pointer; }
+  #langs button.on{ background:#6366F1; border-color:#6366F1; color:#fff; }
+  #genbtn,#copybtn{ margin:8px 12px 0; padding:8px; border:none; border-radius:10px; background:#10B981; color:#fff; font:inherit; font-weight:800; cursor:pointer; }
+  #copybtn{ background:#64748B; margin-bottom:12px; }
+  #gencode{ margin:8px 12px 0; padding:10px; background:#0F172A; color:#E2E8F0; border-radius:10px; font:12.5px/1.55 Consolas,"Courier New",monospace; white-space:pre-wrap; word-break:break-word; min-height:60px; max-height:320px; overflow:auto; }
   #check .ok{ color:#047857; } #check .bad{ color:#B45309; } #check .tip{ color:#475569; }
   .help{ padding:8px 12px 12px; font-size:.8rem; line-height:1.7; color:#475569; }
   .help code{ background:#F1F5F9; border-radius:4px; padding:0 5px; font-family:var(--mono); color:#B91C1C; font-weight:700; }
@@ -107,6 +113,12 @@
   <div id="right">
     <div class="panel"><h3>▶ ผลการทดลองรัน</h3><div id="out"><span class="dim">กดปุ่ม "▶ ทดลองรัน" เพื่อให้คอมพิวเตอร์ทำตามรหัสลำลองของคุณ</span></div><div id="vars"></div></div>
     <div class="panel"><h3>✅ ตรวจรหัสลำลอง</h3><div id="check"><span class="tip">กดปุ่ม "✅ ตรวจรหัส" เพื่อตรวจความถูกต้อง</span></div></div>
+    <div class="panel"><h3>💻 แปลงเป็นโค้ด</h3>
+      <div id="langs"><button type="button" data-l="py" class="on">🐍 Python</button><button type="button" data-l="js">🟨 JavaScript</button></div>
+      <button id="genbtn">สร้างโค้ดจากรหัสลำลองของฉัน</button>
+      <pre id="gencode">เลือกภาษา แล้วกดปุ่มด้านบน ระบบจะแปลงรหัสลำลองเป็นโค้ดให้</pre>
+      <button id="copybtn">📋 คัดลอกโค้ด</button>
+    </div>
     <div class="panel"><h3>📖 คำสั่งที่ใช้ได้</h3>
       <div class="help">
         <code>START</code> / <code>END</code> เริ่มต้น / จบ<br>
@@ -352,6 +364,77 @@ const SAMPLES = {
 };
 function setCode(t){ code.value = t; errLines.clear(); paint(); save(); out.innerHTML = '<span class="dim">กดปุ่ม "▶ ทดลองรัน" เพื่อให้คอมพิวเตอร์ทำตามรหัสลำลองของคุณ</span>'; $("#vars").innerHTML = ""; }
 $("#sample").onchange = function(){ const k = this.value; this.value = ""; if(!k) return; if(code.value.trim() && !confirm("โหลดตัวอย่างจะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return; setCode(SAMPLES[k].join("\n")); toast("โหลดตัวอย่างแล้ว — กด ✅ ตรวจรหัส หรือ ▶ ทดลองรัน"); };
+
+/* ---------- แปลงรหัสลำลองเป็น Python / JavaScript ---------- */
+const PCG = (function(){
+  function ex(e, py){
+    const out = [];
+    for(const t of e.match(TOK) || []){
+      if(/^\s+$/.test(t)) continue;
+      if(/^["“'].*["”']$/.test(t)){ out.push(JSON.stringify(t.slice(1, -1))); continue; }
+      if(/^[A-Za-z_ก-๙]/.test(t)){
+        const u = t.toUpperCase();
+        if(u === "MOD") out.push("%"); else if(u === "AND") out.push(py ? "and" : "&&"); else if(u === "OR") out.push(py ? "or" : "||"); else if(u === "NOT") out.push(py ? "not" : "!");
+        else if(u === "TRUE") out.push(py ? "True" : "true"); else if(u === "FALSE") out.push(py ? "False" : "false"); else out.push(t);
+        continue;
+      }
+      out.push({ "=":"==", "<>":"!=", "≥":">=", "≤":"<=", "×":"*", "÷":"/", "−":"-" }[t] || t);
+    }
+    return out.join(" ").replace(/\( /g, "(").replace(/ \)/g, ")").replace(/! \(/g, "!(");
+  }
+  const splitArgs = (e) => (e.match(/"[^"]*"|“[^”]*”|'[^']*'|[^,]+/g) || []).map(x => x.trim()).filter(Boolean);
+  function tree(){
+    const root = [], stack = [{ body:root }];
+    code.value.split("\n").forEach(raw => {
+      const t = raw.trim(), cm = /^(\/\/|#)/.test(t) ? t.replace(/^(\/\/|#)\s*/, "") : null;
+      const cur = () => stack[stack.length - 1];
+      if(cm !== null){ if(cm) cur().body.push({ t:"cmt", x:cm }); return; }
+      const p = parseLine(raw); if(!p) return;
+      if(p.k === "START" || p.k === "END") return;
+      if(p.k === "INPUT"){ p.a.forEach(v => cur().body.push({ t:"in", v })); }
+      else if(p.k === "SET") cur().body.push({ t:"set", v:p.v, e:p.e });
+      else if(p.k === "DISPLAY") cur().body.push({ t:"out", a:splitArgs(p.e) });
+      else if(p.k === "DO") cur().body.push({ t:"cmt", x:p.a });
+      else if(p.k === "IF"){ const n = { t:"if", e:p.e, yes:[], no:[] }; cur().body.push(n); stack.push({ n, body:n.yes }); }
+      else if(p.k === "WHILE"){ const n = { t:"while", e:p.e, body:[] }; cur().body.push(n); stack.push({ n, body:n.body }); }
+      else if(p.k === "ELSE"){ const c = cur(); if(c.n && c.n.t === "if") c.body = c.n.no; }
+      else if(p.k === "ENDIF" || p.k === "ENDWHILE"){ if(stack.length > 1) stack.pop(); }
+      else cur().body.push({ t:"cmt", x:p.t });
+    });
+    return root;
+  }
+  function render(list, lang){
+    const py = lang === "py", I = py ? "    " : "  ", vars = [], note = (v) => { if(!vars.includes(v)) vars.push(v); };
+    const cm = (x) => (py ? "# " : "// ") + x;
+    const go = (l, d) => {
+      const pad = I.repeat(d), o = [];
+      l.forEach(s => {
+        if(s.t === "in"){ note(s.v); o.push(py ? `${pad}${s.v} = float(input("${s.v} = "))` : `${pad}${s.v} = Number(prompt("${s.v} = "));`); }
+        else if(s.t === "set"){ note(s.v); o.push(py ? `${pad}${s.v} = ${ex(s.e, true)}` : `${pad}${s.v} = ${ex(s.e, false)};`); }
+        else if(s.t === "out"){ const a = s.a.map(x => ex(x, py)).join(", "); o.push(py ? `${pad}print(${a})` : `${pad}console.log(${a});`); }
+        else if(s.t === "cmt") o.push(pad + cm(s.x));
+        else if(s.t === "while"){ const b = go(s.body, d + 1), c = ex(s.e, py); if(py) o.push(`${pad}while ${c}:`, ...(b.length ? b : [pad + I + "pass"])); else o.push(`${pad}while (${c}) {`, ...b, `${pad}}`); }
+        else if(s.t === "if"){
+          const y = go(s.yes, d + 1), n = go(s.no, d + 1), c = ex(s.e, py);
+          if(py){ o.push(`${pad}if ${c}:`, ...(y.length ? y : [pad + I + "pass"])); if(n.length) o.push(`${pad}else:`, ...n); }
+          else{ o.push(`${pad}if (${c}) {`, ...y, `${pad}}` + (n.length ? " else {" : "")); if(n.length) o.push(...n, `${pad}}`); }
+        }
+      });
+      return o;
+    };
+    const body = go(list, 0), head = [py ? "# โค้ด Python สร้างจากรหัสลำลองของฉัน" : "// โค้ด JavaScript สร้างจากรหัสลำลองของฉัน (รันในคอนโซลของเบราว์เซอร์ได้)"];
+    if(!py && vars.length) head.push(`let ${vars.join(", ")};`);
+    return [...head, ...body].join("\n");
+  }
+  return { generate(lang){ if(!code.value.trim()) return "ยังไม่ได้เขียนรหัสลำลอง"; try{ return render(tree(), lang); }catch(e){ return "แปลงเป็นโค้ดไม่สำเร็จ — กด ✅ ตรวจรหัส เพื่อดูข้อผิดพลาดก่อน"; } } };
+})();
+let genLang = "py", genOn = false;
+function showGen(){ genOn = true; $("#gencode").textContent = PCG.generate(genLang); $("#langs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.l === genLang)); }
+$("#langs").onclick = (e) => { const b = e.target.closest("button[data-l]"); if(!b) return; genLang = b.dataset.l; showGen(); };
+$("#genbtn").onclick = showGen;
+code.addEventListener("input", () => { if(genOn) showGen(); });
+$("#copybtn").onclick = () => { const t = $("#gencode").textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast("คัดลอกโค้ดแล้ว"), () => { const r = document.createRange(); r.selectNodeContents($("#gencode")); getSelection().removeAllRanges(); getSelection().addRange(r); toast("เลือกโค้ดไว้แล้ว กด Ctrl+C เพื่อคัดลอก"); }); };
+window.__pcg = PCG;
 
 /* ---------- ส่ง / แชร์ ---------- */
 const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
