@@ -21,6 +21,10 @@
   #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:320px; }
   #sharemenu.open{ display:block; }
   #sharemenu button{ display:block; width:100%; text-align:left; background:none !important; color:#1F2430 !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; }
+  #sharemenu a{ display:block; text-align:left; color:#B91C1C !important; background:none !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; text-decoration:none; cursor:pointer; }
+  #sharemenu a:hover,#sharemenu button:hover{ background:#EEF2FF !important; }
+  #sharemenu hr{ border:none; border-top:1px solid var(--bd); margin:4px 2px; }
+  #sharemenu kbd{ float:right; font:inherit; font-size:.72rem; color:#64748B; }
   #sharemenu button:hover{ background:#EEF2FF !important; } #sharemenu button[disabled]{ opacity:.4; cursor:not-allowed; }
 
   #app{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 340px; gap:8px; padding:8px; }
@@ -75,15 +79,21 @@
     <option value="ex-loop2">ทำซ้ำ 2: ผลรวม 1 ถึง 5</option>
   </select>
   <div style="position:relative">
-    <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
+    <button id="sharebtn">📁 ไฟล์ ▾</button>
     <div id="sharemenu">
+      <button id="f-save">💾 บันทึก<kbd>Ctrl+S</kbd></button>
+      <button id="f-saveas">📄 บันทึกเป็น…</button>
+      <button id="f-open">📂 เปิด…<kbd>Ctrl+O</kbd></button>
+      <input type="file" id="f-input" accept=".txt,text/plain" hidden>
+      <hr>
       <button id="sh-ws">📥 ส่งรหัสลำลองไปใบงาน / แบบทดสอบ (ใส่ในช่องข้อ 6)</button>
       <button id="sh-link">🔗 คัดลอกลิงก์รหัสลำลอง (ส่งให้ครูเปิดดู)</button>
       <button id="sh-text">📝 คัดลอกเป็นข้อความ</button>
-      <button id="sh-txt">💾 บันทึกเป็นไฟล์ .txt</button>
+      <button id="sh-txt">⬇️ ส่งออกเป็นไฟล์ .txt (ดาวน์โหลด)</button>
+      <hr>
+      <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิด</a>
     </div>
   </div>
-  <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิดแท็บนี้</a>
 </header>
 <div id="viewbar">👀 กำลังดูรหัสลำลองที่แชร์มา — <button id="viewedit">✏️ คัดลอกไปแก้ไขต่อ</button></div>
 
@@ -350,18 +360,77 @@ if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = BACK[0]
 $("#backlink").addEventListener("click", e => { e.preventDefault(); const to = $("#backlink").getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); });
 const b64e = (t) => btoa(unescape(encodeURIComponent(t))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/"))));
+const SB_RPC = "https://dhufwdxxfbahovnmjgrc.supabase.co/rest/v1/rpc/", SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
+async function sbCall(fn, body){
+  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 5000);
+  try{ const r = await fetch(SB_RPC + fn, { method:"POST", signal:ac.signal, headers:{ "Content-Type":"application/json", apikey:SB_KEY, Authorization:"Bearer " + SB_KEY }, body:JSON.stringify(body) }); if(!r.ok) throw new Error(r.status); return await r.json(); }
+  finally{ clearTimeout(tm); }
+}
+// ลิงก์สั้น (?s=รหัส 6 ตัว) — ถ้าทำไม่ได้ใช้ลิงก์ยาวแทน
+async function shareLink(){
+  const txt = code.value;
+  if(shareLink.k === txt && shareLink.u) return shareLink.u;
+  try{
+    const c = await sbCall("krtom_flow_share_put", { p_data:{ kind:"pseudo", nodes:[], edges:[], text:txt } });
+    if(typeof c === "string" && /^[A-Z0-9]{6}$/.test(c)){ const u = new URL("pseudocode.html", location.href); u.search = ""; u.searchParams.set("s", c); shareLink.k = txt; shareLink.u = u.href; return u.href; }
+  }catch(e){}
+  return shareURL();
+}
 const shareURL = () => { const u = new URL("pseudocode.html", location.href); u.search = ""; u.searchParams.set("c", b64e(code.value)); return u.href; };
 async function copyText(t){ try{ await navigator.clipboard.writeText(t); return true; }catch(e){ const a = document.createElement("textarea"); a.value = t; a.style.cssText = "position:fixed;opacity:0"; document.body.append(a); a.select(); let ok = false; try{ ok = document.execCommand("copy"); }catch(_){} a.remove(); return ok; } }
 const menu = $("#sharemenu");
 $("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
 document.addEventListener("click", () => menu.classList.remove("open"));
 if(!BACK){ $("#sh-ws").disabled = true; $("#sh-ws").title = "เปิดโปรแกรมนี้จากปุ่มในใบงาน จึงจะส่งไปใบงานได้"; }
-$("#sh-link").onclick = async () => { if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์รหัสลำลองแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-link").onclick = async () => { if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง"); toast("กำลังสร้างลิงก์..."); toast((await copyText(await shareLink())) ? "คัดลอกลิงก์รหัสลำลองแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
 $("#sh-text").onclick = async () => toast((await copyText(code.value)) ? "คัดลอกรหัสลำลองแล้ว" : "คัดลอกไม่สำเร็จ");
-$("#sh-txt").onclick = () => { const a = document.createElement("a"); a.download = "รหัสลำลอง.txt"; a.href = URL.createObjectURL(new Blob(["﻿" + code.value], { type:"text/plain;charset=utf-8" })); a.click(); };
-$("#sh-ws").onclick = () => {
+$("#sh-txt").onclick = () => { if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง"); download(); toast("ส่งออกไฟล์ .txt แล้ว"); };
+/* ---------- เมนูไฟล์: บันทึก / บันทึกเป็น / เปิด ---------- */
+let fileHandle = null;
+const TXT_TYPES = [{ description:"รหัสลำลอง (.txt)", accept:{ "text/plain":[".txt"] } }];
+const fileName = () => "รหัสลำลอง-" + new Date().toISOString().slice(0, 10) + ".txt";
+const fileBody = () => "\uFEFF" + code.value;
+async function saveAs(){
+  if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง");
+  try{
+    if(window.showSaveFilePicker){
+      const h = await showSaveFilePicker({ suggestedName:fileName(), types:TXT_TYPES });
+      const w = await h.createWritable(); await w.write(fileBody()); await w.close(); fileHandle = h; return toast("บันทึกไฟล์ " + h.name + " แล้ว ✅");
+    }
+    download(); toast("บันทึกไฟล์แล้ว (ดูในโฟลเดอร์ดาวน์โหลด) ✅");
+  }catch(e){ if(e && e.name === "AbortError") return; toast("บันทึกไฟล์ไม่สำเร็จ"); }
+}
+function download(){ const a = document.createElement("a"); a.download = fileName(); a.href = URL.createObjectURL(new Blob([fileBody()], { type:"text/plain;charset=utf-8" })); document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000); }
+async function saveFile(){
+  if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง");
+  if(fileHandle){ try{ const w = await fileHandle.createWritable(); await w.write(fileBody()); await w.close(); return toast("บันทึกทับ " + fileHandle.name + " แล้ว ✅"); }catch(e){ fileHandle = null; } }
+  await saveAs();
+}
+function loadText(t){
+  t = String(t).replace(/^\uFEFF/, "");
+  if(t.length > 60000 || /[\u0000-\u0008]/.test(t)) throw new Error("bad");
+  VIEW = false; code.readOnly = false; $("#viewbar").style.display = "none"; setCode(t);
+}
+async function openFile(){
+  if(code.value.trim() && !confirm("เปิดไฟล์ใหม่จะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการเปิดไหม?")) return;
+  try{
+    if(window.showOpenFilePicker){
+      const [h] = await showOpenFilePicker({ types:TXT_TYPES });
+      loadText(await (await h.getFile()).text()); fileHandle = h; return toast("เปิดไฟล์ " + h.name + " แล้ว");
+    }
+    $("#f-input").click();
+  }catch(e){ if(e && e.name === "AbortError") return; toast("เปิดไฟล์ไม่ได้ — ต้องเป็นไฟล์ข้อความ (.txt) ที่บันทึกจากหน้านี้"); }
+}
+$("#f-input").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if(!f) return; try{ loadText(await f.text()); fileHandle = null; toast("เปิดไฟล์ " + f.name + " แล้ว"); }catch(_){ toast("เปิดไฟล์ไม่ได้ — ต้องเป็นไฟล์ข้อความ (.txt) ที่บันทึกจากหน้านี้"); } };
+$("#f-save").onclick = saveFile; $("#f-saveas").onclick = saveAs; $("#f-open").onclick = openFile;
+document.addEventListener("keydown", e => {
+  if(!(e.ctrlKey || e.metaKey) || e.shiftKey || e.altKey) return;
+  const k = e.key.toLowerCase(); if(k === "s"){ e.preventDefault(); saveFile(); } else if(k === "o"){ e.preventDefault(); openFile(); }
+});
+
+$("#sh-ws").onclick = async () => {
   if(!BACK) return; if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง");
-  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz"), txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + shareURL();
+  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz"), txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + await shareLink();
   try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < PART * 8) arr.push(""); arr[(PART - 1) * 8 + 5] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งรหัสลำลองไปที่ข้อ 6 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
   catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
 };
@@ -376,6 +445,14 @@ try{
   else if(ex === "blank"){ if(!code.value.trim()) code.value = "START\n    \nEND"; }
 }catch(e){ toast("เปิดรหัสลำลองจากลิงก์ไม่ได้ — ลิงก์อาจไม่ครบ"); }
 paint();
+(async () => {
+  const sc = QS.get("s"); if(!sc || QS.get("c")) return;
+  try{
+    const d = await sbCall("krtom_flow_share_get", { p_code:sc });
+    if(!d || d.kind !== "pseudo" || typeof d.text !== "string") return toast("ไม่พบรหัสลำลองตามลิงก์นี้ — ตรวจรหัสลิงก์อีกครั้ง");
+    VIEW = true; code.value = d.text; code.readOnly = true; $("#viewbar").style.display = "block"; paint();
+  }catch(e){ toast("เปิดรหัสลำลองจากลิงก์ไม่ได้ — ตรวจอินเทอร์เน็ตแล้วลองใหม่"); }
+})();
 window.__pc = { analyze, SAMPLES, setCode, formatCode, get code(){ return code.value; } };
 </script>
 </body>
