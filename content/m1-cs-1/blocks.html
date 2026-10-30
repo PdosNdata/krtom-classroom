@@ -141,6 +141,8 @@
     .panel.pal{ order:3; } .panel.wsp{ order:2; }
     #trashhint{ display:none !important; }
   }
+  .swal2-popup{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif !important; font-size:1rem !important; }
+  .swal2-title{ font-size:1.35rem !important; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -227,6 +229,8 @@
 <div id="trashhint"></div>
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../assets/js/askdlg.js?v=1"></script>
 <script src="../../assets/js/sfx.js?v=1"></script>
 <script>
 "use strict";
@@ -728,7 +732,7 @@ $("#askin").addEventListener("keydown", e => { if(e.key === "Enter") $("#askok")
 $("#spr").onchange = setSprite; $("#rot").onchange = renderSprite;
 
 /* ---------- แถบเครื่องมือ ---------- */
-$("#clearws").onclick = () => { if(!allScripts().length || confirm("ลบบล็อกทั้งหมดในพื้นที่เขียนโปรแกรม?")){ allScripts().forEach(s => s.remove()); hint(); save(); } };
+$("#clearws").onclick = async () => { if(!allScripts().length || await askConfirm("ลบบล็อกทั้งหมดในพื้นที่เขียนโปรแกรม?", { danger:true, title:"ลบทั้งหมดไหม?", confirmText:"ลบเลย" })){ allScripts().forEach(s => s.remove()); hint(); save(); } };
 $("#tidy").onclick = () => { let y = 16; allScripts().forEach(sc => { sc.style.left = "16px"; sc.style.top = y + "px"; y += sc.getBoundingClientRect().height / ZM + 20; }); save(); };
 
 /* ---------- ตัวอย่างโปรแกรม (ภารกิจ) ---------- */
@@ -770,9 +774,9 @@ Object.assign(SAMPLES, {
 });
 const EXNAME2 = { "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
 const EXNAME = { "ex-seq1":"แปรงฟัน", "ex-seq2":"หาพื้นที่สี่เหลี่ยมผืนผ้า", "ex-sel1":"ตรวจผลสอบ", "ex-sel2":"เลขคู่หรือเลขคี่", "ex-loop1":"วาดสี่เหลี่ยมจัตุรัส", "ex-loop2":"หาผลรวม 1 ถึง 5" };
-$("#sample").onchange = function(){
+$("#sample").onchange = async function(){
   const k = this.value; this.value = ""; if(!k) return;
-  if(allScripts().length && !confirm("โหลดตัวอย่างจะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return;
+  if(allScripts().length && !(await askConfirm("โหลดตัวอย่างจะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"โหลดตัวอย่าง?", confirmText:"โหลดเลย" }))) return;
   loadJSON(JSON.parse(JSON.stringify(SAMPLES[k]))); stopAll(); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
   toast("โหลดตัวอย่างแล้ว — กด 🟩 ธงเขียว เพื่อรัน");
 };

@@ -70,6 +70,8 @@
   .help code{ background:#F1F5F9; border-radius:4px; padding:0 5px; font-family:var(--mono); color:#B91C1C; font-weight:700; }
   #toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); background:#1F2937; color:#fff; padding:8px 18px; border-radius:999px; font-size:.85rem; display:none; z-index:3000; }
   @media (max-width:980px){ html,body{ height:auto; } #app{ grid-template-columns:1fr; } #edwrap{ min-height:340px; } }
+  .swal2-popup{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif !important; font-size:1rem !important; }
+  .swal2-title{ font-size:1.35rem !important; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -136,6 +138,8 @@
 </div>
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../assets/js/askdlg.js?v=1"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -213,7 +217,7 @@ const TOOLS = [
 ];
 const tools = $("#tools");
 TOOLS.forEach(([n, f]) => { if(!f){ const s = document.createElement("span"); s.className = "sep"; tools.append(s); return; } const b = document.createElement("button"); b.textContent = n; b.title = "แทรกคำสั่ง " + n; b.onclick = f; tools.append(b); });
-[["✨ จัดรูปแบบ", "act2", formatCode], ["✅ ตรวจรหัส", "act2", runCheck], ["▶ ทดลองรัน", "act", runProg], ["🗑️ ล้าง", "", () => { if(!code.value.trim() || confirm("ล้างรหัสลำลองทั้งหมด?")){ code.value = ""; errLines.clear(); paint(); save(); } }]].forEach(([n, c, f]) => {
+[["✨ จัดรูปแบบ", "act2", formatCode], ["✅ ตรวจรหัส", "act2", runCheck], ["▶ ทดลองรัน", "act", runProg], ["🗑️ ล้าง", "", async () => { if(!code.value.trim() || await askConfirm("ล้างรหัสลำลองทั้งหมด?", { danger:true, title:"ล้างทั้งหมดไหม?", confirmText:"ล้างเลย" })){ code.value = ""; errLines.clear(); paint(); save(); } }]].forEach(([n, c, f]) => {
   const b = document.createElement("button"); b.textContent = n; if(c) b.className = c; b.onclick = f; tools.append(b); });
 
 /* ---------- แยกบรรทัดเป็นคำสั่ง ---------- */
@@ -364,7 +368,7 @@ const SAMPLES = {
   "ex-loop2": ["START", "    SET total = 0", "    SET count = 1", "    WHILE count <= 5 DO", "        COMPUTE total = total + count", "        COMPUTE count = count + 1", "    ENDWHILE", "    DISPLAY total", "END"]
 };
 function setCode(t){ code.value = t; errLines.clear(); paint(); save(); out.innerHTML = '<span class="dim">กดปุ่ม "▶ ทดลองรัน" เพื่อให้คอมพิวเตอร์ทำตามรหัสลำลองของคุณ</span>'; $("#vars").innerHTML = ""; }
-$("#sample").onchange = function(){ const k = this.value; this.value = ""; if(!k) return; if(code.value.trim() && !confirm("โหลดตัวอย่างจะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return; setCode(SAMPLES[k].join("\n")); toast("โหลดตัวอย่างแล้ว — กด ✅ ตรวจรหัส หรือ ▶ ทดลองรัน"); };
+$("#sample").onchange = async function(){ const k = this.value; this.value = ""; if(!k) return; if(code.value.trim() && !(await askConfirm("โหลดตัวอย่างจะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"โหลดตัวอย่าง?", confirmText:"โหลดเลย" }))) return; setCode(SAMPLES[k].join("\n")); toast("โหลดตัวอย่างแล้ว — กด ✅ ตรวจรหัส หรือ ▶ ทดลองรัน"); };
 
 /* ---------- แปลงรหัสลำลองเป็น Python / JavaScript ---------- */
 const PCG = (function(){
@@ -496,7 +500,7 @@ function loadText(t){
   VIEW = false; code.readOnly = false; $("#viewbar").style.display = "none"; setCode(t);
 }
 async function openFile(){
-  if(code.value.trim() && !confirm("เปิดไฟล์ใหม่จะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการเปิดไหม?")) return;
+  if(code.value.trim() && !(await askConfirm("เปิดไฟล์ใหม่จะแทนที่รหัสที่เขียนไว้ตอนนี้ ต้องการเปิดไหม?", { title:"เปิดไฟล์ใหม่?", confirmText:"เปิดไฟล์" }))) return;
   try{
     if(window.showOpenFilePicker){
       const [h] = await showOpenFilePicker({ types:TXT_TYPES });

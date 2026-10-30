@@ -83,6 +83,8 @@
     html,body{ height:auto; } #app{ grid-template-columns:1fr; } #pal{ flex-direction:row; flex-wrap:wrap; } .pitem{ width:120px; }
     #cvwrap{ min-height:480px; }
   }
+  .swal2-popup{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif !important; font-size:1rem !important; }
+  .swal2-title{ font-size:1.35rem !important; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -148,6 +150,8 @@
 <div id="ctx"></div>
 <div id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../assets/js/askdlg.js?v=1"></script>
 <script>
 "use strict";
 const $ = (s, r = document) => r.querySelector(s);
@@ -280,7 +284,7 @@ function delSel(){
 }
 function undo(){ if(VIEW || snap.length < 2) return toast("ย้อนกลับไม่ได้แล้ว"); snap.pop(); D = JSON.parse(snap[snap.length - 1]); sel = null; render(); save(); }
 $("#del").onclick = delSel; $("#undo").onclick = undo;
-$("#clear").onclick = () => { if(!D.nodes.length || confirm("ลบผังงานทั้งหมด?")){ D = { nodes:[], edges:[] }; sel = null; push(); render(); } };
+$("#clear").onclick = async () => { if(!D.nodes.length || await askConfirm("ลบผังงานทั้งหมด?", { danger:true, title:"ลบทั้งหมดไหม?", confirmText:"ลบเลย" })){ D = { nodes:[], edges:[] }; sel = null; push(); render(); } };
 document.addEventListener("keydown", e => {
   if(e.target.closest("input,textarea,select")) return;
   if(e.key === "Delete" || e.key === "Backspace"){ e.preventDefault(); delSel(); }
@@ -692,9 +696,9 @@ const SAMPLES = {
   "ex-loop2": { type:"while", pre:[T("เริ่มต้น"), P("total = 0, count = 1")], cond:"count <= 5 ?", body:[P("total = total + count"), P("count = count + 1")], post:[IO("แสดง total"), T("จบ")] }
 };
 function loadSample(k){ auto(SAMPLES[k]); sel = null; push(); render(); }
-$("#sample").onchange = function(){
+$("#sample").onchange = async function(){
   const k = this.value; this.value = ""; if(!k) return;
-  if(D.nodes.length && !confirm("โหลดตัวอย่างจะแทนที่ผังงานที่วาดไว้ตอนนี้ ต้องการทำต่อหรือไม่?")) return;
+  if(D.nodes.length && !(await askConfirm("โหลดตัวอย่างจะแทนที่ผังงานที่วาดไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"โหลดตัวอย่าง?", confirmText:"โหลดเลย" }))) return;
   loadSample(k); toast("โหลดตัวอย่างแล้ว — ลองลากย้ายรูปทรง หรือกดตรวจผังงาน");
 };
 
@@ -807,7 +811,7 @@ async function saveFile(){
   await saveAs();
 }
 async function openFile(){
-  if(D.nodes.length && !confirm("เปิดไฟล์ใหม่จะแทนที่ผังงานที่วาดอยู่ตอนนี้ (กดย้อนกลับ Ctrl+Z ได้) ต้องการเปิดไหม?")) return;
+  if(D.nodes.length && !(await askConfirm("เปิดไฟล์ใหม่จะแทนที่ผังงานที่วาดอยู่ตอนนี้ (กดย้อนกลับ Ctrl+Z ได้) ต้องการเปิดไหม?", { title:"เปิดไฟล์ใหม่?", confirmText:"เปิดไฟล์" }))) return;
   try{
     if(window.showOpenFilePicker){
       const [h] = await showOpenFilePicker({ types:[{ description:"ผังงาน (.json)", accept:{ "application/json":[".json"] } }] });
