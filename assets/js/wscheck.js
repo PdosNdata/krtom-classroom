@@ -1,4 +1,4 @@
-/* wscheck.js — ระบบตรวจใบงาน ม.1 หน่วย 2 (ใบ 2.2–2.7) อัตโนมัติ
+/* wscheck.js — ระบบตรวจใบงาน ม.1 หน่วย 2 (ใบ 2.2–2.7) และหน่วย 1 (ใบ 1.1–1.7: run1) อัตโนมัติ
  * ตรวจ 8 ข้อ ข้อละ 1 คะแนน:
  *   ข้อ 1–4  ตรวจคำสำคัญ (วัตถุประสงค์ / Input / Process / Output)
  *   ข้อ 5    ตรวจรูปแบบและลำดับของอัลกอริทึมแบบธรรมชาติ
@@ -233,6 +233,119 @@ function run8(vals){
   return { fields, score, max:24 };
 }
 
+/* ───────── ใบงานหน่วยที่ 1 (ใบ 1.1–1.7): ตรวจเบื้องต้นรายข้อ ข้อละ 1 คะแนน ───────── */
+const TH_ITEM_SEP = /[\n,;、/|•·]+|\s+และ\s+|\s{2,}|(?:^|\s)\d+[.)]\s*|\s-\s/;
+function itemsOf(v){
+  let a = String(v || "").split(TH_ITEM_SEP).map(s => s.trim()).filter(s => s.length >= 2);
+  if(a.length < 2) a = String(v || "").split(/\s+/).map(s => s.trim()).filter(s => s.length >= 2);   // เขียนคั่นด้วยเว้นวรรค
+  return a;
+}
+function segsOf(v){ return String(v || "").split(/\n|→|->|\d+[.)]\s*|[;,]|แล้ว|จากนั้น/).map(s => s.trim()).filter(Boolean); }
+function firstAt(segs, re, from){ for(let i = from || 0; i < segs.length; i++) if(re.test(segs[i])) return i; return -1; }
+const short = (v, n) => !v || v.trim().length < (n || 8);
+const SHORTMSG = "ยังไม่ได้ตอบ หรือตอบสั้นเกินไป";
+// คำนวณสูตรที่นักเรียนเขียน (ใช้ตัวแปร N) — คืน function หรือ null
+function formulaFn(text){
+  let s = String(text || ""); const eq = s.lastIndexOf("="); if(eq >= 0) s = s.slice(eq + 1);
+  s = s.split("\n")[0].replace(/[×xX✕]/g, "*").replace(/÷/g, "/").replace(/−/g, "-").replace(/[Nn]/g, "(N)").replace(/\s+/g, "");
+  if(!s || /[^0-9N()+\-*/.]/.test(s)) return null;
+  s = s.replace(/(\d|\))\(/g, "$1*(");
+  try{ const f = new Function("N", "return (" + s + ");"); const t = f(1); if(typeof t !== "number" || !isFinite(t)) return null; return f; }catch(e){ return null; }
+}
+
+const R1 = {
+  1: { titles:["ปัญหาที่เลือก", "สาระสำคัญของปัญหา", "รายละเอียดที่ตัดทิ้ง", "วิธีการแก้ปัญหา"],
+    f:[
+      (v) => short(v) ? [SHORTMSG] : [],
+      (v) => short(v) ? [SHORTMSG] : itemsOf(v).length >= 2 ? [] : ["สาระสำคัญควรเขียนอย่างน้อย 2 อย่าง (คั่นด้วย , หรือขึ้นบรรทัดใหม่)"],
+      (v, a) => { if(short(v, 4)) return [SHORTMSG]; const s = itemsOf(a[1]), d = itemsOf(v); return d.length && d.every(x => s.includes(x)) ? ["สิ่งที่ตัดทิ้งไม่ควรซ้ำกับสาระสำคัญในข้อ 2"] : []; },
+      (v, a) => { if(short(v, 20)) return ["วิธีแก้ปัญหาควรอธิบายให้ละเอียดกว่านี้ (อย่างน้อย 20 ตัวอักษร)"]; const s = itemsOf(a[1]); return (s.some(x => v.includes(x)) || /สาระสำคัญ|รูปแบบ|ตัดทิ้ง|นามธรรม|แผนภาพ|แบบจำลอง/.test(v)) ? [] : ["วิธีแก้ปัญหาควรนำ \"สาระสำคัญ\" ที่เขียนไว้ในข้อ 2 มาใช้"]; }
+    ] },
+  2: { titles:["ปัญหาที่เลือก", "อัลกอริทึมแบบภาษาธรรมชาติ", "รหัสลำลอง (Pseudo Code)", "ผังงาน (Flowchart)"],
+    f:[
+      (v) => short(v) ? [SHORTMSG] : [],
+      (v) => { if(short(v)) return [SHORTMSG]; const ls = v.split("\n").map(s => s.trim()).filter(Boolean), m = []; if(!/^(\d+[.)]\s*)?เริ่ม/.test(ls[0])) m.push("บรรทัดแรกควรเป็น \"เริ่มต้นการทำงาน\""); if(!/(จบ|สิ้นสุด)/.test(ls[ls.length - 1])) m.push("บรรทัดสุดท้ายควรเป็น \"จบการทำงาน\""); if(ls.length < 4) m.push("ควรมีอย่างน้อย 4 บรรทัด (เริ่มต้น … จบ)"); return m; },
+      (v) => { if(short(v)) return [SHORTMSG]; const m = [], ls = v.split("\n").map(s => s.trim()).filter(Boolean).map(s => s.replace(/^\d+[.)]\s*/, ""));
+        if(!/^START/i.test(ls[0])) m.push("บรรทัดแรกควรเป็น START");
+        if(!/^(STOP|END)/i.test(ls[ls.length - 1])) m.push("บรรทัดสุดท้ายควรเป็น STOP");
+        if(!/INPUT|READ/i.test(v)) m.push("ควรมีคำสั่ง INPUT รับค่า");
+        if(!/COMPUTE|SET|=/i.test(v)) m.push("ควรมีคำสั่ง COMPUTE คำนวณ");
+        if(!/OUTPUT|DISPLAY|PRINT/i.test(v)) m.push("ควรมีคำสั่ง OUTPUT แสดงผล");
+        const iI = v.search(/INPUT|READ/i), iC = v.search(/COMPUTE|SET/i), iO = v.search(/OUTPUT|DISPLAY|PRINT/i);
+        if(iI >= 0 && iC >= 0 && iO >= 0 && !(iI < iC && iC < iO)) m.push("ลำดับควรเป็น INPUT → COMPUTE → OUTPUT");
+        return m; },
+      (v) => { if(short(v)) return [SHORTMSG]; const m = [];
+        if(!/เริ่ม/.test(v) || !/จบ/.test(v)) m.push("ควรบอกสัญลักษณ์ ⬭ วงรี \"เริ่มต้น\" และ \"จบ\"");
+        if(!/รับ|ด้านขนาน|แสดง|ผลลัพธ์/.test(v)) m.push("ควรมีสี่เหลี่ยมด้านขนาน (รับค่า/แสดงผล)");
+        if(!/คำนวณ|ผืนผ้า|ประมวลผล/.test(v)) m.push("ควรมีสี่เหลี่ยมผืนผ้า (คำนวณ/ประมวลผล)");
+        if(!/ลูกศร|→|->/.test(v)) m.push("ควรบอกว่าเชื่อมสัญลักษณ์ด้วยลูกศร");
+        return m; }
+    ] },
+  3: { titles:["ปัญหาและสาเหตุของปัญหา", "ทางเลือกในการแก้ปัญหา", "วิธีที่เลือกและเหตุผล", "อัลกอริทึมของวิธีที่เลือก"],
+    f:[
+      (v) => { if(short(v, 15)) return ["ควรเขียนทั้งปัญหาและสาเหตุให้ชัดเจน (อย่างน้อย 15 ตัวอักษร)"]; return /สาเหตุ|เพราะ|เนื่องจาก|ทำให้|เกิดจาก/.test(v) ? [] : ["ควรบอกสาเหตุของปัญหา (ใช้คำว่า \"สาเหตุ\" หรือ \"เพราะ\")"]; },
+      (v) => short(v) ? [SHORTMSG] : itemsOf(v).length >= 2 || /หรือ|ทางที่ 2|2\./.test(v) ? [] : ["ต้องเขียนทางเลือกอย่างน้อย 2 ทาง"],
+      (v) => { if(short(v, 15)) return ["ควรบอกวิธีที่เลือกและเหตุผล (อย่างน้อย 15 ตัวอักษร)"]; return /เพราะ|เนื่องจาก|เหตุผล|ดังนั้น|จึง/.test(v) ? [] : ["ต้องบอกเหตุผลที่เลือกวิธีนี้ (ใช้คำว่า \"เพราะ\")"]; },
+      (v) => { if(short(v, 15)) return [SHORTMSG]; return segsOf(v).length >= 3 ? [] : ["อัลกอริทึมควรมีอย่างน้อย 3 ขั้นตอน เรียงเป็นข้อ ๆ ตามลำดับ"]; }
+    ] },
+  4: { titles:["สิ่งที่ต้องใช้ในแผนที่ (สาระสำคัญ)", "สิ่งที่ตัดทิ้งได้", "เส้นทางจากบ้านไปโรงเรียน", "เส้นทางที่สั้นที่สุดและเหตุผล"],
+    f:[
+      (v) => short(v) ? [SHORTMSG] : itemsOf(v).length >= 2 ? [] : ["ควรเขียนอย่างน้อย 2 อย่าง เช่น ถนน สถานที่สำคัญ ทิศทาง ระยะทาง"],
+      (v, a) => { if(short(v, 4)) return [SHORTMSG]; const s = itemsOf(a[0]), d = itemsOf(v); return d.length && d.every(x => s.includes(x)) ? ["สิ่งที่ตัดทิ้งไม่ควรซ้ำกับสิ่งที่ต้องใช้ในแผนที่"] : []; },
+      (v) => { if(short(v, 10)) return [SHORTMSG]; const m = []; if(segsOf(v).length < 3) m.push("เส้นทางควรเขียนเป็นลำดับอย่างน้อย 3 ช่วง เช่น ออกจากบ้าน → เลี้ยวซ้าย → ถึงโรงเรียน"); if(!/บ้าน/.test(v)) m.push("ควรเริ่มจาก \"บ้าน\""); if(!/โรงเรียน|ร\.ร\./.test(v)) m.push("ควรจบที่ \"โรงเรียน\""); return m; },
+      (v) => { if(short(v, 15)) return ["ควรเปรียบเทียบเส้นทางและบอกเหตุผลให้ละเอียดกว่านี้"]; const m = []; if(!/\d/.test(v)) m.push("ควรบอกระยะทางหรือเวลาเป็นตัวเลข เช่น 2 กม. หรือ 15 นาที"); if(!/ทางที่|เส้นทาง.*เส้นทาง|หรือ|กับ|เทียบ|1.*2|ก.*ข/.test(v)) m.push("ควรเปรียบเทียบอย่างน้อย 2 เส้นทาง"); if(!/เพราะ|สั้น|น้อยกว่า|เร็ว|ใกล้|เนื่องจาก/.test(v)) m.push("ควรบอกเหตุผลว่าเส้นทางไหนสั้นที่สุด เพราะอะไร"); return m; }
+    ] },
+  5: { titles:["จำนวนต้นข้าวโพดแปลงที่ 1 ถึง 6", "รูปแบบที่สังเกตเห็น", "สูตรหาจำนวนต้นของแปลงที่ N", "จำนวนต้นของแปลงที่ 20"],
+    f:[
+      (v) => { const n = (String(v).match(/\d+/g) || []).map(Number), want = [3, 5, 7, 9, 11, 13]; let at = 0; n.forEach(x => { if(x === want[at]) at++; }); return at === 6 ? [] : [n.length < 6 ? "ต้องเขียนให้ครบ 6 แปลง" : "ตัวเลขยังไม่ตรงกับรูปแบบของโจทย์ ลองทบทวนว่าแต่ละแปลงเพิ่มกี่ต้น"]; },
+      (v) => short(v, 5) ? [SHORTMSG] : (/2/.test(v) && /เพิ่ม|บวก|มากขึ้น|ทีละ/.test(v)) ? [] : ["ต้องบอกว่าแต่ละแปลงเพิ่มขึ้นกี่ต้น (ทีละเท่าไร)"],
+      (v) => { if(short(v, 4)) return [SHORTMSG]; const f = formulaFn(v); let ok = false; if(f){ try{ ok = [1, 2, 3, 4].every((n, i) => Math.abs(f(n) - [3, 5, 7, 9][i]) < 1e-9); }catch(e){} }
+        if(!ok) ok = (/2\s*[×*xX]?\s*N|N\s*[×*xX]\s*2|2.*คูณ|คูณ.*2/.test(v)) && /(\+|บวก)\s*1/.test(v);
+        return ok ? [] : ["สูตรต้องให้ผลถูกต้องเมื่อ N = 1, 2, 3 (ต้องได้ 3, 5, 7) ลองแทนค่าตรวจดู"]; },
+      (v, a) => { if(short(v, 2)) return [SHORTMSG]; const f = formulaFn(a[2]); let mine = null; if(f){ try{ mine = f(20); }catch(e){} } const nums = (String(v).match(/\d+/g) || []).map(Number);
+        return (nums.includes(41) || (mine != null && nums.includes(mine))) ? [] : ["ผลที่ได้ยังไม่ตรงกับสูตร ลองแทน N = 20 ในสูตรของตนเองอีกครั้ง"]; }
+    ] },
+  6: { titles:["ข้อมูลนำเข้า (Input)", "ผลลัพธ์ที่ต้องการ (Output)", "เรียงลำดับ 6 ขั้นตอน", "รหัสลำลอง (Pseudocode)", "ผังงานและคำอธิบาย"],
+    f:[
+      (v) => short(v, 5) ? [SHORTMSG] : (/ข้าว/.test(v) && /น้ำ/.test(v)) ? [] : ["ข้อมูลนำเข้าควรมี ข้าวสาร และ น้ำ (และหม้อหุงข้าว)"],
+      (v) => short(v, 5) ? [SHORTMSG] : /ข้าว.*(สุก|สวย|พอดี)|สุก/.test(v) ? [] : ["ผลลัพธ์ที่ต้องการคือ ข้าวสุก (พอดี)"],
+      (v) => seq6(v, true),
+      (v) => { if(short(v, 15)) return [SHORTMSG]; const m = []; if(!/เริ่ม|START/i.test(v)) m.push("ควรมี \"เริ่มต้น\""); if(!/จบ|END|STOP/i.test(v)) m.push("ควรมี \"จบ\""); const r = seq6(v, false); return m.concat(r); },
+      (v) => { if(short(v, 15)) return ["ควรอธิบายผังงานให้ละเอียดกว่านี้"]; const m = []; if(!/เริ่ม/.test(v) || !/จบ/.test(v)) m.push("ควรบอกสัญลักษณ์ ⬭ \"เริ่มต้น\" และ \"จบ\""); if(!/สี่เหลี่ยม/.test(v)) m.push("ควรบอกว่าขั้นตอนการทำงานใช้สี่เหลี่ยม"); if(!/ลูกศร|→/.test(v)) m.push("ควรบอกว่าใช้ลูกศรเชื่อมลำดับ"); return m; }
+    ] },
+  7: { titles:["ข้อมูลนำเข้า (Input)", "ผลลัพธ์ที่ต้องการ (Output)", "เรียงลำดับ 4 ขั้นตอนและเหตุผล", "อัลกอริทึมพร้อมการทำซ้ำ"],
+    f:[
+      (v) => { if(short(v, 5)) return [SHORTMSG]; const k = [/ปลา/, /ขวด|โหล/, /น้ำ/, /อาหาร/, /สาหร่าย/].filter(re => re.test(v)).length; return k >= 3 ? [] : ["ข้อมูลนำเข้าควรครอบคลุม ปลากัด ขวดโหล น้ำ อาหาร สาหร่าย (อย่างน้อย 3 อย่าง)"]; },
+      (v) => short(v, 5) ? [SHORTMSG] : /สุขภาพ|แข็งแรง|ดี|สบาย|อยู่รอด|โต|สวย/.test(v) ? [] : ["ผลลัพธ์ควรบอกว่าปลากัดเป็นอย่างไร เช่น มีสุขภาพดี"],
+      (v) => { if(short(v, 10)) return [SHORTMSG]; const g = segsOf(v), m = [], P = firstAt(g, /นำปลา|ปล่อยปลา|ใส่ปลา|ปลา.*(ใส่|ลง)/), F = firstAt(g, /อาหาร/), W = firstAt(g, /เปลี่ยนน้ำ/), S = firstAt(g, /สาหร่าย/);
+        if(P < 0 || F < 0 || W < 0 || S < 0) m.push("ต้องเรียงให้ครบทั้ง 4 ขั้นตอนตามที่โจทย์ให้");
+        else if(!(P < F && P < W)) m.push("ต้องนำปลาใส่ขวดโหลก่อน จึงจะให้อาหารและเปลี่ยนน้ำได้");
+        if(!/เพราะ|เนื่องจาก|เหตุผล|จึง|ดังนั้น/.test(v)) m.push("ต้องบอกเหตุผลที่เรียงตามลำดับนี้ (ใช้คำว่า \"เพราะ\")");
+        return m; },
+      (v) => { if(short(v, 15)) return [SHORTMSG]; const m = []; if(!/เริ่ม|START/i.test(v)) m.push("ควรมี \"เริ่มต้น\""); if(!/ทำซ้ำ|ทุกวัน|ทุก ๆ|วนซ้ำ|WHILE|REPEAT|FOR/i.test(v)) m.push("ต้องมีการทำซ้ำ เช่น \"ทำทุกวัน\" หรือ \"ทำซ้ำ\""); if(!/อาหาร/.test(v)) m.push("ควรมีขั้นตอนให้อาหาร"); if(!/เปลี่ยนน้ำ|สาหร่าย|ปลา/.test(v)) m.push("ควรมีขั้นตอนดูแลปลา เช่น เปลี่ยนน้ำ"); if(!/จบ|END|STOP/i.test(v)) m.push("ควรมี \"จบ\""); return m; }
+    ] }
+};
+// ลำดับหุงข้าว: ตักข้าว < ซาว < (ตวงน้ำ) < ใส่น้ำ < กดปุ่ม < รอ ; strict=true ต้องครบ 6 ขั้นตอน
+function seq6(v, strict){
+  const g = segsOf(v), K = { scoop:/ตัก|ข้าวสาร.*(ใส่|ลง)/, wash:/ซาว/, measure:/ตวง/, pour:/ใส่น้ำ|เทน้ำ|น้ำ.*(ใส่|ลง)หม้อ/, press:/กด/, wait:/รอ/ };
+  const at = {}; for(const k in K) at[k] = firstAt(g, K[k]);
+  const have = Object.keys(at).filter(k => at[k] >= 0), m = [];
+  if(strict ? have.length < 6 : have.length < 4) m.push(strict ? "ต้องเรียงให้ครบทั้ง 6 ขั้นตอนตามที่โจทย์ให้" : "ควรมีขั้นตอนหลัก อย่างน้อย 4 อย่าง เช่น ตักข้าวสาร ซาวข้าว ใส่น้ำ กดปุ่มหุง");
+  const before = (a, b) => at[a] < 0 || at[b] < 0 || at[a] < at[b];
+  const bad = [];
+  if(!before("scoop", "wash")) bad.push("ต้องตักข้าวสารใส่หม้อก่อนซาวข้าว");
+  if(!before("wash", "pour")) bad.push("ต้องซาวข้าวก่อนใส่น้ำ");
+  if(!before("measure", "pour")) bad.push("ต้องตวงน้ำก่อนใส่น้ำลงหม้อ");
+  if(!before("pour", "press")) bad.push("ต้องใส่น้ำก่อนกดปุ่มหุงข้าว");
+  if(!before("press", "wait")) bad.push("ต้องกดปุ่มหุงข้าวก่อนรอข้าวสุก");
+  return m.concat(bad);
+}
+function run1(n, vals){
+  const rule = R1[n]; if(!rule) return null;
+  const F = rule.f.map((fn, i) => { let msgs; try{ msgs = fn(vals[i] || "", vals); }catch(e){ msgs = ["ตรวจข้อนี้ไม่ได้ — ลองเขียนใหม่ให้ชัดเจนขึ้น"]; } return { ok:!msgs.length, title:rule.titles[i], msgs, note:"" }; });
+  return { fields:F, score:F.filter(x => x.ok).length, max:F.length };
+}
+
 const blocksFromText = (txt) => { const p = linkParam(txt || "", "p"); if(!p) return null; try{ const d = b64d(p); return { d, bs:allBlocks(d) }; }catch(e){ return null; } };
-window.WSCheck = { blocksFromText, util:{ has, count, hasStr }, run8, run, rules:R, runCode, analyzeCode };
+window.WSCheck = { blocksFromText, util:{ has, count, hasStr }, run8, run, run1, rules:R, runCode, analyzeCode };
 })();

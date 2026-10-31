@@ -26,6 +26,13 @@
   .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
   .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
   .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
   .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
   .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
   .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
@@ -84,6 +91,7 @@
 </main>
 
 <script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/wscheck.js?v=2"></script>
 <script>
 const U = { g:"m1", s:"cs", i:0 }, N = 7, TOTAL = 4;
 const KEY = "krtomws:m1/cs/0:" + N, DONE = "krtomws-done:m1/cs/0:" + N;
@@ -106,15 +114,19 @@ boxes.forEach(b => b.addEventListener("input", () => {
 }));
 refresh();
 
+// ───── ระบบตรวจใบงานเบื้องต้น (ตรวจตอนกดส่ง ไม่แสดงผลหรือเฉลยให้นักเรียน — ส่งคะแนนให้ครู) ─────
+function silentCheck(){ try{ return window.WSCheck && WSCheck.run1 ? WSCheck.run1(N, boxes.map(b => b.value)) : null; }catch(e){ return null; } }
+
 document.getElementById("submit").onclick = async function(){
   const st = document.getElementById("status"), n = answered();
   if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
   this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
   try{
-    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", n, TOTAL);
+    const rr = silentCheck();
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, TOTAL);
     try{ localStorage.setItem(DONE, "1"); }catch(e){}
     st.style.color = "#059669";
-    st.innerHTML = '✅ ส่งใบงานแล้ว <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
   }catch(e){
     this.disabled = false; st.style.color = "#DC2626";
     st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
@@ -122,5 +134,6 @@ document.getElementById("submit").onclick = async function(){
 };
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/submitwork.js?v=2"></script>
 </body>
 </html>

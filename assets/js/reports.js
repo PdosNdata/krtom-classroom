@@ -14,6 +14,7 @@ const KrtomReports = (function(){
 
   let data = null;                       // { roster, agg }
   let st = { view:"class", grade:null, unit:null, student:null, ocFilter:"todo" };
+  let wk = null;                         // งานที่ส่ง (krtom_teacher_work) โหลดเมื่อเปิดแท็บงานที่ส่ง
   let oc = null;                         // { mastery, refl } โหลดเมื่อเปิดแท็บจุดประสงค์/ตรวจคำตอบ
   let model = null;                      // ตารางที่แสดงอยู่ (ใช้ส่งออก)
 
@@ -157,7 +158,7 @@ const KrtomReports = (function(){
     setBreadcrumb([{ label:"🏠 หน้าแรก", href:"#/" }, { label:"📊 ดูงานนักเรียน" }]);
     if(!KrtomContent.isTeacher()){ location.hash = "#/"; return; }
     app.innerHTML = `<div class="page-title">📊 ดูงานนักเรียน</div><div class="page-subtitle">กำลังโหลดคะแนน...</div>`;
-    try{ await load(false); if(st.view === "outcome" || st.view === "review") await loadOc(false); }
+    try{ await load(false); if(st.view === "outcome" || st.view === "review") await loadOc(false); if(st.view === "work") await loadWk(false); }
     catch(e){
       if(location.hash !== hash) return;
       const m = (e && e.message) || "";
@@ -180,6 +181,7 @@ const KrtomReports = (function(){
     if(!stu.some(r => r.code === st.student)) st.student = stu.length ? stu[0].code : null;
 
     if(st.view === "review"){ model = null; drawReview(gs); return; }
+    if(st.view === "work"){ model = null; drawWork(gs); return; }
     model = st.view === "class" ? buildClass() : st.view === "outcome" ? buildOutcome() : buildStudent();
     app.innerHTML = `
       <div class="page-title">📊 ดูงานนักเรียน</div>
@@ -190,6 +192,7 @@ const KrtomReports = (function(){
           <button type="button" class="rp-tab ${st.view === "student" ? "on" : ""}" data-view="student">🧒 รายคน</button>
           <button type="button" class="rp-tab ${st.view === "outcome" ? "on" : ""}" data-view="outcome">🎯 จุดประสงค์</button>
           <button type="button" class="rp-tab ${st.view === "review" ? "on" : ""}" data-view="review">✍️ ตรวจวิจารณ์${pendingN()}</button>
+          <button type="button" class="rp-tab ${st.view === "work" ? "on" : ""}" data-view="work">📄 งานที่ส่ง</button>
         </div>
         <div class="rp-filters">
           <label>ชั้น <select id="rp-grade">${gs.map(g => `<option value="${g.id}" ${g.id === st.grade ? "selected" : ""}>${esc(g.label)}</option>`).join("")}</select></label>
@@ -217,11 +220,81 @@ const KrtomReports = (function(){
     app.querySelectorAll(".rp-actions button").forEach(b => b.onclick = () => act(b.dataset.act, b));
   }
 
+  // ---------------------------------------------------------------- งานที่ส่ง (คำตอบ + ลิงก์งานของนักเรียน)
+  async function loadWk(force){
+    if(wk && !force) return wk;
+    const t = token(); if(!t) throw new Error("หมดเวลาเข้าสู่ระบบ");
+    wk = (await KrtomFlow.rpc("krtom_teacher_work", { p_token: t })) || [];
+    return wk;
+  }
+  const WS_COUNT = { 0:7, 1:8 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
+  const linkify = (t) => esc(t).replace(/(https?:\/\/[^\s<>"']+)/g, (u) => { const c = u.replace(/[.,;)]+$/, ""), tail = u.slice(c.length); const lb = /flowchart\.html/.test(c) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(c) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์"; return `<a href="${c}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 12px;border-radius:999px;font-size:.85em">${lb} ↗</a>${tail}`; });
+  const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? `ใบงาน ${m[1]}.${m[2]}` : a; };
+  function showWork(code, act){
+    const rows = wk.filter(r => r.student_code === code && r.activity === act).sort((a, b) => b.attempt - a.attempt);
+    if(!rows.length) return;
+    const st0 = data.roster.find(r => r.code === code), r = rows[0];
+    const ans = (Array.isArray(r.answers) ? r.answers : []).map(x => `<div style="text-align:left;margin:10px 0"><div style="font-weight:800;color:#4338CA">${esc(x.q)}</div><div style="white-space:pre-wrap;background:#F8FAFC;border-radius:10px;padding:8px 10px;margin-top:4px;line-height:1.55">${linkify(x.a)}</div></div>`).join("");
+    window.Swal && Swal.fire({
+      title: `${wsName(act)} — ${esc(st0 ? st0.name : r.full_name)}`,
+      html: `<div style="text-align:left;color:#475569;font-size:.9em">คะแนนที่ระบบตรวจเบื้องต้น: <b>${r.score}/${r.max_score}</b> · ส่งครั้งที่ ${r.attempt}${rows.length > 1 ? ` (ส่งทั้งหมด ${rows.length} ครั้ง แสดงครั้งล่าสุด)` : ""} · ${dateTh(r.submitted_at)}</div>${ans}`,
+      width: 720, confirmButtonText: "ปิด", confirmButtonColor: "#3B82F6"
+    });
+  }
+  function drawWork(gs){
+    const units = flowUnits(st.grade), stu = data.roster.filter(r => r.g === st.grade);
+    const unit = units.find(u => u.key === st.unit) || units[0], idx = unit ? +unit.key.split("/")[2] : 0;
+    const mine = wk.filter(r => unit && `${r.grade_id}/${r.subject_id}/${r.unit_idx}` === unit.key);
+    const acts = []; for(let n = 1; n <= (WS_COUNT[idx] || 0); n++) acts.push(`worksheet-${idx + 1}-${n}`);
+    mine.forEach(r => { if(!acts.includes(r.activity)) acts.push(r.activity); });
+    const latest = new Map(); mine.forEach(r => { const k = r.student_code + "|" + r.activity, c = latest.get(k); if(!c || r.attempt > c.attempt) latest.set(k, r); });
+    app.innerHTML = `
+      <div class="page-title">📊 ดูงานนักเรียน</div>
+      <div class="page-subtitle">งานที่นักเรียนส่ง: คะแนนที่ระบบตรวจเบื้องต้น + คำตอบและลิงก์งานที่ทำ (กดตัวเลขเพื่อเปิดดู)</div>
+      <div class="rp-wrap">
+        <div class="rp-tabs">
+          <button type="button" class="rp-tab" data-view="class">👥 รายชั้น</button>
+          <button type="button" class="rp-tab" data-view="student">🧒 รายคน</button>
+          <button type="button" class="rp-tab" data-view="outcome">🎯 จุดประสงค์</button>
+          <button type="button" class="rp-tab" data-view="review">✍️ ตรวจวิจารณ์${pendingN()}</button>
+          <button type="button" class="rp-tab on" data-view="work">📄 งานที่ส่ง</button>
+        </div>
+        <div class="rp-filters">
+          <label>ชั้น <select id="rp-grade">${gs.map(g => `<option value="${g.id}" ${g.id === st.grade ? "selected" : ""}>${esc(g.label)}</option>`).join("")}</select></label>
+          <label>หน่วย <select id="rp-unit">${units.map(u => `<option value="${u.key}" ${unit && u.key === unit.key ? "selected" : ""}>${esc(u.label)}</option>`).join("")}</select></label>
+        </div>
+        ${unit ? `<div class="rp-scroll"><table class="rp-table">
+          <thead><tr><th>เลขที่</th><th>ชื่อ-สกุล</th>${acts.map(a => `<th>${esc(wsName(a).replace("ใบงาน ", ""))}</th>`).join("")}</tr></thead>
+          <tbody>${stu.map(s => `<tr><td class="rp-c">${esc(s.seat)}</td><td>${esc(s.name)}</td>${acts.map(a => { const r = latest.get(s.code + "|" + a); return r ? `<td class="rp-c"><button type="button" class="wk-open" data-c="${esc(s.code)}" data-a="${a}" title="เปิดดูงาน">${r.score}/${r.max_score} 📄</button></td>` : `<td class="rp-c rp-none">—</td>`; }).join("")}</tr>`).join("")}</tbody>
+          <tfoot><tr><td></td><td>ส่งแล้ว (คน)</td>${acts.map(a => `<td class="rp-c">${stu.filter(s => latest.has(s.code + "|" + a)).length}/${stu.length}</td>`).join("")}</tr></tfoot>
+        </table></div>` : `<p class="flow-note">ชั้นนี้ยังไม่มีหน่วยที่เปิดระบบเรียนตามลำดับขั้น</p>`}
+        <p class="flow-note">ตัวเลข = คะแนนที่ระบบตรวจเบื้องต้น (ครูตรวจซ้ำได้) · กดเพื่อดูคำตอบและลิงก์งานที่นักเรียนส่ง · นักเรียนไม่เห็นเฉลยหรือผลตรวจ</p>
+        <div class="rp-actions"><button type="button" id="wk-refresh">🔄 โหลดใหม่</button></div>
+      </div>`;
+    app.querySelectorAll(".rp-tab").forEach(b => b.onclick = () => switchView(b.dataset.view));
+    document.getElementById("rp-grade").onchange = (e) => { st.grade = e.target.value; st.unit = null; draw(); };
+    document.getElementById("rp-unit").onchange = (e) => { st.unit = e.target.value; draw(); };
+    document.getElementById("wk-refresh").onclick = async () => { wk = null; await switchView("work"); };
+    app.querySelectorAll(".wk-open").forEach(b => b.onclick = () => showWork(b.dataset.c, b.dataset.a));
+  }
+
   // ---------------------------------------------------------------- ตรวจคำตอบวิจารณ์
   const pendingN = () => { if(!oc) return ""; const n = oc.refl.filter(r => r.teacher_score == null).length; return n ? ` (${n})` : ""; };
   async function switchView(v){
     st.view = v;
     if(oc && oc._stale && v === "outcome") oc = null;
+    if(v === "work" && !wk){
+      app.innerHTML = `<div class="page-title">📊 ดูงานนักเรียน</div><div class="page-subtitle">กำลังโหลดงานที่ส่ง...</div>`;
+      try{ await loadWk(false); }
+      catch(e){
+        const m = (e && e.message) || "";
+        const msg = /PGRST202|Could not find the function/i.test(m) ? "ยังไม่ได้ติดตั้งระบบเก็บงานในฐานข้อมูล (ต้องรันไฟล์ SQL 20261031100000_krtom_submissions.sql ใน Supabase)" : "โหลดข้อมูลไม่สำเร็จ (ตรวจสอบอินเทอร์เน็ต)";
+        st.view = "class";
+        app.innerHTML = `<div class="page-title">📊 ดูงานนักเรียน</div><div class="tab-panel"><p style="text-align:center">${esc(msg)}</p><p style="text-align:center"><button type="button" class="rp-tab on" id="rp-back" style="flex:none;padding:8px 18px">กลับไปรายชั้น</button></p></div>`;
+        document.getElementById("rp-back").onclick = draw;
+        return;
+      }
+    }
     if((v === "outcome" || v === "review") && !oc){
       app.innerHTML = `<div class="page-title">📊 ดูงานนักเรียน</div><div class="page-subtitle">กำลังโหลดข้อมูลจุดประสงค์...</div>`;
       try{ await loadOc(false); }
@@ -250,6 +323,7 @@ const KrtomReports = (function(){
           <button type="button" class="rp-tab" data-view="student">🧒 รายคน</button>
           <button type="button" class="rp-tab" data-view="outcome">🎯 จุดประสงค์</button>
           <button type="button" class="rp-tab on" data-view="review">✍️ ตรวจวิจารณ์${pendingN()}</button>
+          <button type="button" class="rp-tab" data-view="work">📄 งานที่ส่ง</button>
         </div>
         <div class="rp-filters">
           <label>ชั้น <select id="rp-grade">${gs.map(g => `<option value="${g.id}" ${g.id === st.grade ? "selected" : ""}>${esc(g.label)}</option>`).join("")}</select></label>
@@ -321,7 +395,7 @@ const KrtomReports = (function(){
   async function act(a, btn){
     if(!model) return;
     try{
-      if(a === "refresh"){ data = null; oc = null; return render(); }
+      if(a === "refresh"){ data = null; oc = null; wk = null; return render(); }
       if(a === "print"){
         const w = window.open("", "_blank");
         if(!w) return toast("info", "เบราว์เซอร์บล็อกหน้าต่างพิมพ์", "กรุณาอนุญาตป๊อปอัปของเว็บนี้ แล้วกดพิมพ์อีกครั้ง");

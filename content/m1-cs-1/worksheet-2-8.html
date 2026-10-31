@@ -57,6 +57,7 @@
   .q .t{ flex:1; min-width:200px; } .q input[type=text], .q select{ font:inherit; border:2px solid #CBD5E1; border-radius:10px; padding:3px 10px; min-width:90px; background:#fff; }
   .q input[type=text]{ width:90px; text-align:center; font-weight:700; } .q select{ max-width:100%; }
   .q.ok input,.q.ok select{ border-color:#10B981; background:#F0FDF4; } .q.bad input,.q.bad select{ border-color:#F59E0B; background:#FFFBEB; }
+  #pcres,#bkres{ display:none !important; }
   .q .mk{ width:1.6em; text-align:center; } .q .hn{ flex-basis:100%; margin-left:36px; font-size:.8rem; color:#B45309; }
   .toolrow{ display:flex; gap:10px; flex-wrap:wrap; margin:6px 0; } .toolrow a{ display:inline-block; padding:7px 18px; border-radius:999px; font-weight:800; font-size:.88rem; text-decoration:none; color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.2); } .toolrow a.p{ background:linear-gradient(135deg,#10B981,#0EA5E9); } .toolrow a.j{ background:linear-gradient(135deg,#4C97FF,#9966FF); } .toolrow a.s{ background:linear-gradient(135deg,#22C55E,#0EA5E9); }
   .tip2{ background:#F0FDF4; border:1px solid #BBF7D0; border-radius:12px; padding:8px 14px; font-size:.86rem; margin:6px 0 10px; }
@@ -116,9 +117,7 @@
     </div>
     <div class="meter"><i id="bar"></i></div>
     <div class="meter-t" id="meter-t">ตอบแล้ว 0/16 ข้อ</div>
-    <div class="chk" id="checkres"></div>
     <div class="actions">
-      <button class="btn" id="checkbtn" style="background:linear-gradient(135deg,#6366F1,#0EA5E9)">🔍 ให้ระบบตรวจ</button>
       <button class="btn" id="submit">📤 ส่งใบงาน</button>
       <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
     </div>
@@ -148,7 +147,8 @@ function refresh(){ const n = answeredCount(); document.getElementById("bar").st
 document.getElementById("meter-t").textContent = "ตอบแล้ว 0/" + TOTAL_Q + " ข้อ"; refresh();
 
 // ── ตรวจ ──
-function mark(q, ok){ q.classList.toggle("ok", ok); q.classList.toggle("bad", !ok); q.querySelector(".mk").textContent = ok ? "✅" : "⚠️"; let h = q.querySelector(".hn"); if(!ok){ if(!h){ h = document.createElement("div"); h.className = "hn"; q.append(h); } h.textContent = "💡 " + q.dataset.hint; } else if(h) h.remove(); }
+function mark(q, ok){ return;   // ไม่แสดงผลตรวจ/เฉลยให้นักเรียน (ระบบตรวจเงียบ ๆ ตอนกดส่ง)
+   q.classList.toggle("ok", ok); q.classList.toggle("bad", !ok); q.querySelector(".mk").textContent = ok ? "✅" : "⚠️"; let h = q.querySelector(".hn"); if(!ok){ if(!h){ h = document.createElement("div"); h.className = "hn"; q.append(h); } h.textContent = "💡 " + q.dataset.hint; } else if(h) h.remove(); }
 function checkAll(){
   let score = 0; const lines = [];
   items.forEach(q => { const ok = val(q) === q.dataset.a || (q.dataset.k === "num" && val(q) !== "" && Number(val(q)) === Number(q.dataset.a)); mark(q, ok); if(ok) score++; });
@@ -171,11 +171,8 @@ function checkAll(){
     if(b.some(x => (x.t === "say" || x.t === "sayfor") && x.a && x.a[0] && typeof x.a[0] === "object")) s5++; else m5.push("ต้องใช้บล็อก \"พูด\" โดยลากตัวแปรมาวางในช่อง เพื่อแสดงจำนวนแอปเปิล"); }
   res5.innerHTML = (s5 === 3 ? "✅ โปรแกรมครบทั้ง 3 ข้อ" : "⚠️ ผ่าน " + s5 + "/3 ข้อ") + (m5.length ? "<ul style='margin:4px 0 0 1.2em;color:#92400E;font-size:.85rem'>" + m5.map(x => "<li>" + x + "</li>").join("") + "</ul>" : ""); res5.className = "q " + (s5 === 3 ? "ok" : "bad");
   score += s5;
-  const box = document.getElementById("checkres"); box.style.display = "block";
-  box.innerHTML = '<h3>🔍 ผลการตรวจโดยระบบ</h3><div class="big">' + (score === TOTAL ? "🎉 " : "") + score + " / " + TOTAL + ' คะแนน</div><div class="foot">ข้อที่ขึ้น ⚠️ มีคำใบ้ใต้ข้อนั้น — แก้ไขแล้วกด "ให้ระบบตรวจ" ซ้ำได้ · เป็นการตรวจเบื้องต้นโดยระบบ ครูตรวจอีกครั้ง</div>';
   return { score, max:TOTAL };
 }
-document.getElementById("checkbtn").onclick = () => { const r = checkAll(); document.getElementById("checkres").scrollIntoView({ behavior:"smooth", block:"nearest" }); };
 document.getElementById("submit").onclick = async function(){
   const st = document.getElementById("status"), n = answeredCount();
   if(n < TOTAL_Q){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (ตอบแล้ว " + n + "/" + TOTAL_Q + " ข้อ)"; return; }
@@ -185,11 +182,12 @@ document.getElementById("submit").onclick = async function(){
     if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", r.score, TOTAL);
     try{ localStorage.setItem(DONE, "1"); }catch(e){}
     st.style.color = "#059669";
-    st.innerHTML = '✅ ส่งใบงานแล้ว · ระบบตรวจเบื้องต้นได้ ' + r.score + '/' + r.max + ' คะแนน <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
   }catch(e){ this.disabled = false; st.style.color = "#DC2626"; st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ"); }
 };
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/submitwork.js?v=2"></script>
 <script src="../../assets/js/outcomes.js?v=3"></script>
 </body>
 </html>

@@ -838,3 +838,5 @@ html.mid-text{ font-size:24px; }
 .rv-note{ flex:1; min-width:160px; }
 .rv-save{ padding:7px 16px; border:none; border-radius:999px; background:#16A34A; color:#fff; font:inherit; font-weight:700; cursor:pointer; }
 .rv-save:disabled{ opacity:.5; } .rv-st{ font-size:.9em; color:#475569; }
+.wk-open{ border:2px solid #C7D2FE; background:#EEF2FF; color:#3730A3; font:inherit; font-weight:800; border-radius:999px; padding:3px 12px; cursor:pointer; white-space:nowrap; }
+.wk-open:hover{ background:#6366F1; border-color:#6366F1; color:#fff; }

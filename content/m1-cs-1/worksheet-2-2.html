@@ -124,9 +124,7 @@
     </div>
     <div class="meter"><i id="bar"></i></div>
     <div class="meter-t" id="meter-t">ตอบแล้ว 0/8 ข้อ</div>
-    <div class="chk" id="checkres"></div>
     <div class="actions">
-      <button class="btn" id="checkbtn" style="background:linear-gradient(135deg,#6366F1,#0EA5E9)">🔍 ให้ระบบตรวจ</button>
       <button class="btn" id="submit">📤 ส่งใบงาน</button>
       <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
     </div>
@@ -165,30 +163,19 @@ window.addEventListener("storage", e => {
 });
 
 
-// ───── ให้ระบบตรวจใบงาน (เบื้องต้น) ─────
-function showCheck(){
-  const box = document.getElementById("checkres"); if(!window.WSCheck){ return null; }
-  const r = WSCheck.run(N, boxes.map(b => b.value)); if(!r) return null;
-  const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
-  box.style.display = "block";
-  box.innerHTML = '<h3>🔍 ผลการตรวจโดยระบบ</h3><div class="big">' + (r.score === r.max ? "🎉 " : "") + r.score + " / " + r.max + ' ข้อ</div>' +
-    r.fields.map((f, i) => '<div class="row"><span class="' + (f.ok ? "ok" : "bad") + '">' + (f.ok ? "✅" : "⚠️") + " ข้อ " + (i + 1) + " " + f.title + "</span>" +
-      (f.ok ? "" : "<ul>" + f.msgs.map(m => "<li>" + esc(m) + "</li>").join("") + "</ul>") + (f.note ? '<div class="note">' + esc(f.note) + "</div>" : "") + "</div>").join("") +
-    '<div class="foot">เป็นการตรวจเบื้องต้นโดยระบบ — แก้ไขแล้วกด "ให้ระบบตรวจ" ซ้ำได้ ครูจะตรวจอีกครั้ง</div>';
-  return r;
-}
-document.getElementById("checkbtn").onclick = () => { const r = showCheck(); if(r) document.getElementById("checkres").scrollIntoView({ behavior:"smooth", block:"nearest" }); };
+// ───── ระบบตรวจใบงานเบื้องต้น (ตรวจตอนกดส่ง ไม่แสดงผลหรือเฉลยให้นักเรียน — ส่งคะแนนให้ครู) ─────
+function silentCheck(){ try{ return window.WSCheck ? WSCheck.run(N, boxes.map(b => b.value)) : null; }catch(e){ return null; } }
 
 document.getElementById("submit").onclick = async function(){
   const st = document.getElementById("status"), n = answered();
   if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
   this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
   try{
-    const rr = showCheck();
+    const rr = silentCheck();
     if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, TOTAL);
     try{ localStorage.setItem(DONE, "1"); }catch(e){}
     st.style.color = "#059669";
-    st.innerHTML = '✅ ส่งใบงานแล้ว' + (rr ? ' · ระบบตรวจเบื้องต้นได้ ' + rr.score + '/' + rr.max + ' ข้อ' : '') + ' <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
   }catch(e){
     this.disabled = false; st.style.color = "#DC2626";
     st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
@@ -196,6 +183,7 @@ document.getElementById("submit").onclick = async function(){
 };
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/submitwork.js?v=2"></script>
 <script src="../../assets/js/outcomes.js?v=3"></script>
 </body>
 </html>

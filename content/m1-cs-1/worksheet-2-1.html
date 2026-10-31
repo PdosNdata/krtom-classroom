@@ -40,8 +40,8 @@
   .mcq p.q{ font-weight:700; margin:0 0 8px; font-size:.92rem; }
   .mcq .choices{ display:flex; flex-direction:column; gap:8px; }
   .mcq label{ display:flex; align-items:center; gap:10px; padding:10px 14px; border:2px solid #E6E8F0; border-radius:12px; font-size:.88rem; cursor:pointer; }
-  .mcq label.correct{ border-color:#10B981; background:#F0FBF6; }
-  .mcq label.wrong{ border-color:#EF4444; background:#FEF2F2; }
+  /* ไม่เฉลยตัวเลือกให้นักเรียน (ยังเติม class ไว้ใช้คิดคะแนนเงียบ ๆ) */
+  .mcq label.correct, .mcq label.wrong{ border-color:inherit; background:inherit; }
   .mcq input{ accent-color:#3B82F6; }
 
   #check-btn{ display:block; margin:20px auto 0; padding:12px 32px; border:none; border-radius:999px; background:#3B82F6; color:#fff; font-weight:700; font-size:1rem; cursor:pointer; }
@@ -113,11 +113,11 @@
 
   <div class="part">
     <h2>✍️ ตอนที่ 2: เลือกคำตอบที่ถูกต้อง</h2>
-    <p class="instruction">อ่านคำถามแล้วเลือกคำตอบที่ถูกต้องที่สุด จากนั้นกดปุ่ม "ตรวจคำตอบ" ด้านล่าง</p>
+    <p class="instruction">อ่านคำถามแล้วเลือกคำตอบที่ถูกต้องที่สุด จากนั้นกดปุ่ม "ส่งใบงาน" ด้านล่าง ครูจะตรวจและแจ้งผลให้</p>
     <div id="mcq-container"></div>
   </div>
 
-  <button id="check-btn" onclick="checkAnswers()">✅ ตรวจคำตอบตอนที่ 2</button>
+  <button id="check-btn" onclick="checkAnswers()">📤 ส่งใบงาน</button>
   <div id="result"></div>
 
   <p class="print-note">🖨️ ต้องการพิมพ์ใบงานนี้เป็นกระดาษ? กด Ctrl+P (Windows) หรือ Cmd+P (Mac)</p>
@@ -251,11 +251,13 @@ function checkAnswers(){
     }
   });
   const result = document.getElementById("result");
-  result.textContent = `🎉 ได้คะแนนตอนที่ 2: ${score}/${total} ข้อ`;
+  result.textContent = "✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้";
   result.classList.add("show");
+  if(window.KrtomSubmitWork) KrtomSubmitWork({ g:"m1", s:"cs", i:1 }, p1score + score, document.querySelectorAll(".dropzone").length + total);
 }
 </script>
 <script src="../../assets/js/flow.js?v=4"></script>
+<script src="../../assets/js/submitwork.js?v=2"></script>
 <script src="../../assets/js/outcomes.js?v=3"></script>
 </body>
 </html>
