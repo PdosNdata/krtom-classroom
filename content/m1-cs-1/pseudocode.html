@@ -444,7 +444,9 @@ window.__pcg = PCG;
 /* ---------- ส่ง / แชร์ ---------- */
 const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
 const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
-if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
+const UIDX = BACK && BACK[1] ? (+BACK[1] - 1) : 1;   // ใบงาน n.m → หน่วย n (m1-cs-(n-1))
+const SLOT = parseInt(QS.get("slot"), 10);              // ช่องคำตอบที่ต้องส่งไป (เริ่มที่ 0) — ถ้าไม่ระบุใช้ช่องมาตรฐานของหน่วย 2
+if(BACK){ const bl = $("#backlink"); bl.href = BACK[1] === "1" ? "../m1-cs-0/" + BACK[0] : BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
 $("#backlink").addEventListener("click", e => { e.preventDefault(); const to = $("#backlink").getAttribute("href"); window.close(); setTimeout(() => { location.href = to; }, 250); });
 const b64e = (t) => btoa(unescape(encodeURIComponent(t))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/"))));
@@ -518,8 +520,8 @@ document.addEventListener("keydown", e => {
 
 $("#sh-ws").onclick = async () => {
   if(!BACK) return; if(!code.value.trim()) return toast("ยังไม่ได้เขียนรหัสลำลอง");
-  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz"), txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + await shareLink();
-  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < PART * 8) arr.push(""); arr[(PART - 1) * 8 + 5] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งรหัสลำลองไปที่ข้อ 6 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
+  const key = "krtomws:m1/cs/" + UIDX + ":" + (BACK[2] || "quiz"), at = (SLOT >= 0 ? SLOT : (PART - 1) * 8 + 5), txt = code.value.replace(/\s+$/, "") + "\n\nลิงก์รหัสลำลอง (ครูกดเปิดดู/ทดลองรันได้):\n" + await shareLink();
+  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < Math.max(PART * 8, at + 1)) arr.push(""); arr[at] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งรหัสลำลองไปที่ข้อ " + (at + 1) + " ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
   catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
 };
 $("#viewedit").onclick = () => { VIEW = false; code.readOnly = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); save(); toast("คัดลอกรหัสไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };

@@ -705,7 +705,9 @@ $("#sample").onchange = async function(){
 /* ---------- ส่ง / แชร์ ---------- */
 const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
 const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
-if(BACK){ const bl = $("#backlink"); bl.href = BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
+const UIDX = BACK && BACK[1] ? (+BACK[1] - 1) : 1;   // ใบงาน n.m → หน่วย n (m1-cs-(n-1))
+const SLOT = parseInt(QS.get("slot"), 10);              // ช่องคำตอบที่ต้องส่งไป (เริ่มที่ 0) — ถ้าไม่ระบุใช้ช่องมาตรฐานของหน่วย 2
+if(BACK){ const bl = $("#backlink"); bl.href = BACK[1] === "1" ? "../m1-cs-0/" + BACK[0] : BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
 const b64e = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/")))));
 const SB_RPC = "https://dhufwdxxfbahovnmjgrc.supabase.co/rest/v1/rpc/", SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRodWZ3ZHh4ZmJhaG92bm1qZ3JjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTIwODAsImV4cCI6MjA2OTM4ODA4MH0.V-7Jlkq5ucQBznGXjtUKCse8sLLnNJ0mDTlcgme8G0c";
@@ -744,8 +746,8 @@ $("#sh-link").onclick = async () => { if(!D.nodes.length) return toast("ยั�
 $("#sh-text").onclick = async () => toast((await copyText(outline())) ? "คัดลอกข้อความอธิบายผังงานแล้ว" : "คัดลอกไม่สำเร็จ");
 $("#sh-ws").onclick = async () => {
   if(!BACK) return; if(!D.nodes.length) return toast("ยังไม่ได้วาดผังงาน");
-  const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz"), txt = "ลิงก์ผังงาน (ครูกดเปิดดูได้):\n" + await shareLink() + "\n\nลำดับในผังงาน:\n" + outline();
-  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < PART * 8) arr.push(""); arr[(PART - 1) * 8 + 6] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งผังงานไปที่ข้อ 7 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
+  const key = "krtomws:m1/cs/" + UIDX + ":" + (BACK[2] || "quiz"), at = (SLOT >= 0 ? SLOT : (PART - 1) * 8 + 6), txt = "ลิงก์ผังงาน (ครูกดเปิดดูได้):\n" + await shareLink() + "\n\nลำดับในผังงาน:\n" + outline();
+  try{ const arr = JSON.parse(localStorage.getItem(key) || "[]"); while(arr.length < Math.max(PART * 8, at + 1)) arr.push(""); arr[at] = txt; localStorage.setItem(key, JSON.stringify(arr)); toast("ส่งผังงานไปที่ข้อ " + (at + 1) + " ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง"); }
   catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
 };
 $("#sh-png").onclick = () => {

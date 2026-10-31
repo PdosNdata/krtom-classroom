@@ -242,6 +242,8 @@ function itemsOf(v){
 }
 function segsOf(v){ return String(v || "").split(/\n|→|->|\d+[.)]\s*|[;,]|แล้ว|จากนั้น/).map(s => s.trim()).filter(Boolean); }
 function firstAt(segs, re, from){ for(let i = from || 0; i < segs.length; i++) if(re.test(segs[i])) return i; return -1; }
+const noLink = (v) => String(v || "").split(/\n+ลิงก์รหัสลำลอง/)[0];   // ตัดท้ายลิงก์ที่โปรแกรมเติมให้ตอนส่งมา
+const hasFlowLink = (v) => /flowchart\.html\?(s|f)=/.test(String(v || ""));
 const short = (v, n) => !v || v.trim().length < (n || 8);
 const SHORTMSG = "ยังไม่ได้ตอบ หรือตอบสั้นเกินไป";
 // คำนวณสูตรที่นักเรียนเขียน (ใช้ตัวแปร N) — คืน function หรือ null
@@ -265,7 +267,7 @@ const R1 = {
     f:[
       (v) => short(v) ? [SHORTMSG] : [],
       (v) => { if(short(v)) return [SHORTMSG]; const ls = v.split("\n").map(s => s.trim()).filter(Boolean), m = []; if(!/^(\d+[.)]\s*)?เริ่ม/.test(ls[0])) m.push("บรรทัดแรกควรเป็น \"เริ่มต้นการทำงาน\""); if(!/(จบ|สิ้นสุด)/.test(ls[ls.length - 1])) m.push("บรรทัดสุดท้ายควรเป็น \"จบการทำงาน\""); if(ls.length < 4) m.push("ควรมีอย่างน้อย 4 บรรทัด (เริ่มต้น … จบ)"); return m; },
-      (v) => { if(short(v)) return [SHORTMSG]; const m = [], ls = v.split("\n").map(s => s.trim()).filter(Boolean).map(s => s.replace(/^\d+[.)]\s*/, ""));
+      (v) => { v = noLink(v); if(short(v)) return [SHORTMSG]; const m = [], ls = v.split("\n").map(s => s.trim()).filter(Boolean).map(s => s.replace(/^\d+[.)]\s*/, ""));
         if(!/^START/i.test(ls[0])) m.push("บรรทัดแรกควรเป็น START");
         if(!/^(STOP|END)/i.test(ls[ls.length - 1])) m.push("บรรทัดสุดท้ายควรเป็น STOP");
         if(!/INPUT|READ/i.test(v)) m.push("ควรมีคำสั่ง INPUT รับค่า");
@@ -275,6 +277,7 @@ const R1 = {
         if(iI >= 0 && iC >= 0 && iO >= 0 && !(iI < iC && iC < iO)) m.push("ลำดับควรเป็น INPUT → COMPUTE → OUTPUT");
         return m; },
       (v) => { if(short(v)) return [SHORTMSG]; const m = [];
+        if(hasFlowLink(v)) return /เริ่ม/.test(v) && /จบ/.test(v) ? [] : ["ผังงานต้องมี ⬭ \"เริ่มต้น\" และ ⬭ \"จบ\""];
         if(!/เริ่ม/.test(v) || !/จบ/.test(v)) m.push("ควรบอกสัญลักษณ์ ⬭ วงรี \"เริ่มต้น\" และ \"จบ\"");
         if(!/รับ|ด้านขนาน|แสดง|ผลลัพธ์/.test(v)) m.push("ควรมีสี่เหลี่ยมด้านขนาน (รับค่า/แสดงผล)");
         if(!/คำนวณ|ผืนผ้า|ประมวลผล/.test(v)) m.push("ควรมีสี่เหลี่ยมผืนผ้า (คำนวณ/ประมวลผล)");
@@ -310,8 +313,8 @@ const R1 = {
       (v) => short(v, 5) ? [SHORTMSG] : (/ข้าว/.test(v) && /น้ำ/.test(v)) ? [] : ["ข้อมูลนำเข้าควรมี ข้าวสาร และ น้ำ (และหม้อหุงข้าว)"],
       (v) => short(v, 5) ? [SHORTMSG] : /ข้าว.*(สุก|สวย|พอดี)|สุก/.test(v) ? [] : ["ผลลัพธ์ที่ต้องการคือ ข้าวสุก (พอดี)"],
       (v) => seq6(v, true),
-      (v) => { if(short(v, 15)) return [SHORTMSG]; const m = []; if(!/เริ่ม|START/i.test(v)) m.push("ควรมี \"เริ่มต้น\""); if(!/จบ|END|STOP/i.test(v)) m.push("ควรมี \"จบ\""); const r = seq6(v, false); return m.concat(r); },
-      (v) => { if(short(v, 15)) return ["ควรอธิบายผังงานให้ละเอียดกว่านี้"]; const m = []; if(!/เริ่ม/.test(v) || !/จบ/.test(v)) m.push("ควรบอกสัญลักษณ์ ⬭ \"เริ่มต้น\" และ \"จบ\""); if(!/สี่เหลี่ยม/.test(v)) m.push("ควรบอกว่าขั้นตอนการทำงานใช้สี่เหลี่ยม"); if(!/ลูกศร|→/.test(v)) m.push("ควรบอกว่าใช้ลูกศรเชื่อมลำดับ"); return m; }
+      (v) => { v = noLink(v); if(short(v, 15)) return [SHORTMSG]; const m = []; if(!/เริ่ม|START/i.test(v)) m.push("ควรมี \"เริ่มต้น\""); if(!/จบ|END|STOP/i.test(v)) m.push("ควรมี \"จบ\""); const r = seq6(v, false); return m.concat(r); },
+      (v) => { if(short(v, 15)) return ["ควรอธิบายผังงานให้ละเอียดกว่านี้"]; const m = []; if(hasFlowLink(v)) return /เริ่ม/.test(v) && /จบ/.test(v) ? [] : ["ผังงานต้องมี ⬭ \"เริ่มต้น\" และ ⬭ \"จบ\""]; if(!/เริ่ม/.test(v) || !/จบ/.test(v)) m.push("ควรบอกสัญลักษณ์ ⬭ \"เริ่มต้น\" และ \"จบ\""); if(!/สี่เหลี่ยม/.test(v)) m.push("ควรบอกว่าขั้นตอนการทำงานใช้สี่เหลี่ยม"); if(!/ลูกศร|→/.test(v)) m.push("ควรบอกว่าใช้ลูกศรเชื่อมลำดับ"); return m; }
     ] },
   7: { titles:["ข้อมูลนำเข้า (Input)", "ผลลัพธ์ที่ต้องการ (Output)", "เรียงลำดับ 4 ขั้นตอนและเหตุผล", "อัลกอริทึมพร้อมการทำซ้ำ"],
     f:[
@@ -322,7 +325,7 @@ const R1 = {
         else if(!(P < F && P < W)) m.push("ต้องนำปลาใส่ขวดโหลก่อน จึงจะให้อาหารและเปลี่ยนน้ำได้");
         if(!/เพราะ|เนื่องจาก|เหตุผล|จึง|ดังนั้น/.test(v)) m.push("ต้องบอกเหตุผลที่เรียงตามลำดับนี้ (ใช้คำว่า \"เพราะ\")");
         return m; },
-      (v) => { if(short(v, 15)) return [SHORTMSG]; const m = []; if(!/เริ่ม|START/i.test(v)) m.push("ควรมี \"เริ่มต้น\""); if(!/ทำซ้ำ|ทุกวัน|ทุก ๆ|วนซ้ำ|WHILE|REPEAT|FOR/i.test(v)) m.push("ต้องมีการทำซ้ำ เช่น \"ทำทุกวัน\" หรือ \"ทำซ้ำ\""); if(!/อาหาร/.test(v)) m.push("ควรมีขั้นตอนให้อาหาร"); if(!/เปลี่ยนน้ำ|สาหร่าย|ปลา/.test(v)) m.push("ควรมีขั้นตอนดูแลปลา เช่น เปลี่ยนน้ำ"); if(!/จบ|END|STOP/i.test(v)) m.push("ควรมี \"จบ\""); return m; }
+      (v) => { v = noLink(v); if(short(v, 15)) return [SHORTMSG]; const m = []; if(!/เริ่ม|START/i.test(v)) m.push("ควรมี \"เริ่มต้น\""); if(!/ทำซ้ำ|ทุกวัน|ทุก ๆ|วนซ้ำ|WHILE|REPEAT|FOR/i.test(v)) m.push("ต้องมีการทำซ้ำ เช่น \"ทำทุกวัน\" หรือ \"ทำซ้ำ\""); if(!/อาหาร/.test(v)) m.push("ควรมีขั้นตอนให้อาหาร"); if(!/เปลี่ยนน้ำ|สาหร่าย|ปลา/.test(v)) m.push("ควรมีขั้นตอนดูแลปลา เช่น เปลี่ยนน้ำ"); if(!/จบ|END|STOP/i.test(v)) m.push("ควรมี \"จบ\""); return m; }
     ] }
 };
 // ลำดับหุงข้าว: ตักข้าว < ซาว < (ตวงน้ำ) < ใส่น้ำ < กดปุ่ม < รอ ; strict=true ต้องครบ 6 ขั้นตอน
