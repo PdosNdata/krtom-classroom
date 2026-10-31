@@ -389,6 +389,8 @@ img{ max-width:100%; }
 .unit-card.has-fullcard{ overflow:hidden; background:transparent; border:none; box-shadow:none; }
 .unit-card.has-fullcard:hover{ box-shadow:none; }
 .unit-card.has-fullcard .u-fullcard-img{ display:block; }
+/* หน้ารายการหน่วย: การ์ดรูปเต็มลดเหลือครึ่งหนึ่ง จัดกึ่งกลาง (จอกว้างเท่านั้น) */
+@media (min-width:761px){ .card-grid > .unit-card.has-fullcard{ width:50%; justify-self:center; margin-left:auto; margin-right:auto; } }
 
 .tag{
   display:inline-block; font-size:.72rem; font-weight:600;
