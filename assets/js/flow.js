@@ -179,10 +179,9 @@
 
   function knowledgeBar(u, unitHref){
     const bar = document.createElement("div");
-    bar.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 14px;background:#fff;border-top:1px solid #E6E8F0;box-shadow:0 -4px 14px rgba(0,0,0,.08);text-align:center";
+    bar.style.cssText = "max-width:760px;margin:10px auto 40px;padding:10px 14px;text-align:center";   // อยู่ท้ายหน้า ไม่ลอยค้างจอ
     bar.innerHTML = '<button type="button" id="flow-read-done" style="padding:12px 26px;border:none;border-radius:999px;background:#10B981;color:#fff;font:700 1rem Sarabun,sans-serif;cursor:pointer">✅ อ่านจบแล้ว ไปทำใบงาน →</button><div id="flow-read-msg" style="font-size:.8rem;color:#DC2626;margin-top:4px"></div>';
-    document.body.appendChild(bar);
-    document.body.style.paddingBottom = "90px";
+    (document.querySelector("main") || document.body).appendChild(bar);
     const btn = bar.querySelector("#flow-read-done");
     btn.onclick = async () => {
       btn.disabled = true; btn.textContent = "กำลังบันทึก...";
