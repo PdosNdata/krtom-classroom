@@ -7,7 +7,7 @@
 "use strict";
 (function(){
 const C = window.DRAGWS, $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
-const U = { g:"m1", s:"cs", i:0 }, DONE = "krtomws-done:m1/cs/0:" + C.n;
+const UI = C.u || 0, U = { g:"m1", s:"cs", i:UI }, DONE = "krtomws-done:m1/cs/" + UI + ":" + C.n;
 const chips = $$(".chip"), zones = $$(".zone");
 const TOTAL = chips.filter(c => c.dataset.ans).length;
 let picked = null;       // chip ที่แตะเลือกไว้ (โหมดแตะ)

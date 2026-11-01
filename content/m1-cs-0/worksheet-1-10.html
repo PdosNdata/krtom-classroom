@@ -117,7 +117,8 @@
 const U = { g:"m1", s:"cs", i:0 }, N = 10, TOTAL = 8;
 const KEY = "krtomws:m1/cs/0:" + N, DONE = "krtomws-done:m1/cs/0:" + N;
 const boxes = [...document.querySelectorAll("textarea")];
-const answered = () => boxes.filter(b => b.value.trim().length >= 8).length;   // นับข้อที่ตอบอย่างน้อย 8 ตัวอักษร
+const SHORT = [2];   // ข้อที่ตอบเป็นตัวเลขสั้น ๆ ได้ (อย่างน้อย 2 ตัวอักษร) ข้ออื่นอย่างน้อย 8 ตัวอักษร
+const answered = () => boxes.filter((b, i) => b.value.trim().length >= (SHORT.includes(i) ? 2 : 8)).length;
 
 function refresh(){
   const n = answered();
@@ -140,7 +141,7 @@ function silentCheck(){ try{ return window.WSCheck && WSCheck.run1 ? WSCheck.run
 
 document.getElementById("submit").onclick = async function(){
   const st = document.getElementById("status"), n = answered();
-  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
+  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (ข้อที่ต้องเขียนอธิบายพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
   this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
   try{
     const rr = silentCheck();
@@ -156,5 +157,6 @@ document.getElementById("submit").onclick = async function(){
 </script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=4"></script>
+<script src="../../assets/js/linkify.js?v=1"></script>
 </body>
 </html>

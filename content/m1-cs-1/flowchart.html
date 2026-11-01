@@ -54,8 +54,11 @@
   .zoombar{ margin-left:auto; display:flex; align-items:center; gap:4px; }
   .zoombar button{ min-width:30px; font-weight:800; }
   #zlabel{ min-width:46px; text-align:center; font-weight:700; }
-  #ctx{ display:none; position:fixed; z-index:4000; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.25); padding:6px; width:236px; font-size:.82rem; }
+  #ctx{ display:none; position:fixed; z-index:4000; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.25); padding:6px; width:236px; font-size:.82rem; max-height:calc(100vh - 16px); overflow-y:auto; }
   #ctx .it{ display:block; width:100%; text-align:left; background:none; border:none; font:inherit; padding:6px 10px; border-radius:8px; cursor:pointer; color:#1F2430; }
+  #ctx .it{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  #ctx .it kbd{ flex:none; font:600 .72rem/1.4 Consolas,monospace; color:#64748B; background:#F1F5F9; border:1px solid #CBD5E1; border-bottom-width:2px; border-radius:6px; padding:0 6px; }
+  #ctx .it:disabled{ opacity:.45; cursor:not-allowed; }
   #ctx .it:hover{ background:#EEF2FF; } #ctx .it.danger{ color:#B91C1C; }
   #ctx .hd{ font-size:.72rem; font-weight:800; color:#64748B; padding:6px 10px 2px; }
   #ctx .sw{ display:flex; flex-wrap:wrap; gap:6px; padding:2px 8px 6px; }
@@ -276,6 +279,25 @@ function smartPos(){
   if(!D.nodes.length) return [400, 70];
   const last = D.nodes[D.nodes.length - 1], z = size(last); return [last.x, last.y + z.h / 2 + 60];
 }
+/* ---------- คัดลอก / วาง / ทำซ้ำ (Ctrl+C · Ctrl+V · Ctrl+D) ---------- */
+const CLIPKEY = "krtomFlowClip"; let clipN = 0;
+function copySel(){
+  if(!sel || sel.type !== "n" || VIEW) return false;
+  const n = D.nodes.find(x => x.id === sel.id); if(!n) return false;
+  const o = { ...n }; delete o.id; try{ localStorage.setItem(CLIPKEY, JSON.stringify(o)); }catch(e){}
+  window.__clip = o; clipN = 0; toast("คัดลอกรูปทรงแล้ว (วางด้วย Ctrl+V)"); return true;
+}
+function clipData(){ if(window.__clip) return window.__clip; try{ return JSON.parse(localStorage.getItem(CLIPKEY) || "null"); }catch(e){ return null; } }
+function pasteAt(x, y){
+  const o = clipData(); if(!o || VIEW) return false;
+  clipN++; const c = { ...o, id:"n" + (uid++), x: x != null ? Math.round(x) : o.x + 40 * clipN, y: y != null ? Math.round(y) : o.y + 40 * clipN };
+  D.nodes.push(c); sel = { type:"n", id:c.id }; push(); render(); toast("วางรูปทรงแล้ว"); return true;
+}
+function dupSel(){
+  if(!sel || sel.type !== "n" || VIEW) return false;
+  const n = D.nodes.find(x => x.id === sel.id); if(!n) return false;
+  const c = { ...n, id:"n" + (uid++), x:n.x + 40, y:n.y + 40 }; D.nodes.push(c); sel = { type:"n", id:c.id }; push(); render(); return true;
+}
 function delSel(){
   if(!sel || VIEW) return;
   if(sel.type === "n"){ D.nodes = D.nodes.filter(n => n.id !== sel.id); D.edges = D.edges.filter(e => e.a !== sel.id && e.b !== sel.id); }
@@ -289,6 +311,12 @@ document.addEventListener("keydown", e => {
   if(e.target.closest("input,textarea,select")) return;
   if(e.key === "Delete" || e.key === "Backspace"){ e.preventDefault(); delSel(); }
   if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z"){ e.preventDefault(); undo(); }
+  if((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey){
+    const k = e.key.toLowerCase();
+    if(k === "c" && copySel()) e.preventDefault();
+    else if(k === "v" && clipData()){ e.preventDefault(); pasteAt(); }
+    else if(k === "d" && sel && sel.type === "n"){ e.preventDefault(); dupSel(); }
+  }
 });
 
 /* ---------- ตำแหน่งเมาส์ -> พิกัด SVG ---------- */
@@ -432,8 +460,11 @@ function nodeMenu(e, n){
     <div class="sw">${SWATCH.map((c, i) => `<i data-a="color" data-i="${i}" title="${c[2]}" style="background:${c[0]};border-color:${c[1]}"></i>`).join("")}<i data-a="color" data-i="-1" title="สีเดิม" style="background:linear-gradient(135deg,#fff 45%,#EF4444 46%,#EF4444 54%,#fff 55%);border-color:#94A3B8"></i></div>
     <div class="hd">↔️ เปลี่ยนขนาด</div>
     <div class="sz"><button data-a="smaller">−</button><span id="szl">${Math.round(m * 100)}%</span><button data-a="bigger">+</button><button data-a="size1" style="flex:2">ปกติ</button></div>
-    <button class="it" data-a="dup">📄 ทำซ้ำรูปทรงนี้</button>
-    <button class="it danger" data-a="del">🗑️ ลบรูปทรงนี้</button>`;
+    <div class="hd">⌨️ จัดการรูปทรง</div>
+    <button class="it" data-a="copy"><span>📋 คัดลอก</span><kbd>Ctrl+C</kbd></button>
+    <button class="it" data-a="paste" ${clipData() ? "" : "disabled"}><span>📥 วาง</span><kbd>Ctrl+V</kbd></button>
+    <button class="it" data-a="dup"><span>📄 ทำซ้ำรูปทรงนี้</span><kbd>Ctrl+D</kbd></button>
+    <button class="it danger" data-a="del"><span>🗑️ ลบรูปทรงนี้</span><kbd>Delete</kbd></button>`;
   showCtx(e, html, c => c.onclick = ev => {
     const b = ev.target.closest("[data-a]"); if(!b) return; const a = b.dataset.a;
     if(a === "shape"){ const k = b.dataset.k; if(!KIND[k] || k === n.k){ hideCtx(); return; } if(n.k === "conn" || k === "conn"){ delete n.rw; delete n.rh; } n.k = k; push(); hideCtx(); render(); return; }
@@ -443,7 +474,9 @@ function nodeMenu(e, n){
       n.s = a === "size1" ? 1 : Math.max(.5, Math.min(2.5, +((n.s || 1) + (a === "bigger" ? .15 : -.15)).toFixed(2))); delete n.rw; delete n.rh;
       const v = n.s; if(v === 1) delete n.s; push(); render(); const l = $("#szl"); if(l) l.textContent = Math.round(v * 100) + "%"; return;
     }
-    if(a === "dup"){ const c = { ...n, id:"n" + (uid++), x:n.x + 40, y:n.y + 40 }; D.nodes.push(c); sel = { type:"n", id:c.id }; push(); hideCtx(); render(); return; }
+    if(a === "copy"){ hideCtx(); copySel(); return; }
+    if(a === "paste"){ hideCtx(); pasteAt(); return; }
+    if(a === "dup"){ hideCtx(); dupSel(); return; }
     if(a === "del"){ hideCtx(); delSel(); }
   }); 
 }
@@ -451,7 +484,7 @@ function edgeMenu(e, ed){
   showCtx(e, `<div class="hd">ลูกศร</div><button class="it" data-a="lbl">✏️ แก้ข้อความบนลูกศร (ใช่ / ไม่ใช่)</button>
     <div class="hd">↔️ ปรับขนาดลูกศร (ความหนา)</div>
     <div class="sz"><button data-a="thin">−</button><span id="ewl">${Math.round((ed.w || 1) * 100)}%</span><button data-a="thick">+</button><button data-a="w1" style="flex:2">ปกติ</button></div>
-    <button class="it danger" data-a="del">🗑️ ลบลูกศรนี้</button>`, c => c.onclick = ev => {
+    <button class="it danger" data-a="del"><span>🗑️ ลบลูกศรนี้</span><kbd>Delete</kbd></button>`, c => c.onclick = ev => {
     const b = ev.target.closest("[data-a]"); if(!b) return; const a = b.dataset.a;
     if(a === "thin" || a === "thick" || a === "w1"){ ed.w = a === "w1" ? 1 : Math.max(.5, Math.min(6, +((ed.w || 1) + (a === "thick" ? .25 : -.25)).toFixed(2))); const v = ed.w; if(v === 1) delete ed.w; push(); render(); const l = $("#ewl"); if(l) l.textContent = Math.round(v * 100) + "%"; return; }
     hideCtx();
@@ -464,7 +497,11 @@ cv.addEventListener("contextmenu", e => {
   const nd = e.target.closest("[data-node]"), ed = e.target.closest("[data-edge]"), [x, y] = pt(e), hit = nd ? nodeById(nd.dataset.node) : nodeAt(x, y, null);
   if(hit){ sel = { type:"n", id:hit.id }; render(); nodeMenu(e, hit); }
   else if(ed){ sel = { type:"e", id:ed.dataset.edge }; render(); edgeMenu(e, D.edges.find(z => z.id === ed.dataset.edge)); }
-  else hideCtx();
+  else{
+    sel = null; render();
+    if(!clipData()){ hideCtx(); return; }
+    showCtx(e, `<div class="hd">กระดาน</div><button class="it" data-a="paste"><span>📥 วางรูปทรงที่นี่</span><kbd>Ctrl+V</kbd></button>`, c => c.onclick = ev => { if(ev.target.closest("[data-a=paste]")){ hideCtx(); pasteAt(x, y); } });
+  }
 });
 document.addEventListener("pointerdown", e => { if(!e.target.closest("#ctx")) hideCtx(); }, true);
 document.addEventListener("keydown", e => { if(e.key === "Escape") hideCtx(); });

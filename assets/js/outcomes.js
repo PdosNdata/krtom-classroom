@@ -40,6 +40,11 @@
     "worksheet-2-8":    { o:["O2"],           c:["C2","C3","C5"],       r:["R1","R3","R5"],       what:"ใบงานนี้", crit:[
       "ถ้า apple = 5 แล้วสั่ง SET apple = 0 ค่าเดิมหายไปไหม เทียบกับการเทผลไม้ออกจากตะกร้าในชีวิตจริงสมเหตุสมผลหรือไม่",
       "ถ้าโปรแกรมไม่มีตัวแปรเลย จะมีข้อเสียอย่างไร ยกตัวอย่างประกอบ" ] },
+    "worksheet-2-9":    { o:["O1","O3"],      c:["C1","C2","C3"],       r:["R2","R3"],            what:"ใบงานนี้" },
+    "worksheet-2-10":   { o:["O1","O2"],      c:["C2","C5"],            r:["R1","R4"],            what:"ใบงานนี้" },
+    "worksheet-2-11":   { o:["O2","O3"],      c:["C1","C3","C5"],       r:["R3","R5"],            what:"ใบงานนี้" },
+    "worksheet-2-12":   { o:["O2","O3"],      c:["C3","C5"],            r:["R5"],                 what:"กิจกรรมนี้" },
+    "worksheet-2-13":   { o:["O1","O2","O3"], c:["C2"],                 r:["R1","R2"],            what:"แบบทดสอบนี้" },
     "quiz":             { o:["O1","O2","O3"], c:["C1","C2","C3"],       r:["R1","R2","R3","R4","R5"], what:"แบบทดสอบนี้" },
     "game":             { o:["O1"],           c:["C1","C2"],           r:["R1"],                 what:"เกมนี้" },
     "game-scratch":     { o:["O2","O3"],      c:["C2","C5"],            r:["R1","R2"],            what:"เกมนี้" },
@@ -63,7 +68,7 @@
   window.KrtomOutcomes = { PAGES, QUIZ_MAP, labels:{ O, C, R }, file };
   if(cfg) buildUI();
   setupEvidence();
-  linkifyAnswers();
+  if(!window.__linkified) linkifyAnswers();
 
   // ลิงก์ในช่องคำตอบ (เช่น ลิงก์ผังงาน/รหัสลำลองที่ส่งมาจากโปรแกรมวาด) กดเปิดได้เลย — ช่องพิมพ์กดลิงก์ไม่ได้ จึงแสดงแถวลิงก์ใต้ช่อง
   function linkifyAnswers(){
@@ -120,7 +125,7 @@
 
   // คำถามวิจารณ์ท้ายใบงาน (R3 วิเคราะห์/วิจารณ์ · R4 สรุปแง่คิด) — เก็บแยกจาก 8 ข้อหลัก ไม่นับเป็นข้อบังคับ
   if(cfg.crit){
-    const m = file.match(/worksheet-2-(\d)/); if(!m) return;
+    const m = file.match(/worksheet-2-(\d+)/); if(!m) return;
     const KEY = "krtomws:m1/cs/1:" + m[1] + "crit";
     const card = document.createElement("div");
     card.className = "oc-crit"; card.id = "oc-crit";
@@ -164,7 +169,7 @@
     window.KrtomOutcomes.sendEvidence = sendEvidence;
 
     // ใบงาน 2.2–2.8: ห่อ KrtomFlow.submit (ใบงานเรียกตอนกด "ส่งใบงาน")
-    const wm = file.match(/^worksheet-2-(\d)$/);
+    const wm = file.match(/^worksheet-2-(\d+)$/);
     if(wm && window.KrtomFlow){
       const n = +wm[1], act = file, orig = KrtomFlow.submit;
       KrtomFlow.submit = async function(u, type, score, total){
@@ -175,6 +180,10 @@
             const vals = [...document.querySelectorAll("textarea")].filter(x => !x.closest("#oc-crit")).map(x => x.value);
             const r = WSCheck.run(n, vals);
             if(r) items = r.fields.map((f, i) => ({ item:"f" + (i + 1), score:f.ok ? 1 : 0, max:1 }));
+          }
+          else if(n >= 9 && window.__wsItems){     // ใบงานใหม่ (2.9–2.13): ใช้ผลตรวจรายข้อที่หน้าใบงานจดไว้
+            const arr = window.__wsItems.ta || window.__wsItems.mcq;
+            if(arr && arr.length) items = arr.map((f, i) => ({ item:"f" + (i + 1), score:f.ok ? 1 : 0, max:1 }));
           }
           await sendEvidence(act, items); await sendReflection(act);
         }

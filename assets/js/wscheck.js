@@ -419,6 +419,32 @@ R1[14] = { titles:["อัลกอริทึมภาษาธรรมชา
   kwRule([/เพราะ/, /ง่าย/, /เห็น/, /ชัด/, /ลำดับ/, /ภาพ/], 2, "ควรบอกรูปแบบที่เลือกพร้อมเหตุผลว่าเพราะอะไร", 20)
 ] };
 
+// ───── ใบงานหน่วย 2 (แบบฝึกหัด/กิจกรรมประกอบหนังสือเรียน) เรียกด้วย run1("u2-N", ...) ─────
+const pyHas = (v, res, msgs) => { v = noLink(v); const m = []; res.forEach((re, i) => { if(!re.test(v)) m.push(msgs[i]); }); return m; };
+R1["u2-9"] = { titles:["การเขียนโปรแกรมคืออะไร", "หลักการ 4 ขั้นตอน", "วัตถุประสงค์", "ข้อมูลนำเข้า", "ข้อมูลนำออก", "วิธีประมวลผล", "คำนวณราคา 500 บาท"], f:[
+  kwRule([/ชุดคำสั่ง/, /ภาษา/, /สั่ง/, /คอมพิวเตอร์/, /ทำงาน/], 2, "ควรอธิบายว่าเป็นการเขียนชุดคำสั่งเพื่อสั่งให้คอมพิวเตอร์ทำงาน", 15),
+  (v) => short(v, 15) ? [SHORTMSG] : hitN(v, [/วิเคราะห์|กำหนด/, /ออกแบบ/, /เขียน/, /ทดสอบ/]) >= 4 ? [] : ["ควรเขียนให้ครบ 4 ขั้นตอน: กำหนด/วิเคราะห์ปัญหา ออกแบบ เขียนโปรแกรม ทดสอบ"],
+  kwRule([/คำนวณ/, /ราคา/, /ลด/, /จ่าย/], 2, "ควรบอกว่าโปรแกรมใช้คำนวณราคาหลังลด 10%", 8),
+  (v) => short(v, 8) ? [SHORTMSG] : (/ราคา|price|ป้าย/i.test(v) && /ตัวแปร|[a-z]{3,}/i.test(v)) ? [] : ["ควรบอกว่านำเข้าราคาป้าย และตั้งชื่อตัวแปร เช่น price"],
+  (v) => short(v, 8) ? [SHORTMSG] : (/จ่าย|สุทธิ|pay|total|net|ผลลัพธ์/i.test(v) && /ตัวแปร|[a-z]{3,}/i.test(v)) ? [] : ["ควรบอกว่าแสดงราคาที่ต้องจ่าย และตั้งชื่อตัวแปร เช่น pay"],
+  (v) => short(v, 6) ? [SHORTMSG] : (/=/.test(v) && /0\.9|0\.1|90|10/.test(v)) ? [] : ["ควรเขียนสมการ เช่น pay = price - price * 0.1 หรือ pay = price * 0.9"],
+  (v) => short(v, 3) ? [SHORTMSG] : hasNo(v, 450) ? [] : ["ลด 10% ของ 500 คือ 50 ต้องจ่าย 450 บาท และสมเหตุสมผลเพราะน้อยกว่าราคาป้าย"]
+] };
+R1["u2-11"] = { titles:["วิเคราะห์ปัญหาค่าโทร", "รหัสลำลอง", "โปรแกรมไพทอน", "ไล่ผล 20 นาที", "ไพทอน if", "ไพทอน while"], f:[
+  (v) => short(v, 15) ? [SHORTMSG] : (/นาที|minute/i.test(v) && /ค่าโทร|cost|bill|จ่าย|บาท/i.test(v) && /3/.test(v)) ? [] : ["ควรบอกข้อมูลนำเข้า (จำนวนนาที) ข้อมูลนำออก (ค่าโทร) และสมการที่คูณ 3"],
+  pseudoBasic({ re: /3/, msg: "ควรใช้ 3 บาทต่อนาทีในการคำนวณ" }),
+  (v) => { const m = pyHas(v, [/input\s*\(/, /print\s*\(/, /\*\s*3|3\s*\*/], ["ควรมี input() รับจำนวนนาที", "ควรมี print() แสดงค่าโทร", "ควรคำนวณด้วยการคูณ 3"]); return short(v, 15) ? [SHORTMSG] : m; },
+  (v) => short(v, 2) ? [SHORTMSG] : hasNo(v, 60) ? [] : ["20 นาที × 3 บาท = 60 บาท"],
+  (v) => { const m = pyHas(v, [/if\s/i, /else\s*:/i, />=\s*2|>\s*=\s*2|2\s*<=/, /50/, /30/, /print\s*\(/], ["ควรมี if", "ควรมี else:", "เงื่อนไขควรเปรียบเทียบน้ำหนักกับ 2 (>= 2)", "ควรแสดงค่าส่ง 50 บาท", "ควรแสดงค่าส่ง 30 บาท", "ควรมี print()"]); return short(v, 20) ? [SHORTMSG] : m; },
+  (v) => { const m = pyHas(v, [/while\s/i, /print\s*\(/, /<=\s*5|<\s*6/, /\+\s*1|\+=\s*1/], ["ควรมี while", "ควรมี print()", "ต้องกำหนดเงื่อนไขให้หยุดที่ 5 (<= 5)", "ต้องเพิ่มค่าตัวนับทีละ 1"]); return short(v, 20) ? [SHORTMSG] : m; }
+] };
+R1["u2-12"] = { titles:["ตั้งชื่อตัวแปร", "คำสั่งรับค่า", "คำสั่งประมวลผล", "คำสั่งแสดงผล"], f:[
+  (v) => short(v, 8) ? [SHORTMSG] : (new Set((v.match(/[A-Za-z_][A-Za-z_0-9]{2,}/g) || []).map(x => x.toLowerCase())).size >= 2 ? [] : ["ควรตั้งชื่อตัวแปรภาษาอังกฤษอย่างน้อย 2 ตัว เช่น bottles, total"]),
+  (v) => { v = noLink(v); return short(v, 8) ? [SHORTMSG] : (/input\s*\(/.test(v) && /int\s*\(|float\s*\(/.test(v)) ? [] : ["ควรใช้ input() ร่วมกับ int() เพื่อรับจำนวนขวดเป็นเลขจำนวนเต็ม"]; },
+  (v) => short(v, 6) ? [SHORTMSG] : (/=/.test(v) && /\*\s*8|8\s*\*/.test(v)) ? [] : ["ควรคำนวณ เช่น total = bottles * 8"],
+  (v) => short(v, 6) ? [SHORTMSG] : /print\s*\(/.test(v) ? [] : ["ควรใช้ print() แสดงราคารวม"]
+] };
+
 function run1(n, vals){
   const rule = R1[n]; if(!rule) return null;
   const F = rule.f.map((fn, i) => { let msgs; try{ msgs = fn(vals[i] || "", vals); }catch(e){ msgs = ["ตรวจข้อนี้ไม่ได้ — ลองเขียนใหม่ให้ชัดเจนขึ้น"]; } return { ok:!msgs.length, title:rule.titles[i], msgs, note:"" }; });
@@ -429,5 +455,5 @@ const blocksFromText = (txt) => { const p = linkParam(txt || "", "p"); if(!p) re
 // จดผลตรวจรายข้อ (ถูก/ผิด + เหตุผล) ไว้ให้ submitwork.js ส่งไปกับคำตอบ เพื่อให้ครูเห็นว่าข้อไหนผ่านหรือไม่ผ่าน
 const keepItems = (fn) => (n, vals) => { const r = fn(n, vals); window.__wsItems = r && r.fields ? { ta: r.fields.map(f => ({ ok:!!f.ok, hint:(f.msgs || []).join(" · ") })) } : null; return r; };
 window.WSCheck = { blocksFromText, util:{ has, count, hasStr }, run8, run, run1, rules:R, runCode, analyzeCode };
-WSCheck.run = keepItems(run); WSCheck.run1 = keepItems(run1);
+window.WSCheck.run = keepItems(run); window.WSCheck.run1 = keepItems(run1);
 })();

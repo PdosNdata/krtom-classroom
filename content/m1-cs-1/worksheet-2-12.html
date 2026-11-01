@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 2.12: กิจกรรม ตู้กดน้ำมหาสนุก — ม.1 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; --c1:#FB923C; --c2:#C2410C; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🥤 ใบงานที่ 2.12 กิจกรรม ตู้กดน้ำมหาสนุก</h1>
+    <p>กิจกรรม · เขียนโปรแกรมไพทอนอย่างง่าย · ม.1 หน่วยที่ 2</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">ตู้กดน้ำดื่มขายขวดละ 8 บาท ผู้ซื้อกดจำนวนขวดที่ต้องการ แล้วตู้ต้องแสดงราคารวมที่ต้องจ่าย จงเขียนคำสั่งของโปรแกรมนี้ด้วยภาษาไพทอน</p>
+    <div class="example">💡 คิดก่อน: ข้อมูลเข้า = จำนวนขวด · ผลลัพธ์ = ราคารวม · สมการ = ราคารวม = 8 × จำนวนขวด</div>
+  </div>
+
+  <div class="card" id="form">
+    <div class="field">
+      <label for="f0"><span class="fn">1</span> ตั้งชื่อตัวแปรที่ใช้ในโปรแกรม (อย่างน้อย 2 ตัว) และบอกว่าแต่ละตัวเก็บอะไร</label>
+      <div class="hint">ใช้ชื่อภาษาอังกฤษ เช่น bottles</div>
+      <textarea id="f0" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f1"><span class="fn">2</span> คำสั่งการรับค่า</label>
+      <div class="hint">รับจำนวนขวดจากแป้นพิมพ์ เป็นเลขจำนวนเต็ม</div>
+      <textarea id="f1" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f2"><span class="fn">3</span> คำสั่งการประมวลผล</label>
+      <div class="hint">คำนวณราคารวม</div>
+      <textarea id="f2" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f3"><span class="fn">4</span> คำสั่งการแสดงผล</label>
+      <div class="hint">แสดงราคารวมที่ต้องจ่าย</div>
+      <textarea id="f3" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/4 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/wscheck.js?v=7"></script>
+<script>
+const U = { g:"m1", s:"cs", i:1 }, N = 12, TOTAL = 4;
+const KEY = "krtomws:m1/cs/1:" + N, DONE = "krtomws-done:m1/cs/1:" + N;
+const boxes = [...document.querySelectorAll("textarea")];
+const answered = () => boxes.filter(b => b.value.trim().length >= 8).length;   // นับข้อที่ตอบอย่างน้อย 8 ตัวอักษร
+
+function refresh(){
+  const n = answered();
+  document.getElementById("bar").style.width = (n / TOTAL * 100) + "%";
+  document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ";
+}
+// บันทึกร่างอัตโนมัติ (เก็บในเครื่องนี้)
+try{
+  const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+  boxes.forEach((b, i) => { if(saved[i]) b.value = saved[i]; });
+}catch(e){}
+boxes.forEach(b => b.addEventListener("input", () => {
+  try{ localStorage.setItem(KEY, JSON.stringify(boxes.map(x => x.value))); }catch(e){}
+  refresh();
+}));
+refresh();
+
+// ───── ระบบตรวจใบงานเบื้องต้น (ตรวจตอนกดส่ง ไม่แสดงผลหรือเฉลยให้นักเรียน — ส่งคะแนนให้ครู) ─────
+function silentCheck(){ try{ return window.WSCheck && WSCheck.run1 ? WSCheck.run1("u2-" + N, boxes.map(b => b.value)) : null; }catch(e){ return null; } }
+
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), n = answered();
+  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    const rr = silentCheck();
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, TOTAL);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=4"></script>
+<script src="../../assets/js/linkify.js?v=1"></script>
+<script src="../../assets/js/outcomes.js?v=5"></script>
+</body>
+</html>
