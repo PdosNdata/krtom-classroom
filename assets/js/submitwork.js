@@ -39,7 +39,22 @@
     catch(e){ /* ยังไม่ได้ติดตั้ง SQL / ออฟไลน์: ข้ามไป */ }
   }
   window.KrtomSubmitWork = send;   // ใบงานที่ไม่ได้ส่งผ่าน KrtomFlow.submit (เช่น 2.1) เรียกใช้เอง
+  // ส่งแล้วส่งซ้ำไม่ได้ จนกว่าครูจะเปิดสิทธิ์ (ถามเซิร์ฟเวอร์ ถ้ายังไม่ได้ติดตั้ง SQL หรือออฟไลน์ ให้ข้ามไป)
+  async function canSubmit(){
+    if(KrtomFlow.mode() !== "student") return true;
+    try{ return (await KrtomFlow.rpc("krtom_work_can_submit", { p_token: sessionStorage.getItem("krtomStudentToken"), p_activity: act })) !== false; }
+    catch(e){ return true; }
+  }
+  window.addEventListener("load", async () => {
+    if(await canSubmit()) return;
+    document.querySelectorAll("#submit, #check-btn").forEach(b => { b.disabled = true; b.style.opacity = ".5"; b.style.cursor = "not-allowed"; });
+    const n = document.createElement("div");
+    n.style.cssText = "max-width:740px;margin:12px auto;padding:10px 16px;border-radius:14px;background:#ECFDF5;border:2px solid #34D399;color:#065F46;font-weight:700;text-align:center";
+    n.textContent = "✅ ส่งใบงานนี้แล้ว — ส่งซ้ำไม่ได้ ถ้าต้องการแก้ไขหรือทำใหม่ ให้ขอครูเปิดสิทธิ์ส่งใหม่";
+    const m = document.querySelector("main"); if(m) m.insertBefore(n, m.firstChild);
+  });
   KrtomFlow.submit = async function(u, type, score, total){
+    if(type === "worksheet" && !(await canSubmit())) throw new Error("ส่งใบงานนี้แล้ว");
     const r = await orig.apply(this, arguments);
     if(type === "worksheet") await send(u, score, total);
     return r;
