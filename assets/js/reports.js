@@ -158,7 +158,7 @@ const KrtomReports = (function(){
     setBreadcrumb([{ label:"🏠 หน้าแรก", href:"#/" }, { label:"📊 ดูงานนักเรียน" }]);
     if(!KrtomContent.isTeacher()){ location.hash = "#/"; return; }
     app.innerHTML = `<div class="page-title">📊 ดูงานนักเรียน</div><div class="page-subtitle">กำลังโหลดคะแนน...</div>`;
-    try{ await load(false); if(st.view === "outcome" || st.view === "review") await loadOc(false); if(st.view === "work") await loadWk(false); }
+    try{ await load(false); if(st.view === "outcome" || st.view === "review") await loadOc(false); if(st.view === "work") await loadWk(false); else await loadWk(false).catch(() => {}); }
     catch(e){
       if(location.hash !== hash) return;
       const m = (e && e.message) || "";
@@ -204,6 +204,7 @@ const KrtomReports = (function(){
         <div class="rp-title">${esc(model.title)}</div>
         <div class="rp-sub">${esc(model.subtitle)}</div>
         <div class="rp-scroll">${tableHtml(model)}</div>`}
+        ${st.view === "student" ? studentWorkHtml(st.student) : ""}
         <div class="rp-actions">
           <button type="button" data-act="print">🖨️ พิมพ์</button>
           <button type="button" data-act="xlsx">📊 Excel</button>
@@ -218,6 +219,7 @@ const KrtomReports = (function(){
     const u = document.getElementById("rp-unit"); if(u) u.onchange = () => { st.unit = u.value; draw(); };
     const s = document.getElementById("rp-student"); if(s) s.onchange = () => { st.student = s.value; draw(); };
     app.querySelectorAll(".rp-actions button").forEach(b => b.onclick = () => act(b.dataset.act, b));
+    app.querySelectorAll(".wk-open").forEach(b => b.onclick = () => showWork(b.dataset.c, b.dataset.a));
   }
 
   // ---------------------------------------------------------------- งานที่ส่ง (คำตอบ + ลิงก์งานของนักเรียน)
@@ -230,6 +232,27 @@ const KrtomReports = (function(){
   const WS_COUNT = { 0:15, 1:8 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
   const linkify = (t) => esc(t).replace(/(https?:\/\/[^\s<>"']+)/g, (u) => { const c = u.replace(/[.,;)]+$/, ""), tail = u.slice(c.length); const lb = /flowchart\.html/.test(c) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(c) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์"; return `<a href="${c}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 12px;border-radius:999px;font-size:.85em">${lb} ↗</a>${tail}`; });
   const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? `ใบงาน ${m[1]}.${m[2]}` : a; };
+
+  // ชื่อใบงาน (แสดงในหน้ารายคน)
+  const WS_NAMES = {
+    "1-1":"แนวคิดเชิงนามธรรม", "1-2":"การเขียนอัลกอริทึม 3 รูปแบบ", "1-3":"ออกแบบอัลกอริทึมในชีวิตประจำวัน", "1-4":"บ้านฉันอยู่นี่ โรงเรียนอยู่ไหน", "1-5":"ไร่ข้าวโพดจำลอง", "1-6":"หุงข้าวให้สุกพอดี", "1-7":"เลี้ยงปลากัด",
+    "1-8":"แยกย่อยปัญหา (ลากไปวาง)", "1-9":"หาตัวเลข หารูปร่าง (ลากไปวาง)", "1-10":"แนวคิดเชิงนามธรรมและอัลกอริทึมเบื้องต้น", "1-11":"ภาษาธรรมชาติและภาษาคอมพิวเตอร์", "1-12":"อัลกอริทึมด้วยรหัสลำลอง", "1-13":"อัลกอริทึมด้วยผังงาน", "1-14":"กิจกรรม ร้านน้ำผลไม้ปั่น", "1-15":"แบบทดสอบท้ายหน่วย",
+    "2-1":"จับคู่ศัพท์ + เลือกตอบ", "2-2":"ไข่ดาว", "2-3":"อุณหภูมิ", "2-4":"สวนสัตว์", "2-5":"รางวัลพิเศษ", "2-6":"สามเหลี่ยม", "2-7":"แมวเหมียว", "2-8":"ตัวแปร"
+  };
+  // ใบงานที่ส่งของนักเรียนคนเดียว: คะแนน + ลิงก์งานที่ส่ง (ผังงาน/รหัสลำลอง/โค้ดจิ๊กซอว์) + ปุ่มดูคำตอบ
+  function studentWorkHtml(code){
+    if(!wk) return `<p class="flow-note">ยังไม่มีข้อมูลงานที่ส่ง (ถ้ายังไม่เคยใช้ ต้องรันไฟล์ SQL 20261031100000_krtom_submissions.sql ใน Supabase)</p>`;
+    const mine = wk.filter(r => r.student_code === code), latest = new Map();
+    mine.forEach(r => { const c = latest.get(r.activity); if(!c || r.attempt > c.attempt) latest.set(r.activity, r); });
+    const key = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? +m[1] * 1000 + +m[2] : 1e9; };
+    const rows = [...latest.values()].sort((a, b) => key(a.activity) - key(b.activity));
+    const linksOf = (r) => { const out = []; (Array.isArray(r.answers) ? r.answers : []).forEach((x, i) => { (String(x.a || "").match(/https?:\/\/[^\s<>"']+/g) || []).forEach(u => { const c = u.replace(/[.,;)]+$/, ""); const lb = /flowchart\.html/.test(c) ? "🔷 ผังงาน" : /pseudocode\.html/.test(c) ? "📝 รหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 โค้ดจิ๊กซอว์" : "🔗 ลิงก์"; out.push(`<a href="${esc(c)}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 10px;border-radius:999px;font-size:.82em;margin:2px 4px 2px 0">${lb} ↗</a>`); }); }); return out.join(""); };
+    const body = rows.length ? rows.map(r => { const m = /^worksheet-(\d+)-(\d+)$/.exec(r.activity), nm = m ? (WS_NAMES[m[1] + "-" + m[2]] || "") : ""; const lk = linksOf(r);
+      return `<tr><td>${esc(wsName(r.activity))}${nm ? `<div style="font-size:.82em;color:#64748B">${esc(nm)}</div>` : ""}</td><td class="rp-c"><b>${r.score}/${r.max_score}</b></td><td class="rp-c">${r.attempt}</td><td class="rp-c">${esc(dateTh(r.submitted_at))}</td><td>${lk || '<span style="color:#94A3B8">—</span>'}</td><td class="rp-c"><button type="button" class="wk-open" data-c="${esc(code)}" data-a="${esc(r.activity)}">📄 ดูคำตอบ</button></td></tr>`; }).join("")
+      : `<tr><td colspan="6" class="rp-c rp-none">นักเรียนคนนี้ยังไม่ได้ส่งใบงาน</td></tr>`;
+    return `<div class="rp-title" style="margin-top:18px">📄 ใบงานที่ส่ง</div><div class="rp-sub">คะแนนที่ระบบตรวจเบื้องต้น และลิงก์งานที่นักเรียนส่ง (ครั้งล่าสุดของแต่ละใบงาน)</div>
+      <div class="rp-scroll"><table class="rp-table"><thead><tr><th>ใบงาน</th><th>คะแนน</th><th>ส่งครั้งที่</th><th>ส่งล่าสุด</th><th>ลิงก์งานที่ส่ง</th><th>คำตอบ</th></tr></thead><tbody>${body}</tbody></table></div>`;
+  }
   function showWork(code, act){
     const rows = wk.filter(r => r.student_code === code && r.activity === act).sort((a, b) => b.attempt - a.attempt);
     if(!rows.length) return;
