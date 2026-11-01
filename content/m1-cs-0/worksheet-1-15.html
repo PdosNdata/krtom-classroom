@@ -163,6 +163,7 @@ document.getElementById("submit").onclick = async function(){
   const st = document.getElementById("status"), p = picked(), n = p.filter(x => x >= 0).length;
   if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง"; return; }
   const score = p.filter((x, i) => x === ANS[i]).length;
+  window.__wsItems = { mcq: p.map((x, i) => ({ ok: x === ANS[i] })) };
   this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
   try{
     if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", score, TOTAL);
@@ -176,6 +177,6 @@ document.getElementById("submit").onclick = async function(){
 };
 </script>
 <script src="../../assets/js/flow.js?v=5"></script>
-<script src="../../assets/js/submitwork.js?v=2"></script>
+<script src="../../assets/js/submitwork.js?v=3"></script>
 </body>
 </html>

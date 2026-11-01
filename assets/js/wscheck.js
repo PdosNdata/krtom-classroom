@@ -261,7 +261,7 @@ const R1 = {
       (v) => short(v) ? [SHORTMSG] : [],
       (v) => short(v) ? [SHORTMSG] : itemsOf(v).length >= 2 ? [] : ["สาระสำคัญควรเขียนอย่างน้อย 2 อย่าง (คั่นด้วย , หรือขึ้นบรรทัดใหม่)"],
       (v, a) => { if(short(v, 4)) return [SHORTMSG]; const s = itemsOf(a[1]), d = itemsOf(v); return d.length && d.every(x => s.includes(x)) ? ["สิ่งที่ตัดทิ้งไม่ควรซ้ำกับสาระสำคัญในข้อ 2"] : []; },
-      (v, a) => { if(short(v, 20)) return ["วิธีแก้ปัญหาควรอธิบายให้ละเอียดกว่านี้ (อย่างน้อย 20 ตัวอักษร)"]; const s = itemsOf(a[1]); return (s.some(x => v.includes(x)) || /สาระสำคัญ|รูปแบบ|ตัดทิ้ง|นามธรรม|แผนภาพ|แบบจำลอง/.test(v)) ? [] : ["วิธีแก้ปัญหาควรนำ \"สาระสำคัญ\" ที่เขียนไว้ในข้อ 2 มาใช้"]; }
+      (v, a) => { if(short(v, 8)) return ["วิธีแก้ปัญหาควรเขียนให้ชัดเจนกว่านี้"]; const s = itemsOf(a[1]); return (s.some(x => v.includes(x)) || /สาระสำคัญ|รูปแบบ|ตัดทิ้ง|นามธรรม|แผนภาพ|แบบจำลอง|ตั้ง|ปรับ|เลิก|ลด|เพิ่ม|หยุด|นอน|ตื่น|เตรียม|แก้|ทำ|ควร|งด|จด|วางแผน|ฝึก|เลือก|แยก|ใช้/.test(v)) ? [] : ["วิธีแก้ปัญหาควรบอกสิ่งที่จะลงมือทำ เช่น ปรับ ลด เพิ่ม หรือเลือกวิธีให้ตรงกับสาระสำคัญในข้อ 2"]; }
     ] },
   2: { titles:["ปัญหาที่เลือก", "อัลกอริทึมแบบภาษาธรรมชาติ", "รหัสลำลอง (Pseudo Code)", "ผังงาน (Flowchart)"],
     f:[
@@ -426,5 +426,8 @@ function run1(n, vals){
 }
 
 const blocksFromText = (txt) => { const p = linkParam(txt || "", "p"); if(!p) return null; try{ const d = b64d(p); return { d, bs:allBlocks(d) }; }catch(e){ return null; } };
+// จดผลตรวจรายข้อ (ถูก/ผิด + เหตุผล) ไว้ให้ submitwork.js ส่งไปกับคำตอบ เพื่อให้ครูเห็นว่าข้อไหนผ่านหรือไม่ผ่าน
+const keepItems = (fn) => (n, vals) => { const r = fn(n, vals); window.__wsItems = r && r.fields ? { ta: r.fields.map(f => ({ ok:!!f.ok, hint:(f.msgs || []).join(" · ") })) } : null; return r; };
 window.WSCheck = { blocksFromText, util:{ has, count, hasStr }, run8, run, run1, rules:R, runCode, analyzeCode };
+WSCheck.run = keepItems(run); WSCheck.run1 = keepItems(run1);
 })();

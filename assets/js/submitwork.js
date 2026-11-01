@@ -9,11 +9,13 @@
   const act = m[1], orig = KrtomFlow.submit;
   const clean = (t) => String(t || "").replace(/\s+/g, " ").trim();
   function collect(){
-    const out = [];
+    const out = [], items = window.__wsItems || {};      // ผลตรวจรายข้อที่หน้าใบงานจดไว้ (ถ้ามี)
     document.querySelectorAll("textarea").forEach((ta, i) => {
       const text = ta.value.trim(); if(!text) return;
       const f = ta.closest(".field, .sec, .card, section") || ta.parentElement, lb = (ta.id && document.querySelector('label[for="' + ta.id + '"]')) || (f && f.querySelector("label, h2, h3, .q"));
-      out.push({ q: clean(lb ? lb.textContent : "") || ("ข้อ " + (i + 1)), a: text });
+      const it = items.ta && items.ta[i], row = { q: clean(lb ? lb.textContent : "") || ("ข้อ " + (i + 1)), a: text };
+      if(it){ row.ok = it.ok; if(it.hint) row.hint = it.hint; }
+      out.push(row);
     });
     // ใบงาน 2.8: ข้อกรอกค่า/เลือกค่า (.q[data-k])
     document.querySelectorAll(".q[data-k]").forEach(q => {
@@ -22,9 +24,11 @@
     });
     // ปรนัย (ใบงาน 2.1): ข้อความคำถาม + ตัวเลือกที่เลือก
     const p1 = document.getElementById("p1-score"); if(p1) out.push({ q: "ตอนที่ 1 จับคู่คำศัพท์", a: "จับคู่ถูก " + p1.textContent + "/" + document.querySelectorAll(".dropzone").length });
-    document.querySelectorAll(".mcq").forEach(q => {
+    document.querySelectorAll(".mcq").forEach((q, j) => {
       const c = q.querySelector("input[type=radio]:checked");
-      out.push({ q: clean((q.querySelector(".q") || {}).textContent), a: c ? clean(c.closest("label").textContent) : "(ไม่ได้ตอบ)" });
+      const it = items.mcq && items.mcq[j], row = { q: clean((q.querySelector(".q") || {}).textContent), a: c ? clean(c.closest("label").textContent) : "(ไม่ได้ตอบ)" };
+      if(it) row.ok = it.ok;
+      out.push(row);
     });
     return out;
   }

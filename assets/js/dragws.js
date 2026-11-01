@@ -72,7 +72,16 @@ $$(".tray").forEach(t => t.addEventListener("click", (e) => { if(!picked || e.ta
 function score(){
   let s = 0; chips.forEach(c => { if(!c.dataset.ans) return; const z = c.closest(".zone"); if(z && z.dataset.key === c.dataset.ans) s++; }); return s;
 }
+// ผลรายช่อง: ช่องรับหลายชิ้น ถูกเมื่อวางครบและไม่มีชิ้นผิด · ช่องรับชิ้นเดียวถูกเมื่อวางชิ้นที่ตรงกัน
+function zoneItems(){
+  return { ta: zones.map(z => {
+    const inside = $$(".chip", z), want = chips.filter(c => c.dataset.ans === z.dataset.key), wrong = inside.filter(c => c.dataset.ans !== z.dataset.key);
+    const ok = want.length ? (want.every(c => c.closest(".zone") === z) && !wrong.length) : !inside.length;
+    return { ok, hint: ok ? "" : (wrong.length ? "มีชิ้นที่วางผิดที่: " + wrong.map(c => c.textContent.trim()).join(", ") : "ยังวางไม่ครบ") };
+  }) };
+}
 function snapshot(){
+  window.__wsItems = zoneItems();
   const box = $("#answers"); box.innerHTML = "";
   zones.forEach((z, i) => { const f = document.createElement("div"); f.className = "field";
     const l = document.createElement("label"); l.htmlFor = "ga" + i; l.textContent = z.dataset.title || ("ช่อง " + (i + 1));

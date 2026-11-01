@@ -231,6 +231,8 @@ const KrtomReports = (function(){
   }
   const WS_COUNT = { 0:15, 1:8 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
   const linkify = (t) => esc(t).replace(/(https?:\/\/[^\s<>"']+)/g, (u) => { const c = u.replace(/[.,;)]+$/, ""), tail = u.slice(c.length); const lb = /flowchart\.html/.test(c) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(c) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์"; return `<a href="${c}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 12px;border-radius:999px;font-size:.85em">${lb} ↗</a>${tail}`; });
+  const eff = (r) => r.teacher_score != null ? r.teacher_score : r.score;
+  const mark = (r) => r.teacher_status === "edited" ? ' <span title="ครูแก้คะแนน">✏️</span>' : r.teacher_status === "approved" ? ' <span title="ครูเห็นชอบ">✅</span>' : "";
   const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? `ใบงาน ${m[1]}.${m[2]}` : a; };
 
   // ชื่อใบงาน (แสดงในหน้ารายคน)
@@ -248,7 +250,7 @@ const KrtomReports = (function(){
     const rows = [...latest.values()].sort((a, b) => key(a.activity) - key(b.activity));
     const linksOf = (r) => { const out = []; (Array.isArray(r.answers) ? r.answers : []).forEach((x, i) => { (String(x.a || "").match(/https?:\/\/[^\s<>"']+/g) || []).forEach(u => { const c = u.replace(/[.,;)]+$/, ""); const lb = /flowchart\.html/.test(c) ? "🔷 ผังงาน" : /pseudocode\.html/.test(c) ? "📝 รหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 โค้ดจิ๊กซอว์" : "🔗 ลิงก์"; out.push(`<a href="${esc(c)}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 10px;border-radius:999px;font-size:.82em;margin:2px 4px 2px 0">${lb} ↗</a>`); }); }); return out.join(""); };
     const body = rows.length ? rows.map(r => { const m = /^worksheet-(\d+)-(\d+)$/.exec(r.activity), nm = m ? (WS_NAMES[m[1] + "-" + m[2]] || "") : ""; const lk = linksOf(r);
-      return `<tr><td>${esc(wsName(r.activity))}${nm ? `<div style="font-size:.82em;color:#64748B">${esc(nm)}</div>` : ""}</td><td class="rp-c"><b>${r.score}/${r.max_score}</b></td><td class="rp-c">${r.attempt}</td><td class="rp-c">${esc(dateTh(r.submitted_at))}</td><td>${lk || '<span style="color:#94A3B8">—</span>'}</td><td class="rp-c"><button type="button" class="wk-open" data-c="${esc(code)}" data-a="${esc(r.activity)}">📄 ดูคำตอบ</button></td></tr>`; }).join("")
+      return `<tr><td>${esc(wsName(r.activity))}${nm ? `<div style="font-size:.82em;color:#64748B">${esc(nm)}</div>` : ""}</td><td class="rp-c"><b>${eff(r)}/${r.max_score}</b>${mark(r)}${r.teacher_status === "edited" ? `<div style="font-size:.75em;color:#64748B">ระบบ ${r.score}</div>` : ""}</td><td class="rp-c">${r.attempt}</td><td class="rp-c">${esc(dateTh(r.submitted_at))}</td><td>${lk || '<span style="color:#94A3B8">—</span>'}</td><td class="rp-c"><button type="button" class="wk-open" data-c="${esc(code)}" data-a="${esc(r.activity)}">📄 ดูคำตอบ</button></td></tr>`; }).join("")
       : `<tr><td colspan="6" class="rp-c rp-none">นักเรียนคนนี้ยังไม่ได้ส่งใบงาน</td></tr>`;
     return `<div class="rp-title" style="margin-top:18px">📄 ใบงานที่ส่ง</div><div class="rp-sub">คะแนนที่ระบบตรวจเบื้องต้น และลิงก์งานที่นักเรียนส่ง (ครั้งล่าสุดของแต่ละใบงาน)</div>
       <div class="rp-scroll"><table class="rp-table"><thead><tr><th>ใบงาน</th><th>คะแนน</th><th>ส่งครั้งที่</th><th>ส่งล่าสุด</th><th>ลิงก์งานที่ส่ง</th><th>คำตอบ</th></tr></thead><tbody>${body}</tbody></table></div>`;
@@ -257,12 +259,38 @@ const KrtomReports = (function(){
     const rows = wk.filter(r => r.student_code === code && r.activity === act).sort((a, b) => b.attempt - a.attempt);
     if(!rows.length) return;
     const st0 = data.roster.find(r => r.code === code), r = rows[0];
-    const ans = (Array.isArray(r.answers) ? r.answers : []).map(x => `<div style="text-align:left;margin:10px 0"><div style="font-weight:800;color:#4338CA">${esc(x.q)}</div><div style="white-space:pre-wrap;background:#F8FAFC;border-radius:10px;padding:8px 10px;margin-top:4px;line-height:1.55">${linkify(x.a)}</div></div>`).join("");
+    const flag = (x) => x.ok === true ? `<span style="background:#DCFCE7;color:#047857;border-radius:999px;padding:1px 10px;font-size:.8em;font-weight:800;margin-left:6px">✔ ถูก</span>` : x.ok === false ? `<span style="background:#FEE2E2;color:#B91C1C;border-radius:999px;padding:1px 10px;font-size:.8em;font-weight:800;margin-left:6px">✖ ยังไม่ถูก</span>` : "";
+    const ans = (Array.isArray(r.answers) ? r.answers : []).map(x => `<div style="text-align:left;margin:10px 0"><div style="font-weight:800;color:#4338CA">${esc(x.q)}${flag(x)}</div><div style="white-space:pre-wrap;background:${x.ok === false ? "#FFF7F7" : "#F8FAFC"};border-radius:10px;padding:8px 10px;margin-top:4px;line-height:1.55;${x.ok === false ? "border:1px solid #FECACA;" : ""}">${linkify(x.a)}</div>${x.ok === false && x.hint ? `<div style="color:#B45309;font-size:.85em;margin-top:3px">⚠️ ระบบเห็นว่า: ${esc(x.hint)}</div>` : ""}</div>`).join("");
+    const rv = r.teacher_status === "edited" ? `<div style="margin-top:6px;background:#FEF3C7;border-radius:8px;padding:5px 10px">✏️ ครูแก้คะแนนเป็น <b>${r.teacher_score}/${r.max_score}</b>${r.teacher_note ? " · " + esc(r.teacher_note) : ""}</div>` : r.teacher_status === "approved" ? `<div style="margin-top:6px;background:#DCFCE7;border-radius:8px;padding:5px 10px">✅ ครูเห็นชอบคะแนน ${r.teacher_score}/${r.max_score} แล้ว</div>` : "";
+    const hasMarks = (r.answers || []).some && (r.answers || []).some(x => x.ok === true || x.ok === false);
     window.Swal && Swal.fire({
       title: `${wsName(act)} — ${esc(st0 ? st0.name : r.full_name)}`,
-      html: `<div style="text-align:left;color:#475569;font-size:.9em">คะแนนที่ระบบตรวจเบื้องต้น: <b>${r.score}/${r.max_score}</b> · ส่งครั้งที่ ${r.attempt}${rows.length > 1 ? ` (ส่งทั้งหมด ${rows.length} ครั้ง แสดงครั้งล่าสุด)` : ""} · ${dateTh(r.submitted_at)}</div>${ans}`,
-      width: 720, confirmButtonText: "ปิด", confirmButtonColor: "#3B82F6"
+      html: `<div style="text-align:left;color:#475569;font-size:.9em">คะแนนที่ระบบตรวจเบื้องต้น: <b>${r.score}/${r.max_score}</b> · ส่งครั้งที่ ${r.attempt}${rows.length > 1 ? ` (ส่งทั้งหมด ${rows.length} ครั้ง แสดงครั้งล่าสุด)` : ""} · ${dateTh(r.submitted_at)}${hasMarks ? "" : " · (งานชิ้นนี้ส่งก่อนมีระบบแสดงถูก/ผิดรายข้อ)"}${rv}</div>${ans}`,
+      width: 720, showDenyButton: true, showCancelButton: true,
+      confirmButtonText: "✅ เห็นชอบคะแนน", denyButtonText: "✏️ แก้คะแนน", cancelButtonText: "ปิด",
+      confirmButtonColor: "#10B981", denyButtonColor: "#F59E0B", cancelButtonColor: "#64748B"
+    }).then(async (res) => {
+      if(res.isConfirmed) await reviewWork(r, "approved");
+      else if(res.isDenied) await editScore(r);
     });
+  }
+  async function reviewWork(r, status, score, note){
+    try{
+      await KrtomFlow.rpc("krtom_teacher_review_work", { p_token: token(), p_id: r.id, p_status: status, p_score: status === "edited" ? score : null, p_note: note || null });
+      r.teacher_status = status; r.teacher_score = status === "approved" ? r.score : score; r.teacher_note = note || null;
+      draw();
+    }catch(e){
+      const m = (e && e.message) || "";
+      Swal.fire({ icon:"error", title:"บันทึกไม่สำเร็จ", text: /PGRST202|Could not find the function/i.test(m) ? "ยังไม่ได้ติดตั้งระบบตรวจงาน (ต้องรันไฟล์ SQL 20261101100000_krtom_work_review.sql ใน Supabase)" : m || "ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่" });
+    }
+  }
+  async function editScore(r){
+    const res = await Swal.fire({
+      title: "แก้คะแนน", width: 460, showCancelButton: true, confirmButtonText: "บันทึก", cancelButtonText: "ยกเลิก", confirmButtonColor: "#F59E0B",
+      html: `<div style="text-align:left;font-size:.95em">คะแนนเต็ม ${r.max_score} · ระบบตรวจได้ ${r.score}<br><label style="font-weight:700">คะแนนใหม่</label><br><input id="rv-score" type="number" min="0" max="${r.max_score}" step="1" value="${eff(r)}" class="swal2-input" style="margin:6px 0 10px;width:100%"><br><label style="font-weight:700">หมายเหตุ (ไม่บังคับ)</label><br><textarea id="rv-note" class="swal2-textarea" style="margin:6px 0;width:100%" placeholder="เช่น ตอบถูกแต่เขียนต่างจากเฉลย">${esc(r.teacher_note || "")}</textarea></div>`,
+      preConfirm: () => { const v = parseInt(document.getElementById("rv-score").value, 10); if(!(v >= 0 && v <= r.max_score)){ Swal.showValidationMessage("คะแนนต้องเป็นเลข 0 ถึง " + r.max_score); return false; } return { v, note: document.getElementById("rv-note").value }; }
+    });
+    if(res.isConfirmed) await reviewWork(r, "edited", res.value.v, res.value.note);
   }
   function drawWork(gs){
     const units = flowUnits(st.grade), stu = data.roster.filter(r => r.g === st.grade);
@@ -288,7 +316,7 @@ const KrtomReports = (function(){
         </div>
         ${unit ? `<div class="rp-scroll"><table class="rp-table">
           <thead><tr><th>เลขที่</th><th>ชื่อ-สกุล</th>${acts.map(a => `<th>${esc(wsName(a).replace("ใบงาน ", ""))}</th>`).join("")}</tr></thead>
-          <tbody>${stu.map(s => `<tr><td class="rp-c">${esc(s.seat)}</td><td>${esc(s.name)}</td>${acts.map(a => { const r = latest.get(s.code + "|" + a); return r ? `<td class="rp-c"><button type="button" class="wk-open" data-c="${esc(s.code)}" data-a="${a}" title="เปิดดูงาน">${r.score}/${r.max_score} 📄</button></td>` : `<td class="rp-c rp-none">—</td>`; }).join("")}</tr>`).join("")}</tbody>
+          <tbody>${stu.map(s => `<tr><td class="rp-c">${esc(s.seat)}</td><td>${esc(s.name)}</td>${acts.map(a => { const r = latest.get(s.code + "|" + a); return r ? `<td class="rp-c"><button type="button" class="wk-open" data-c="${esc(s.code)}" data-a="${a}" title="เปิดดูงาน">${eff(r)}/${r.max_score}${mark(r)} 📄</button></td>` : `<td class="rp-c rp-none">—</td>`; }).join("")}</tr>`).join("")}</tbody>
           <tfoot><tr><td></td><td>ส่งแล้ว (คน)</td>${acts.map(a => `<td class="rp-c">${stu.filter(s => latest.has(s.code + "|" + a)).length}/${stu.length}</td>`).join("")}</tr></tfoot>
         </table></div>` : `<p class="flow-note">ชั้นนี้ยังไม่มีหน่วยที่เปิดระบบเรียนตามลำดับขั้น</p>`}
         <p class="flow-note">ตัวเลข = คะแนนที่ระบบตรวจเบื้องต้น (ครูตรวจซ้ำได้) · กดเพื่อดูคำตอบและลิงก์งานที่นักเรียนส่ง · นักเรียนไม่เห็นเฉลยหรือผลตรวจ</p>
