@@ -433,6 +433,33 @@ function render(){
 }
 
 /* ---------------- หน้าแรก ---------------- */
+// โปรแกรมเสริม (วาดผังงาน/รหัสลำลอง/โค้ดจิ๊กซอว์): แสดงทุกชั้น ไม่ต้องเข้าสู่ระบบก่อนก็เปิดได้
+function extrasHtml(){
+  return `
+    <div class="group-block group-extras">
+      <div class="group-title">🧰 โปรแกรมเสริม</div>
+      <p class="extras-lead">เครื่องมือช่วยเรียนวิทยาการคำนวณ (เปิดใช้ได้ทุกชั้น ทุกคน และใช้ประกอบใบงาน) — <b>คลิกเข้าไปใช้ได้ทุกครั้งที่ต้องการวาดหรือเขียนโปรแกรม</b> ไม่ต้องเลือกหน่วยก่อน</p>
+      <div class="extras-grid">
+        <a class="extra-card extra-flow" href="content/m1-cs-1/flowchart.html" target="_blank" rel="noopener">
+          <span class="extra-head"><span class="extra-ico">🔷</span><b>วาดผังงาน (Flowchart)</b></span>
+          <small>ลากสัญลักษณ์ผังงานครบ 13 แบบ (เริ่มต้น/สิ้นสุด · กระบวนการ · รับข้อมูล/แสดงผล · รับจากแป้นพิมพ์ · ตัดสินใจ · แสดงบนจอภาพ · เอกสาร · เตรียมการ · กระบวนการย่อย · ที่เก็บข้อมูล · ฐานข้อมูล · จุดเชื่อมต่อ · ตัวเชื่อมต่างหน้า) ต่อเส้นลูกศร ตรวจผังงาน และส่งงานเข้าใบงาน</small>
+          <span class="extra-go">คลิกเพื่อวาด ➜</span>
+        </a>
+        <a class="extra-card extra-pseudo" href="content/m1-cs-1/pseudocode.html" target="_blank" rel="noopener">
+          <span class="extra-head"><span class="extra-ico">📝</span><b>เขียนรหัสลำลอง (Pseudocode)</b></span>
+          <small>พิมพ์รหัสลำลอง START · INPUT · COMPUTE · DISPLAY · IF · WHILE · END มีตัวไฮไลต์สี ปุ่มแทรกคำสั่ง ตรวจรหัส และ <b>ทดลองรันให้เห็นผลลัพธ์จริง</b> พร้อมส่งงานเข้าใบงาน</small>
+          <span class="extra-go">คลิกเพื่อเขียน ➜</span>
+        </a>
+        <a class="extra-card extra-block" href="content/m1-cs-1/blocks.html" target="_blank" rel="noopener">
+          <span class="extra-head"><span class="extra-ico">🧱</span><b>โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)</b></span>
+          <small>ต่อบล็อกคำสั่งรูปจิ๊กซอว์เหมือน Scratch สั่งตัวละครนักเรียนเดิน วาดรูป ถามตอบ ทำซ้ำ ใช้ตัวแปรและเงื่อนไข มีตัวอย่างโปรแกรมให้โหลด และส่งงานเข้าใบงาน</small>
+          <span class="extra-go">คลิกเพื่อเขียน ➜</span>
+        </a>
+      </div>
+    </div>
+  `;
+}
+
 function renderHome(){
   document.documentElement.classList.add("large-text"); // หน้าแรก: ตัวอักษรใหญ่กว่าปกติ 2 เท่า สีสันสดใสถูกใจเด็ก
   setBreadcrumb([{ label:"🏠 หน้าแรก" }]);
@@ -496,27 +523,7 @@ function renderHome(){
 
     ${groupHtml}
 
-    <div class="group-block group-extras">
-      <div class="group-title">🧰 โปรแกรมเสริม</div>
-      <p class="extras-lead">เครื่องมือช่วยเรียนวิทยาการคำนวณ (เหมาะกับ ม.1–ม.3 และใช้ประกอบใบงาน) — <b>คลิกเข้าไปใช้ได้ทุกครั้งที่ต้องการวาดหรือเขียนโปรแกรม</b> ไม่ต้องเลือกหน่วยก่อน</p>
-      <div class="extras-grid">
-        <a class="extra-card extra-flow" href="content/m1-cs-1/flowchart.html" target="_blank" rel="noopener">
-          <span class="extra-head"><span class="extra-ico">🔷</span><b>วาดผังงาน (Flowchart)</b></span>
-          <small>ลากสัญลักษณ์ผังงานครบ 13 แบบ (เริ่มต้น/สิ้นสุด · กระบวนการ · รับข้อมูล/แสดงผล · รับจากแป้นพิมพ์ · ตัดสินใจ · แสดงบนจอภาพ · เอกสาร · เตรียมการ · กระบวนการย่อย · ที่เก็บข้อมูล · ฐานข้อมูล · จุดเชื่อมต่อ · ตัวเชื่อมต่างหน้า) ต่อเส้นลูกศร ตรวจผังงาน และส่งงานเข้าใบงาน</small>
-          <span class="extra-go">คลิกเพื่อวาด ➜</span>
-        </a>
-        <a class="extra-card extra-pseudo" href="content/m1-cs-1/pseudocode.html" target="_blank" rel="noopener">
-          <span class="extra-head"><span class="extra-ico">📝</span><b>เขียนรหัสลำลอง (Pseudocode)</b></span>
-          <small>พิมพ์รหัสลำลอง START · INPUT · COMPUTE · DISPLAY · IF · WHILE · END มีตัวไฮไลต์สี ปุ่มแทรกคำสั่ง ตรวจรหัส และ <b>ทดลองรันให้เห็นผลลัพธ์จริง</b> พร้อมส่งงานเข้าใบงาน</small>
-          <span class="extra-go">คลิกเพื่อเขียน ➜</span>
-        </a>
-        <a class="extra-card extra-block" href="content/m1-cs-1/blocks.html" target="_blank" rel="noopener">
-          <span class="extra-head"><span class="extra-ico">🧱</span><b>โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)</b></span>
-          <small>ต่อบล็อกคำสั่งรูปจิ๊กซอว์เหมือน Scratch สั่งตัวละครนักเรียนเดิน วาดรูป ถามตอบ ทำซ้ำ ใช้ตัวแปรและเงื่อนไข มีตัวอย่างโปรแกรมให้โหลด และส่งงานเข้าใบงาน</small>
-          <span class="extra-go">คลิกเพื่อเขียน ➜</span>
-        </a>
-      </div>
-    </div>
+    ${extrasHtml()}
 
     <div class="hero">
       <h1>🕶️ เกม AR สำหรับ ป.1–3</h1>
@@ -638,6 +645,7 @@ function renderGrade(grade){
     <div class="page-title">${GRADE_EMOJI[grade.id] || ""} ชั้น${grade.grade}</div>
     <div class="page-subtitle">เลือกวิชาที่ต้องการเรียน</div>
     <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${cards}</div>
+    ${extrasHtml()}
   `;
 }
 
@@ -702,6 +710,7 @@ function renderUnitList(grade, subject){
     <div class="page-title">${subject.name} · ${grade.grade}</div>
     <div class="page-subtitle">รหัสอ้างอิงแผนการสอน: ${subject.code} — ทั้งหมด ${subject.units.length} หน่วยการเรียนรู้</div>
     <div class="card-grid" style="grid-template-columns:1fr">${cards}</div>
+    ${extrasHtml()}
   `;
 }
 
