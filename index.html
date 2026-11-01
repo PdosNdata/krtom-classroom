@@ -161,7 +161,8 @@
 <script src="assets/js/contents.js?v=8"></script>
 <script src="assets/js/standards.js?v=3"></script>
 <script src="assets/js/flow.js?v=6"></script>
-<script src="assets/js/reports.js?v=8"></script>
+<script src="assets/js/settings.js?v=4"></script>
+<script src="assets/js/reports.js?v=9"></script>
 <script src="assets/js/app.js?v=111"></script>
 <script>
   function openLoginModal(){ document.getElementById("login-modal").classList.add("show"); }
@@ -247,7 +248,7 @@
       if(error) throw error;
       const match = Array.isArray(data) ? data[0] : data;
       if(!match){
-        errorBox.textContent = "เลขประจำตัวหรือรหัสผ่านไม่ถูกต้อง";
+        errorBox.textContent = "เลขประจำตัวหรือรหัสผ่านไม่ถูกต้อง (ถ้าลืมรหัสที่เปลี่ยนไว้ ให้แจ้งครูรีเซ็ตกลับเป็นเลขประจำตัว)";
         return;
       }
       errorBox.textContent = "";
@@ -328,13 +329,7 @@
   }
   function onUserSettingsClick(){
     closeUserMenu();
-    Swal.fire({
-      icon: "info",
-      title: "⚙️ หน้าตั้งค่า",
-      text: "กำลังพัฒนา เร็วๆ นี้",
-      confirmButtonText: "ตกลง",
-      confirmButtonColor: "#3B82F6"
-    });
+    KrtomSettings.open();
   }
   function onUserLogoutClick(){
     closeUserMenu();

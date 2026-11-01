@@ -228,6 +228,7 @@ const KrtomReports = (function(){
     if(wk && !force) return wk;
     const t = token(); if(!t) throw new Error("หมดเวลาเข้าสู่ระบบ");
     wk = (await KrtomFlow.rpc("krtom_teacher_work", { p_token: t })) || [];
+    try{ await KrtomSettings.loadKeyFiles(true); }catch(e){}   // ไฟล์เฉลยต้นฉบับ (ยังไม่ได้ติดตั้ง/ยังไม่มี ก็ข้ามไป)
     try{ keys = new Map(((await KrtomFlow.rpc("krtom_teacher_keys", { p_token: t })) || []).map(k => [k.activity + "|" + k.q_norm, k.answer])); }catch(e){ keys = new Map(); }   // ยังไม่ได้ติดตั้ง/ยังไม่ใส่เฉลย ก็ข้ามไป
     return wk;
   }
@@ -264,14 +265,31 @@ const KrtomReports = (function(){
     if(!rows.length) return;
     const st0 = data.roster.find(r => r.code === code), r = rows[0];
     const flag = (x) => x.ok === true ? `<span style="background:#DCFCE7;color:#047857;border-radius:999px;padding:1px 10px;font-size:.8em;font-weight:800;margin-left:6px">✔ ถูก</span>` : x.ok === false ? `<span style="background:#FEE2E2;color:#B91C1C;border-radius:999px;padding:1px 10px;font-size:.8em;font-weight:800;margin-left:6px">✖ ยังไม่ถูก</span>` : "";
-    const ans = (Array.isArray(r.answers) ? r.answers : []).map(x => `<div style="text-align:left;margin:10px 0"><div style="font-weight:800;color:#4338CA">${esc(x.q)}${flag(x)}</div><div style="white-space:pre-wrap;background:${x.ok === false ? "#FFF7F7" : "#F8FAFC"};border-radius:10px;padding:8px 10px;margin-top:4px;line-height:1.55;${x.ok === false ? "border:1px solid #FECACA;" : ""}">${linkify(x.a)}</div>${x.ok === false && x.hint ? `<div style="color:#B45309;font-size:.85em;margin-top:3px">⚠️ ระบบเห็นว่า: ${esc(x.hint)}</div>` : ""}${keyOf(act, x.q) ? `<div style="margin-top:4px;background:#ECFDF5;border:1px dashed #34D399;border-radius:10px;padding:6px 10px;font-size:.88em;color:#065F46;line-height:1.5"><b>🔑 เฉลย/แนวคำตอบ:</b> ${esc(keyOf(act, x.q))}</div>` : ""}</div>`).join("");
+    const ans = (Array.isArray(r.answers) ? r.answers : []).map((x, i) => `<div style="text-align:left;margin:10px 0"><div style="font-weight:800;color:#4338CA">${esc(x.q)}${flag(x)}</div><div style="white-space:pre-wrap;background:${x.ok === false ? "#FFF7F7" : "#F8FAFC"};border-radius:10px;padding:8px 10px;margin-top:4px;line-height:1.55;${x.ok === false ? "border:1px solid #FECACA;" : ""}">${linkify(x.a)}</div>${x.ok === false && x.hint ? `<div style="color:#B45309;font-size:.85em;margin-top:3px">⚠️ ระบบเห็นว่า: ${esc(x.hint)}</div>` : ""}${keyOf(act, x.q) ? `<div style="margin-top:4px;background:#ECFDF5;border:1px dashed #34D399;border-radius:10px;padding:6px 10px;font-size:.88em;color:#065F46;line-height:1.5"><b>🔑 เฉลย/แนวคำตอบ:</b> ${esc(keyOf(act, x.q))}</div>` : ""}<button type="button" class="key-edit" data-i="${i}" style="margin-top:3px;background:none;border:none;color:#6366F1;font-size:.8em;cursor:pointer;font-weight:700">${keyOf(act, x.q) ? "✏️ แก้เฉลยข้อนี้" : "➕ เพิ่มเฉลยข้อนี้"}</button></div>`).join("");
     const rv = r.teacher_status === "edited" ? `<div style="margin-top:6px;background:#FEF3C7;border-radius:8px;padding:5px 10px">✏️ ครูแก้คะแนนเป็น <b>${r.teacher_score}/${r.max_score}</b>${r.teacher_note ? " · " + esc(r.teacher_note) : ""}</div>` : r.teacher_status === "approved" ? `<div style="margin-top:6px;background:#DCFCE7;border-radius:8px;padding:5px 10px">✅ ครูเห็นชอบคะแนน ${r.teacher_score}/${r.max_score} แล้ว</div>` : "";
+    const kf = (window.KrtomSettings ? KrtomSettings.filesFor(r.grade_id, r.subject_id, r.unit_idx) : []);
+    const kfHtml = `<div style="text-align:left;margin:8px 0 2px;font-size:.88em;color:#475569">📎 ไฟล์เฉลยต้นฉบับของหน่วยนี้: ${kf.length ? kf.map(f => `<button type="button" class="kf-open" data-id="${f.id}" style="background:#3B82F6;color:#fff;border:none;border-radius:999px;padding:2px 12px;margin:2px 4px 2px 0;font-weight:700;cursor:pointer">${esc(f.file_name)}</button>`).join("") : `<span style="color:#94A3B8">ยังไม่ได้อัปโหลด (เมนู ตั้งค่า → อัปโหลดเฉลยแต่ละหน่วย)</span>`}</div>`;
     const hasMarks = (r.answers || []).some && (r.answers || []).some(x => x.ok === true || x.ok === false);
     window.Swal && Swal.fire({
       title: `${wsName(act)} — ${esc(st0 ? st0.name : r.full_name)}`,
-      html: `<div style="text-align:left;color:#475569;font-size:.9em">คะแนนที่ระบบตรวจเบื้องต้น: <b>${r.score}/${r.max_score}</b> · ส่งครั้งที่ ${r.attempt}${rows.length > 1 ? ` (ส่งทั้งหมด ${rows.length} ครั้ง แสดงครั้งล่าสุด)` : ""} · ${dateTh(r.submitted_at)}${hasMarks ? "" : " · (งานชิ้นนี้ส่งก่อนมีระบบแสดงถูก/ผิดรายข้อ)"}${rv}</div>
+      html: `<div style="text-align:left;color:#475569;font-size:.9em">คะแนนที่ระบบตรวจเบื้องต้น: <b>${r.score}/${r.max_score}</b> · ส่งครั้งที่ ${r.attempt}${rows.length > 1 ? ` (ส่งทั้งหมด ${rows.length} ครั้ง แสดงครั้งล่าสุด)` : ""} · ${dateTh(r.submitted_at)}${hasMarks ? "" : " · (งานชิ้นนี้ส่งก่อนมีระบบแสดงถูก/ผิดรายข้อ)"}${rv}</div>${kfHtml}
         <label style="display:flex;align-items:center;gap:8px;text-align:left;margin:10px 0 2px;padding:8px 12px;border:2px solid ${r.allow_resubmit ? "#34D399" : "#CBD5E1"};border-radius:12px;background:${r.allow_resubmit ? "#ECFDF5" : "#F8FAFC"};font-weight:700;cursor:pointer"><input type="checkbox" id="rv-resub" ${r.allow_resubmit ? "checked" : ""} style="width:20px;height:20px"> 🔓 อนุญาตให้นักเรียนคนนี้ส่งใบงานนี้ใหม่ <span style="font-weight:400;color:#64748B;font-size:.85em">(ไม่ติ๊ก = ส่งแล้วส่งซ้ำไม่ได้)</span></label>${ans}`,
-      width: 720, willClose: () => { const c = document.getElementById("rv-resub"); r._resub = c ? c.checked : r.allow_resubmit; }, showDenyButton: true, showCancelButton: true,
+      width: 720, didOpen: () => {
+        const pop = Swal.getPopup();
+        pop.querySelectorAll(".kf-open").forEach(b => b.onclick = () => KrtomSettings.openKeyFile(b.dataset.id));
+        pop.querySelectorAll(".key-edit").forEach(b => b.onclick = async () => {
+          const x = r.answers[+b.dataset.i], cur = keyOf(act, x.q) || "";
+          Swal.close();
+          const res = await Swal.fire({ title:"✏️ เฉลย/แนวคำตอบ", width:600, showCancelButton:true, confirmButtonText:"บันทึก", cancelButtonText:"ยกเลิก", confirmButtonColor:"#10B981",
+            html:`<div style="text-align:left;font-size:.9em;margin-bottom:6px;color:#475569">${esc(x.q)}</div><textarea id="key-txt" class="swal2-textarea" style="margin:0;width:100%;height:150px" placeholder="พิมพ์เฉลยหรือแนวคำตอบ (เว้นว่างแล้วบันทึก = ลบเฉลยข้อนี้)">${esc(cur)}</textarea>` });
+          if(res.isConfirmed){
+            const v = (document.getElementById("key-txt") || {}).value;
+            try{ await KrtomFlow.rpc("krtom_teacher_set_key", { p_token: token(), p_activity: act, p_q_norm: qNorm(x.q), p_q: x.q, p_answer: v == null ? "" : v }); if(v && v.trim()) keys.set(act + "|" + qNorm(x.q), v); else keys.delete(act + "|" + qNorm(x.q)); }
+            catch(e){ await Swal.fire({ icon:"error", title:"บันทึกเฉลยไม่สำเร็จ", text: window.KrtomSettings ? KrtomSettings.errMsg(e) : "ลองใหม่" }); }
+          }
+          showWork(code, act);
+        });
+      }, willClose: () => { const c = document.getElementById("rv-resub"); r._resub = c ? c.checked : r.allow_resubmit; }, showDenyButton: true, showCancelButton: true,
       confirmButtonText: "✅ เห็นชอบคะแนน", denyButtonText: "✏️ แก้คะแนน", cancelButtonText: "ปิด",
       confirmButtonColor: "#10B981", denyButtonColor: "#F59E0B", cancelButtonColor: "#64748B"
     }).then(async (res) => {
