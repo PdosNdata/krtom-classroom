@@ -227,7 +227,7 @@ const KrtomReports = (function(){
     wk = (await KrtomFlow.rpc("krtom_teacher_work", { p_token: t })) || [];
     return wk;
   }
-  const WS_COUNT = { 0:7, 1:8 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
+  const WS_COUNT = { 0:15, 1:8 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
   const linkify = (t) => esc(t).replace(/(https?:\/\/[^\s<>"']+)/g, (u) => { const c = u.replace(/[.,;)]+$/, ""), tail = u.slice(c.length); const lb = /flowchart\.html/.test(c) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(c) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์"; return `<a href="${c}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 12px;border-radius:999px;font-size:.85em">${lb} ↗</a>${tail}`; });
   const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? `ใบงาน ${m[1]}.${m[2]}` : a; };
   function showWork(code, act){

@@ -704,7 +704,7 @@ $("#sample").onchange = async function(){
 
 /* ---------- ส่ง / แชร์ ---------- */
 const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.search).get("part") || "1", 10) || 1));
-const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
+const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d+)-(\d+)|quiz)\.html$/);
 const UIDX = BACK && BACK[1] ? (+BACK[1] - 1) : 1;   // ใบงาน n.m → หน่วย n (m1-cs-(n-1))
 const SLOT = parseInt(QS.get("slot"), 10);              // ช่องคำตอบที่ต้องส่งไป (เริ่มที่ 0) — ถ้าไม่ระบุใช้ช่องมาตรฐานของหน่วย 2
 if(BACK){ const bl = $("#backlink"); bl.href = BACK[1] === "1" ? "../m1-cs-0/" + BACK[0] : BACK[0]; bl.textContent = BACK[0] === "quiz.html" ? "✖ ปิดแท็บ กลับไปแบบทดสอบ" : "✖ ปิดแท็บ กลับไปใบงาน"; }
