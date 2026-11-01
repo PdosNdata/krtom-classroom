@@ -47,7 +47,7 @@
 <header>
   <h1>⚙️ ตั้งค่า</h1>
   <span class="who" id="who"></span>
-  <a href="index.html">← กลับหน้าแรก</a>
+  <a href="index.html" id="back">← กลับหน้าแรก</a>
 </header>
 <div class="wrap">
   <nav id="nav"></nav>
@@ -64,6 +64,14 @@
     Object.keys(r.ss || {}).forEach(function(k){ if(r.ss[k] != null) sessionStorage.setItem(k, r.ss[k]); });
   }catch(e){}
 })();
+</script>
+<script>
+// ปุ่มกลับหน้าแรก = ปิดแท็บนี้ (กลับไปแท็บหน้าแรกที่เปิดค้างไว้) ถ้าเบราว์เซอร์ไม่ให้ปิด จะไปหน้าแรกแทน
+document.getElementById("back").addEventListener("click", function(e){
+  e.preventDefault();
+  window.close();
+  setTimeout(function(){ location.href = "index.html"; }, 300);
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/data.js?v=16"></script>
