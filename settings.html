@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตั้งค่า — บทเรียนคอมพิวเตอร์ช่วยสอน (CAI)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:17px; --bd:#E2E8F0; --ink:#1E293B; --mut:#64748B; --blue:#4F46E5; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:#F1F5F9; color:var(--ink); line-height:1.6; }
+  header{ background:linear-gradient(135deg,#6366F1,#8B5CF6); color:#fff; padding:14px 22px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:1.35em; flex:1; } header .who{ font-size:.85em; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:6px 14px; border-radius:999px; text-decoration:none; font-size:.85em; white-space:nowrap; }
+  .wrap{ max-width:1100px; margin:0 auto; padding:18px 14px 50px; display:grid; grid-template-columns:290px 1fr; gap:18px; align-items:start; }
+  nav{ display:grid; gap:10px; position:sticky; top:12px; }
+  .it{ display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#fff; border:2px solid var(--bd); border-radius:18px; padding:10px 12px; cursor:pointer; font:inherit; color:var(--ink); transition:transform .12s, box-shadow .12s, border-color .12s; }
+  .it:hover{ transform:translateY(-1px); box-shadow:0 6px 14px rgba(15,23,42,.1); }
+  .it.on{ border-color:var(--c); background:#fff; box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 22%, transparent); }
+  .ic{ flex:none; width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.45em; background:var(--c); box-shadow:0 4px 10px rgba(0,0,0,.18); }
+  .it b{ display:block; font-size:1em; line-height:1.3; } .it small{ display:block; color:var(--mut); font-size:.8em; line-height:1.35; }
+  main{ background:#fff; border:1px solid var(--bd); border-radius:20px; padding:22px 24px 28px; min-height:340px; box-shadow:0 6px 18px rgba(15,23,42,.06); }
+  main h2{ margin:0 0 4px; font-size:1.35em; } main .lead{ color:var(--mut); margin:0 0 16px; font-size:.92em; }
+  label.f{ display:block; font-weight:700; margin:12px 0 4px; }
+  input[type=password], input[type=text], select{ width:100%; max-width:420px; font:inherit; padding:9px 12px; border:2px solid var(--bd); border-radius:12px; background:#fff; }
+  input:focus, select:focus{ outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(79,70,229,.15); }
+  .btn{ font:inherit; font-weight:700; border:none; border-radius:999px; padding:9px 24px; color:#fff; background:var(--blue); cursor:pointer; box-shadow:0 3px 0 rgba(0,0,0,.18); }
+  .btn.sm{ padding:3px 12px; font-size:.85em; box-shadow:none; } .btn.red{ background:#EF4444; } .btn.gray{ background:#64748B; } .btn.amber{ background:#F59E0B; } .btn.green{ background:#10B981; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .msg{ margin:12px 0 0; padding:9px 14px; border-radius:12px; font-weight:600; display:none; } .msg.ok{ display:block; background:#ECFDF5; color:#065F46; border:1px solid #6EE7B7; } .msg.err{ display:block; background:#FEF2F2; color:#991B1B; border:1px solid #FCA5A5; }
+  .note{ margin:14px 0 0; padding:10px 14px; border-radius:12px; background:#F1F5F9; color:#475569; font-size:.9em; }
+  .unit{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:20px 0 6px; padding-bottom:6px; border-bottom:2px solid var(--bd); font-weight:800; }
+  .unit small{ margin-left:auto; font-weight:600; color:var(--mut); } .unit button{ border:1px solid #CBD5E1; background:#fff; border-radius:999px; padding:2px 12px; font:inherit; font-size:.82em; cursor:pointer; }
+  .unit button:hover{ background:#EEF2FF; }
+  .ws{ display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #F1F5F9; } .ws .no{ flex:none; min-width:2.8em; font-weight:800; color:#6366F1; } .ws .nm{ flex:1; min-width:0; }
+  .seg{ flex:none; display:inline-flex; border:2px solid var(--bd); border-radius:999px; overflow:hidden; } .seg button{ border:none; background:#fff; padding:5px 14px; font:inherit; font-size:.86em; cursor:pointer; color:var(--mut); font-weight:700; }
+  .seg button.on[data-a="auto"]{ background:#10B981; color:#fff; } .seg button.on[data-a="manual"]{ background:#F59E0B; color:#fff; }
+  .file{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; border:1px solid var(--bd); border-radius:12px; padding:8px 12px; margin:6px 0; } .file span{ flex:1; word-break:break-all; min-width:140px; }
+  .row2{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px; } .row2 select{ flex:1; min-width:150px; max-width:none; }
+  @media (max-width:820px){ .wrap{ grid-template-columns:1fr; } nav{ position:static; grid-template-columns:1fr 1fr; } main{ padding:18px 14px 24px; } }
+  @media (max-width:520px){ nav{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>⚙️ ตั้งค่า</h1>
+  <span class="who" id="who"></span>
+  <a href="index.html">← กลับหน้าแรก</a>
+</header>
+<div class="wrap">
+  <nav id="nav"></nav>
+  <main id="panel"><p class="lead">กำลังโหลด...</p></main>
+</div>
+
+<script>
+// ใช้การเข้าสู่ระบบเดิมจากแท็บที่เปิดหน้านี้ (sessionStorage ถูกคัดลอกมาให้) ถ้าไม่มี ลองดึงจาก "จดจำการเข้าสู่ระบบ" ในเครื่องนี้
+(function(){
+  try{
+    if(sessionStorage.getItem("loggedInUserName")) return;
+    var r = JSON.parse(localStorage.getItem("krtomRemember") || "null");
+    if(!r || !r.ts || Date.now() - r.ts > 12 * 3600 * 1000) return;
+    Object.keys(r.ss || {}).forEach(function(k){ if(r.ss[k] != null) sessionStorage.setItem(k, r.ss[k]); });
+  }catch(e){}
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="assets/js/data.js?v=16"></script>
+<script src="assets/js/flow.js?v=6"></script>
+<script src="assets/js/settings.js?v=8"></script>
+<script src="assets/js/settings-page.js?v=2"></script>
+</body>
+</html>
