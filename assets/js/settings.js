@@ -30,6 +30,16 @@
   .kst-d{ font-size:.82em; color:#64748B; line-height:1.4; margin-top:2px; }
   .kst-go{ flex:none; color:#94A3B8; font-size:1.4em; font-weight:700; }
   .kst-note{ margin-top:12px; padding:10px 12px; border-radius:12px; background:#F1F5F9; color:#475569; font-size:.85em; line-height:1.5; text-align:left; }
+  .kst-unit{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:14px 0 6px; font-weight:800; color:#1E293B; text-align:left; }
+  .kst-unit small{ margin-left:auto; font-weight:600; color:#64748B; }
+  .kst-unit button{ border:1px solid #CBD5E1; background:#fff; border-radius:999px; padding:2px 10px; font:inherit; font-size:.8em; cursor:pointer; color:#334155; }
+  .kst-unit button:hover{ background:#EEF2FF; }
+  .kst-ws{ display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid #F1F5F9; text-align:left; }
+  .kst-ws .no{ flex:none; min-width:2.6em; font-weight:800; color:#6366F1; }
+  .kst-ws .nm{ flex:1; min-width:0; font-size:.92em; line-height:1.35; }
+  .kst-seg{ flex:none; display:inline-flex; border:2px solid #E2E8F0; border-radius:999px; overflow:hidden; }
+  .kst-seg button{ border:none; background:#fff; padding:4px 11px; font:inherit; font-size:.82em; cursor:pointer; color:#64748B; font-weight:700; }
+  .kst-seg button.on[data-a="auto"]{ background:#10B981; color:#fff; } .kst-seg button.on[data-a="manual"]{ background:#F59E0B; color:#fff; }
   .kst-lab{ display:block; font-weight:700; margin:10px 0 4px; text-align:left; }`;
   document.head.appendChild(css);
   const fire = (o, wide) => Swal.fire(Object.assign({ customClass:{ popup:"kst-pop" + (wide ? " kst-wide" : "") } }, o));
@@ -80,8 +90,9 @@
       html:`<div class="kst-menu">
         ${row("st-pw", "#6366F1", "🔑", "เปลี่ยนรหัสผ่าน", "เปลี่ยนรหัสผ่านเข้าสู่ระบบของครู")}
         ${row("st-reset", "#F59E0B", "🔄", "รีเซ็ตรหัสผ่านนักเรียน", "กลับเป็นเลขประจำตัว กรณีนักเรียนลืมรหัส")}
+        ${row("st-modes", "#EC4899", "📝", "การตรวจใบงาน", "เลือกว่าใบงานไหนให้ระบบตรวจ หรือครูตรวจเอง")}
         ${row("st-keys", "#10B981", "📎", "เฉลยแต่ละหน่วย", "อัปโหลดและเปิดดูไฟล์เฉลยต้นฉบับ")}</div>`,
-      didOpen: () => { document.getElementById("st-pw").onclick = () => { Swal.close(); changePassword("teacher"); }; document.getElementById("st-reset").onclick = () => { Swal.close(); resetStudents(); }; document.getElementById("st-keys").onclick = () => { Swal.close(); keyFilesDialog(); }; }
+      didOpen: () => { document.getElementById("st-pw").onclick = () => { Swal.close(); changePassword("teacher"); }; document.getElementById("st-reset").onclick = () => { Swal.close(); resetStudents(); }; document.getElementById("st-modes").onclick = () => { Swal.close(); modesDialog(); }; document.getElementById("st-keys").onclick = () => { Swal.close(); keyFilesDialog(); }; }
     });
   }
 
@@ -139,6 +150,33 @@
       await rpc("krtom_teacher_reset_student_password", { p_student_code: r.value });
       fire({ icon:"success", title:"รีเซ็ตแล้ว", html:"รหัสผ่านของ <b>" + esc(nm) + "</b> กลับเป็นเลขประจำตัว <b>" + esc(r.value) + "</b> แล้ว", confirmButtonColor:"#3B82F6" });
     }catch(e){ fire({ icon:"error", title:"รีเซ็ตไม่สำเร็จ", text: errMsg(e) }); }
+  }
+
+  // ---------------------------------------------------------------- การตรวจใบงาน: ระบบตรวจ / ครูตรวจเอง
+  const WS_CAT = [
+    { u:1, label:"หน่วยที่ 1 การออกแบบและการเขียนอัลกอริทึม", names:["แนวคิดเชิงนามธรรม", "การเขียนอัลกอริทึม 3 รูปแบบ", "ออกแบบอัลกอริทึมในชีวิตประจำวัน", "บ้านฉันอยู่นี่ โรงเรียนอยู่ไหน", "ไร่ข้าวโพดจำลอง", "หุงข้าวให้สุกพอดี", "เลี้ยงปลากัด", "แยกย่อยปัญหา (ลากไปวาง)", "หาตัวเลข หารูปร่าง (ลากไปวาง)", "แนวคิดเชิงนามธรรมและอัลกอริทึมเบื้องต้น", "ภาษาธรรมชาติและภาษาคอมพิวเตอร์", "อัลกอริทึมด้วยรหัสลำลอง", "อัลกอริทึมด้วยผังงาน", "กิจกรรม ร้านน้ำผลไม้ปั่น", "แบบทดสอบท้ายหน่วย"] },
+    { u:2, label:"หน่วยที่ 2 การออกแบบและการเขียนโปรแกรมเบื้องต้น", names:["จับคู่ศัพท์ + เลือกตอบ", "ไข่ดาว", "อุณหภูมิ", "สวนสัตว์", "รางวัลพิเศษ", "สามเหลี่ยม", "แมวเหมียว", "ตัวแปร", "การเขียนโปรแกรมเบื้องต้น", "ภาษาและซอฟต์แวร์เขียนโปรแกรม (ลากไปวาง)", "เขียนโปรแกรมจากอัลกอริทึม", "กิจกรรม ตู้กดน้ำมหาสนุก", "แบบทดสอบท้ายหน่วย"] }
+  ];
+  async function modesDialog(){
+    let manual;
+    try{ manual = new Set(((await KrtomFlow.rpc("krtom_ws_modes", {})) || []).filter(x => x.mode === "manual").map(x => x.activity)); }
+    catch(e){ return fire({ icon:"error", title:"โหลดไม่สำเร็จ", text: needSql(e) ? "ยังไม่ได้ติดตั้งระบบนี้ (ต้องรันไฟล์ SQL 20261105100000_krtom_ws_modes.sql ใน Supabase)" : errMsg(e) }); }
+    const act = (u, i) => "worksheet-" + u + "-" + (i + 1);
+    const html = () => `<div style="max-height:62vh;overflow:auto;padding-right:4px">
+      <div class="kst-note" style="margin:0 0 6px">🟢 ระบบตรวจ = ระบบให้คะแนนและบอกถูก/ผิดรายข้อให้ครู · 🟠 ครูตรวจเอง = ระบบไม่ให้คะแนน นักเรียนส่งแล้วขึ้น “รอตรวจ” ครูเปิดดูแล้วให้คะแนนเอง</div>
+      ${WS_CAT.map(g => `<div class="kst-unit">${esc(g.label)}<small>ทั้งหน่วย:</small><button type="button" data-all="${g.u}|auto">ระบบตรวจ</button><button type="button" data-all="${g.u}|manual">ครูตรวจเอง</button></div>
+        ${g.names.map((nm, i) => { const m = manual.has(act(g.u, i)); return `<div class="kst-ws"><span class="no">${g.u}.${i + 1}</span><span class="nm">${esc(nm)}</span><span class="kst-seg" data-ws="${act(g.u, i)}"><button type="button" data-a="auto" class="${m ? "" : "on"}">ระบบตรวจ</button><button type="button" data-a="manual" class="${m ? "on" : ""}">ครูตรวจเอง</button></span></div>`; }).join("")}`).join("")}</div>`;
+    const set = async (ids, mode) => {
+      try{
+        for(const id of ids){ if((mode === "manual") === manual.has(id)) continue; await rpc("krtom_teacher_set_ws_mode", { p_activity:id, p_mode:mode }); if(mode === "manual") manual.add(id); else manual.delete(id); }
+        try{ sessionStorage.removeItem("krtomWsModes"); }catch(e){}
+      }catch(e){ fire({ icon:"error", title:"บันทึกไม่สำเร็จ", text: needSql(e) ? "ต้องรันไฟล์ SQL 20261105100000_krtom_ws_modes.sql ใน Supabase ก่อน" : errMsg(e) }); }
+    };
+    const bind = () => {
+      document.querySelectorAll(".kst-seg button").forEach(b => b.onclick = async () => { const seg = b.parentElement; await set([seg.dataset.ws], b.dataset.a); seg.querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.a === (manual.has(seg.dataset.ws) ? "manual" : "auto"))); });
+      document.querySelectorAll("[data-all]").forEach(b => b.onclick = async () => { const [u, mode] = b.dataset.all.split("|"), g = WS_CAT.find(x => x.u === +u); await set(g.names.map((_, i) => act(g.u, i)), mode); Swal.update({ html: html() }); bind(); });
+    };
+    fire({ title:"📝 การตรวจใบงาน", html: html(), showConfirmButton:false, showCloseButton:true, didOpen: bind }, true);
   }
 
   async function keyFilesDialog(){

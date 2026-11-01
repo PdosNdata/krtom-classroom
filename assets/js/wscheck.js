@@ -256,14 +256,14 @@ function formulaFn(text){
 }
 
 const R1 = {
-  1: { titles:["ปัญหาที่เลือก", "สาระสำคัญของปัญหา", "รายละเอียดที่ตัดทิ้ง", "วิธีการแก้ปัญหา"],
+  1: { manual:[0], titles:["ปัญหาที่เลือก", "สาระสำคัญของปัญหา", "รายละเอียดที่ตัดทิ้ง", "วิธีการแก้ปัญหา"],
     f:[
       (v) => short(v) ? [SHORTMSG] : [],
       (v) => short(v) ? [SHORTMSG] : itemsOf(v).length >= 2 ? [] : ["สาระสำคัญควรเขียนอย่างน้อย 2 อย่าง (คั่นด้วย , หรือขึ้นบรรทัดใหม่)"],
       (v, a) => { if(short(v, 4)) return [SHORTMSG]; const s = itemsOf(a[1]), d = itemsOf(v); return d.length && d.every(x => s.includes(x)) ? ["สิ่งที่ตัดทิ้งไม่ควรซ้ำกับสาระสำคัญในข้อ 2"] : []; },
       (v, a) => { if(short(v, 8)) return ["วิธีแก้ปัญหาควรเขียนให้ชัดเจนกว่านี้"]; const s = itemsOf(a[1]); return (s.some(x => v.includes(x)) || /สาระสำคัญ|รูปแบบ|ตัดทิ้ง|นามธรรม|แผนภาพ|แบบจำลอง|ตั้ง|ปรับ|เลิก|ลด|เพิ่ม|หยุด|นอน|ตื่น|เตรียม|แก้|ทำ|ควร|งด|จด|วางแผน|ฝึก|เลือก|แยก|ใช้/.test(v)) ? [] : ["วิธีแก้ปัญหาควรบอกสิ่งที่จะลงมือทำ เช่น ปรับ ลด เพิ่ม หรือเลือกวิธีให้ตรงกับสาระสำคัญในข้อ 2"]; }
     ] },
-  2: { titles:["ปัญหาที่เลือก", "อัลกอริทึมแบบภาษาธรรมชาติ", "รหัสลำลอง (Pseudo Code)", "ผังงาน (Flowchart)"],
+  2: { manual:[0], titles:["ปัญหาที่เลือก", "อัลกอริทึมแบบภาษาธรรมชาติ", "รหัสลำลอง (Pseudo Code)", "ผังงาน (Flowchart)"],
     f:[
       (v) => short(v) ? [SHORTMSG] : [],
       (v) => { if(short(v)) return [SHORTMSG]; const ls = v.split("\n").map(s => s.trim()).filter(Boolean), m = []; if(!/^(\d+[.)]\s*)?เริ่ม/.test(ls[0])) m.push("บรรทัดแรกควรเป็น \"เริ่มต้นการทำงาน\""); if(!/(จบ|สิ้นสุด)/.test(ls[ls.length - 1])) m.push("บรรทัดสุดท้ายควรเป็น \"จบการทำงาน\""); if(ls.length < 4) m.push("ควรมีอย่างน้อย 4 บรรทัด (เริ่มต้น … จบ)"); return m; },
@@ -448,12 +448,15 @@ R1["u2-12"] = { titles:["ตั้งชื่อตัวแปร", "คำส
 function run1(n, vals){
   const rule = R1[n]; if(!rule) return null;
   const F = rule.f.map((fn, i) => { let msgs; try{ msgs = fn(vals[i] || "", vals); }catch(e){ msgs = ["ตรวจข้อนี้ไม่ได้ — ลองเขียนใหม่ให้ชัดเจนขึ้น"]; } return { ok:!msgs.length, title:rule.titles[i], msgs, note:"" }; });
-  return { fields:F, score:F.filter(x => x.ok).length, max:F.length };
+  const man = rule.manual || [];                       // ข้อที่ให้ครูตรวจเอง: ไม่นับคะแนนระบบ ไม่ขึ้นถูก/ผิด
+  F.forEach((x, i) => { if(man.includes(i)){ x.manual = true; x.ok = true; x.msgs = []; } });
+  const auto = F.filter(x => !x.manual);
+  return { fields:F, score:auto.filter(x => x.ok).length, max:auto.length };
 }
 
 const blocksFromText = (txt) => { const p = linkParam(txt || "", "p"); if(!p) return null; try{ const d = b64d(p); return { d, bs:allBlocks(d) }; }catch(e){ return null; } };
 // จดผลตรวจรายข้อ (ถูก/ผิด + เหตุผล) ไว้ให้ submitwork.js ส่งไปกับคำตอบ เพื่อให้ครูเห็นว่าข้อไหนผ่านหรือไม่ผ่าน
-const keepItems = (fn) => (n, vals) => { const r = fn(n, vals); window.__wsItems = r && r.fields ? { ta: r.fields.map(f => ({ ok:!!f.ok, hint:(f.msgs || []).join(" · ") })) } : null; return r; };
+const keepItems = (fn) => (n, vals) => { const r = fn(n, vals); window.__wsItems = r && r.fields ? { ta: r.fields.map(f => f.manual ? { manual:true } : { ok:!!f.ok, hint:(f.msgs || []).join(" · ") }) } : null; return r; };
 window.WSCheck = { blocksFromText, util:{ has, count, hasStr }, run8, run, run1, rules:R, runCode, analyzeCode };
 window.WSCheck.run = keepItems(run); window.WSCheck.run1 = keepItems(run1);
 })();

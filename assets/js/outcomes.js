@@ -185,7 +185,8 @@
             const arr = window.__wsItems.ta || window.__wsItems.mcq;
             if(arr && arr.length) items = arr.map((f, i) => ({ item:"f" + (i + 1), score:f.ok ? 1 : 0, max:1 }));
           }
-          await sendEvidence(act, items); await sendReflection(act);
+          if(!(window.KrtomWsMode && KrtomWsMode.isManual(act))) await sendEvidence(act, items);     // ครูตรวจเอง: ไม่บันทึกหลักฐานอัตโนมัติ
+          await sendReflection(act);
         }
         return res;
       };

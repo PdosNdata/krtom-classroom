@@ -92,7 +92,7 @@
 </main>
 
 <script src="../../assets/js/tts.js?v=2"></script>
-<script src="../../assets/js/wscheck.js?v=7"></script>
+<script src="../../assets/js/wscheck.js?v=8"></script>
 <script>
 const U = { g:"m1", s:"cs", i:0 }, N = 1, TOTAL = 4;
 const KEY = "krtomws:m1/cs/0:" + N, DONE = "krtomws-done:m1/cs/0:" + N;
@@ -124,7 +124,7 @@ document.getElementById("submit").onclick = async function(){
   this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
   try{
     const rr = silentCheck();
-    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, TOTAL);
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, rr ? rr.max : TOTAL);
     try{ localStorage.setItem(DONE, "1"); }catch(e){}
     st.style.color = "#059669";
     st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
@@ -135,7 +135,7 @@ document.getElementById("submit").onclick = async function(){
 };
 </script>
 <script src="../../assets/js/flow.js?v=6"></script>
-<script src="../../assets/js/submitwork.js?v=4"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
 <script src="../../assets/js/linkify.js?v=1"></script>
 </body>
 </html>
