@@ -88,7 +88,7 @@
     catch(e){ return panel.innerHTML = '<h2>📝 การตรวจใบงาน</h2><div class="msg err">' + (needSql(e) ? sqlHint("20261105100000_krtom_ws_modes.sql") : esc(errText(e))) + "</div>"; }
     const act = (u, i) => "worksheet-" + u + "-" + (i + 1);
     const G = (typeof CURRICULUM !== "undefined" ? CURRICULUM : []).map(g => ({ id:g.id, label:g.grade, subjects:g.subjects.map(s => ({ id:s.id, name:s.name, units:s.units.map(u => u.name) })) }));
-    const catFor = (g, sub, ui) => g === "m1" && sub === "cs" ? H.WS_CAT.find(x => x.u === ui + 1) : null;   // ตอนนี้มีใบงานรายใบที่ตั้งโหมดได้เฉพาะ ม.1 วิทยาการคำนวณ หน่วย 1–2
+    const catFor = (g, sub, ui) => sub === "cs" ? H.WS_CAT.find(x => (x.g || "m1") === g && x.idx === ui) : null;   // ตอนนี้มีใบงานรายใบที่ตั้งโหมดได้เฉพาะ ม.1 วิทยาการคำนวณ หน่วย 1–2
     let gi = Math.max(0, G.findIndex(g => g.id === "m1")), si = 0, ui = 0;
     const html = () => {
       const g = G[gi], s = g.subjects[si] || g.subjects[0], cat = catFor(g.id, s.id, ui);
@@ -98,8 +98,8 @@
         <select id="md-u" style="max-width:none;margin-bottom:6px">${s.units.map((x, i) => `<option value="${i}" ${i === ui ? "selected" : ""}>หน่วยที่ ${i + 1}: ${esc(x)}</option>`).join("")}</select>
         <div class="msg" id="mdm"></div>
         ${cat ? `<div class="unit">ใบงานของหน่วยนี้ (${cat.names.length} ใบ)<small>ตั้งทั้งหน่วย:</small><button type="button" data-all="auto">ระบบตรวจ</button><button type="button" data-all="manual">ครูตรวจเอง</button></div>
-          ${cat.names.map((n, i) => { const m = manual.has(act(cat.u, i)); return `<div class="ws"><span class="no">${cat.u}.${i + 1}</span><span class="nm">${esc(n)}</span><span class="seg" data-ws="${act(cat.u, i)}"><button type="button" data-a="auto" class="${m ? "" : "on"}">ระบบตรวจ</button><button type="button" data-a="manual" class="${m ? "on" : ""}">ครูตรวจเอง</button></span></div>`; }).join("")}`
-        : `<div class="note">หน่วยนี้ยังไม่มีใบงานรายใบที่ตั้งการตรวจได้ (ตอนนี้ใช้ได้กับ ม.1 วิทยาการคำนวณ หน่วยที่ 1–2) เมื่อเพิ่มใบงานรายใบของหน่วยอื่น จะมาปรากฏที่นี่</div>`}`;
+          ${cat.names.map((n, i) => { const m = manual.has(act(cat.u, i)); return `<div class="ws"><span class="no">${cat.disp || cat.u}.${i + 1}</span><span class="nm">${esc(n)}</span><span class="seg" data-ws="${act(cat.u, i)}"><button type="button" data-a="auto" class="${m ? "" : "on"}">ระบบตรวจ</button><button type="button" data-a="manual" class="${m ? "on" : ""}">ครูตรวจเอง</button></span></div>`; }).join("")}`
+        : `<div class="note">หน่วยนี้ยังไม่มีใบงานรายใบที่ตั้งการตรวจได้ (ตอนนี้ใช้ได้กับ ม.1 วิทยาการคำนวณ หน่วยที่ 1–3 และ ม.3 วิทยาการคำนวณ หน่วยที่ 1) เมื่อเพิ่มใบงานรายใบของหน่วยอื่น จะมาปรากฏที่นี่</div>`}`;
     };
     const set = async (ids, mode) => {
       try{

@@ -232,7 +232,7 @@ const KrtomReports = (function(){
     try{ keys = new Map(((await KrtomFlow.rpc("krtom_teacher_keys", { p_token: t })) || []).map(k => [k.activity + "|" + k.q_norm, k.answer])); }catch(e){ keys = new Map(); }   // ยังไม่ได้ติดตั้ง/ยังไม่ใส่เฉลย ก็ข้ามไป
     return wk;
   }
-  const WS_COUNT = { 0:15, 1:13 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
+  const WS_COUNT = { 0:15, 1:13, 2:9 };   // จำนวนใบงานต่อหน่วย (ใช้เรียงคอลัมน์)
   const linkify = (t) => esc(t).replace(/(https?:\/\/[^\s<>"']+)/g, (u) => { const c = u.replace(/[.,;)]+$/, ""), tail = u.slice(c.length); const lb = /flowchart\.html/.test(c) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(c) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(c) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์"; return `<a href="${c}" target="_blank" rel="noopener" style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;font-weight:700;padding:2px 12px;border-radius:999px;font-size:.85em">${lb} ↗</a>${tail}`; });
   const qNorm = (q) => String(q || "").replace(/\s+/g, "").slice(0, 60);
   const keyOf = (act, q) => keys.get(act + "|" + qNorm(q));
@@ -240,13 +240,15 @@ const KrtomReports = (function(){
   const pending = (r) => isManual(r) && r.teacher_status == null;
   const eff = (r) => r.teacher_score != null ? r.teacher_score : r.score;
   const mark = (r) => (r.teacher_status === "edited" ? ' <span title="ครูแก้คะแนน">✏️</span>' : r.teacher_status === "approved" ? ' <span title="ครูเห็นชอบ">✅</span>' : "") + (r.allow_resubmit ? ' <span title="เปิดให้ส่งใหม่ได้">🔓</span>' : "");
-  const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? `ใบงาน ${m[1]}.${m[2]}` : a; };
+  const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? (+m[1] > 30 ? `ใบงาน ม.3 ${m[1] - 30}.${m[2]}` : `ใบงาน ${m[1]}.${m[2]}`) : a; };
 
   // ชื่อใบงาน (แสดงในหน้ารายคน)
   const WS_NAMES = {
     "1-1":"แนวคิดเชิงนามธรรม", "1-2":"การเขียนอัลกอริทึม 3 รูปแบบ", "1-3":"ออกแบบอัลกอริทึมในชีวิตประจำวัน", "1-4":"บ้านฉันอยู่นี่ โรงเรียนอยู่ไหน", "1-5":"ไร่ข้าวโพดจำลอง", "1-6":"หุงข้าวให้สุกพอดี", "1-7":"เลี้ยงปลากัด",
     "1-8":"แยกย่อยปัญหา (ลากไปวาง)", "1-9":"หาตัวเลข หารูปร่าง (ลากไปวาง)", "1-10":"แนวคิดเชิงนามธรรมและอัลกอริทึมเบื้องต้น", "1-11":"ภาษาธรรมชาติและภาษาคอมพิวเตอร์", "1-12":"อัลกอริทึมด้วยรหัสลำลอง", "1-13":"อัลกอริทึมด้วยผังงาน", "1-14":"กิจกรรม ร้านน้ำผลไม้ปั่น", "1-15":"แบบทดสอบท้ายหน่วย",
-    "2-1":"จับคู่ศัพท์ + เลือกตอบ", "2-2":"ไข่ดาว", "2-3":"อุณหภูมิ", "2-4":"สวนสัตว์", "2-5":"รางวัลพิเศษ", "2-6":"สามเหลี่ยม", "2-7":"แมวเหมียว", "2-8":"ตัวแปร", "2-9":"การเขียนโปรแกรมเบื้องต้น", "2-10":"ภาษาและซอฟต์แวร์เขียนโปรแกรม (ลากไปวาง)", "2-11":"เขียนโปรแกรมจากอัลกอริทึม", "2-12":"กิจกรรม ตู้กดน้ำมหาสนุก", "2-13":"แบบทดสอบท้ายหน่วย"
+    "2-1":"จับคู่ศัพท์ + เลือกตอบ", "2-2":"ไข่ดาว", "2-3":"อุณหภูมิ", "2-4":"สวนสัตว์", "2-5":"รางวัลพิเศษ", "2-6":"สามเหลี่ยม", "2-7":"แมวเหมียว", "2-8":"ตัวแปร", "2-9":"การเขียนโปรแกรมเบื้องต้น", "2-10":"ภาษาและซอฟต์แวร์เขียนโปรแกรม (ลากไปวาง)", "2-11":"เขียนโปรแกรมจากอัลกอริทึม", "2-12":"กิจกรรม ตู้กดน้ำมหาสนุก", "2-13":"แบบทดสอบท้ายหน่วย",
+    "3-1":"ข้อมูลปฐมภูมิ ทุติยภูมิ และซอฟต์แวร์", "3-2":"ข้อมูลและการเก็บรวบรวมข้อมูล", "3-3":"สารสนเทศและความสำคัญ", "3-4":"ส่วนประกอบของระบบสารสนเทศ (ลากไปวาง)", "3-5":"ดัชนีมวลกายของเพื่อน", "3-6":"ประมวลผลเชื่อมตรง/แบบกลุ่ม", "3-7":"ซอฟต์แวร์และการเลือกใช้งาน", "3-8":"กิจกรรม สารสนเทศสร้างได้ด้วยเรา", "3-9":"แบบทดสอบท้ายหน่วย",
+    "31-1":"การรวบรวมข้อมูล", "31-2":"จัดประเภทข้อมูลและวิธีรวบรวม (ลากไปวาง)", "31-3":"การประมวลผลข้อมูล", "31-4":"กรรมวิธีและวิธีประมวลผล (ลากไปวาง)", "31-5":"การใช้ซอฟต์แวร์จัดการข้อมูลและสารสนเทศ", "31-6":"กิจกรรม สำรวจ BMI", "31-7":"แบบทดสอบท้ายหน่วย ตอนที่ 1", "31-8":"แบบทดสอบท้ายหน่วย ตอนที่ 2",
   };
   // ใบงานที่ส่งของนักเรียนคนเดียว: คะแนน + ลิงก์งานที่ส่ง (ผังงาน/รหัสลำลอง/โค้ดจิ๊กซอว์) + ปุ่มดูคำตอบ
   function studentWorkHtml(code){
@@ -326,7 +328,7 @@ const KrtomReports = (function(){
     const units = flowUnits(st.grade), stu = data.roster.filter(r => r.g === st.grade);
     const unit = units.find(u => u.key === st.unit) || units[0], idx = unit ? +unit.key.split("/")[2] : 0;
     const mine = wk.filter(r => unit && `${r.grade_id}/${r.subject_id}/${r.unit_idx}` === unit.key);
-    const acts = []; for(let n = 1; n <= (WS_COUNT[idx] || 0); n++) acts.push(`worksheet-${idx + 1}-${n}`);
+    const acts = [], wc = unit && unit.key.startsWith("m3/") ? { 0:8 }[idx] : WS_COUNT[idx], pf = unit && unit.key.startsWith("m3/") ? 30 : 0; for(let n = 1; n <= (wc || 0); n++) acts.push(`worksheet-${pf + idx + 1}-${n}`);
     mine.forEach(r => { if(!acts.includes(r.activity)) acts.push(r.activity); });
     const latest = new Map(); mine.forEach(r => { const k = r.student_code + "|" + r.activity, c = latest.get(k); if(!c || r.attempt > c.attempt) latest.set(k, r); });
     app.innerHTML = `

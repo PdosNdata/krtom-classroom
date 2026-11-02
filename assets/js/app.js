@@ -251,9 +251,14 @@ const READY_CONTENT = {
   },
   "m1/cs/2": {
     knowledge: { href:"content/m1-cs-2/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
-    worksheet: { href:"content/m1-cs-2/worksheet.html", title:"ใบงานที่ 3.1 ข้อมูลปฐมภูมิ ทุติยภูมิ และการเลือกใช้ซอฟต์แวร์" },
+    worksheet: { href:"content/m1-cs-2/worksheet.html", title:"ใบงานที่ 3.1–3.9 การจัดการข้อมูลและสารสนเทศ" },
     quiz:      { href:"content/m1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game:      { href:"content/m1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
+  "m3/cs/0": {
+    knowledge: { href:"content/m3-cs-0/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
+    worksheet: { href:"content/m3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.8 การรวบรวม ประมวลผล และใช้ซอฟต์แวร์จัดการข้อมูล" },
+    quiz:      { href:"content/m3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
   },
   "m1/cs/3": {
     knowledge: { href:"content/m1-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
@@ -718,6 +723,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
@@ -801,6 +807,18 @@ async function renderFlowSteps(grade, subject, idx, unit){
     app.innerHTML = head + `<div class="tab-panel"><p style="text-align:center">${flowEsc(KrtomFlow.errText(err))}</p><div class="btn-row" style="justify-content:center"><a class="btn" href="javascript:render()">ลองใหม่</a></div></div>`;
     return;
   }
+  // ขั้น "ใบงาน" ของหน่วยที่มีหลายใบ: ถือว่าทำแล้วเมื่อส่งครบทุกใบเท่านั้น (เดิมส่งใบเดียวก็ขึ้น "ทำแล้ว")
+  let wsLeft = null;
+  const wsTotal = WS_PER_UNIT[`${u.g}/${u.s}/${u.i}`];
+  if(set && wsTotal && KrtomFlow.mode() === "student" && set.has(`${u.g}/${u.s}/${u.i}/worksheet`)){
+    try{
+      const tk = sessionStorage.getItem("krtomStudentToken");
+      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : 0) + u.i + 1}-${k + 1}` })));
+      wsLeft = open.filter(Boolean).length;                 // true = ยังไม่ส่ง (หรือครูเปิดให้ส่งใหม่)
+      if(wsLeft > 0){ set = new Set(set); set.delete(`${u.g}/${u.s}/${u.i}/worksheet`); }
+    }catch(e){ wsLeft = null; }                              // ยังไม่ได้ติดตั้ง SQL / ออฟไลน์: ใช้ความคืบหน้าเดิม
+  }
+  if(location.hash !== hash) return;
   const tracked = !!set;
   let nextFound = false;
   const cardList = FLOW_STEPS.map((st, n) => {
@@ -809,7 +827,7 @@ async function renderFlowSteps(grade, subject, idx, unit){
     const isNext = tracked && isOpen && !isDone && !nextFound;
     if(isNext) nextFound = true;
     const state = isDone ? "done" : (isOpen ? (isNext ? "next" : "open") : "locked");
-    const badge = isDone ? "✅ ทำแล้ว" : (!isOpen ? "🔒 ล็อก" : (isNext ? "▶ ทำขั้นนี้" : ""));
+    const badge = isDone ? "✅ ทำแล้ว" : (!isOpen ? "🔒 ล็อก" : (st.key === "worksheet" && wsLeft > 0 ? `▶ ส่งแล้ว ${wsTotal - wsLeft}/${wsTotal} ใบ` : (isNext ? "▶ ทำขั้นนี้" : "")));
     const inner = `${flowImg(st.key, st.label)}<span class="flow-num">${n+1}</span><span class="flow-emoji">${st.emoji}</span><span class="flow-label">${st.label}</span><span class="flow-badge">${badge}</span>`;
     return isOpen
       ? `<a class="flow-step ${state}" href="${flowStepHref(u, st.key)}">${inner}</a>`

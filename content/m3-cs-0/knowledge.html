@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การจัดการข้อมูลและสารสนเทศ — ม.3 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>การจัดการข้อมูลและสารสนเทศ · ม.3 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/m3/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>บอกลักษณะและประเภทของข้อมูล และเลือกวิธีรวบรวมข้อมูลได้เหมาะสม</li>
+      <li>บอกประเภทของการประมวลผลข้อมูล และเลือกวิธีประมวลผลได้เหมาะสม</li>
+      <li>ใช้ซอฟต์แวร์ที่เหมาะสมจัดการข้อมูลและสารสนเทศ และตระหนักว่าข้อมูลที่นำเสนอไม่ควรกระทบผู้อื่น</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> ภาพรวมการจัดการข้อมูลและสารสนเทศ</h2>
+    <div>
+    <p><b>ข้อมูล</b> คือข้อเท็จจริงหรือเหตุการณ์เกี่ยวกับคน สัตว์ สิ่งของ เป็นได้ทั้งตัวเลข ข้อความ ภาพ และเสียง ส่วน <b>สารสนเทศ</b> คือข้อมูลที่ผ่านการประมวลผล คำนวณ วิเคราะห์ และแปลความหมายแล้ว นำไปใช้ประโยชน์หรือช่วยตัดสินใจได้</p>
+    <p>ตัวอย่างปัญหา <b>“ซื้อสินค้าออนไลน์อย่างปลอดภัย”</b> ต้องรวบรวมข้อมูลหลายอย่างก่อนตัดสินใจ แล้วนำมาประมวลผล เช่น เลือกร้านที่จดทะเบียนไว้ ร้านที่ไม่มีประวัติฉ้อโกง และเก็บหลักฐานการสั่งซื้อไว้</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🔎</span><div><h3>รวบรวมข้อมูล</h3><p>เก็บข้อมูลที่ต้องการ ซึ่งเป็นขั้นตอนที่สำคัญที่สุด</p></div></div>
+      <div class="concept-card"><span class="icon">⚙️</span><div><h3>ประมวลผลข้อมูล</h3><p>จัดการกับข้อมูลให้ได้ผลลัพธ์ที่มีความหมาย</p></div></div>
+      <div class="concept-card"><span class="icon">📊</span><div><h3>นำเสนอสารสนเทศ</h3><p>แสดงผลด้วยซอฟต์แวร์ที่เหมาะสม</p></div></div>
+    </div>
+    <div class="info-box">💡 <b>ตัวชี้วัด ว 4.2 ม.3/2:</b> รวบรวม ประมวลผล ประเมินผล และนำเสนอข้อมูลและสารสนเทศตามวัตถุประสงค์ โดยใช้ซอฟต์แวร์หรือบริการบนอินเทอร์เน็ตที่หลากหลาย</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การรวบรวมข้อมูล</h2>
+    <div>
+    <p>เมื่อดูตามแหล่งที่มา ข้อมูลแบ่งเป็น 2 กลุ่ม</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🎤</span><div><h3>ข้อมูลปฐมภูมิ</h3><p>ผู้ใช้เก็บรวบรวมเอง จึงตรงกับความต้องการมากที่สุด</p></div></div>
+      <div class="concept-card"><span class="icon">📚</span><div><h3>ข้อมูลทุติยภูมิ</h3><p>มีผู้อื่นรวบรวมไว้แล้ว ต้องพิจารณาก่อนว่าถูกต้องและทันสมัยหรือไม่</p></div></div>
+    </div>
+    <p><b>วิธีรวบรวมข้อมูลปฐมภูมิ</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🗣️</span><div><h3>การสัมภาษณ์</h3><p>พูดคุยเพื่อให้ได้ข้อมูลเชิงลึก</p></div></div>
+      <div class="concept-card"><span class="icon">📞</span><div><h3>การสอบถามทางโทรศัพท์</h3><p>เหมาะกับผู้ที่อยู่ไกลหรือไม่สะดวกพบกัน</p></div></div>
+      <div class="concept-card"><span class="icon">📝</span><div><h3>การใช้แบบสอบถาม</h3><p>เก็บจากคนจำนวนมากได้รวดเร็ว</p></div></div>
+      <div class="concept-card"><span class="icon">👀</span><div><h3>การสังเกต</h3><p>ดูพฤติกรรมหรือเหตุการณ์จริง</p></div></div>
+    </div>
+    <p><b>ตัวอย่างข้อมูลทุติยภูมิ:</b> การค้นหาจากหนังสือในห้องสมุด และการค้นหาความรู้บนอินเทอร์เน็ต</p>
+    <div class="info-box">💡 <b>ควรรู้:</b> การเลือกวิธีรวบรวมข้อมูลต้องให้เหมาะกับประเภทข้อมูลและวัตถุประสงค์ของงาน</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> การประมวลผลข้อมูล</h2>
+    <div>
+    <p>ข้อมูลที่รวบรวมมานำไปใช้ตรง ๆ มักไม่สะดวก จึงต้อง <b>ประมวลผล</b> คือจัดการกับข้อมูลด้วยการคำนวณหรือเปรียบเทียบ เพื่อให้ได้ผลลัพธ์ที่มีความหมาย แบ่งตามอุปกรณ์ที่ใช้ได้ 3 แบบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">✋</span><div><h3>ด้วยมือ</h3><p>เหมาะกับข้อมูลจำนวนน้อย เช่น นับคะแนนเอง</p></div></div>
+      <div class="concept-card"><span class="icon">🧮</span><div><h3>ด้วยเครื่องจักรกล</h3><p>เช่น เครื่องคิดเลข เครื่องคิดเงินในร้านค้า</p></div></div>
+      <div class="concept-card"><span class="icon">💻</span><div><h3>ด้วยคอมพิวเตอร์</h3><p>เหมาะกับข้อมูลจำนวนมาก ได้ผลรวดเร็วและแม่นยำ</p></div></div>
+    </div>
+    <p><b>ขั้นตอนการประมวลผลด้วยคอมพิวเตอร์ 3 ขั้นตอน</b></p>
+    <ol class="steps">
+      <li><b>นำเข้าข้อมูล</b> (Input) ป้อนข้อมูลที่จะประมวลผลเข้าสู่เครื่อง</li>
+      <li><b>ประมวลผล</b> (Process) เช่น คำนวณ เรียงลำดับ จัดกลุ่ม</li>
+      <li><b>แสดงผล</b> (Output) ได้สารสนเทศและจัดทำรายงานเพื่อนำเสนอ</li>
+    </ol>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> วิธีประมวลผลของคอมพิวเตอร์</h2>
+    <div>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">📦</span><div><h3>แบบแบตช์ (Batch)</h3><p>รวบรวมข้อมูลไว้ช่วงเวลาหนึ่ง แล้วประมวลผลพร้อมกัน ต้องกำหนดช่วงเวลาชัดเจน เช่น คิดดอกเบี้ยธนาคารทุก 6 เดือน</p></div></div>
+      <div class="concept-card"><span class="icon">⚡</span><div><h3>แบบอินเทอร์แอ็กทีฟ (Interactive)</h3><p>ประมวลผลและให้ผลลัพธ์ทันที</p></div></div>
+    </div>
+    <p>แบบอินเทอร์แอ็กทีฟมี 2 ประเภท</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🌐</span><div><h3>การประมวลผลออนไลน์</h3><p>ทำงานกับคอมพิวเตอร์โดยตรง ไม่ต้องอยู่กับเครื่องประมวลผล เช่น ทำธุรกรรมที่ตู้เอทีเอ็ม</p></div></div>
+      <div class="concept-card"><span class="icon">⏱️</span><div><h3>การประมวลผลแบบทันที</h3><p>ได้ผลลัพธ์ทันที มักใช้ร่วมกับแบบออนไลน์ เช่น แสดงความคิดเห็นบนโซเชียลแล้วเห็นทันที</p></div></div>
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> กรรมวิธีประมวลผลข้อมูลด้วยคอมพิวเตอร์</h2>
+    <div>
+    <p>เพื่อให้ได้ข้อมูลตรงกับความต้องการของผู้ใช้มากที่สุด มีกรรมวิธีให้เลือกใช้ ได้แก่</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">➕</span><div><h3>การคำนวณ</h3><p>เช่น หาเกรดเฉลี่ย</p></div></div>
+      <div class="concept-card"><span class="icon">↕️</span><div><h3>การจัดเรียงข้อมูล</h3><p>เรียงน้อยไปมาก หรือเรียงตัวอักษร</p></div></div>
+      <div class="concept-card"><span class="icon">🗂️</span><div><h3>การจัดกลุ่มข้อมูล</h3><p>สรุปผลตามชั้นเรียน</p></div></div>
+      <div class="concept-card"><span class="icon">🔍</span><div><h3>การสืบค้นข้อมูล</h3><p>ค้นหาจากชื่อหรือรหัส</p></div></div>
+      <div class="concept-card"><span class="icon">🧩</span><div><h3>การรวมข้อมูล</h3><p>รวมประวัติเข้าแถวกับผลการเรียน</p></div></div>
+      <div class="concept-card"><span class="icon">📋</span><div><h3>การสรุปผลและทำรายงาน</h3><p>นำผลมาเรียบเรียงนำเสนอ</p></div></div>
+      <div class="concept-card"><span class="icon">💾</span><div><h3>การบันทึก / สำเนา / สำรองข้อมูล</h3><p>เก็บข้อมูลและทำสำเนาไว้ใช้ภายหลัง</p></div></div>
+      <div class="concept-card"><span class="icon">🛠️</span><div><h3>การปรับปรุง / กู้คืนข้อมูล</h3><p>แก้ไขให้ทันสมัยหรือนำข้อมูลที่เสียหายกลับมา</p></div></div>
+      <div class="concept-card"><span class="icon">📡</span><div><h3>การสื่อสารและบีบอัดข้อมูล</h3><p>ส่งข้อมูลระหว่างเครื่องและลดขนาดไฟล์</p></div></div>
+    </div>
+    <p><b>ลำดับการเตรียมและนำข้อมูลไปใช้</b></p>
+    <ol class="steps">
+      <li><b>เตรียมข้อมูลเพื่อนำเข้า</b> ลงรหัสข้อมูล ตรวจสอบแก้ไข แยกประเภท บันทึกลงสื่อ</li>
+      <li><b>ประมวลผลข้อมูล</b> ตามกรรมวิธีที่เลือก</li>
+      <li><b>นำข้อมูลไปใช้ประโยชน์และแสดงผล</b></li>
+    </ol>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">6</span> ซอฟต์แวร์ที่ใช้จัดการข้อมูลและสารสนเทศ</h2>
+    <div>
+    <p>เลือกใช้ซอฟต์แวร์ให้ตรงกับวัตถุประสงค์ของงาน แบ่งตามลักษณะได้ดังนี้</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">💽</span><div><h3>ติดตั้งบนเครื่อง</h3><p>เช่น Microsoft Word, Microsoft Access</p></div></div>
+      <div class="concept-card"><span class="icon">☁️</span><div><h3>ใช้งานผ่านอินเทอร์เน็ต</h3><p>เช่น Google Docs, Google Sheets, Microsoft Forms</p></div></div>
+      <div class="concept-card"><span class="icon">📦</span><div><h3>ซอฟต์แวร์สำเร็จรูป</h3><p>เช่น Microsoft Excel</p></div></div>
+      <div class="concept-card"><span class="icon">🏥</span><div><h3>พัฒนาขึ้นเฉพาะงาน</h3><p>เช่น ซอฟต์แวร์ประมวลผลข้อมูลทางการแพทย์</p></div></div>
+    </div>
+    <p><b>ตามขั้นตอนการจัดการข้อมูล</b></p>
+    <ol class="steps">
+      <li><b>รวบรวมข้อมูล</b> เช่น โปรแกรมสร้างแบบสอบถามออนไลน์</li>
+      <li><b>ประมวลผลข้อมูล</b> เช่น โปรแกรมตารางคำนวณ</li>
+      <li><b>นำเสนอข้อมูล</b> เช่น ซอฟต์แวร์สร้างภาพอินโฟกราฟิก ภาพ 3 มิติ และสไลด์นำเสนอ</li>
+    </ol>
+    <div class="info-box">⚠️ <b>ข้อควรคำนึง:</b> ข้อมูลที่นำเสนอไม่ควรส่งผลกระทบต่อผู้อื่น เช่น ไม่เปิดเผยข้อมูลส่วนตัวโดยไม่ได้รับอนุญาต</div>
+    </div>
+  </section>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>การรวบรวมข้อมูลเป็นขั้นตอนที่สำคัญที่สุด ข้อมูลปฐมภูมิเก็บเอง ข้อมูลทุติยภูมิมีผู้เก็บไว้แล้ว</li>
+      <li>การประมวลผลทำได้ด้วยมือ เครื่องจักรกล และคอมพิวเตอร์ ซึ่งมี 3 ขั้นตอน คือ นำเข้า ประมวลผล แสดงผล</li>
+      <li>คอมพิวเตอร์ประมวลผลได้ 2 วิธี คือ แบบแบตช์ และแบบอินเทอร์แอ็กทีฟ</li>
+      <li>เลือกซอฟต์แวร์ให้ตรงกับงานรวบรวม ประมวลผล และนำเสนอ โดยไม่ให้กระทบผู้อื่น</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m3/cs/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/accordion.js?v=1"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+</body>
+</html>

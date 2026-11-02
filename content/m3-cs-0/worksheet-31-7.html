@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.7: แบบทดสอบท้ายหน่วย ตอนที่ 1 — ม.3 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; --c1:#818CF8; --c2:#4338CA; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  .mcq{ margin-bottom:18px; } .mcq .q{ font-weight:800; margin-bottom:6px; }
+  .mcq label{ display:flex; gap:10px; align-items:flex-start; padding:8px 12px; border:2px solid #E2E8F0; border-radius:12px; margin:6px 0; cursor:pointer; font-size:.95rem; background:#fff; }
+  .mcq label:has(input:checked){ border-color:var(--c2); background:#EEF2FF; }
+  .mcq input{ margin-top:5px; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🏁 ใบงานที่ 1.7 แบบทดสอบท้ายหน่วย ตอนที่ 1</h1>
+    <p>Unit test ตอนที่ 1 · ปรนัย 10 ข้อ · ม.3 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">เลือกคำตอบที่ถูกที่สุดข้อละ 1 คำตอบ ทำครบ 10 ข้อแล้วกดส่ง ครูจะตรวจและแจ้งผลให้</p>
+  </div>
+
+  <div class="card" id="form">
+    <div class="mcq" data-i="0">
+      <div class="q">1. ข้อใดเป็นลักษณะของการรวบรวมข้อมูลทุติยภูมิ</div>
+      <label><input type="radio" name="q0" value="0"> <span>ข้อมูลจากการสังเกต</span></label>
+      <label><input type="radio" name="q0" value="1"> <span>ข้อมูลจากการสัมภาษณ์</span></label>
+      <label><input type="radio" name="q0" value="2"> <span>ข้อมูลจากการสำรวจด้วยตนเอง</span></label>
+      <label><input type="radio" name="q0" value="3"> <span>ข้อมูลจากแหล่งที่ผู้อื่นรวบรวมไว้ให้แล้ว</span></label>
+    </div>
+    <div class="mcq" data-i="1">
+      <div class="q">2. ข้อมูลที่ได้จากแบบสำรวจความพึงพอใจที่ผู้ตอบกรอกด้วยตนเอง เป็นข้อมูลประเภทใด เพราะเหตุใด</div>
+      <label><input type="radio" name="q1" value="0"> <span>ปฐมภูมิ เพราะผู้ตอบกรอกแบบสำรวจด้วยตนเอง</span></label>
+      <label><input type="radio" name="q1" value="1"> <span>ปฐมภูมิ เพราะสังเกตพฤติกรรมของผู้ตอบ</span></label>
+      <label><input type="radio" name="q1" value="2"> <span>ทุติยภูมิ เพราะนำแบบสำรวจจากแหล่งอื่นมาใช้ได้</span></label>
+      <label><input type="radio" name="q1" value="3"> <span>ทุติยภูมิ เพราะสอบถามจากบุคคลที่เกี่ยวข้อง</span></label>
+    </div>
+    <div class="mcq" data-i="2">
+      <div class="q">3. แอมไปสอบถามร้านอาหารใกล้บริเวณงานวัดด้วยตนเองเพื่อวางแผนจำนวนวัตถุดิบ เป็นการรวบรวมข้อมูลประเภทใด และมีข้อดีอย่างไร</div>
+      <label><input type="radio" name="q2" value="0"> <span>ปฐมภูมิ ทำให้ได้ข้อมูลตามที่ต้องการ</span></label>
+      <label><input type="radio" name="q2" value="1"> <span>ปฐมภูมิ ทำให้ได้ข้อมูลจากกลุ่มตัวอย่าง</span></label>
+      <label><input type="radio" name="q2" value="2"> <span>ทุติยภูมิ ทำให้นำข้อมูลไปใช้ได้ง่าย</span></label>
+      <label><input type="radio" name="q2" value="3"> <span>ทุติยภูมิ ทำให้หาข้อมูลจากหลายแหล่ง</span></label>
+    </div>
+    <div class="mcq" data-i="3">
+      <div class="q">4. การใช้เครื่องคิดเลขคำนวณข้อมูล จัดเป็นการประมวลผลข้อมูลประเภทใดตามแบบฝึกหัด</div>
+      <label><input type="radio" name="q3" value="0"> <span>การประมวลผลข้อมูลด้วยมือ</span></label>
+      <label><input type="radio" name="q3" value="1"> <span>การประมวลผลข้อมูลด้วยอุปกรณ์</span></label>
+      <label><input type="radio" name="q3" value="2"> <span>การประมวลผลข้อมูลด้วยเครื่องจักรกล</span></label>
+      <label><input type="radio" name="q3" value="3"> <span>การประมวลผลข้อมูลด้วยคอมพิวเตอร์</span></label>
+    </div>
+    <div class="mcq" data-i="4">
+      <div class="q">5. การประมวลผลข้อมูลด้วยคอมพิวเตอร์มีกี่ขั้นตอน อะไรบ้าง</div>
+      <label><input type="radio" name="q4" value="0"> <span>2 ขั้นตอน คือ การประมวลผล และการแสดงผล</span></label>
+      <label><input type="radio" name="q4" value="1"> <span>2 ขั้นตอน คือ การประมวลผล และการส่งออกข้อมูล</span></label>
+      <label><input type="radio" name="q4" value="2"> <span>3 ขั้นตอน คือ การนำเข้าข้อมูล การประมวลผล และการแสดงผล</span></label>
+      <label><input type="radio" name="q4" value="3"> <span>3 ขั้นตอน คือ การนำเข้าข้อมูล การประมวลผล และการตรวจสอบข้อมูล</span></label>
+    </div>
+    <div class="mcq" data-i="5">
+      <div class="q">6. ข้อใดเป็นการประมวลผลแบบอินเทอร์แอ็กทีฟ</div>
+      <label><input type="radio" name="q5" value="0"> <span>ระบบคิดค่าน้ำประปาทุกสิ้นเดือน</span></label>
+      <label><input type="radio" name="q5" value="1"> <span>ระบบคิดดอกเบี้ยรายปีของธนาคาร</span></label>
+      <label><input type="radio" name="q5" value="2"> <span>การทำธุรกรรมทางการเงินที่ตู้ ATM</span></label>
+      <label><input type="radio" name="q5" value="3"> <span>การคำนวณผลการเรียนเฉลี่ยทุกภาคเรียน</span></label>
+    </div>
+    <div class="mcq" data-i="6">
+      <div class="q">7. ข้อใดเป็นลักษณะของการประมวลผลด้วยคอมพิวเตอร์แบบการคำนวณ</div>
+      <label><input type="radio" name="q6" value="0"> <span>ปาล์มจัดเรียงข้อมูลตามเงื่อนไขที่กำหนด</span></label>
+      <label><input type="radio" name="q6" value="1"> <span>เป้จัดเรียงข้อมูลโดยแยกเป็นกลุ่ม</span></label>
+      <label><input type="radio" name="q6" value="2"> <span>ปอยนำข้อมูลมาคำนวณผ่านสูตรทางคณิตศาสตร์</span></label>
+      <label><input type="radio" name="q6" value="3"> <span>ป่านค้นหาและนำข้อมูลที่ต้องการจากแหล่งเก็บข้อมูลไปใช้</span></label>
+    </div>
+    <div class="mcq" data-i="7">
+      <div class="q">8. ข้อใดเป็นกรรมวิธีการประมวลผลด้วยคอมพิวเตอร์แบบจัดเรียงข้อมูล</div>
+      <label><input type="radio" name="q7" value="0"> <span>นนท์แยกไฟล์งานตามประเภทของงาน</span></label>
+      <label><input type="radio" name="q7" value="1"> <span>ครูจัดกลุ่มผลการเรียนเฉลี่ยของนักเรียน</span></label>
+      <label><input type="radio" name="q7" value="2"> <span>บิวเรียงไฟล์ข้อมูลจากวันที่เก่าที่สุดไปวันที่ใหม่ที่สุด</span></label>
+      <label><input type="radio" name="q7" value="3"> <span>ภัทรหาตำแหน่งที่เก็บหนังสือจากระบบของห้องสมุด</span></label>
+    </div>
+    <div class="mcq" data-i="8">
+      <div class="q">9. ซอฟต์แวร์ในข้อใดที่ใช้งานได้แม้ไม่ได้เชื่อมต่ออินเทอร์เน็ต</div>
+      <label><input type="radio" name="q8" value="0"> <span>Google Docs</span></label>
+      <label><input type="radio" name="q8" value="1"> <span>Google Slides</span></label>
+      <label><input type="radio" name="q8" value="2"> <span>Microsoft Word</span></label>
+      <label><input type="radio" name="q8" value="3"> <span>Microsoft Forms</span></label>
+    </div>
+    <div class="mcq" data-i="9">
+      <div class="q">10. ถ้าต้องการนำเสนอผลโครงการในห้องประชุมที่มีผู้ฟังจำนวนมาก ควรเลือกซอฟต์แวร์ใด</div>
+      <label><input type="radio" name="q9" value="0"> <span>Microsoft Word</span></label>
+      <label><input type="radio" name="q9" value="1"> <span>Microsoft Excel</span></label>
+      <label><input type="radio" name="q9" value="2"> <span>Microsoft Access</span></label>
+      <label><input type="radio" name="q9" value="3"> <span>Microsoft PowerPoint</span></label>
+    </div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/4 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const U = { g:"m3", s:"cs", i:0 }, N = 7, TOTAL = 10;
+const KEY = "krtomws:m3/cs/0:" + N, DONE = "krtomws-done:m3/cs/0:" + N;
+const ANS = [3, 0, 0, 0, 2, 2, 2, 2, 2, 3];     // ตรวจเงียบ ไม่แสดงเฉลยให้นักเรียน
+const groups = [...document.querySelectorAll(".mcq")];
+const picked = () => groups.map(g => { const c = g.querySelector("input:checked"); return c ? +c.value : -1; });
+function refresh(){
+  const n = picked().filter(x => x >= 0).length;
+  document.getElementById("bar").style.width = (n / TOTAL * 100) + "%";
+  document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ";
+}
+try{ const saved = JSON.parse(localStorage.getItem(KEY) || "[]"); groups.forEach((g, i) => { if(saved[i] >= 0){ const r = g.querySelector('input[value="' + saved[i] + '"]'); if(r) r.checked = true; } }); }catch(e){}
+groups.forEach(g => g.addEventListener("change", () => { try{ localStorage.setItem(KEY, JSON.stringify(picked())); }catch(e){} refresh(); }));
+refresh();
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), p = picked(), n = p.filter(x => x >= 0).length;
+  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง"; return; }
+  const score = p.filter((x, i) => x === ANS[i]).length;
+  window.__wsItems = { mcq: p.map((x, i) => ({ ok: x === ANS[i] })) };
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", score, TOTAL);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=1"></script>
+</body>
+</html>
