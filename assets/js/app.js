@@ -243,7 +243,7 @@ const READY_CONTENT = {
     quiz:      { href:"content/m1-cs-1/quiz.html", title:"แบบทดสอบหลังเรียน: ตอนที่ 1 ปรนัย 23 ข้อ + ตอนที่ 2 อัตนัย 3 โจทย์ (โครงสร้างละ 1 ข้อ ครบ 8 ขั้นตอน)" },
     game:      { href:"content/m1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[ { key:"scratch-m1-1", href:"content/m1-cs-1/game-scratch.html", label:"🧩 เกมพลิกไพ่ บล็อกคำสั่ง Scratch" },
-                   { key:"blocks-m1-1", href:"content/m1-cs-1/blocks.html", label:"🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)" },
+                   { key:"blocks-m1-1", href:"content/m1-cs-1/blocks.html", label:"🧱 CODE BLOCKS (ลากบล็อกเขียนโปรแกรม)" },
                    { key:"flowchart-m1-1", href:"content/m1-cs-1/flowchart.html", label:"🔷 วาดผังงาน (Flowchart)" },
                    { key:"pseudocode-m1-1", href:"content/m1-cs-1/pseudocode.html", label:"📝 เขียนรหัสลำลอง (Pseudocode)" },
                    { key:"varfruit-m1-1", href:"content/m1-cs-1/game-variable.html", label:"🎮 เกมค่าตัวแปร (เก็บผลไม้ใส่ตะกร้า)" },
@@ -453,7 +453,7 @@ function render(){
 }
 
 /* ---------------- หน้าแรก ---------------- */
-// โปรแกรมเสริม (วาดผังงาน/รหัสลำลอง/โค้ดจิ๊กซอว์): แสดงทุกชั้น ไม่ต้องเข้าสู่ระบบก่อนก็เปิดได้
+// โปรแกรมเสริม (วาดผังงาน/รหัสลำลอง/CODE BLOCKS): แสดงทุกชั้น ไม่ต้องเข้าสู่ระบบก่อนก็เปิดได้
 function extrasHtml(){
   return `
     <div class="group-block group-extras">
@@ -471,8 +471,8 @@ function extrasHtml(){
           <span class="extra-go">คลิกเพื่อเขียน ➜</span>
         </a>
         <a class="extra-card extra-block" href="content/m1-cs-1/blocks.html" target="_blank" rel="noopener">
-          <span class="extra-head"><span class="extra-ico">🧱</span><b>โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)</b></span>
-          <small>ต่อบล็อกคำสั่งรูปจิ๊กซอว์เหมือน Scratch สั่งตัวละครนักเรียนเดิน วาดรูป ถามตอบ ทำซ้ำ ใช้ตัวแปรและเงื่อนไข มีตัวอย่างโปรแกรมให้โหลด และส่งงานเข้าใบงาน</small>
+          <span class="extra-head"><span class="extra-ico">🧱</span><b>CODE BLOCKS (ลากบล็อกเขียนโปรแกรม)</b></span>
+          <small>ลากต่อบล็อกคำสั่งเหมือนจิ๊กซอว์ สั่งตัวละครนักเรียนเดิน วาดรูป ถามตอบ ทำซ้ำ ใช้ตัวแปรและเงื่อนไข มีตัวอย่างโปรแกรมให้โหลด และส่งงานเข้าใบงาน</small>
           <span class="extra-go">คลิกเพื่อเขียน ➜</span>
         </a>
       </div>
@@ -1058,7 +1058,7 @@ function renderTabContent(tab, grade, subject, unit, idx){
   });
 }
 
-const NEW_TAB_TOOLS = /\/(blocks|flowchart|pseudocode|game-variable|game-variable-jump)\.html$/;   // โปรแกรมเสริม (โค้ดจิ๊กซอว์ / วาดผังงาน): เปิดในแท็บใหม่
+const NEW_TAB_TOOLS = /\/(blocks|flowchart|pseudocode|game-variable|game-variable-jump)\.html$/;   // โปรแกรมเสริม (CODE BLOCKS / วาดผังงาน): เปิดในแท็บใหม่
 // ปุ่มโปรแกรมเสริม/เกมที่ยังไม่มีรูปของครู: ใช้ปุ่มลูกอมสีสดแทน (รูปของครูมาก่อนเสมอ)
 const TOOL_BTN_COLOR = { "scratch-m1-1":"tb-purple", "varfruit-m1-1":"tb-orange", "varjump-m1-1":"tb-green", "blocks-m1-1":"tb-blue", "flowchart-m1-1":"tb-teal", "pseudocode-m1-1":"tb-pink" };
 function actionBtn(href, key, label, cls){

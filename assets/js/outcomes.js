@@ -74,7 +74,7 @@
   function linkifyAnswers(){
     const URLRE = /https?:\/\/[^\s<>"']+/g, boxes = new Map();
     const esc = (t) => String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-    const label = (u) => /flowchart\.html/.test(u) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(u) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(u) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์";
+    const label = (u) => /flowchart\.html/.test(u) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(u) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(u) ? "🧩 เปิด CODE BLOCKS" : "🔗 เปิดลิงก์";
     function refresh(ta){
       const urls = [...new Set((ta.value.match(URLRE) || []).map(u => u.replace(/[.,;)]+$/, "")))];
       let box = boxes.get(ta);

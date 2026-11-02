@@ -108,11 +108,11 @@
       <textarea id="pc" rows="8" placeholder="START&#10;    ...&#10;END"></textarea>
       <div class="q" id="pcres" style="border:none;display:none"></div>
     </div>
-    <div class="sec"><h2>🧱 ตอนที่ 5 ต่อบล็อกในโค้ดจิ๊กซอว์ <span class="pt">3 คะแนน</span></h2>
+    <div class="sec"><h2>🧱 ตอนที่ 5 ต่อบล็อกใน CODE BLOCKS <span class="pt">3 คะแนน</span></h2>
       <p class="d"><b>โจทย์:</b> ตะกร้ามีแอปเปิล <b>3 ผล</b> ให้ถามว่าหยิบเพิ่มกี่ผล แล้ว <b>พูด</b> จำนวนแอปเปิลทั้งหมด โดยใช้ตัวแปร <code>apple</code> (กำหนดค่าเริ่มต้น → เปลี่ยนค่า → พูดค่าตัวแปร)</p>
-      <div class="toolrow"><a class="j" href="blocks.html?ex=blank&back=worksheet-2-8.html" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a></div>
+      <div class="toolrow"><a class="j" href="blocks.html?ex=blank&back=worksheet-2-8.html" target="_blank" rel="noopener">🧱 เปิดโปรแกรม CODE BLOCKS</a></div>
       <div class="hintline" style="font-size:.8rem;color:#64748B;margin:0 0 4px">ต่อบล็อกเสร็จแล้วกด 📤 ส่ง / คัดลอก → ส่งไปใบงาน ระบบจะใส่ลิงก์ในช่องนี้ให้ (หรือวางลิงก์ที่คัดลอกมา)</div>
-      <textarea id="bk" rows="4" placeholder="ลิงก์โปรแกรมโค้ดจิ๊กซอว์..."></textarea>
+      <textarea id="bk" rows="4" placeholder="ลิงก์โปรแกรม CODE BLOCKS..."></textarea>
       <div class="q" id="bkres" style="border:none;display:none"></div>
     </div>
     <div class="meter"><i id="bar"></i></div>
@@ -125,7 +125,7 @@
   </div>
 </main>
 
-<script src="../../assets/js/wscheck.js?v=8"></script>
+<script src="../../assets/js/wscheck.js?v=16"></script>
 <script src="../../assets/js/tts.js?v=2"></script>
 <script>
 const U = { g:"m1", s:"cs", i:1 }, N = 8, TOTAL = 21;
@@ -163,8 +163,8 @@ function checkAll(){
   // ตอน 5: ตรวจบล็อก
   const res5 = document.getElementById("bkres"); res5.style.display = "block"; res5.style.flexDirection = "column"; res5.style.alignItems = "flex-start"; let s5 = 0; const m5 = []; const U2 = WSCheck.util;
   const bb = WSCheck.blocksFromText(bk.value);
-  if(bk.value.trim().length < 20) m5.push("ยังไม่ได้ส่งโปรแกรมจากโค้ดจิ๊กซอว์");
-  else if(!bb) m5.push("ไม่พบลิงก์โปรแกรม — ให้กด 📤 ส่ง / คัดลอก → ส่งไปใบงาน จากโค้ดจิ๊กซอว์");
+  if(bk.value.trim().length < 20) m5.push("ยังไม่ได้ส่งโปรแกรมจาก CODE BLOCKS");
+  else if(!bb) m5.push("ไม่พบลิงก์โปรแกรม — ให้กด 📤 ส่ง / คัดลอก → ส่งไปใบงาน จาก CODE BLOCKS");
   else { const b = bb.bs;
     if((bb.d.vars || []).length && U2.has(b, "set") && U2.hasStr(b, "3")) s5++; else m5.push("ต้องสร้างตัวแปร และใช้บล็อก \"กำหนด … เป็น 3\" (ค่าเริ่มต้นแอปเปิล 3 ผล)");
     if(U2.has(b, "ask") && (U2.has(b, "change") || U2.has(b, "add"))) s5++; else m5.push("ต้องถามจำนวนที่หยิบเพิ่ม แล้ว \"เปลี่ยน … ทีละ\" (หรือบวก) ค่าตัวแปร");
@@ -188,8 +188,8 @@ document.getElementById("submit").onclick = async function(){
 </script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>
-<script src="../../assets/js/linkify.js?v=1"></script>
-<script src="../../assets/js/outcomes.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/outcomes.js?v=7"></script>
 <script src="../../assets/js/unitinfo.js?v=4"></script>
 </body>
 </html>

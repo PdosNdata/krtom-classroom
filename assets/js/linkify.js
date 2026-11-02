@@ -1,4 +1,4 @@
-/* linkify.js — ทำลิงก์ที่อยู่ในช่องคำตอบของใบงานให้กดได้ (ผังงาน / รหัสลำลอง / โค้ดจิ๊กซอว์ / ลิงก์อื่น)
+/* linkify.js — ทำลิงก์ที่อยู่ในช่องคำตอบของใบงานให้กดได้ (ผังงาน / รหัสลำลอง / CODE BLOCKS / ลิงก์อื่น)
  * ใต้ช่องที่มี URL จะมีปุ่มกดเปิดในแท็บใหม่ · อัปเดตเมื่อพิมพ์ หรือเมื่อโปรแกรมในอีกแท็บส่งข้อความกลับมา
  * ใส่ในหน้าใบงานทุกใบ (หน่วย 1 และ 2)
  */
@@ -7,7 +7,7 @@
   function run(){
     const URLRE = /https?:\/\/[^\s<>"']+/g, boxes = new Map();
     const esc = (t) => String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-    const label = (u) => /flowchart\.html/.test(u) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(u) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(u) ? "🧩 เปิดโค้ดจิ๊กซอว์" : "🔗 เปิดลิงก์";
+    const label = (u) => /flowchart\.html/.test(u) ? "🔷 เปิดผังงาน" : /pseudocode\.html/.test(u) ? "📝 เปิดรหัสลำลอง" : /blocks\.html/.test(u) ? "🧩 เปิด CODE BLOCKS" : "🔗 เปิดลิงก์";
     function refresh(ta){
       const urls = [...new Set((ta.value.match(URLRE) || []).map(u => u.replace(/[.,;)]+$/, "")))];
       let box = boxes.get(ta);

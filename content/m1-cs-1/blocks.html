@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>โค้ดจิ๊กซอว์ — ม.1 หน่วย 2</title>
+<title>CODE BLOCKS — ม.1 หน่วย 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -149,7 +149,7 @@
 <body>
 
 <header>
-  <h1>🧱 โค้ดจิ๊กซอว์ (ลากบล็อกเขียนโปรแกรม)</h1>
+  <h1>🧱 CODE BLOCKS (ลากบล็อกเขียนโปรแกรม)</h1>
   <select id="sample" title="ตัวอย่างโปรแกรม">
     <option value="">📂 โหลดตัวอย่างโปรแกรม…</option>
     <option value="square">ภารกิจ 1: วาดสี่เหลี่ยมจัตุรัส</option>
@@ -235,7 +235,7 @@
 <script>
 "use strict";
 /* ============================================================
- * โค้ดจิ๊กซอว์ — เขียนใหม่ทั้งหมดเพื่อการเรียนวิทยาการคำนวณ ม.1 (ไม่ใช่ Scratch ของ MIT)
+ * CODE BLOCKS — เขียนใหม่ทั้งหมดเพื่อการเรียนวิทยาการคำนวณ ม.1 (ไม่ใช่ Scratch ของ MIT)
  * ============================================================ */
 const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; };
@@ -840,12 +840,12 @@ async function copyText(t){
 const menu = $("#sharemenu");
 $("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
 document.addEventListener("click", () => menu.classList.remove("open"));
-if(!BACK) $("#sh-ws").disabled = true, $("#sh-ws").title = "เปิดโค้ดจิ๊กซอว์จากปุ่มในใบงาน จึงจะส่งไปใบงานได้";
+if(!BACK) $("#sh-ws").disabled = true, $("#sh-ws").title = "เปิด CODE BLOCKS จากปุ่มในใบงาน จึงจะส่งไปใบงานได้";
 $("#sh-link").onclick = async () => { if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์โปรแกรมแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
 $("#sh-text").onclick = async () => { toast((await copyText(programText())) ? "คัดลอกข้อความคำสั่งแล้ว" : "คัดลอกไม่สำเร็จ"); };
 $("#sh-png").onclick = () => {
   const c = el("canvas"); c.width = 480; c.height = 360; const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, 480, 360); g.drawImage(cv, 0, 0);
-  const a = el("a"); a.download = "ผลจากโค้ดจิ๊กซอว์.png"; a.href = c.toDataURL("image/png"); a.click();
+  const a = el("a"); a.download = "ผลจาก CODE BLOCKS.png"; a.href = c.toDataURL("image/png"); a.click();
 };
 $("#sh-ws").onclick = () => {
   if(!BACK) return;

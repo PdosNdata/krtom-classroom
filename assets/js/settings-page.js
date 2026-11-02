@@ -7,11 +7,13 @@
   const role = (() => { try{ return sessionStorage.getItem("loggedInRole"); }catch(e){ return null; } })();
   const teacher = role === "teacher" && !!H.token(), student = role === "student" && !!H.stuToken();
   const nm = (() => { try{ return sessionStorage.getItem("loggedInUserName") || ""; }catch(e){ return ""; } })();
-  $("#who").textContent = nm ? "👤 " + nm + (teacher ? " (ครู)" : "") : "";
+  $("#who").innerHTML = nm ? '<span data-k-avatar>👤</span> ' + esc(nm) + (teacher ? " (ครู)" : "") : ""; if(window.KrtomAvatar) KrtomAvatar.paint();
   const panel = $("#panel"), nav = $("#nav");
-  const NAV = teacher
+  const AV = ["avatar", "#EC4899", "🧑‍🎨", "ภาพโปรไฟล์", "เลือกการ์ตูนผู้ชาย ผู้หญิง หรือเด็ก"];
+  const NAV0 = teacher
     ? [["pw", "#6366F1", "🔑", "เปลี่ยนรหัสผ่าน", "เปลี่ยนรหัสผ่านเข้าสู่ระบบของครู"], ["reset", "#F59E0B", "🔄", "รีเซ็ตรหัสผ่านนักเรียน", "กลับเป็นเลขประจำตัว กรณีนักเรียนลืมรหัส"], ["modes", "#EC4899", "📝", "การตรวจใบงาน", "เลือกว่าใบงานไหนให้ระบบตรวจ หรือครูตรวจเอง"], ["keys", "#10B981", "📎", "เฉลยแต่ละหน่วย", "อัปโหลดและเปิดดูไฟล์เฉลยต้นฉบับ"]]
     : [["pw", "#6366F1", "🔑", "เปลี่ยนรหัสผ่านของฉัน", "ตั้งรหัสผ่านใหม่แทนเลขประจำตัว"]];
+  const NAV = [AV].concat(NAV0);
   const msg = (el, kind, text) => { el.className = "msg " + kind; el.textContent = text; };
   const errText = (e) => /รหัสครูหรือรหัสผ่านไม่ถูกต้อง|รหัสผ่านเดิมไม่ถูกต้อง/.test((e && e.message) || "") ? "รหัสผ่านเดิมไม่ถูกต้อง"
     : /หมดเวลาเข้าสู่ระบบ/.test((e && e.message) || "") ? "หมดเวลาเข้าสู่ระบบ กรุณากลับหน้าแรกแล้วเข้าสู่ระบบใหม่" : KrtomSettings.errMsg(e);
@@ -158,7 +160,26 @@
     draw();
   }
 
-  const VIEWS = { pw: pwPanel, reset: resetPanel, modes: modesPanel, keys: keysPanel };
+  // ---------------------------------------------------------------- ภาพโปรไฟล์ (avatar)
+  function avatarPanel(){
+    const A = window.KrtomAvatar; if(!A){ panel.innerHTML = '<h2>🧑‍🎨 ภาพโปรไฟล์</h2><p class="lead">โหลดไม่สำเร็จ ลองรีเฟรชหน้านี้</p>'; return; }
+    let tab = (A.LIST.find(x => x.id === A.get()) || A.LIST[0]).g;
+    const draw = () => {
+      const cur = A.get(), ca = A.LIST.find(x => x.id === cur);
+      panel.innerHTML = `<h2>🧑‍🎨 ภาพโปรไฟล์</h2><p class="lead">เลือกการ์ตูนที่ชอบเป็นภาพของคุณ จะแสดงที่มุมขวาบนของหน้าเว็บ</p>
+        <div class="av-now">${ca ? A.svg(cur) : '<div class="ph">👤</div>'}<div><b>${ca ? esc(ca.name) : "ยังไม่ได้เลือกภาพ"}</b><br><button type="button" class="btn sm gray" id="av-clear"${ca ? "" : " disabled"}>ใช้ไอคอนเดิม</button></div></div>
+        <div class="av-tabs">${A.GROUPS.map(([g, t, ic]) => `<button type="button" data-g="${g}" class="${g === tab ? "on" : ""}">${ic} ${t}</button>`).join("")}</div>
+        <div class="av-grid">${A.LIST.filter(x => x.g === tab).map(x => `<button type="button" class="av-it ${x.id === cur ? "on" : ""}" data-id="${x.id}">${A.svg(x.id)}<b>${esc(x.name)}</b></button>`).join("")}</div>
+        <div class="msg" id="avm"></div>
+        <div class="note">💡 ภาพที่เลือกเก็บไว้ในเครื่องนี้ ถ้าเปลี่ยนเครื่องหรือเบราว์เซอร์ใหม่ ต้องเลือกอีกครั้ง</div>`;
+      panel.querySelectorAll(".av-tabs button").forEach(b => b.onclick = () => { tab = b.dataset.g; draw(); });
+      panel.querySelectorAll(".av-it").forEach(b => b.onclick = () => { A.set(b.dataset.id); draw(); msg($("#avm"), "ok", "เปลี่ยนภาพโปรไฟล์แล้ว"); });
+      const c = $("#av-clear"); if(c) c.onclick = () => { A.set(""); draw(); msg($("#avm"), "ok", "กลับไปใช้ไอคอนเดิมแล้ว"); };
+    };
+    draw();
+  }
+
+  const VIEWS = { avatar: avatarPanel, pw: pwPanel, reset: resetPanel, modes: modesPanel, keys: keysPanel };
   function route(){
     let id = (location.hash || "").replace("#", ""); if(!NAV.some(n => n[0] === id)) id = NAV[0][0];
     nav.querySelectorAll(".it").forEach(b => b.classList.toggle("on", b.dataset.id === id));

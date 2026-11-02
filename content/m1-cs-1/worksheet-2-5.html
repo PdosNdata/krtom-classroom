@@ -73,7 +73,7 @@
   </div>
 
   <div class="card jig">
-    <p>🧱 <b>ข้อ 8 ลงมือทำด้วยโค้ดจิ๊กซอว์</b></p>
+    <p>🧱 <b>ข้อ 8 ลงมือทำด้วย CODE BLOCKS</b></p>
     <p style="font-weight:400">ต่อบล็อกให้ตรงกับอัลกอริทึมที่ออกแบบ แล้วกด 🟩 ธงเขียว เพื่อทดสอบ</p>
     <div class="row"><a href="blocks.html?ex=blank&back=worksheet-2-5.html" target="_blank" rel="noopener">🧱 เริ่มเขียนเอง (กระดานว่าง)</a><a class="alt" href="blocks.html?ex=score&back=worksheet-2-5.html" target="_blank" rel="noopener">👀 ดูตัวอย่างโปรแกรม</a></div>
   </div>
@@ -117,9 +117,9 @@
       <textarea id="f6" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
     </div>
     <div class="field">
-      <label for="f7"><span class="fn">8</span> เขียนโปรแกรม โค้ดจิ๊กซอว์</label>
-      <div class="hint">บล็อกที่ใช้ และผลทดสอบ 85 กับ 80 (สังเกตผลที่คะแนน 80) · กดปุ่ม <b>📤 ส่ง / คัดลอก ▾ → ส่งโปรแกรมไปใบงาน</b> ในโค้ดจิ๊กซอว์ ระบบจะใส่ลิงก์และรายการบล็อกในช่องนี้ให้เอง (หรือวางลิงก์ที่คัดลอกมา)</div>
-      <a class="jbtn" href="blocks.html?ex=blank&back=worksheet-2-5.html" target="_blank" rel="noopener">🧱 เปิดโปรแกรมโค้ดจิ๊กซอว์</a>
+      <label for="f7"><span class="fn">8</span> เขียนโปรแกรม CODE BLOCKS</label>
+      <div class="hint">บล็อกที่ใช้ และผลทดสอบ 85 กับ 80 (สังเกตผลที่คะแนน 80) · กดปุ่ม <b>📤 ส่ง / คัดลอก ▾ → ส่งโปรแกรมไปใบงาน</b> ใน CODE BLOCKS ระบบจะใส่ลิงก์และรายการบล็อกในช่องนี้ให้เอง (หรือวางลิงก์ที่คัดลอกมา)</div>
+      <a class="jbtn" href="blocks.html?ex=blank&back=worksheet-2-5.html" target="_blank" rel="noopener">🧱 เปิดโปรแกรม CODE BLOCKS</a>
       <textarea id="f7" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
     </div>
     <div class="meter"><i id="bar"></i></div>
@@ -132,7 +132,7 @@
   </div>
 </main>
 
-<script src="../../assets/js/wscheck.js?v=8"></script>
+<script src="../../assets/js/wscheck.js?v=16"></script>
 <script src="../../assets/js/tts.js?v=2"></script>
 <script>
 const U = { g:"m1", s:"cs", i:1 }, N = 5, TOTAL = 8;
@@ -156,7 +156,7 @@ boxes.forEach(b => b.addEventListener("input", () => {
 }));
 refresh();
 
-// รับโปรแกรมที่ส่งมาจากโค้ดจิ๊กซอว์ (อีกแท็บหนึ่ง) แล้วอัปเดตช่องตอบทันที
+// รับโปรแกรมที่ส่งมาจาก CODE BLOCKS (อีกแท็บหนึ่ง) แล้วอัปเดตช่องตอบทันที
 window.addEventListener("storage", e => {
   if(e.key !== KEY) return;
   try{ const sv = JSON.parse(e.newValue || "[]"); boxes.forEach((b, i) => { if(sv[i] != null && b.value !== sv[i]) b.value = sv[i]; }); refresh(); }catch(_){}
@@ -184,8 +184,8 @@ document.getElementById("submit").onclick = async function(){
 </script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>
-<script src="../../assets/js/linkify.js?v=1"></script>
-<script src="../../assets/js/outcomes.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/outcomes.js?v=7"></script>
 <script src="../../assets/js/unitinfo.js?v=4"></script>
 </body>
 </html>

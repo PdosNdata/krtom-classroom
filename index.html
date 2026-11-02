@@ -120,7 +120,7 @@
 </header>
 
 <button type="button" class="fixed-user-badge" id="fixed-user-badge" onclick="onHeaderLoginClick(event)" style="display:none;">
-  👤 <span id="fixed-user-name"></span>
+  <span data-k-avatar>👤</span> <span id="fixed-user-name"></span>
 </button>
 
 <div class="user-menu-dropdown" id="user-menu-dropdown">
@@ -161,9 +161,10 @@
 <script src="assets/js/contents.js?v=8"></script>
 <script src="assets/js/standards.js?v=6"></script>
 <script src="assets/js/flow.js?v=6"></script>
-<script src="assets/js/settings.js?v=16"></script>
-<script src="assets/js/reports.js?v=19"></script>
-<script src="assets/js/app.js?v=121"></script>
+<script src="assets/js/avatars.js?v=1"></script>
+<script src="assets/js/settings.js?v=17"></script>
+<script src="assets/js/reports.js?v=20"></script>
+<script src="assets/js/app.js?v=122"></script>
 <script>
   function openLoginModal(){ document.getElementById("login-modal").classList.add("show"); }
   function closeLoginModal(){ document.getElementById("login-modal").classList.remove("show"); }
@@ -286,6 +287,7 @@
   function setHeaderLoggedInUser(name){
     currentLoggedInUser = name;
     document.getElementById("fixed-user-name").textContent = name;
+    if(window.KrtomAvatar) KrtomAvatar.paint();
     document.getElementById("fixed-user-badge").style.display = "flex";
     document.getElementById("banner-login-btn").style.display = "none";
     document.getElementById("compact-login-btn").style.display = "none";

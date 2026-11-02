@@ -39,6 +39,9 @@
   .seg button.on[data-a="auto"]{ background:#10B981; color:#fff; } .seg button.on[data-a="manual"]{ background:#F59E0B; color:#fff; }
   .file{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; border:1px solid var(--bd); border-radius:12px; padding:8px 12px; margin:6px 0; } .file span{ flex:1; word-break:break-all; min-width:140px; }
   .row2{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px; } .row2 select{ flex:1; min-width:150px; max-width:none; }
+  .av-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 14px; } .av-tabs button{ border:2px solid var(--bd); background:#fff; border-radius:999px; padding:7px 18px; font:inherit; font-weight:700; cursor:pointer; color:var(--mut); } .av-tabs button.on{ background:var(--blue); border-color:var(--blue); color:#fff; }
+  .av-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(108px, 1fr)); gap:14px; } .av-it{ border:3px solid transparent; background:#fff; border-radius:20px; padding:8px 6px 10px; cursor:pointer; text-align:center; font:inherit; color:var(--ink); box-shadow:0 3px 10px rgba(15,23,42,.08); transition:transform .12s, border-color .12s; } .av-it:hover{ transform:translateY(-3px); } .av-it.on{ border-color:var(--blue); box-shadow:0 0 0 4px rgba(79,70,229,.18); } .av-it svg{ width:84px; height:84px; display:block; margin:0 auto 4px; } .av-it small{ display:block; font-size:.78em; color:var(--mut); }
+  .av-now{ display:flex; align-items:center; gap:14px; margin:0 0 14px; padding:10px 14px; border-radius:16px; background:#F8FAFC; border:1px solid var(--bd); } .av-now svg{ width:64px; height:64px; display:block; } .av-now .ph{ width:64px; height:64px; border-radius:50%; background:#E2E8F0; display:flex; align-items:center; justify-content:center; font-size:2rem; }
   @media (max-width:820px){ .wrap{ grid-template-columns:1fr; } nav{ position:static; grid-template-columns:1fr 1fr; } main{ padding:18px 14px 24px; } }
   @media (max-width:520px){ nav{ grid-template-columns:1fr; } }
 </style>
@@ -76,7 +79,8 @@ document.getElementById("back").addEventListener("click", function(e){
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="assets/js/data.js?v=16"></script>
 <script src="assets/js/flow.js?v=6"></script>
-<script src="assets/js/settings.js?v=16"></script>
-<script src="assets/js/settings-page.js?v=5"></script>
+<script src="assets/js/avatars.js?v=1"></script>
+<script src="assets/js/settings.js?v=17"></script>
+<script src="assets/js/settings-page.js?v=6"></script>
 </body>
 </html>

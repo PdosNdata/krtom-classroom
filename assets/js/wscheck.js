@@ -4,7 +4,7 @@
  *   ข้อ 5    ตรวจรูปแบบและลำดับของอัลกอริทึมแบบธรรมชาติ
  *   ข้อ 6    รันรหัสลำลองจริงด้วยค่าทดสอบ (ใช้เอนจินในไฟล์นี้)
  *   ข้อ 7    ถอดลิงก์ผังงาน (?f=) แล้วตรวจโครงสร้าง ถ้าไม่มีลิงก์ตรวจจากคำบรรยาย
- *   ข้อ 8    ถอดลิงก์โค้ดจิ๊กซอว์ (?p=) แล้วตรวจชนิดบล็อกและค่า
+ *   ข้อ 8    ถอดลิงก์ CODE BLOCKS (?p=) แล้วตรวจชนิดบล็อกและค่า
  * ผลที่ได้เป็น "การตรวจเบื้องต้นโดยระบบ" ครูควรตรวจซ้ำได้
  */
 (function(){
@@ -123,7 +123,7 @@ const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+
 const b64t = (t) => decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/"))));
 function linkParam(text, key){ const m = text.match(new RegExp("[?&]" + key + "=([A-Za-z0-9_-]+)")); return m ? m[1] : null; }
 
-/* ───────── ตรวจบล็อกโค้ดจิ๊กซอว์ ───────── */
+/* ───────── ตรวจบล็อก CODE BLOCKS ───────── */
 function walkBlocks(list, cb){ (list || []).forEach(b => { if(!b || typeof b !== "object") return; cb(b); (b.a || []).forEach(x => { if(x && typeof x === "object") walkBlocks([x], cb); }); (b.s || []).forEach(s => walkBlocks(s, cb)); }); }
 function allBlocks(d){ const out = []; (d.scripts || []).forEach(sc => walkBlocks(sc.b, b => out.push(b))); return out; }
 const has = (bs, t) => bs.some(b => b.t === t);
@@ -181,7 +181,7 @@ function checkNatural(v, rule){
 function run(n, vals){
   const rule = R[n]; if(!rule) return null;
   const F = []; const add = (ok, title, msgs, note) => F.push({ ok, title, msgs, note });
-  const T = ["วัตถุประสงค์", "ข้อมูลนำเข้า (Input)", "วิธีประมวลผล (Process)", "ข้อมูลนำออก (Output)", "อัลกอริทึมแบบธรรมชาติ", "รหัสลำลอง (Pseudocode)", "ผังงาน (Flowchart)", "โปรแกรมโค้ดจิ๊กซอว์"];
+  const T = ["วัตถุประสงค์", "ข้อมูลนำเข้า (Input)", "วิธีประมวลผล (Process)", "ข้อมูลนำออก (Output)", "อัลกอริทึมแบบธรรมชาติ", "รหัสลำลอง (Pseudocode)", "ผังงาน (Flowchart)", "โปรแกรม CODE BLOCKS"];
   for(let i = 0; i < 4; i++){ const m = checkText(vals[i] || "", i, rule); add(!m.length, T[i], m); }
   { const m = checkNatural(vals[4] || "", rule); add(!m.length, T[4], m); }
   // ข้อ 6
@@ -202,8 +202,8 @@ function run(n, vals){
   // ข้อ 8
   { const txt = vals[7] || "", p = linkParam(txt, "p"); let msgs = [], note = "";
     if(txt.trim().length < 8) msgs.push("ยังไม่ได้เขียนโปรแกรม");
-    else if(p){ try{ const bs = allBlocks(b64d(p)); rule.blocks.need.forEach((fn, k) => { if(!fn(bs)) msgs.push(rule.blocks.msg[k]); }); note = "ตรวจจากโปรแกรมที่ส่งมาจากโค้ดจิ๊กซอว์"; }catch(e){ msgs.push("เปิดลิงก์โปรแกรมไม่ได้ — ลองกดส่งจากโค้ดจิ๊กซอว์อีกครั้ง"); } }
-    else { note = "ตรวจจากคำบรรยาย (ถ้าส่งจากโค้ดจิ๊กซอว์จะตรวจละเอียดกว่า)"; if(!/บล็อก|ธงเขียว|พูด|ถาม|ทำซ้ำ|ถ้า/.test(txt)) msgs.push("ควรบอกว่าใช้บล็อกอะไรบ้าง หรือส่งโปรแกรมจากโค้ดจิ๊กซอว์"); }
+    else if(p){ try{ const bs = allBlocks(b64d(p)); rule.blocks.need.forEach((fn, k) => { if(!fn(bs)) msgs.push(rule.blocks.msg[k]); }); note = "ตรวจจากโปรแกรมที่ส่งมาจาก CODE BLOCKS"; }catch(e){ msgs.push("เปิดลิงก์โปรแกรมไม่ได้ — ลองกดส่งจาก CODE BLOCKS อีกครั้ง"); } }
+    else { note = "ตรวจจากคำบรรยาย (ถ้าส่งจาก CODE BLOCKS จะตรวจละเอียดกว่า)"; if(!/บล็อก|ธงเขียว|พูด|ถาม|ทำซ้ำ|ถ้า/.test(txt)) msgs.push("ควรบอกว่าใช้บล็อกอะไรบ้าง หรือส่งโปรแกรมจาก CODE BLOCKS"); }
     add(!msgs.length, T[7], msgs, note); }
   const score = F.filter(x => x.ok).length;
   return { fields:F, score, max:8 };
