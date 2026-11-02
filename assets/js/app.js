@@ -260,6 +260,11 @@ const READY_CONTENT = {
     worksheet: { href:"content/m3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.8 การรวบรวม ประมวลผล และใช้ซอฟต์แวร์จัดการข้อมูล" },
     quiz:      { href:"content/m3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
   },
+  "m3/cs/1": {
+    knowledge: { href:"content/m3-cs-1/knowledge.html", title:"ความน่าเชื่อถือของข้อมูล" },
+    worksheet: { href:"content/m3-cs-1/worksheet.html", title:"ใบงานที่ 2.1–2.10 สืบค้น ประเมินความน่าเชื่อถือ และรู้เท่าทันสื่อ" },
+    quiz:      { href:"content/m3-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
+  },
   "m1/cs/3": {
     knowledge: { href:"content/m1-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
     worksheet: { href:"content/m1-cs-3/worksheet.html", title:"ใบงานที่ 4.1 ภัยคุกคามและสัญญาอนุญาตครีเอทีฟคอมมอนส์" },
@@ -723,7 +728,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },

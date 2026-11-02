@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 2.2: โปรแกรมค้นหา เทคนิค และขั้นตอนสืบค้น (ลากไปวาง) — ม.3 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; --c1:#2DD4BF; --c2:#0F766E; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  h2.part{ font-size:1.05rem; margin:6px 0 10px; padding:8px 14px; border-radius:12px; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); }
+  .tray{ display:flex; flex-wrap:wrap; gap:8px; padding:10px; margin-bottom:12px; background:#F1F5F9; border:2px dashed #CBD5E1; border-radius:14px; min-height:48px; }
+  .tray:empty::after{ content:"วางครบแล้ว"; color:#94A3B8; font-size:.85rem; }
+  .chip{ background:#fff; border:2px solid #CBD5E1; border-radius:999px; padding:6px 14px; font-weight:700; font-size:.88rem; cursor:grab; box-shadow:0 2px 6px rgba(0,0,0,.1); touch-action:none; user-select:none; }
+  .chip.picked{ border-color:var(--c2); background:#ECFDF5; box-shadow:0 0 0 4px rgba(16,185,129,.25); }
+  .chip.lifting{ opacity:.3; } .chip.ghost{ position:fixed; transform:translate(-50%,-50%); pointer-events:none; z-index:999; opacity:.92; }
+  .zones{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:8px; }
+  .zone{ background:#fff; border:3px dashed #C9D0E5; border-radius:14px; padding:8px 10px 10px; min-height:92px; transition:border-color .15s, background .15s; }
+  .zone.over{ border-color:var(--c2); background:#F0FDFA; } .zone.has{ border-style:solid; border-color:#94A3B8; }
+  .zone .zt{ font-weight:800; font-size:.92rem; margin-bottom:6px; } .zone .zt small{ display:block; font-weight:400; color:#64748B; font-size:.75rem; }
+  .zbody{ display:flex; flex-wrap:wrap; gap:6px; min-height:34px; }
+  .ordering{ display:grid; gap:8px; margin-bottom:10px; } .ordering .zone{ display:flex; align-items:center; gap:10px; min-height:0; padding:8px 12px; } .ordering .zone .zt{ margin:0; flex:none; width:2.2em; color:var(--c2); font-size:1.1rem; } .ordering .zbody{ flex:1; }
+  .pq{ border:1px solid #E2E8F0; border-radius:14px; padding:10px 12px; margin-bottom:12px; background:#FAFBFF; }
+  .pq .ql{ font-weight:800; font-size:.92rem; margin-bottom:6px; } .pq .seq{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:1.35rem; font-weight:800; margin-bottom:8px; }
+  .pq .seq .zone{ min-width:62px; min-height:50px; padding:4px 6px; border-radius:12px; display:flex; align-items:center; justify-content:center; } .pq .seq .zone .zbody{ min-height:0; justify-content:center; }
+  .pq .seq .zone:empty, .pq .seq .zone .zbody:empty::after{ content:"?"; color:#94A3B8; font-size:1.1rem; }
+  .pq .tray{ margin:0; padding:6px; min-height:0; background:transparent; border:none; } .pq .tray:empty::after{ content:""; } .pq .chip{ font-size:1.15rem; padding:4px 16px; }
+  .match{ display:grid; gap:8px; margin-bottom:10px; } .match .zone{ display:flex; align-items:center; gap:10px; min-height:0; padding:8px 12px; } .match .zone .zt{ margin:0; flex:1; font-weight:600; font-size:.9rem; } .match .zone .zbody{ flex:none; min-width:130px; min-height:34px; border-radius:999px; background:#F1F5F9; justify-content:center; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🧩 ใบงานที่ 2.2 โปรแกรมค้นหา เทคนิค และขั้นตอนสืบค้น (ลากไปวาง)</h1>
+    <p>ประเภทโปรแกรมค้นหา · เทคนิค + - OR · ขั้นตอนสืบค้น · ม.3 หน่วยที่ 2</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">ลากรายการไปวางให้ถูกต้องทั้ง 3 ตอน ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง ครูจะตรวจและแจ้งผลให้ · ใช้นิ้วแตะเลือกชิ้นแล้วแตะช่องปลายทางก็ได้</p>
+  </div>
+
+  <div class="card" id="form">
+    <h2 class="part">ตอนที่ 1 ประเภทของโปรแกรมค้นหา (ลากชื่อไปวางให้ตรงกับลักษณะ)</h2>
+    <div class="tray" data-id="t1"><div class="chip" data-ans="s1">Crawler Based Search Engine</div><div class="chip" data-ans="s2">Web Directory</div><div class="chip" data-ans="s3">Meta Search Engine (Meta Tag)</div></div>
+    <div class="match"><div class="zone" data-key="s1" data-mode="one" data-title="ประเภทของโปรแกรมค้นหา: ใช้ซอฟต์แวร์ขนาดเล็กไปเก็บข้อมูลจากเว็บไซต์ต่าง ๆ มาบันทึกในฐานข้อมูล แม่นยำและเร็ว นิยมมากที่สุด"><div class="zt">ใช้ซอฟต์แวร์ขนาดเล็กไปเก็บข้อมูลจากเว็บไซต์ต่าง ๆ มาบันทึกในฐานข้อมูล แม่นยำและเร็ว นิยมมากที่สุด</div><div class="zbody"></div></div><div class="zone" data-key="s2" data-mode="one" data-title="ประเภทของโปรแกรมค้นหา: รวบรวมเว็บไซต์เป็นสารบัญแยกหมวดหมู่ชัดเจน เหมาะกับการค้นข้อมูลเฉพาะด้าน"><div class="zt">รวบรวมเว็บไซต์เป็นสารบัญแยกหมวดหมู่ชัดเจน เหมาะกับการค้นข้อมูลเฉพาะด้าน</div><div class="zbody"></div></div><div class="zone" data-key="s3" data-mode="one" data-title="ประเภทของโปรแกรมค้นหา: ค้นจากคำสั่งที่กำหนดรายละเอียดเว็บไซต์ เช่น ชื่อเว็บ ผู้แต่ง คำสำคัญ ความแม่นยำน้อยกว่าประเภทอื่น"><div class="zt">ค้นจากคำสั่งที่กำหนดรายละเอียดเว็บไซต์ เช่น ชื่อเว็บ ผู้แต่ง คำสำคัญ ความแม่นยำน้อยกว่าประเภทอื่น</div><div class="zbody"></div></div></div>
+    <h2 class="part" style="margin-top:18px">ตอนที่ 2 เทคนิคการค้นหา (ลากไปวางให้ตรงกับผลที่ได้)</h2>
+    <div class="tray" data-id="t2"><div class="chip" data-ans="t1">เครื่องหมายบวก ( + )</div><div class="chip" data-ans="t2">เครื่องหมายลบ ( - )</div><div class="chip" data-ans="t3">เครื่องหมายอัญประกาศ ( " " )</div><div class="chip" data-ans="t4">คำว่า OR</div></div>
+    <div class="match"><div class="zone" data-key="t1" data-mode="one" data-title="เทคนิคค้นหา: เพิ่มความสำคัญของคำนั้นในการค้นหา เช่น สถานที่ท่องเที่ยว+ทะเล"><div class="zt">เพิ่มความสำคัญของคำนั้นในการค้นหา เช่น สถานที่ท่องเที่ยว+ทะเล</div><div class="zbody"></div></div><div class="zone" data-key="t2" data-mode="one" data-title="เทคนิคค้นหา: ตัดคำที่ไม่ต้องการออกจากผลลัพธ์ เช่น ผลไม้ -มะม่วง"><div class="zt">ตัดคำที่ไม่ต้องการออกจากผลลัพธ์ เช่น ผลไม้ -มะม่วง</div><div class="zbody"></div></div><div class="zone" data-key="t3" data-mode="one" data-title="เทคนิคค้นหา: ค้นหาเป็นกลุ่มคำที่ต้องเรียงติดกันตามที่พิมพ์"><div class="zt">ค้นหาเป็นกลุ่มคำที่ต้องเรียงติดกันตามที่พิมพ์</div><div class="zbody"></div></div><div class="zone" data-key="t4" data-mode="one" data-title="เทคนิคค้นหา: ค้นหาโดยให้พบคำใดคำหนึ่งในสองคำ"><div class="zt">ค้นหาโดยให้พบคำใดคำหนึ่งในสองคำ</div><div class="zbody"></div></div></div>
+    <h2 class="part" style="margin-top:18px">ตอนที่ 3 ขั้นตอนการสืบค้น (ลากไปวางให้ตรงกับการทำงาน)</h2>
+    <div class="tray" data-id="t3"><div class="chip" data-ans="u1">กำหนดวัตถุประสงค์และหัวข้อ</div><div class="chip" data-ans="u2">กำหนดประเภทของข้อมูล</div><div class="chip" data-ans="u3">กำหนดคำสำคัญ</div><div class="chip" data-ans="u4">ประเมินความน่าเชื่อถือของข้อมูล</div></div>
+    <div class="match"><div class="zone" data-key="u1" data-mode="one" data-title="ขั้นตอนสืบค้น: ตั้งเป้าหมายและหัวข้อให้ชัดเจน เพื่อกำหนดขอบเขตไม่ให้กว้างเกินไป"><div class="zt">ตั้งเป้าหมายและหัวข้อให้ชัดเจน เพื่อกำหนดขอบเขตไม่ให้กว้างเกินไป</div><div class="zbody"></div></div><div class="zone" data-key="u2" data-mode="one" data-title="ขั้นตอนสืบค้น: เลือกว่าต้องการข้อความ ภาพ หรือวิดีโอ เพื่อลดเวลาค้นหา"><div class="zt">เลือกว่าต้องการข้อความ ภาพ หรือวิดีโอ เพื่อลดเวลาค้นหา</div><div class="zbody"></div></div><div class="zone" data-key="u3" data-mode="one" data-title="ขั้นตอนสืบค้น: เลือกคำที่ตรงกับข้อมูลที่ต้องการ เพราะโปรแกรมค้นหาแสดงผลจากคำนี้"><div class="zt">เลือกคำที่ตรงกับข้อมูลที่ต้องการ เพราะโปรแกรมค้นหาแสดงผลจากคำนี้</div><div class="zbody"></div></div><div class="zone" data-key="u4" data-mode="one" data-title="ขั้นตอนสืบค้น: คัดเลือกเฉพาะข้อมูลที่ถูกต้องและมีคุณค่าจากผลที่ได้"><div class="zt">คัดเลือกเฉพาะข้อมูลที่ถูกต้องและมีคุณค่าจากผลที่ได้</div><div class="zbody"></div></div></div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t"></div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<div id="answers" style="display:none"></div>
+<script>window.DRAGWS = { n:2, u:1, g:"m3" };</script>
+<script src="../../assets/js/dragws.js?v=4"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=1"></script>
+</body>
+</html>

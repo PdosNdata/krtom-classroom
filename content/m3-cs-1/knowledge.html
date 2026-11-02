@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: ความน่าเชื่อถือของข้อมูล — ม.3 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 2</h1>
+    <p>ความน่าเชื่อถือของข้อมูล · ม.3 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/m3/cs/1/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายวิธีสืบค้นหาแหล่งข้อมูลและใช้เทคนิคค้นหาได้</li>
+      <li>ประเมินความน่าเชื่อถือของข้อมูลด้วยหลักการและ PROMPT ได้</li>
+      <li>อธิบายองค์ประกอบของการรู้เท่าทันสื่อและวิเคราะห์สถานการณ์ได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> ภาพรวมความน่าเชื่อถือของข้อมูล</h2>
+    <div>
+    <p>ปัจจุบันข้อมูลมาจากหลายแหล่ง โดยเฉพาะสื่อสังคมออนไลน์ ถ้าผู้รับข้อมูลเชื่อและแชร์ต่อโดยไม่ไตร่ตรองและไม่ประเมินความน่าเชื่อถือ อาจเกิดผลเสียต่อตนเองและสังคม ความน่าเชื่อถือของข้อมูลจึงสำคัญมาก</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🔍</span><div><h3>สืบค้นหาแหล่งข้อมูล</h3><p>ค้นหาข้อมูลที่ต้องการด้วยเครื่องมือต่าง ๆ</p></div></div>
+      <div class="concept-card"><span class="icon">⚖️</span><div><h3>ประเมินความน่าเชื่อถือ</h3><p>คัดเลือกเฉพาะข้อมูลที่ถูกต้องและตรงความต้องการ</p></div></div>
+      <div class="concept-card"><span class="icon">📺</span><div><h3>รู้เท่าทันสื่อ</h3><p>เข้าถึง วิเคราะห์ ประเมิน และใช้สื่ออย่างรับผิดชอบ</p></div></div>
+    </div>
+    <div class="info-box">💡 <b>ตัวชี้วัด ว 4.2 ม.3/3:</b> ประเมินความน่าเชื่อถือของข้อมูลและรู้เท่าทันสื่อ</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> การสืบค้นเพื่อหาแหล่งข้อมูล</h2>
+    <div>
+    <p>การสืบค้นแหล่งข้อมูลคือกระบวนการค้นหาข้อมูลที่ต้องการโดยใช้เครื่องมือต่าง ๆ ทำได้ 2 แบบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">📚</span><div><h3>สืบค้นด้วยมือ</h3><p>ค้นจากเอกสาร หนังสือ ตำรา ที่ห้องสมุดหรือหน่วยงานจัดไว้ให้</p></div></div>
+      <div class="concept-card"><span class="icon">💻</span><div><h3>สืบค้นด้วยคอมพิวเตอร์</h3><p>ค้นจากฐานข้อมูล ข้อมูลออนไลน์ อินเทอร์เน็ต และโปรแกรมค้นหา (Search Engine)</p></div></div>
+    </div>
+    <p><b>ประโยชน์และโทษของอินเทอร์เน็ต</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">✅</span><div><h3>ประโยชน์</h3><p>แลกเปลี่ยนข่าวสาร ติดต่อผู้อื่นทั่วโลก ซื้อของออนไลน์ประหยัดเวลา</p></div></div>
+      <div class="concept-card"><span class="icon">⚠️</span><div><h3>โทษ</h3><p>ข้อมูลกระจัดกระจาย ใช้มากเกินไปกระทบการเรียน ข้อมูลจริงเท็จปะปนกัน</p></div></div>
+    </div>
+    <p><b>ใช้อินเทอร์เน็ตอย่างมีคุณธรรมและจริยธรรม</b> เช่น ไม่เผยแพร่ข้อมูลเท็จ เคารพข้อตกลงการใช้งาน ใช้ถ้อยคำสุภาพ ไม่ละเมิดสิทธิผู้อื่น และไม่ใช้ทำร้ายผู้อื่น</p>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> โปรแกรมค้นหาและขั้นตอนการสืบค้น</h2>
+    <div>
+    <p><b>ประเภทของโปรแกรมค้นหา (Search Engine)</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🕷️</span><div><h3>Crawler Based</h3><p>ใช้ซอฟต์แวร์ Web Crawler เก็บข้อมูลจากเว็บไซต์เข้าฐานข้อมูล แม่นยำและเร็ว นิยมที่สุด</p></div></div>
+      <div class="concept-card"><span class="icon">🗂️</span><div><h3>Web Directory</h3><p>จัดเว็บไซต์เป็นหมวดหมู่ มีดรรชนี เหมาะกับการค้นข้อมูลเฉพาะด้าน</p></div></div>
+      <div class="concept-card"><span class="icon">🏷️</span><div><h3>Meta Search</h3><p>ค้นจาก Meta Tag ของเว็บไซต์ ความแม่นยำน้อยกว่าประเภทอื่น</p></div></div>
+    </div>
+    <p><b>ขั้นตอนการสืบค้นด้วยอินเทอร์เน็ต</b></p>
+    <ol class="steps">
+      <li><b>กำหนดวัตถุประสงค์และหัวข้อ</b> ให้ชัดเจน เพื่อไม่ให้ขอบเขตกว้างเกินไป</li>
+      <li><b>กำหนดประเภทของข้อมูล</b> เช่น ข้อความ ภาพ วิดีโอ</li>
+      <li><b>กำหนดคำสำคัญ</b> ให้ตรงกับข้อมูลที่ต้องการ</li>
+      <li><b>ประเมินความน่าเชื่อถือ</b> ของข้อมูลที่ได้</li>
+    </ol>
+    <p><b>เทคนิคการค้นหา</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">➕</span><div><h3>เครื่องหมายบวก (+)</h3><p>เพิ่มความสำคัญของคำ เช่น สถานที่ท่องเที่ยว+ทะเล+เกาะ</p></div></div>
+      <div class="concept-card"><span class="icon">➖</span><div><h3>เครื่องหมายลบ (-)</h3><p>ตัดคำที่ไม่ต้องการ เช่น ผลไม้ -มะม่วง</p></div></div>
+      <div class="concept-card"><span class="icon">❝❞</span><div><h3>อัญประกาศ " "</h3><p>ค้นเป็นกลุ่มคำที่ต้องเรียงติดกัน</p></div></div>
+      <div class="concept-card"><span class="icon">🔀</span><div><h3>คำว่า OR</h3><p>ค้นให้พบคำใดคำหนึ่ง</p></div></div>
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> การประเมินความน่าเชื่อถือของข้อมูล</h2>
+    <div>
+    <p>ก่อนนำข้อมูลไปใช้ ต้องคัดเลือกเฉพาะข้อมูลที่น่าเชื่อถือ ถูกต้อง และตรงตามความต้องการ โดยมีหลักการประเมิน 3 ข้อ</p>
+    <ol class="steps">
+      <li><b>ความตรงตามความต้องการ</b> อ่านชื่อเว็บไซต์ ชื่อหัวเรื่อง คำนำ สารบัญ ว่าตรงที่ต้องการหรือไม่</li>
+      <li><b>ความน่าเชื่อถือและความทันสมัย</b> ดูแหล่งข้อมูล ชนิดสื่อ ผู้เขียน และวันที่เผยแพร่</li>
+      <li><b>ระดับเนื้อหา</b> ปฐมภูมิ ทุติยภูมิ ตติยภูมิ</li>
+    </ol>
+    <p><b>ระดับเนื้อหาของข้อมูล</b></p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🥇</span><div><h3>ปฐมภูมิ</h3><p>ผู้เขียนศึกษาค้นคว้าเองและเผยแพร่ครั้งแรก เช่น วิทยานิพนธ์ รายงานวิจัย</p></div></div>
+      <div class="concept-card"><span class="icon">🥈</span><div><h3>ทุติยภูมิ</h3><p>นำปฐมภูมิมาเรียบเรียงหรือวิจารณ์ เช่น บทความวารสาร บทคัดย่อ</p></div></div>
+      <div class="concept-card"><span class="icon">🥉</span><div><h3>ตติยภูมิ</h3><p>ชี้แนะแหล่งข้อมูล เช่น บรรณานุกรม ดรรชนีวารสาร</p></div></div>
+    </div>
+    <p><b>วิธีตรวจสอบความน่าเชื่อถือของเว็บไซต์</b> เนื้อหาตรงวัตถุประสงค์ · ไม่ขัดกฎหมายและศีลธรรม · ระบุชื่อผู้เขียน · อ้างอิงแหล่งที่มา · ระบุวันที่เผยแพร่และปรับปรุง · มีลิงก์ไปแหล่งที่อ้างถึง · ระบุวัตถุประสงค์ · มีช่องทางติดต่อผู้ดูแล</p>
+    <p><b>แหล่งข้อมูลที่น่าเชื่อถือ</b> เจ้าของข้อมูลที่มีประสบการณ์ตรง · องค์กรหรือผู้เชี่ยวชาญเฉพาะด้าน · หน่วยงานของรัฐ</p>
+    <p><b>หลัก PROMPT</b></p>
+    <ol class="steps">
+      <li><b>P การนำเสนอ</b> ข้อมูลชัดเจนหรือไม่</li>
+      <li><b>R ความสัมพันธ์กัน</b> เนื้อหาครบและสัมพันธ์กันหรือไม่</li>
+      <li><b>O วัตถุประสงค์</b> จุดมุ่งหมาย ความคิดเห็นและวาระที่ต้องการ</li>
+      <li><b>M วิธีการ</b> รวบรวมหรือผลิตข้อมูลด้วยวิธีใด</li>
+      <li><b>P พิสูจน์หรือยืนยัน</b> มีแหล่งอ้างอิงหรือไม่</li>
+      <li><b>T ทันเหตุการณ์</b> เป็นปัจจุบันหรือไม่</li>
+    </ol>
+    <div class="info-box">⚠️ <b>เหตุผลวิบัติ</b> คือการใช้เหตุผลที่ผิดพลาดเพื่อให้ผู้อื่นเชื่อ เช่น “ใคร ๆ ก็ทำ จึงไม่ผิด” ทำให้ผู้รับเข้าใจผิดและอาจเผยแพร่ต่อจนเกิดความเสียหาย</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> การรู้เท่าทันสื่อ</h2>
+    <div>
+    <p>การรู้เท่าทันสื่อสารสนเทศเป็นทักษะแห่งศตวรรษที่ 21 เกี่ยวกับความสามารถในการเข้าถึงสารสนเทศผ่านสื่อและเทคโนโลยีดิจิทัล มี 4 องค์ประกอบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🚪</span><div><h3>เข้าถึงสื่อ</h3><p>ได้รับสื่อหลายประเภทอย่างเต็มที่และเข้าใจเนื้อหา</p></div></div>
+      <div class="concept-card"><span class="icon">🔎</span><div><h3>เข้าใจและประเมินค่า</h3><p>วิเคราะห์สื่อเพื่อประเมินคุณภาพและคุณค่า</p></div></div>
+      <div class="concept-card"><span class="icon">🛠️</span><div><h3>สร้าง ใช้ประโยชน์ เฝ้าระวัง</h3><p>สร้างสื่อของตนเองและระวังเนื้อหาไม่เหมาะสม</p></div></div>
+      <div class="concept-card"><span class="icon">🪞</span><div><h3>สะท้อนคิด</h3><p>พิจารณาผลกระทบของการกระทำต่อผู้อื่น</p></div></div>
+    </div>
+    <p><b>การรู้เท่าทันสื่อดิจิทัล 4 ด้าน</b> การรักษาความสัมพันธ์และการสื่อสาร · การใช้อินเทอร์เน็ตอย่างปลอดภัย · การสร้างอัตลักษณ์ส่วนตัวในโลกออนไลน์ · การป้องกันข้อมูลและแก้ปัญหาการถูกกลั่นแกล้งทางออนไลน์ · และการใช้ข้อมูลดิจิทัลอย่างสร้างสรรค์โดยไม่ละเมิดลิขสิทธิ์</p>
+    </div>
+  </section>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>สืบค้นได้ทั้งด้วยมือและด้วยคอมพิวเตอร์ ขั้นตอนสืบค้นมี 4 ขั้น และมีเทคนิค + - " " OR ช่วยค้นให้ตรง</li>
+      <li>ประเมินความน่าเชื่อถือโดยดูความตรงความต้องการ ความน่าเชื่อถือและทันสมัย และระดับเนื้อหา รวมถึงใช้ PROMPT</li>
+      <li>เหตุผลวิบัติและข้อมูลผิดพลาดทำให้เข้าใจผิดและเสียหายเป็นวงกว้าง</li>
+      <li>การรู้เท่าทันสื่อช่วยให้ใช้ข้อมูลอย่างรับผิดชอบและไม่ละเมิดผู้อื่น</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m3/cs/1/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/accordion.js?v=1"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+</body>
+</html>
