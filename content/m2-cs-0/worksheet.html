@@ -98,7 +98,7 @@
 </header>
 
 <main>
-  <p class="lead">เลือกทำใบงานทั้ง 5 ใบ ✨<small>ใบ 1.2 ลากไปวาง · ใบ 1.5 ปรนัย · ใบอื่น ๆ เขียนตอบ</small></p>
+  <p class="lead">เลือกทำใบงานทั้ง 6 ใบ ✨<small>ใบ 1.2 ลากไปวาง · ใบ 1.5 ปรนัย · ใบ 1.6 ฝึกเพิ่มอย่างละ 2 ข้อ · ใบอื่น ๆ เขียนตอบ</small></p>
   <div class="stack">
     <a class="wsbtn" href="worksheet-21-1.html" data-n="1" style="--c1:#60A5FA;--c2:#1D4ED8;--edge:#1E3A8A;--glow:96,165,250">
       <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
@@ -170,6 +170,20 @@
         <span class="go">เริ่มทำ ➜</span>
       </span>
     </a>
+    <a class="wsbtn" href="worksheet-21-6.html" data-n="6" style="--c1:#22C55E;--c2:#15803D;--edge:#14532D;--glow:34,197,94">
+      <span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
+      <span class="ghost-no">1.6</span>
+      <span class="orb"><span class="orb-in">💪</span></span>
+      <span class="wsbtn-text">
+        <span class="wsbtn-kicker">ใบงานที่ 1.6</span>
+        <span class="wsbtn-title">ฝึกเพิ่ม 4 องค์ประกอบ</span>
+        <span class="wsbtn-sub">อย่างละ 2 ข้อ</span>
+      </span>
+      <span class="wsbtn-side">
+        <span class="status" id="st-6">ยังไม่ได้ส่ง</span>
+        <span class="go">เริ่มทำ ➜</span>
+      </span>
+    </a>
   </div>
   <p class="note">🖨️ พิมพ์ใบงานเป็นกระดาษได้ที่หน้าใบงานแต่ละใบ (กด Ctrl+P)</p>
 </main>
@@ -178,7 +192,7 @@
 (function(){
   // แสดงสถานะ "ส่งแล้ว" ของแต่ละใบ (เก็บในเครื่องนี้)
   try{
-    for(let n = 1; n <= 5; n++){
+    for(let n = 1; n <= 6; n++){
       if(localStorage.getItem("krtomws-done:m2/cs/0:" + n)){
         const el = document.getElementById("st-" + n);
         if(el){ el.textContent = "✅ ส่งแล้ว"; el.classList.add("done"); }
