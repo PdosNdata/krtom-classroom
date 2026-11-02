@@ -705,7 +705,7 @@ function renderUnitList(grade, subject){
 
   // การ์ดหน่วยเต็ม (ถ้าครูออกแบบภาพของหน่วยนั้นไว้เอง): ถ้าโหลดได้จะแทนที่การ์ดโค้ดทั้งหมด ถ้าไม่มีไฟล์จะใช้การ์ดโค้ดสำรองแทน
   const cardHtml = (u, i) => `
-    <a class="card unit-card" href="#/unit/${grade.id}/${subject.id}/${i}">
+    <a class="card unit-card" href="#/unit/${grade.id}/${subject.id}/${i}" style="--uc:${UNIT_COLORS[i % UNIT_COLORS.length]}">
       <img class="u-fullcard-img" src="assets/images/home-unit-${grade.id}-${subject.id}-${i}.webp" alt="${u.name}"
            onload="this.closest('.unit-card').classList.add('has-fullcard'); this.style.display='block'; this.nextElementSibling.style.display='none';"
            onerror="this.style.display='none';">
@@ -724,7 +724,7 @@ function renderUnitList(grade, subject){
   app.innerHTML = `
     <div class="page-title">${subject.name} · ${grade.grade}</div>
     <div class="page-subtitle">รหัสอ้างอิงแผนการสอน: ${subject.code} — ทั้งหมด ${subject.units.length} หน่วยการเรียนรู้</div>
-    <div class="card-grid" style="grid-template-columns:1fr">${cards}</div>
+    <div class="card-grid${["p3", "p4", "m2", "m3"].includes(grade.id) ? " unit-grid-coded" : ""}" style="grid-template-columns:1fr">${cards}</div>
     ${extrasHtml()}
   `;
 }
