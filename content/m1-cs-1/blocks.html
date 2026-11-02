@@ -273,6 +273,17 @@ const SPEC = {
   point:     { cat:"motion",  kind:"stack", parts:["หันไปทาง", N(90), "องศา"] },
   changex:   { cat:"motion",  kind:"stack", parts:["เปลี่ยน x ทีละ", N(10)] },
   changey:   { cat:"motion",  kind:"stack", parts:["เปลี่ยน y ทีละ", N(10)] },
+  gotorand:  { cat:"motion",  kind:"stack", parts:["ไปที่", { i:"opt", o:["ตำแหน่งสุ่ม", "ตัวชี้เมาส์"], d:"ตำแหน่งสุ่ม" }] },
+  glidetorand:{ cat:"motion", kind:"stack", parts:["ร่อนไปที่", { i:"opt", o:["ตำแหน่งสุ่ม", "ตัวชี้เมาส์"], d:"ตำแหน่งสุ่ม" }, "ใน", N(1), "วินาที"] },
+  glide:     { cat:"motion",  kind:"stack", parts:["ร่อนไปที่ x:", N(0), "y:", N(0), "ใน", N(1), "วินาที"] },
+  towards:   { cat:"motion",  kind:"stack", parts:["หันเข้าหา", { i:"opt", o:["ตัวชี้เมาส์", "กึ่งกลางเวที"], d:"ตัวชี้เมาส์" }] },
+  setx:      { cat:"motion",  kind:"stack", parts:["กำหนด x เป็น", N(0)] },
+  sety:      { cat:"motion",  kind:"stack", parts:["กำหนด y เป็น", N(0)] },
+  bounce:    { cat:"motion",  kind:"stack", parts:["ถ้าชนขอบ ให้สะท้อนกลับ"] },
+  rotstyle:  { cat:"motion",  kind:"stack", parts:["ตั้งลักษณะการหมุนเป็น", { i:"opt", o:["รอบทิศทาง", "ซ้าย-ขวา", "ไม่หมุน"], d:"รอบทิศทาง" }] },
+  xpos:      { cat:"motion",  kind:"rep",   parts:["ตำแหน่ง x"] },
+  ypos:      { cat:"motion",  kind:"rep",   parts:["ตำแหน่ง y"] },
+  dirn:      { cat:"motion",  kind:"rep",   parts:["ทิศทาง"] },
   say:       { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี")] },
   sayfor:    { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี"), "เป็นเวลา", N(2), "วินาที"] },
   costume:   { cat:"looks",   kind:"stack", parts:["สลับชุดตัวละคร"] },
@@ -314,7 +325,7 @@ const SPEC = {
 };
 const CATS = [
   ["event","เหตุการณ์","#F5B800",["flag","keyspace","spriteclick","backdropis","timerhat","recv","broadcast","broadcastwait"]],
-  ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","goto","point","changex","changey"]],
+  ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","gotorand","goto","glidetorand","glide","point","towards","changex","setx","changey","sety","bounce","rotstyle","xpos","ypos","dirn"]],
   ["looks","รูปร่าง","#9966FF",["say","sayfor","costume","backdrop"]],
   ["sound","เสียง","#CF63CF",["beep"]],
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
@@ -623,13 +634,15 @@ const girlSvg = (pose) => `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2
 </svg>`;
 const COSTUMES = [[boySvg(0), boySvg(1)], [girlSvg(0), girlSvg(1)], ["🐱","😺","😸"], ["🐶","🐕","🦮"], ["🐸","🦎"], ["🚀","🛸"]];
 ["boy", "girl"].forEach((k, i) => { const im = new Image(); im.onload = () => { COSTUMES[i] = [`<img src="img/${k}.webp" alt="">`]; renderSprite(); }; im.src = "img/" + k + ".webp"; });
-const S = { x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, cost:0, spr:0, vars:{}, answer:"", bg:"ขาว" };
+const S = { x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, cost:0, spr:0, vars:{}, answer:"", bg:"ขาว", rs:null, mx:0, my:0 };
 const cv = $("#pen"), cx = cv.getContext("2d"), spriteEl = $("#sprite"), bubble = $("#bubble");
 function setSprite(){ S.spr = +$("#spr").value; S.cost = 0; renderSprite(); save(); }
 function renderSprite(){
   spriteEl.innerHTML = COSTUMES[S.spr][S.cost % COSTUMES[S.spr].length];
   spriteEl.style.left = ((S.x + 240) / 480 * 100) + "%"; spriteEl.style.top = ((180 - S.y) / 360 * 100) + "%";
-  spriteEl.style.rotate = $("#rot").checked ? ((S.dir - 90) + "deg") : "0deg";
+  const rs = S.rs || ($("#rot").checked ? "รอบทิศทาง" : "ไม่หมุน");
+  spriteEl.style.rotate = rs === "รอบทิศทาง" ? ((S.dir - 90) + "deg") : "0deg";
+  spriteEl.style.scale = (rs === "ซ้าย-ขวา" && Math.sin(S.dir * Math.PI / 180) < -0.01) ? "-1 1" : "1 1";
   // ให้กรอบคำพูดอยู่เหนือหัวตัวละคร (ถ้าตัวละครชิดขอบบนให้ไปอยู่ใต้เท้า) และไม่ล้นเวที
   const xp = (S.x + 240) / 480 * 100, yp = (180 - S.y) / 360 * 100;
   bubble.style.left = Math.min(70, Math.max(30, xp)) + "%"; bubble.style.top = yp + "%";
@@ -642,7 +655,7 @@ function renderMon(){
 }
 const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
 function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").style.background = BACKDROPS[S.bg]; }
-function resetSprite(){ setBackdrop("ขาว"); S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; S.cost = 0; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; renderSprite(); }
+function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; S.cost = 0; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; renderSprite(); }
 
 /* ---------- ตัวแปลสั่งงาน ---------- */
 const STOP = { stop:true };
@@ -657,6 +670,9 @@ function val(a){
   if(typeof a !== "object") return isNum(a) ? Number(a) : a;
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
+    case "xpos": return Math.round(S.x * 100) / 100;
+    case "ypos": return Math.round(S.y * 100) / 100;
+    case "dirn": return Math.round(((S.dir % 360) + 360) % 360 * 100) / 100;
     case "var": return S.vars[a.name] ?? 0;
     case "add": return num(val(a.a[0])) + num(val(a.a[1]));
     case "sub": return num(val(a.a[0])) - num(val(a.a[1]));
@@ -683,6 +699,13 @@ function drawTo(nx, ny){
   S.x = Math.max(-1000, Math.min(1000, S.x)); S.y = Math.max(-1000, Math.min(1000, S.y));
 }
 const spd = () => $("#speed").value;
+function targetXY(m){ return m === "ตัวชี้เมาส์" ? [S.mx, S.my] : [Math.round(Math.random() * 440 - 220), Math.round(Math.random() * 320 - 160)]; }
+async function glideTo(tx, ty, sec, c){
+  const x0 = S.x, y0 = S.y, t0 = performance.now(), ms = Math.max(0, sec) * 1000;
+  while(performance.now() - t0 < ms){ const f = (performance.now() - t0) / ms; drawTo(x0 + (tx - x0) * f, y0 + (ty - y0) * f); renderSprite(); await sleep(16); chk(c); }
+  drawTo(tx, ty); renderSprite();
+}
+$("#stagebox").addEventListener("mousemove", (e) => { const r = $("#stagebox").getBoundingClientRect(); S.mx = Math.round((e.clientX - r.left) / r.width * 480 - 240); S.my = Math.round(180 - (e.clientY - r.top) / r.height * 360); });
 async function pace(c){
   chk(c); const m = spd();
   if(m === "slow") await sleep(420); else if(m === "normal") await sleep(45); else if(++cnt % 250 === 0) await sleep(0);
@@ -693,6 +716,19 @@ const EXEC = {
   async turnR(j){ S.dir = (S.dir + num(val(j.a[0]))) % 360; renderSprite(); },
   async turnL(j){ S.dir = (S.dir - num(val(j.a[0]))) % 360; renderSprite(); },
   async goto(j){ drawTo(num(val(j.a[0])), num(val(j.a[1]))); renderSprite(); },
+  async gotorand(j){ const t = targetXY(j.a[0]); drawTo(t[0], t[1]); renderSprite(); },
+  async glidetorand(j, c){ const t = targetXY(j.a[0]); await glideTo(t[0], t[1], num(val(j.a[1])), c); },
+  async glide(j, c){ await glideTo(num(val(j.a[0])), num(val(j.a[1])), num(val(j.a[2])), c); },
+  async towards(j){ const tx = j.a[0] === "ตัวชี้เมาส์" ? S.mx : 0, ty = j.a[0] === "ตัวชี้เมาส์" ? S.my : 0; if(tx !== S.x || ty !== S.y) S.dir = (Math.atan2(tx - S.x, ty - S.y) * 180 / Math.PI + 360) % 360; renderSprite(); },
+  async setx(j){ drawTo(num(val(j.a[0])), S.y); renderSprite(); },
+  async sety(j){ drawTo(S.x, num(val(j.a[0]))); renderSprite(); },
+  async bounce(){
+    const r = S.dir * Math.PI / 180; let dx = Math.sin(r), dy = Math.cos(r), hit = false;
+    if(S.x > 220){ dx = -Math.abs(dx); S.x = 220; hit = true; } if(S.x < -220){ dx = Math.abs(dx); S.x = -220; hit = true; }
+    if(S.y > 160){ dy = -Math.abs(dy); S.y = 160; hit = true; } if(S.y < -160){ dy = Math.abs(dy); S.y = -160; hit = true; }
+    if(hit) S.dir = (Math.atan2(dx, dy) * 180 / Math.PI + 360) % 360; renderSprite();
+  },
+  async rotstyle(j){ S.rs = j.a[0] || "รอบทิศทาง"; renderSprite(); },
   async point(j){ S.dir = num(val(j.a[0])); renderSprite(); },
   async changex(j){ drawTo(S.x + num(val(j.a[0])), S.y); renderSprite(); },
   async changey(j){ drawTo(S.x, S.y + num(val(j.a[0]))); renderSprite(); },
