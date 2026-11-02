@@ -37,12 +37,11 @@
       P:{ knowledge:[1,2,3], list:[1,2,3], quiz:[1,2,3],
           "worksheet-3-1":[1,2], "worksheet-3-2":[1,3], "worksheet-3-3":[1], "worksheet-3-4":[1,2], "worksheet-3-5":[1,3], "worksheet-3-6":[1,3], "worksheet-3-7":[2], "worksheet-3-8":[3], "worksheet-3-9":[1,2,3] } }
   };
-  const U = UNITS[dir]; if(!U) return;
-  const key = file === "worksheet" ? "list" : file;
-  const idx = U.P[key]; if(!idx) return;
-  const kind = file === "knowledge" ? "know" : (file === "quiz" || file === "worksheet-31-7" || file === "worksheet-32-9" || file === "worksheet-3-9" || file === "worksheet-41-6" || file === "worksheet-21-5") ? "test" : (file === "worksheet-31-2" || file === "worksheet-31-4" || file === "worksheet-32-2" || file === "worksheet-32-7" || file === "worksheet-3-4" || file === "worksheet-41-2" || file === "worksheet-41-4" || file === "worksheet-21-2") ? "drag" : file === "worksheet" ? "list" : "text";
+  const TESTS = ["quiz", "worksheet-31-7", "worksheet-32-9", "worksheet-3-9", "worksheet-41-6", "worksheet-21-5"];
+  const DRAGS = ["worksheet-31-2", "worksheet-31-4", "worksheet-32-2", "worksheet-32-7", "worksheet-3-4", "worksheet-41-2", "worksheet-41-4", "worksheet-21-2"];
+  const kind = file === "knowledge" ? "know" : TESTS.includes(file) ? "test" : DRAGS.includes(file) ? "drag" : file === "worksheet" ? "list" : "text";
   const cs = { know:["C1", "C2", "C5"], list:["C1", "C2", "C3", "C5"], text:["C1", "C2", "C3", "C5"], drag:["C2", "C5"], test:["C2", "C3"] }[kind];
-  const ts = { know:["ใฝ่เรียนรู้"], list:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน", "ซื่อสัตย์สุจริต"], text:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], drag:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], test:["ซื่อสัตย์สุจริต", "มีวินัย"] }[kind].concat((U.MORE && U.MORE[file]) || []);
+  const TR = { know:["ใฝ่เรียนรู้"], list:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน", "ซื่อสัตย์สุจริต"], text:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], drag:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], test:["ซื่อสัตย์สุจริต", "มีวินัย"] }[kind];
   const what = { know:"ใบความรู้นี้", list:"ใบงานชุดนี้", text:"ใบงานนี้", drag:"ใบงานนี้", test:"แบบทดสอบนี้" }[kind] || "หน้านี้";
   const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const css = document.createElement("style");
@@ -57,20 +56,48 @@
   .ui-box .ui-c{ background:#BBF7D0; color:#14532D; } .ui-box .ui-t{ background:#FBCFE8; color:#831843; }
   .ui-box ul{ margin:2px 0 0; padding-left:20px; }
   .ui-box .ui-std{ font-size:.78rem; color:#64748B; margin-top:4px; }
-  .obj-box{ display:none !important; }
   @media print{ .ui-box{ box-shadow:none; } }`;
   document.head.appendChild(css);
-  const box = document.createElement("div");
-  box.className = "ui-box";
-  box.innerHTML = `<div class="ui-h">🎯 ${esc(what)}ทำแล้วได้ตามตัวชี้วัดและจุดประสงค์</div>` +
-    `<div class="ui-ind">📌 <b>ตัวชี้วัด ${esc(U.ind[0])}</b> ${esc(U.ind[1])}</div>` +
-    `<div>🎯 <b>จุดประสงค์การเรียนรู้</b></div><ul>${idx.map(i => `<li>${esc(U.O[i - 1])}</li>`).join("")}</ul>` +
-    `<div class="ui-row"><span class="ui-lab">🧠 สมรรถนะสำคัญของผู้เรียน:</span>${cs.map(k => `<span class="ui-chip ui-c">${esc(C[k])}</span>`).join("")}</div>` +
-    `<div class="ui-row"><span class="ui-lab">🌟 คุณลักษณะอันพึงประสงค์:</span>${ts.map(t => `<span class="ui-chip ui-t">${esc(t)}</span>`).join("")}</div>` +
-    `<div class="ui-std">มาตรฐาน ${esc(STD)}</div>`;
-  const main = document.querySelector("main");
-  const intro = document.querySelector("main .card.intro, main .intro");
-  if(intro && intro.parentNode) intro.parentNode.insertBefore(box, intro.nextSibling);
-  else if(main) main.insertBefore(box, main.firstChild);
-  else { const h = document.querySelector("header"); if(h && h.parentNode) h.parentNode.insertBefore(box, h.nextSibling); else document.body.insertBefore(box, document.body.firstChild); }
+  // inds = [[รหัส, ข้อความ], ...] · objs = ข้อความจุดประสงค์ (ว่าง = ไม่แสดง) · compact = แสดงเฉพาะตัวชี้วัดกับคุณลักษณะ (หน้าที่มีกล่องสมรรถนะของตัวเองอยู่แล้ว)
+  function render(inds, objs, extraTraits, compact){
+    const ts = TR.concat(extraTraits || []);
+    const box = document.createElement("div");
+    box.className = "ui-box";
+    box.innerHTML = `<div class="ui-h">🎯 ${esc(what)}ทำแล้วได้ตามตัวชี้วัด${compact ? "" : "และจุดประสงค์"}</div>` +
+      inds.map(r => `<div class="ui-ind">📌 <b>ตัวชี้วัด ${esc(r[0])}</b> ${esc(r[1])}</div>`).join("") +
+      (!compact && objs && objs.length ? `<div>🎯 <b>จุดประสงค์การเรียนรู้</b></div><ul>${objs.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : "") +
+      (compact ? "" : `<div class="ui-row"><span class="ui-lab">🧠 สมรรถนะสำคัญของผู้เรียน:</span>${cs.map(k => `<span class="ui-chip ui-c">${esc(C[k])}</span>`).join("")}</div>`) +
+      `<div class="ui-row"><span class="ui-lab">🌟 คุณลักษณะอันพึงประสงค์:</span>${ts.map(t => `<span class="ui-chip ui-t">${esc(t)}</span>`).join("")}</div>` +
+      `<div class="ui-std">มาตรฐาน ${esc(STD)}</div>`;
+    if(!compact){ const st = document.createElement("style"); st.textContent = ".obj-box{ display:none !important; }"; document.head.appendChild(st); }
+    const main = document.querySelector("main");
+    const anchor = document.querySelector("main .oc-box") || document.querySelector("main .card.intro, main .intro");
+    if(anchor && anchor.parentNode) anchor.parentNode.insertBefore(box, anchor.nextSibling);
+    else if(main) main.insertBefore(box, main.firstChild);
+    else { const h = document.querySelector("header"); if(h && h.parentNode) h.parentNode.insertBefore(box, h.nextSibling); else document.body.insertBefore(box, document.body.firstChild); }
+  }
+  const U = UNITS[dir];
+  if(U){
+    const idx = U.P[file === "worksheet" ? "list" : file]; if(!idx) return;
+    render([U.ind], idx.map(i => U.O[i - 1]), (U.MORE && U.MORE[file]) || [], false);
+    return;
+  }
+  // หน่วยอื่น ๆ: ดึงตัวชี้วัดจาก standards.js และจุดประสงค์จาก .obj-box ของใบความรู้หน่วยเดียวกัน
+  const m = /^([a-z]\d)-([a-z]+)-(\d+)$/.exec(dir || ""); if(!m) return;
+  const ukey = m[1] + "/" + m[2] + "/" + m[3];
+  if(file !== "knowledge" && file !== "quiz" && file !== "worksheet" && !/^worksheet-/.test(file)) return;
+  const loadStd = () => new Promise(res => {
+    if(typeof UNIT_STANDARDS !== "undefined") return res();
+    const sc = document.createElement("script"); sc.src = "../../assets/js/standards.js?v=6"; sc.onload = () => res(); sc.onerror = () => res(); document.head.appendChild(sc);
+  });
+  const getObjs = async () => {
+    if(file === "knowledge") return [...document.querySelectorAll(".obj-box li")].map(li => li.textContent.trim()).filter(Boolean);
+    try{ const doc = new DOMParser().parseFromString(await (await fetch("knowledge.html")).text(), "text/html"); return [...doc.querySelectorAll(".obj-box li")].map(li => li.textContent.trim()).filter(Boolean); }catch(e){ return []; }
+  };
+  loadStd().then(async () => {
+    const st = typeof UNIT_STANDARDS !== "undefined" && UNIT_STANDARDS[ukey]; if(!st || !st.indicators || !st.indicators.length) return;
+    const compact = dir === "m1-cs-1";                // ม.1 หน่วย 2 มีกล่องจุดประสงค์/สมรรถนะอยู่แล้ว (outcomes.js) จึงเพิ่มเฉพาะตัวชี้วัดและคุณลักษณะ
+    const objs = compact ? [] : await getObjs();
+    render(st.indicators.map(r => [r.code, r.text]), objs, [], compact);
+  });
 })();
