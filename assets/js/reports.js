@@ -240,7 +240,7 @@ const KrtomReports = (function(){
   const pending = (r) => isManual(r) && r.teacher_status == null;
   const eff = (r) => r.teacher_score != null ? r.teacher_score : r.score;
   const mark = (r) => (r.teacher_status === "edited" ? ' <span title="ครูแก้คะแนน">✏️</span>' : r.teacher_status === "approved" ? ' <span title="ครูเห็นชอบ">✅</span>' : "") + (r.allow_resubmit ? ' <span title="เปิดให้ส่งใหม่ได้">🔓</span>' : "");
-  const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? (+m[1] > 40 ? `ใบงาน ป.4 ${m[1] - 40}.${m[2]}` : +m[1] > 30 ? `ใบงาน ม.3 ${m[1] - 30}.${m[2]}` : `ใบงาน ${m[1]}.${m[2]}`) : a; };
+  const wsName = (a) => { const m = /^worksheet-(\d+)-(\d+)$/.exec(a); return m ? (+m[1] > 40 ? `ใบงาน ป.4 ${m[1] - 40}.${m[2]}` : +m[1] > 30 ? `ใบงาน ม.3 ${m[1] - 30}.${m[2]}` : +m[1] > 20 ? `ใบงาน ม.2 ${m[1] - 20}.${m[2]}` : `ใบงาน ${m[1]}.${m[2]}`) : a; };
 
   // ชื่อใบงาน (แสดงในหน้ารายคน)
   const WS_NAMES = {
@@ -251,6 +251,7 @@ const KrtomReports = (function(){
     "31-1":"การรวบรวมข้อมูล", "31-2":"จัดประเภทข้อมูลและวิธีรวบรวม (ลากไปวาง)", "31-3":"การประมวลผลข้อมูล", "31-4":"กรรมวิธีและวิธีประมวลผล (ลากไปวาง)", "31-5":"การใช้ซอฟต์แวร์จัดการข้อมูลและสารสนเทศ", "31-6":"กิจกรรม สำรวจ BMI", "31-7":"แบบทดสอบท้ายหน่วย ตอนที่ 1", "31-8":"แบบทดสอบท้ายหน่วย ตอนที่ 2",
     "32-1":"การสืบค้นเพื่อหาแหล่งข้อมูล", "32-2":"โปรแกรมค้นหา เทคนิค และขั้นตอน (ลากไปวาง)", "32-3":"เทคนิคการสืบค้น", "32-4":"การประเมินความน่าเชื่อถือของข้อมูล", "32-5":"วิเคราะห์ความน่าเชื่อถือและเหตุผลวิบัติ", "32-6":"การรู้เท่าทันสื่อ", "32-7":"รู้เท่าทันสื่อและระดับเนื้อหา (ลากไปวาง)", "32-8":"กิจกรรม ความน่าเชื่อถือของข้อมูล", "32-9":"แบบทดสอบท้ายหน่วย ตอนที่ 1", "32-10":"แบบทดสอบท้ายหน่วย ตอนที่ 2",
     "41-1":"เหตุผลเชิงตรรกะ", "41-2":"ลำดับขั้นตอนและรูปแบบอัลกอริทึม (ลากไปวาง)", "41-3":"อัลกอริทึมด้วยข้อความและรหัสลำลอง", "41-4":"สัญลักษณ์และผังงาน (ลากไปวาง)", "41-5":"กิจกรรม ของขวัญสำหรับเพื่อน", "41-6":"แบบทดสอบท้ายหน่วย",
+    "21-1":"องค์ประกอบของแนวคิดเชิงคำนวณ", "21-2":"แยกย่อย หารูปแบบ นามธรรม อัลกอริทึม (ลากไปวาง)", "21-3":"ประยุกต์ใช้แนวคิดเชิงคำนวณ", "21-4":"แนวคิดเชิงคำนวณกับการแก้ปัญหา", "21-5":"แบบทดสอบท้ายหน่วย",
   };
   // ใบงานที่ส่งของนักเรียนคนเดียว: คะแนน + ลิงก์งานที่ส่ง (ผังงาน/รหัสลำลอง/โค้ดจิ๊กซอว์) + ปุ่มดูคำตอบ
   function studentWorkHtml(code){
@@ -330,7 +331,7 @@ const KrtomReports = (function(){
     const units = flowUnits(st.grade), stu = data.roster.filter(r => r.g === st.grade);
     const unit = units.find(u => u.key === st.unit) || units[0], idx = unit ? +unit.key.split("/")[2] : 0;
     const mine = wk.filter(r => unit && `${r.grade_id}/${r.subject_id}/${r.unit_idx}` === unit.key);
-    const isM3 = unit && unit.key.startsWith("m3/"), isP4 = unit && unit.key.startsWith("p4/"), acts = [], wc = isM3 ? { 0:8, 1:10 }[idx] : isP4 ? { 0:6 }[idx] : WS_COUNT[idx], pf = isM3 ? 30 : isP4 ? 40 : 0; for(let n = 1; n <= (wc || 0); n++) acts.push(`worksheet-${pf + idx + 1}-${n}`);
+    const isM3 = unit && unit.key.startsWith("m3/"), isP4 = unit && unit.key.startsWith("p4/"), isM2 = unit && unit.key.startsWith("m2/"), acts = [], wc = isM3 ? { 0:8, 1:10 }[idx] : isP4 ? { 0:6 }[idx] : isM2 ? { 0:5 }[idx] : WS_COUNT[idx], pf = isM3 ? 30 : isP4 ? 40 : isM2 ? 20 : 0; for(let n = 1; n <= (wc || 0); n++) acts.push(`worksheet-${pf + idx + 1}-${n}`);
     mine.forEach(r => { if(!acts.includes(r.activity)) acts.push(r.activity); });
     const latest = new Map(); mine.forEach(r => { const k = r.student_code + "|" + r.activity, c = latest.get(k); if(!c || r.attempt > c.attempt) latest.set(k, r); });
     app.innerHTML = `

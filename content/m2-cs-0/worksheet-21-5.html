@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.5: แบบทดสอบท้ายหน่วย — ม.2 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; --c1:#818CF8; --c2:#4338CA; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  .mcq{ margin-bottom:18px; } .mcq .q{ font-weight:800; margin-bottom:6px; }
+  .mcq label{ display:flex; gap:10px; align-items:flex-start; padding:8px 12px; border:2px solid #E2E8F0; border-radius:12px; margin:6px 0; cursor:pointer; font-size:.95rem; background:#fff; }
+  .mcq label:has(input:checked){ border-color:var(--c2); background:#EEF2FF; }
+  .mcq input{ margin-top:5px; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🏁 ใบงานที่ 1.5 แบบทดสอบท้ายหน่วย</h1>
+    <p>ปรนัย 10 ข้อ · ม.2 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">เลือกคำตอบที่ถูกที่สุดข้อละ 1 คำตอบ ทำครบ 10 ข้อแล้วกดส่ง ครูจะตรวจและแจ้งผลให้</p>
+  </div>
+
+  <div class="card" id="form">
+    <div class="mcq" data-i="0">
+      <div class="q">1. แนวคิดเชิงคำนวณคือข้อใด</div>
+      <label><input type="radio" name="q0" value="0"> <span>การเดาคำตอบอย่างรวดเร็ว</span></label>
+      <label><input type="radio" name="q0" value="1"> <span>แนวคิดแก้ปัญหาอย่างเป็นระบบและมีขั้นตอนชัดเจน</span></label>
+      <label><input type="radio" name="q0" value="2"> <span>การเขียนโปรแกรมภาษาไพทอนเท่านั้น</span></label>
+      <label><input type="radio" name="q0" value="3"> <span>การใช้เครื่องคิดเลข</span></label>
+    </div>
+    <div class="mcq" data-i="1">
+      <div class="q">2. ข้อใดไม่ใช่องค์ประกอบของแนวคิดเชิงคำนวณ</div>
+      <label><input type="radio" name="q1" value="0"> <span>การแยกย่อย</span></label>
+      <label><input type="radio" name="q1" value="1"> <span>การหารูปแบบ</span></label>
+      <label><input type="radio" name="q1" value="2"> <span>การจดจำ</span></label>
+      <label><input type="radio" name="q1" value="3"> <span>อัลกอริทึม</span></label>
+    </div>
+    <div class="mcq" data-i="2">
+      <div class="q">3. การแตกปัญหาใหญ่ให้เป็นปัญหาย่อย คือแนวคิดใด</div>
+      <label><input type="radio" name="q2" value="0"> <span>การแยกย่อย</span></label>
+      <label><input type="radio" name="q2" value="1"> <span>การหารูปแบบ</span></label>
+      <label><input type="radio" name="q2" value="2"> <span>เชิงนามธรรม</span></label>
+      <label><input type="radio" name="q2" value="3"> <span>อัลกอริทึม</span></label>
+    </div>
+    <div class="mcq" data-i="3">
+      <div class="q">4. การสังเกตว่าคนเตี้ยกว่าอยู่ซ้ายของคนสูงกว่าเสมอ คือแนวคิดใด</div>
+      <label><input type="radio" name="q3" value="0"> <span>การแยกย่อย</span></label>
+      <label><input type="radio" name="q3" value="1"> <span>การหารูปแบบ</span></label>
+      <label><input type="radio" name="q3" value="2"> <span>เชิงนามธรรม</span></label>
+      <label><input type="radio" name="q3" value="3"> <span>อัลกอริทึม</span></label>
+    </div>
+    <div class="mcq" data-i="4">
+      <div class="q">5. การเรียงแถวตามความสูงโดยไม่สนใจเพศและอายุ คือแนวคิดใด</div>
+      <label><input type="radio" name="q4" value="0"> <span>การแยกย่อย</span></label>
+      <label><input type="radio" name="q4" value="1"> <span>การหารูปแบบ</span></label>
+      <label><input type="radio" name="q4" value="2"> <span>เชิงนามธรรม</span></label>
+      <label><input type="radio" name="q4" value="3"> <span>อัลกอริทึม</span></label>
+    </div>
+    <div class="mcq" data-i="5">
+      <div class="q">6. การเขียนขั้นตอนวิธีแก้ปัญหาเรียงเป็นลำดับ คือแนวคิดใด</div>
+      <label><input type="radio" name="q5" value="0"> <span>การแยกย่อย</span></label>
+      <label><input type="radio" name="q5" value="1"> <span>การหารูปแบบ</span></label>
+      <label><input type="radio" name="q5" value="2"> <span>เชิงนามธรรม</span></label>
+      <label><input type="radio" name="q5" value="3"> <span>อัลกอริทึม</span></label>
+    </div>
+    <div class="mcq" data-i="6">
+      <div class="q">7. ในการจัดแถวด้วย “ตำแหน่งหลัก” ผู้ที่เตี้ยกว่าตำแหน่งหลักจะอยู่ด้านใด</div>
+      <label><input type="radio" name="q6" value="0"> <span>ด้านซ้าย</span></label>
+      <label><input type="radio" name="q6" value="1"> <span>ด้านขวา</span></label>
+      <label><input type="radio" name="q6" value="2"> <span>ด้านหลัง</span></label>
+      <label><input type="radio" name="q6" value="3"> <span>ตรงกลาง</span></label>
+    </div>
+    <div class="mcq" data-i="7">
+      <div class="q">8. จัดตู้เสื้อผ้าให้หาง่ายที่สุด ข้อมูลใดควรตัดทิ้งเมื่อจัดกลุ่มตามประเภท</div>
+      <label><input type="radio" name="q7" value="0"> <span>ชนิดของเสื้อผ้า</span></label>
+      <label><input type="radio" name="q7" value="1"> <span>ยี่ห้อและราคา</span></label>
+      <label><input type="radio" name="q7" value="2"> <span>ขนาดตู้</span></label>
+      <label><input type="radio" name="q7" value="3"> <span>จำนวนชั้น</span></label>
+    </div>
+    <div class="mcq" data-i="8">
+      <div class="q">9. ข้อใดเป็นประโยชน์ของแนวคิดเชิงคำนวณ</div>
+      <label><input type="radio" name="q8" value="0"> <span>ทำให้ปัญหาซับซ้อนขึ้น</span></label>
+      <label><input type="radio" name="q8" value="1"> <span>แก้ปัญหาได้เป็นระบบและมีประสิทธิภาพ</span></label>
+      <label><input type="radio" name="q8" value="2"> <span>ไม่ต้องคิดวิเคราะห์</span></label>
+      <label><input type="radio" name="q8" value="3"> <span>ใช้ได้เฉพาะกับคอมพิวเตอร์</span></label>
+    </div>
+    <div class="mcq" data-i="9">
+      <div class="q">10. เมื่อมีหลายวิธีแก้ปัญหา ควรเลือกวิธีใด</div>
+      <label><input type="radio" name="q9" value="0"> <span>วิธีที่ยาวที่สุด</span></label>
+      <label><input type="radio" name="q9" value="1"> <span>วิธีที่ถูกต้องและมีประสิทธิภาพที่สุดตามเงื่อนไข</span></label>
+      <label><input type="radio" name="q9" value="2"> <span>วิธีแรกที่คิดได้</span></label>
+      <label><input type="radio" name="q9" value="3"> <span>วิธีที่เพื่อนใช้</span></label>
+    </div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/4 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const U = { g:"m2", s:"cs", i:0 }, N = 5, TOTAL = 10;
+const KEY = "krtomws:m2/cs/0:" + N, DONE = "krtomws-done:m2/cs/0:" + N;
+const ANS = [1, 2, 0, 1, 2, 3, 0, 1, 1, 1];     // ตรวจเงียบ ไม่แสดงเฉลยให้นักเรียน
+const groups = [...document.querySelectorAll(".mcq")];
+const picked = () => groups.map(g => { const c = g.querySelector("input:checked"); return c ? +c.value : -1; });
+function refresh(){
+  const n = picked().filter(x => x >= 0).length;
+  document.getElementById("bar").style.width = (n / TOTAL * 100) + "%";
+  document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ";
+}
+try{ const saved = JSON.parse(localStorage.getItem(KEY) || "[]"); groups.forEach((g, i) => { if(saved[i] >= 0){ const r = g.querySelector('input[value="' + saved[i] + '"]'); if(r) r.checked = true; } }); }catch(e){}
+groups.forEach(g => g.addEventListener("change", () => { try{ localStorage.setItem(KEY, JSON.stringify(picked())); }catch(e){} refresh(); }));
+refresh();
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), p = picked(), n = p.filter(x => x >= 0).length;
+  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง"; return; }
+  const score = p.filter((x, i) => x === ANS[i]).length;
+  window.__wsItems = { mcq: p.map((x, i) => ({ ok: x === ANS[i] })) };
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", score, TOTAL);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=1"></script>
+<script src="../../assets/js/unitinfo.js?v=2"></script>
+</body>
+</html>

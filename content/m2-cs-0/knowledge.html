@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: แก้ปัญหาด้วยแนวคิดเชิงคำนวณ — ม.2 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>แก้ปัญหาด้วยแนวคิดเชิงคำนวณ · ม.2 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/m2/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายความหมายของแนวคิดเชิงคำนวณได้</li>
+      <li>อธิบายองค์ประกอบของแนวคิดเชิงคำนวณได้</li>
+      <li>ออกแบบอัลกอริทึมเพื่อแก้ปัญหาผ่านการประยุกต์ใช้แนวคิดเชิงคำนวณได้</li>
+      <li>เห็นประโยชน์ของการใช้แนวคิดเชิงคำนวณในการแก้ปัญหา</li>
+      <li>อธิบายแนวทางการแก้ปัญหาที่ประยุกต์ใช้แนวคิดเชิงคำนวณได้</li>
+      <li>อธิบายแนวทางการวิเคราะห์และวางแผนการแก้ปัญหาจากสถานการณ์ได้</li>
+      <li>พิจารณาสถานการณ์และเลือกวิธีแก้ปัญหาอย่างมีวิจารณญาณได้</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> แนวคิดเชิงคำนวณคืออะไร</h2>
+    <div>
+    <p><b>แนวคิดเชิงคำนวณ (Computational Thinking)</b> คือแนวคิดแก้ปัญหาอย่างเป็นระบบ เน้นการคิดเชิงตรรกะ และมีลำดับขั้นตอนชัดเจน เป็นกระบวนการที่ทั้งมนุษย์และคอมพิวเตอร์เข้าใจร่วมกันได้ เมื่อนำมาแก้ปัญหา ปัญหาจะถูกจัดการอย่างเป็นระบบและได้ผลลัพธ์ตามต้องการอย่างมีประสิทธิภาพ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🧩</span><div><h3>การแยกย่อย</h3><p>แตกปัญหาใหญ่เป็นปัญหาย่อย</p></div></div>
+      <div class="concept-card"><span class="icon">🔁</span><div><h3>การหารูปแบบ</h3><p>สังเกตลักษณะหรือกฎที่เกิดซ้ำ</p></div></div>
+      <div class="concept-card"><span class="icon">🎯</span><div><h3>แนวคิดเชิงนามธรรม</h3><p>เก็บเฉพาะสิ่งสำคัญ ตัดสิ่งไม่เกี่ยวข้อง</p></div></div>
+      <div class="concept-card"><span class="icon">📋</span><div><h3>อัลกอริทึม</h3><p>ขั้นตอนวิธีแก้ปัญหาที่เรียงลำดับชัดเจน</p></div></div>
+    </div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> ตัวอย่าง: เข้าแถวตามความสูงให้เร็วที่สุด</h2>
+    <div>
+    <ol class="steps">
+      <li><b>แยกย่อย</b> เลือกนักเรียนซ้ายสุดเป็น “ตำแหน่งหลัก” แล้วแบ่งนักเรียนเป็น 2 กลุ่ม: เตี้ยกว่าตำแหน่งหลักอยู่ด้านซ้าย สูงกว่าหรือเท่ากันอยู่ด้านขวา แล้วทำซ้ำกับแต่ละกลุ่มจนแบ่งไม่ได้อีก</li>
+      <li><b>หารูปแบบ</b> ทุกกลุ่มใช้วิธีแบ่งเดียวกัน และคนที่เตี้ยกว่าอยู่ซ้ายของคนที่สูงกว่าเสมอ</li>
+      <li><b>นามธรรม</b> ใช้เฉพาะส่วนสูง ไม่นำเพศ อายุ น้ำหนัก ชื่อ มาเป็นเกณฑ์</li>
+      <li><b>อัลกอริทึม</b> เขียนขั้นตอนเรียงเป็นข้อ ๆ จนทุกคนเข้าแถวถูกต้อง</li>
+    </ol>
+    <div class="info-box">💡 ปัญหาเดียวกันแก้ได้หลายวิธี ให้เลือกวิธีที่ถูกต้องและมีประสิทธิภาพที่สุดตามเงื่อนไข</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> การประยุกต์ใช้แนวคิดเชิงคำนวณแก้ปัญหา</h2>
+    <div>
+    <p>ใช้ได้กับปัญหาในชีวิตจริง เช่น จัดเรียงเสื้อผ้าให้หาง่ายที่สุด จัดตารางใช้ห้องหรือสนาม วางแผนเดินทาง</p>
+    <ol class="steps">
+      <li><b>วิเคราะห์ปัญหา</b> ข้อมูลที่มี เงื่อนไข และผลลัพธ์ที่ต้องการ</li>
+      <li><b>แยกย่อยปัญหา</b> ให้เป็นส่วนที่จัดการได้</li>
+      <li><b>หารูปแบบ</b> ที่ใช้ซ้ำได้</li>
+      <li><b>ตัดสิ่งไม่เกี่ยวข้อง</b> ออก (เชิงนามธรรม)</li>
+      <li><b>เขียนอัลกอริทึม</b> เรียงเป็นขั้นตอน แล้วตรวจสอบผลลัพธ์</li>
+    </ol>
+    <div class="info-box">💡 เมื่อมีหลายวิธี ให้ใช้วิจารณญาณเลือกวิธีที่เหมาะสมที่สุด เช่น ถูกต้อง ยุติธรรม และทำได้เร็ว</div>
+    </div>
+  </section>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>แนวคิดเชิงคำนวณคือการแก้ปัญหาอย่างเป็นระบบ มีขั้นตอนชัดเจน</li>
+      <li>มี 4 องค์ประกอบ: การแยกย่อย การหารูปแบบ แนวคิดเชิงนามธรรม และอัลกอริทึม</li>
+      <li>ใช้แก้ปัญหาจริงได้ เช่น เข้าแถวตามความสูง จัดเรียงเสื้อผ้า จัดตารางใช้ห้อง</li>
+      <li>เมื่อมีหลายวิธี ให้เลือกวิธีที่ถูกต้องและมีประสิทธิภาพที่สุด</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/m2/cs/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/accordion.js?v=1"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/unitinfo.js?v=2"></script>
+</body>
+</html>
