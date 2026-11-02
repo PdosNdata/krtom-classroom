@@ -275,12 +275,14 @@ const SPEC = {
   pensize:   { cat:"pen",     kind:"stack", parts:["ตั้งขนาดปากกา", N(3)] },
   wait:      { cat:"control", kind:"stack", parts:["รอ", N(1), "วินาที"] },
   repeat:    { cat:"control", kind:"c",     parts:["ทำซ้ำ", N(10), "รอบ"] },
-  forever:   { cat:"control", kind:"c",     parts:["ทำซ้ำไม่รู้จบ ♾️"], cap:true },
+  forever:   { cat:"control", kind:"c",     parts:["วนซ้ำตลอด ♾️"], cap:true },
   if:        { cat:"control", kind:"c",     parts:["ถ้า", BL, "แล้ว"] },
   ifelse:    { cat:"control", kind:"c",     parts:["ถ้า", BL, "แล้ว"], els:true },
   while:     { cat:"control", kind:"c",     parts:["ทำซ้ำในขณะที่", BL] },
-  waituntil: { cat:"control", kind:"stack", parts:["รอจนกว่า", BL] },
-  stopall:   { cat:"control", kind:"stack", parts:["หยุดทั้งหมด ⏹"], cap:true },
+  waituntil: { cat:"control", kind:"stack", parts:["รอจนกระทั่ง", BL] },
+  repeatuntil:{ cat:"control", kind:"c",    parts:["ทำซ้ำจน", BL] },
+  stop:      { cat:"control", kind:"stack", parts:["หยุด", { i:"opt", o:["ทั้งหมด", "สคริปต์นี้", "สคริปต์อื่น ๆ"], d:"ทั้งหมด" }], cap:true },
+  stopall:   { cat:"control", kind:"stack", parts:["หยุดทั้งหมด ⏹"], cap:true },   // เก็บไว้ให้โปรแกรมเก่าที่บันทึก/แชร์ไว้ยังเปิดได้ (ไม่แสดงในชุดบล็อก)
   ask:       { cat:"sensing", kind:"stack", parts:["ถาม", T("คุณชื่ออะไร"), "และรอคำตอบ"] },
   answer:    { cat:"sensing", kind:"rep",   parts:["คำตอบ"] },
   add:       { cat:"ops",     kind:"rep",   parts:[A(), "+", A()] },
@@ -306,7 +308,7 @@ const CATS = [
   ["looks","รูปร่าง","#9966FF",["say","sayfor","costume"]],
   ["sound","เสียง","#CF63CF",["beep"]],
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
-  ["control","ควบคุม","#FF9F1C",["wait","repeat","while","forever","if","ifelse","waituntil","stopall"]],
+  ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop"]],
   ["sensing","รับค่า","#3AAAD1",["ask","answer"]],
   ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","mod","rand","join","gt","lt","eq","and","or","not"]],
   ["vars","ตัวแปร","#FF6B3D",[]]
@@ -352,7 +354,7 @@ function makeBlock(id, vals, varName){
   b.append(head);
   if(sp.kind === "c"){
     b.append(el("div", "cslot"));
-    if(sp.els){ b.append(el("div", "brow elsebar", "ไม่เช่นนั้น")); b.append(el("div", "cslot")); }
+    if(sp.els){ b.append(el("div", "brow elsebar", "มิฉะนั้น")); b.append(el("div", "cslot")); }
     b.append(el("div", "cfoot"));
   }
   return b;
@@ -635,7 +637,8 @@ function resetSprite(){ S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "
 const STOP = { stop:true };
 let RUN = 0, sleepers = new Set(), askRes = null, cnt = 0;
 const sleep = (ms) => new Promise(res => { const t = setTimeout(() => { sleepers.delete(f); res(); }, ms); const f = () => { clearTimeout(t); res(); }; sleepers.add(f); });
-const chk = (c) => { if(c.my !== RUN) throw STOP; };
+const chk = (c) => { if(c.my !== RUN || c.dead) throw STOP; };
+let CTXS = [];          // บริบทของแต่ละสคริปต์ที่กำลังรัน (ใช้กับบล็อก "หยุด สคริปต์นี้/สคริปต์อื่น ๆ")
 const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
 const isNum = (v) => typeof v === "number" || (typeof v === "string" && v.trim() !== "" && Number.isFinite(Number(v)));
 function val(a){
@@ -698,6 +701,13 @@ const EXEC = {
   async if(j, c){ if(cond(j.a[0])) await execList(j.s[0], c); },
   async ifelse(j, c){ await execList(cond(j.a[0]) ? j.s[0] : j.s[1], c); },
   async waituntil(j, c){ while(!cond(j.a[0])){ await sleep(30); chk(c); } },
+  async repeatuntil(j, c){ let g = 0; while(!cond(j.a[0])){ await execList(j.s[0], c); await pace(c); if(++g > 100000) break; } },
+  async stop(j, c){
+    const m = j.a[0] || "ทั้งหมด";
+    if(m === "ทั้งหมด") return stopAll();
+    if(m === "สคริปต์นี้"){ c.dead = true; chk(c); return; }
+    CTXS.forEach(x => { if(x !== c) x.dead = true; }); sleepers.forEach(f => f());      // สคริปต์อื่น ๆ
+  },
   async stopall(){ stopAll(); },
   async set(j){ if(j.a[0]) S.vars[j.a[0]] = val(j.a[1]); renderMon(); },
   async change(j){ if(j.a[0]) S.vars[j.a[0]] = num(S.vars[j.a[0]]) + num(val(j.a[1])); renderMon(); },
@@ -719,9 +729,9 @@ function stopAll(){
   document.querySelectorAll(".blk.run").forEach(x => x.classList.remove("run"));
 }
 async function runScriptsList(lists, fresh){
-  stopAll(); const my = RUN; const c = { my };
+  stopAll(); const my = RUN; CTXS = lists.map(() => ({ my, dead:false }));
   if(fresh){ resetSprite(); if($("#autoclr").checked) cx.clearRect(0, 0, 480, 360); }
-  try{ await Promise.all(lists.map(l => execList(l, c))); }
+  try{ await Promise.all(lists.map((l, i) => execList(l, CTXS[i]).catch(err => { if(err !== STOP) throw err; }))); }
   catch(err){ if(err !== STOP){ console.error(err); toast("เกิดข้อผิดพลาดในโปรแกรม: " + (err.message || err)); } }
 }
 const hatLists = (id) => allScripts().map(sc => [...sc.children].filter(x => x.classList.contains("blk"))).filter(l => l.length && l[0].dataset.id === id).map(l => l.slice(1).map(ser));
@@ -831,7 +841,7 @@ function lbl(j){
 }
 function outline(list, ind){
   return list.map(j => { const sp = SPEC[j.t], pad = "  ".repeat(ind); let out = pad + lbl(j);
-    if(sp.kind === "c"){ out += "\n" + outline(j.s[0] || [], ind + 1); if(sp.els) out += "\n" + pad + "ไม่เช่นนั้น\n" + outline(j.s[1] || [], ind + 1); }
+    if(sp.kind === "c"){ out += "\n" + outline(j.s[0] || [], ind + 1); if(sp.els) out += "\n" + pad + "มิฉะนั้น\n" + outline(j.s[1] || [], ind + 1); }
     return out; }).join("\n");
 }
 function programText(){
