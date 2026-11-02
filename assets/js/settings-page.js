@@ -99,7 +99,7 @@
         <div class="msg" id="mdm"></div>
         ${cat ? `<div class="unit">ใบงานของหน่วยนี้ (${cat.names.length} ใบ)<small>ตั้งทั้งหน่วย:</small><button type="button" data-all="auto">ระบบตรวจ</button><button type="button" data-all="manual">ครูตรวจเอง</button></div>
           ${cat.names.map((n, i) => { const m = manual.has(act(cat.u, i)); return `<div class="ws"><span class="no">${cat.disp || cat.u}.${i + 1}</span><span class="nm">${esc(n)}</span><span class="seg" data-ws="${act(cat.u, i)}"><button type="button" data-a="auto" class="${m ? "" : "on"}">ระบบตรวจ</button><button type="button" data-a="manual" class="${m ? "on" : ""}">ครูตรวจเอง</button></span></div>`; }).join("")}`
-        : `<div class="note">หน่วยนี้ยังไม่มีใบงานรายใบที่ตั้งการตรวจได้ (ตอนนี้ใช้ได้กับ ม.1 วิทยาการคำนวณ หน่วยที่ 1–3 และ ม.3 วิทยาการคำนวณ หน่วยที่ 1) เมื่อเพิ่มใบงานรายใบของหน่วยอื่น จะมาปรากฏที่นี่</div>`}`;
+        : `<div class="note">หน่วยนี้ยังไม่มีใบงานรายใบที่ตั้งการตรวจได้ (ตอนนี้ใช้ได้กับ ม.1 วิทยาการคำนวณ หน่วยที่ 1–3 ม.3 วิทยาการคำนวณ หน่วยที่ 1–2 และ ป.4 วิทยาการคำนวณ หน่วยที่ 1) เมื่อเพิ่มใบงานรายใบของหน่วยอื่น จะมาปรากฏที่นี่</div>`}`;
     };
     const set = async (ids, mode) => {
       try{

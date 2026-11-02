@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: ขั้นตอนวิธีการแก้ปัญหา — ป.4 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.7; }
+  header{ background:linear-gradient(135deg,#3B82F6,#8B5CF6); color:#fff; padding:22px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.85rem; opacity:.9; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; white-space:nowrap; }
+
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 60px; }
+
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; }
+  .obj-box ul{ margin:0; padding-left:20px; font-size:.92rem; }
+  .obj-box li{ margin-bottom:4px; }
+
+  section.topic{ margin-bottom:36px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.2rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:16px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; flex:none; }
+
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-bottom:16px; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:52px; height:52px; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .concept-card h3{ margin:0 0 4px; font-size:1rem; }
+  .concept-card p{ margin:0; font-size:.86rem; color:#555; }
+
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:16px 18px; margin:16px 0; font-size:.9rem; }
+  .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:16px 18px; margin:24px 0; display:flex; gap:12px; align-items:flex-start; }
+  .fun-fact .emoji{ font-size:1.6rem; }
+  .fun-fact b{ color:#B45309; }
+
+  .steps{ counter-reset:step; list-style:none; margin:0; padding:0; }
+  .steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 44px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.9rem; }
+  .steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:20px 22px; margin-top:32px; }
+  .summary-box h2{ margin:0 0 10px; font-size:1.05rem; }
+  .summary-box ul{ margin:0; padding-left:20px; font-size:.9rem; }
+
+  .nav-row{ display:flex; justify-content:center; margin-top:34px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 1</h1>
+    <p>ขั้นตอนวิธีการแก้ปัญหา · ป.4 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p4/cs/0/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <ul>
+      <li>อธิบายการทำงานและคาดการณ์ผลลัพธ์โดยใช้เหตุผลเชิงตรรกะและอัลกอริทึมได้</li>
+      <li>ใช้เหตุผลเชิงตรรกะและอัลกอริทึมในการแก้ปัญหาอย่างง่ายได้</li>
+      <li>เห็นประโยชน์ของการแก้ปัญหาในชีวิตประจำวันโดยใช้เหตุผลเชิงตรรกะและอัลกอริทึม</li>
+      <li>อธิบายหลักการเขียนอัลกอริทึมด้วยข้อความและรหัสลำลองได้</li>
+      <li>อธิบายหลักการทำงานของอัลกอริทึมด้วยผังงานได้</li>
+      <li>แสดงอัลกอริทึมเพื่อแก้ปัญหาด้วยข้อความ รหัสลำลอง และผังงานได้อย่างถูกต้อง</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> เหตุผลเชิงตรรกะ</h2>
+    <div>
+    <p><b>เหตุผลเชิงตรรกะ</b> คือการใช้เหตุผล กฎ หรือเงื่อนไขที่เกี่ยวข้อง มาช่วยคิดแก้ปัญหาและตัดสินใจ ให้ได้คำตอบที่สมเหตุสมผลและครอบคลุมทุกกรณี</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">🔢</span><div><h3>เกมซูโดกุ</h3><p>ดูทั้งแถวตั้งและแถวนอน ตัวเลขห้ามซ้ำ แล้วใช้เหตุผลหาตัวเลขที่หายไป</p></div></div>
+      <div class="concept-card"><span class="icon">🗺️</span><div><h3>หาเส้นทาง</h3><p>เลือกเส้นทางโดยดูเงื่อนไข เช่น ใช้บัตรคำสั่งน้อยที่สุด</p></div></div>
+      <div class="concept-card"><span class="icon">🧩</span><div><h3>หาแบบรูป</h3><p>สังเกตกฎของรูปหรือตัวเลข แล้วคาดการณ์ตัวต่อไป</p></div></div>
+    </div>
+    <div class="info-box">💡 <b>ควรรู้:</b> ถ้าเริ่มต้นไม่เหมือนกัน ผลลัพธ์ก็อาจไม่เหมือนกัน เช่น เดินไปโรงเรียนคนละเส้นทาง</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> อัลกอริทึมคืออะไร</h2>
+    <div>
+    <p><b>อัลกอริทึม (Algorithm)</b> คือขั้นตอนวิธีที่ใช้แก้ปัญหาอย่างเป็นระบบ มีลำดับขั้นตอนตั้งแต่เริ่มต้นจนได้ผลลัพธ์ที่ต้องการ มี 6 ขั้นตอน</p>
+    <ol class="steps">
+      <li><b>ทำความเข้าใจปัญหา</b></li>
+      <li><b>คิดวิธีการแก้ปัญหา</b></li>
+      <li><b>เรียงลำดับขั้นตอนก่อนและหลัง</b></li>
+      <li><b>ทบทวนขั้นตอนในแต่ละวิธี</b></li>
+      <li><b>ตรวจสอบความถูกต้องและผลลัพธ์</b></li>
+      <li><b>เลือกวิธีการที่ให้ผลลัพธ์ดีที่สุด</b></li>
+    </ol>
+    <div class="info-box">💡 อัลกอริทึมคือการแก้ปัญหาด้วยความคิดเชิงตรรกะ เขียนได้หลายแบบ ให้เลือกแบบที่เหมาะสม กระชับ และรัดกุม</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> เขียนอัลกอริทึมด้วยข้อความและรหัสลำลอง</h2>
+    <div>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">💬</span><div><h3>ภาษาธรรมชาติ</h3><p>เขียนบรรยายขั้นตอนด้วยภาษาที่เราใช้พูด เช่น 1) ต้มน้ำ 2) ใส่ไข่ 3) รอ 10 นาที</p></div></div>
+      <div class="concept-card"><span class="icon">⌨️</span><div><h3>รหัสลำลอง (Pseudocode)</h3><p>เขียนข้อความสั้น กระชับ ใกล้เคียงภาษาโปรแกรม เช่น if ... else ...</p></div></div>
+    </div>
+    <p><b>ตัวอย่างรหัสลำลอง</b></p>
+    <ol class="steps">
+      <li>START</li>
+      <li>if ฝนตก then กางร่ม</li>
+      <li>else ใส่หมวก</li>
+      <li>END</li>
+    </ol>
+    <div class="info-box">💡 ถึงจะเรียงขั้นตอนไม่เหมือนกัน แต่ถ้าเริ่มต้นและจบเหมือนกัน ก็ทำสำเร็จได้ เช่น ต้มบะหมี่กึ่งสำเร็จรูป การเลือกวิธีที่ดีที่สุดขึ้นกับเงื่อนไขที่ตั้งไว้</div>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> การแสดงอัลกอริทึมด้วยผังงาน (Flowchart)</h2>
+    <div>
+    <p><b>ผังงาน</b> คือแผนผังที่ใช้รูปร่างสัญลักษณ์และลูกศรแสดงขั้นตอนการทำงาน ทำให้เห็นภาพและเข้าใจง่าย</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">⭕</span><div><h3>วงรี</h3><p>จุดเริ่มต้นและจุดสิ้นสุด</p></div></div>
+      <div class="concept-card"><span class="icon">▭</span><div><h3>สี่เหลี่ยมผืนผ้า</h3><p>กระบวนการ หรือการทำงาน</p></div></div>
+      <div class="concept-card"><span class="icon">▱</span><div><h3>สี่เหลี่ยมด้านขนาน</h3><p>ข้อมูลเข้า หรือข้อมูลออก</p></div></div>
+      <div class="concept-card"><span class="icon">◇</span><div><h3>ข้าวหลามตัด</h3><p>การตัดสินใจ มีทางเลือกใช่/ไม่ใช่</p></div></div>
+      <div class="concept-card"><span class="icon">➡️</span><div><h3>ลูกศร</h3><p>ทิศทางลำดับการทำงาน</p></div></div>
+    </div>
+    <p><b>ตัวอย่างผังงานส่งอีเมล:</b> เริ่มต้น → เปิดโปรแกรมอีเมล → เขียนอีเมลและใส่ผู้รับ → ตรวจสอบความถูกต้อง → กดส่ง → สิ้นสุด</p>
+    </div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> แก้ปัญหาด้วยเหตุผลเชิงตรรกะและอัลกอริทึม</h2>
+    <div>
+    <p>เมื่อเจอปัญหา ให้ใช้เหตุผลเชิงตรรกะคิดวิธีแก้ แล้วแสดงขั้นตอนด้วยอัลกอริทึม 3 แบบ</p>
+    <div class="concept-grid">
+      <div class="concept-card"><span class="icon">📝</span><div><h3>ข้อความ</h3><p>เขียนเป็นข้อ ๆ ตามลำดับ</p></div></div>
+      <div class="concept-card"><span class="icon">⌨️</span><div><h3>รหัสลำลอง</h3><p>ใช้คำสั่งสั้น ๆ เช่น if else</p></div></div>
+      <div class="concept-card"><span class="icon">🔷</span><div><h3>ผังงาน</h3><p>วาดสัญลักษณ์และลูกศร</p></div></div>
+    </div>
+    <div class="info-box">🎁 <b>ตัวอย่างปัญหา:</b> นิชามีเงิน 800 บาท อยากซื้อของขวัญวันเกิดให้เพื่อน ต้องเลือกสินค้าที่ราคารวมไม่เกิน 800 บาท ให้เขียนอัลกอริทึมการเลือกซื้อ</div>
+    </div>
+  </section>
+
+  <div class="summary-box">
+    <h2>📌 สรุปท้ายหน่วย</h2>
+    <ul>
+      <li>เหตุผลเชิงตรรกะคือการใช้เหตุผล กฎ หรือเงื่อนไขมาแก้ปัญหา</li>
+      <li>อัลกอริทึมคือขั้นตอนวิธีแก้ปัญหาที่เรียงลำดับชัดเจน มี 6 ขั้นตอน</li>
+      <li>เขียนอัลกอริทึมได้ 3 แบบ คือ ข้อความ รหัสลำลอง และผังงาน</li>
+      <li>ผังงานใช้วงรี สี่เหลี่ยมผืนผ้า สี่เหลี่ยมด้านขนาน ข้าวหลามตัด และลูกศร</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p4/cs/0/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/accordion.js?v=1"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/unitinfo.js?v=2"></script>
+</body>
+</html>

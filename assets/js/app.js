@@ -255,6 +255,11 @@ const READY_CONTENT = {
     quiz:      { href:"content/m1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game:      { href:"content/m1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
+  "p4/cs/0": {
+    knowledge: { href:"content/p4-cs-0/knowledge.html", title:"ขั้นตอนวิธีการแก้ปัญหา" },
+    worksheet: { href:"content/p4-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.6 เหตุผลเชิงตรรกะ อัลกอริทึม และผังงาน" },
+    quiz:      { href:"content/p4-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
+  },
   "m3/cs/0": {
     knowledge: { href:"content/m3-cs-0/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
     worksheet: { href:"content/m3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.8 การรวบรวม ประมวลผล และใช้ซอฟต์แวร์จัดการข้อมูล" },
@@ -728,7 +733,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
@@ -818,7 +823,7 @@ async function renderFlowSteps(grade, subject, idx, unit){
   if(set && wsTotal && KrtomFlow.mode() === "student" && set.has(`${u.g}/${u.s}/${u.i}/worksheet`)){
     try{
       const tk = sessionStorage.getItem("krtomStudentToken");
-      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : 0) + u.i + 1}-${k + 1}` })));
+      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : u.g === "p4" ? 40 : 0) + u.i + 1}-${k + 1}` })));
       wsLeft = open.filter(Boolean).length;                 // true = ยังไม่ส่ง (หรือครูเปิดให้ส่งใหม่)
       if(wsLeft > 0){ set = new Set(set); set.delete(`${u.g}/${u.s}/${u.i}/worksheet`); }
     }catch(e){ wsLeft = null; }                              // ยังไม่ได้ติดตั้ง SQL / ออฟไลน์: ใช้ความคืบหน้าเดิม
