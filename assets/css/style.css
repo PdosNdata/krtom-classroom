@@ -769,6 +769,8 @@ button.cx-open{ border:none; cursor:pointer; font:inherit; font-weight:700; }
 
 /* ม.1–ม.3: ตัวอักษรใหญ่ขึ้น 1.5 เท่า (ฐาน 16px → 24px) */
 html.mid-text{ font-size:24px; }
+html.p5-text{ font-size:32px; }
+@media (max-width:600px){ html.p5-text{ font-size:24px; } }
 
 /* ---------- เมนูหน่วย: เส้นทางงู 1→2→3 ↓ 6←5←4 ---------- */
 .unit-path{
