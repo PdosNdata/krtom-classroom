@@ -119,6 +119,7 @@
   #stagebox canvas{ position:absolute; inset:0; width:100%; height:100%; }
   #sprite{ position:absolute; font-size:9cqw; line-height:1; transform:translate(-50%,-50%); transition:left .12s linear, top .12s linear; pointer-events:auto; cursor:pointer; }
   #sprite svg, #sprite img{ height:15cqw; width:auto; display:block; }
+  #bubble.think{ border-style:dashed; border-radius:24px; }
   #bubble{ position:absolute; background:#fff; border:2px solid #94A3B8; border-radius:14px; padding:3px 10px; font-weight:700; font-size:3.6cqw; max-width:60%; display:none; transform:translate(-50%,calc(-100% - 9cqw)); z-index:3; transition:left .12s linear, top .12s linear; }
   #mon{ position:absolute; left:6px; top:6px; display:flex; flex-direction:column; gap:3px; z-index:3; }
   #mon span{ background:#FFEDD5; border:1px solid #FDBA74; border-radius:6px; padding:0 8px; font-size:3.3cqw; font-weight:700; color:#9A3412; }
@@ -255,6 +256,7 @@ const COLORS = { "แดง":"#EF4444", "ส้ม":"#F97316", "เหลือ�
  */
 const N = (d) => ({ i:"num", d }), T = (d) => ({ i:"text", d }), A = (d = "") => ({ i:"any", d }), BL = { i:"bool" };
 const KEYOPTS = ["เว้นวรรค", "ลูกศรขึ้น", "ลูกศรลง", "ลูกศรซ้าย", "ลูกศรขวา"].concat("abcdefghijklmnopqrstuvwxyz0123456789".split(""));
+const FXOPTS = ["สี", "ความสว่าง", "ความซีด", "โปร่งใส"];
 const MSGS = ["ข้อความ 1", "ข้อความ 2", "ข้อความ 3", "เริ่ม", "จบ"];
 const BACKDROPS = { "ขาว":"#FFFFFF", "ฟ้าอ่อน":"#DBEAFE", "เขียวอ่อน":"#DCFCE7", "เหลืองอ่อน":"#FEF9C3", "ชมพูอ่อน":"#FCE7F3" };
 const SPEC = {
@@ -286,7 +288,22 @@ const SPEC = {
   dirn:      { cat:"motion",  kind:"rep",   parts:["ทิศทาง"] },
   say:       { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี")] },
   sayfor:    { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี"), "เป็นเวลา", N(2), "วินาที"] },
-  costume:   { cat:"looks",   kind:"stack", parts:["สลับชุดตัวละคร"] },
+  think:     { cat:"looks",   kind:"stack", parts:["คิด", T("อืมม...")] },
+  thinkfor:  { cat:"looks",   kind:"stack", parts:["คิด", T("อืมม..."), "เป็นเวลา", N(2), "วินาที"] },
+  setcost:   { cat:"looks",   kind:"stack", parts:["เปลี่ยนชุดเป็น", { i:"opt", o:["ชุดที่ 1", "ชุดที่ 2", "ชุดที่ 3"], d:"ชุดที่ 1" }] },
+  costume:   { cat:"looks",   kind:"stack", parts:["ชุดถัดไป"] },
+  nextbackdrop:{ cat:"looks", kind:"stack", parts:["ฉากหลังถัดไป"] },
+  changesize:{ cat:"looks",   kind:"stack", parts:["เปลี่ยนขนาดทีละ", N(10)] },
+  setsize:   { cat:"looks",   kind:"stack", parts:["กำหนดขนาดเป็น", N(100), "%"] },
+  changefx:  { cat:"looks",   kind:"stack", parts:["เปลี่ยนเอฟเฟกต์", { i:"opt", o:FXOPTS, d:"สี" }, "ทีละ", N(25)] },
+  setfx:     { cat:"looks",   kind:"stack", parts:["กำหนดเอฟเฟกต์", { i:"opt", o:FXOPTS, d:"สี" }, "เป็น", N(0)] },
+  clearfx:   { cat:"looks",   kind:"stack", parts:["ล้างเอฟเฟกต์กราฟิก"] },
+  show:      { cat:"looks",   kind:"stack", parts:["แสดงตัวละคร"] },
+  hide:      { cat:"looks",   kind:"stack", parts:["ซ่อนตัวละคร"] },
+  costnum:   { cat:"looks",   kind:"rep",   parts:["ชุดที่"] },
+  bgnum:     { cat:"looks",   kind:"rep",   parts:["ฉากหลังที่"] },
+  bgname:    { cat:"looks",   kind:"rep",   parts:["ชื่อฉากหลัง"] },
+  sizen:     { cat:"looks",   kind:"rep",   parts:["ขนาด"] },
   backdrop:  { cat:"looks",   kind:"stack", parts:["เปลี่ยนฉากหลังเป็น", { i:"opt", o:Object.keys(BACKDROPS), d:"ขาว" }] },
   beep:      { cat:"sound",   kind:"stack", parts:["เล่นเสียง ปิ๊ง 🔔"] },
   pendown:   { cat:"pen",     kind:"stack", parts:["ปากกา ลง ✏️"] },
@@ -326,7 +343,7 @@ const SPEC = {
 const CATS = [
   ["event","เหตุการณ์","#F5B800",["flag","keyspace","spriteclick","backdropis","timerhat","recv","broadcast","broadcastwait"]],
   ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","gotorand","goto","glidetorand","glide","point","towards","changex","setx","changey","sety","bounce","rotstyle","xpos","ypos","dirn"]],
-  ["looks","รูปร่าง","#9966FF",["say","sayfor","costume","backdrop"]],
+  ["looks","รูปร่าง","#9966FF",["say","sayfor","think","thinkfor","setcost","costume","backdrop","nextbackdrop","changesize","setsize","changefx","setfx","clearfx","show","hide","costnum","bgnum","bgname","sizen"]],
   ["sound","เสียง","#CF63CF",["beep"]],
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
   ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop"]],
@@ -634,7 +651,7 @@ const girlSvg = (pose) => `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2
 </svg>`;
 const COSTUMES = [[boySvg(0), boySvg(1)], [girlSvg(0), girlSvg(1)], ["🐱","😺","😸"], ["🐶","🐕","🦮"], ["🐸","🦎"], ["🚀","🛸"]];
 ["boy", "girl"].forEach((k, i) => { const im = new Image(); im.onload = () => { COSTUMES[i] = [`<img src="img/${k}.webp" alt="">`]; renderSprite(); }; im.src = "img/" + k + ".webp"; });
-const S = { x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, cost:0, spr:0, vars:{}, answer:"", bg:"ขาว", rs:null, mx:0, my:0 };
+const S = { x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, cost:0, spr:0, vars:{}, answer:"", bg:"ขาว", rs:null, mx:0, my:0, sz:100, fx:{}, vis:true };
 const cv = $("#pen"), cx = cv.getContext("2d"), spriteEl = $("#sprite"), bubble = $("#bubble");
 function setSprite(){ S.spr = +$("#spr").value; S.cost = 0; renderSprite(); save(); }
 function renderSprite(){
@@ -642,7 +659,13 @@ function renderSprite(){
   spriteEl.style.left = ((S.x + 240) / 480 * 100) + "%"; spriteEl.style.top = ((180 - S.y) / 360 * 100) + "%";
   const rs = S.rs || ($("#rot").checked ? "รอบทิศทาง" : "ไม่หมุน");
   spriteEl.style.rotate = rs === "รอบทิศทาง" ? ((S.dir - 90) + "deg") : "0deg";
-  spriteEl.style.scale = (rs === "ซ้าย-ขวา" && Math.sin(S.dir * Math.PI / 180) < -0.01) ? "-1 1" : "1 1";
+  const flip = (rs === "ซ้าย-ขวา" && Math.sin(S.dir * Math.PI / 180) < -0.01) ? -1 : 1, k = Math.max(0, S.sz) / 100;
+  spriteEl.style.scale = (flip * k) + " " + k;
+  const fx = S.fx;
+  spriteEl.style.filter = "hue-rotate(" + ((fx["สี"] || 0) * 3.6) + "deg) brightness(" + Math.max(0, 1 + (fx["ความสว่าง"] || 0) / 100) + ") saturate(" + Math.max(0, 1 - (fx["ความซีด"] || 0) / 100) + ")";
+  spriteEl.style.opacity = Math.min(1, Math.max(0, 1 - (fx["โปร่งใส"] || 0) / 100));
+  spriteEl.style.display = S.vis ? "" : "none";
+  if(!S.vis) bubble.style.display = "none";
   // ให้กรอบคำพูดอยู่เหนือหัวตัวละคร (ถ้าตัวละครชิดขอบบนให้ไปอยู่ใต้เท้า) และไม่ล้นเวที
   const xp = (S.x + 240) / 480 * 100, yp = (180 - S.y) / 360 * 100;
   bubble.style.left = Math.min(70, Math.max(30, xp)) + "%"; bubble.style.top = yp + "%";
@@ -655,7 +678,7 @@ function renderMon(){
 }
 const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
 function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").style.background = BACKDROPS[S.bg]; }
-function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; S.cost = 0; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; renderSprite(); }
+function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; S.cost = 0; S.sz = 100; S.fx = {}; S.vis = true; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; bubble.className = ""; renderSprite(); }
 
 /* ---------- ตัวแปลสั่งงาน ---------- */
 const STOP = { stop:true };
@@ -670,6 +693,10 @@ function val(a){
   if(typeof a !== "object") return isNum(a) ? Number(a) : a;
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
+    case "costnum": return S.cost % COSTUMES[S.spr].length + 1;
+    case "bgnum": return Object.keys(BACKDROPS).indexOf(S.bg) + 1;
+    case "bgname": return S.bg;
+    case "sizen": return Math.round(S.sz);
     case "xpos": return Math.round(S.x * 100) / 100;
     case "ypos": return Math.round(S.y * 100) / 100;
     case "dirn": return Math.round(((S.dir % 360) + 360) % 360 * 100) / 100;
@@ -732,8 +759,19 @@ const EXEC = {
   async point(j){ S.dir = num(val(j.a[0])); renderSprite(); },
   async changex(j){ drawTo(S.x + num(val(j.a[0])), S.y); renderSprite(); },
   async changey(j){ drawTo(S.x, S.y + num(val(j.a[0]))); renderSprite(); },
-  async say(j){ bubble.textContent = fmt(val(j.a[0])); bubble.style.display = bubble.textContent ? "block" : "none"; },
-  async sayfor(j, c){ bubble.textContent = fmt(val(j.a[0])); bubble.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); bubble.style.display = "none"; },
+  async say(j){ bubble.className = ""; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = bubble.textContent && S.vis ? "block" : "none"; },
+  async think(j){ bubble.className = "think"; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = bubble.textContent && S.vis ? "block" : "none"; },
+  async thinkfor(j, c){ bubble.className = "think"; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = S.vis ? "block" : "none"; await sleep(num(val(j.a[1])) * 1000); chk(c); bubble.style.display = "none"; },
+  async setcost(j){ const n = parseInt(String(j.a[0]).replace(/\D/g, ""), 10) || 1; S.cost = (n - 1) % COSTUMES[S.spr].length; renderSprite(); },
+  async nextbackdrop(){ const ks = Object.keys(BACKDROPS), n = ks[(ks.indexOf(S.bg) + 1) % ks.length]; setBackdrop(n); fireHats("backdropis", n); },
+  async changesize(j){ S.sz = Math.min(500, Math.max(5, S.sz + num(val(j.a[0])))); renderSprite(); },
+  async setsize(j){ S.sz = Math.min(500, Math.max(5, num(val(j.a[0])))); renderSprite(); },
+  async changefx(j){ const f = j.a[0] || "สี"; S.fx[f] = (S.fx[f] || 0) + num(val(j.a[1])); renderSprite(); },
+  async setfx(j){ S.fx[j.a[0] || "สี"] = num(val(j.a[1])); renderSprite(); },
+  async clearfx(){ S.fx = {}; renderSprite(); },
+  async show(){ S.vis = true; renderSprite(); },
+  async hide(){ S.vis = false; renderSprite(); },
+  async sayfor(j, c){ bubble.className = ""; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); bubble.style.display = "none"; },
   async costume(){ S.cost = (S.cost + 1) % COSTUMES[S.spr].length; renderSprite(); },
   async backdrop(j){ const n = j.a[0] || "ขาว"; setBackdrop(n); fireHats("backdropis", n); },
   async broadcast(j){ fireHats("recv", j.a[0] || "ข้อความ 1"); },
