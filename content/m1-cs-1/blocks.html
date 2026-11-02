@@ -17,10 +17,13 @@
   header a, header button, header select{ color:#fff; background:rgba(255,255,255,.22); border:none; padding:6px 14px; border-radius:999px; font:inherit; font-size:.85rem; text-decoration:none; cursor:pointer; }
   header select option{ color:#1F2430; }
 
-  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:300px; }
+  #sharemenu{ display:none; position:absolute; right:0; top:110%; z-index:2500; background:#fff; border:1px solid var(--bd); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.2); padding:6px; width:330px; }
   #sharemenu.open{ display:block; }
   #sharemenu button{ display:block; width:100%; text-align:left; background:none !important; color:#1F2430 !important; border-radius:8px !important; padding:8px 10px !important; font-size:.82rem !important; }
   #sharemenu button:hover{ background:#EEF2FF !important; }
+  #sharemenu small{ float:right; color:#64748B; font-size:.72rem; margin-left:10px; margin-top:2px; }
+  #sharemenu hr{ border:none; border-top:1px solid var(--bd); margin:5px 2px; }
+  #fname{ font-size:.8rem; background:rgba(255,255,255,.2); padding:4px 12px; border-radius:999px; white-space:nowrap; max-width:220px; overflow:hidden; text-overflow:ellipsis; }
   #sharemenu button[disabled]{ opacity:.4; cursor:not-allowed; }
   #viewbar{ display:none; background:#FEF9C3; border-bottom:1px solid #FDE047; padding:6px 14px; font-size:.85rem; font-weight:700; }
   #viewbar button{ font:inherit; font-size:.8rem; border:none; background:#3B82F6; color:#fff; border-radius:999px; padding:3px 12px; cursor:pointer; margin-left:8px; }
@@ -168,12 +171,17 @@
     <option value="ex-loop2">ทำซ้ำ 2: ผลรวม 1 ถึง 5</option>
   </select>
   <div style="position:relative">
-    <button id="sharebtn">📤 ส่ง / คัดลอก ▾</button>
+    <button id="sharebtn">📁 ไฟล์ ▾</button>
     <div id="sharemenu">
-      <button id="sh-ws">📥 ส่งโปรแกรมไปใบงาน / แบบทดสอบ (ใส่ในช่องข้อ 8)</button>
-      <button id="sh-link">🔗 คัดลอกลิงก์โปรแกรม (ส่งให้ครูเปิดดู)</button>
-      <button id="sh-text">📝 คัดลอกเป็นข้อความคำสั่ง</button>
-      <button id="sh-png">🖼️ บันทึกภาพผลบนเวที (.png)</button>
+      <button id="fl-new">🆕 ใหม่ <small>เริ่มโปรแกรมใหม่</small></button>
+      <button id="fl-open">📂 เปิด… <small>โปรแกรมที่บันทึกไว้</small></button>
+      <button id="fl-save">💾 บันทึก <small>Ctrl + S</small></button>
+      <button id="fl-saveas">📄 บันทึกเป็น… <small>ตั้งชื่อใหม่</small></button>
+      <hr>
+      <button id="sh-ws">📥 ส่งโปรแกรมไปใบงาน <small>ใส่ในช่องข้อ 8</small></button>
+      <button id="sh-link">🔗 คัดลอกลิงก์โปรแกรม <small>ส่งให้ครูเปิดดู</small></button>
+      <button id="sh-text">📝 คัดลอกเป็นข้อความ <small>คำสั่งทีละบรรทัด</small></button>
+      <button id="sh-png">🖼️ บันทึกภาพผลเวที <small>.png</small></button>
     </div>
   </div>
   <a id="backlink" href="../../index.html" title="ปิดแท็บนี้แล้วกลับไปหน้าเว็บเดิม">✖ ปิดแท็บนี้</a>
@@ -858,6 +866,65 @@ $("#sh-ws").onclick = () => {
     toast("ส่งโปรแกรมไปที่ข้อ 8 ของใบงานแล้ว ✅ — กลับไปที่ใบงานเพื่อตรวจและกดส่ง");
   }catch(e){ toast("ส่งไม่สำเร็จ — ลองใช้ \"คัดลอกลิงก์\" แล้วนำไปวางในใบงาน"); }
 };
+
+/* ---------- เมนู ไฟล์: ใหม่ · เปิด · บันทึก · บันทึกเป็น (เก็บไว้ในเครื่องนี้) ---------- */
+const FKEY = "krtomBlocksFiles:m1/cs/1";
+let curName = null;
+const readFiles = () => { try{ return JSON.parse(localStorage.getItem(FKEY) || "{}") || {}; }catch(e){ return {}; } };
+const writeFiles = (o) => { try{ localStorage.setItem(FKEY, JSON.stringify(o)); return true; }catch(e){ return false; } };
+function showName(){
+  let n = document.getElementById("fname");
+  if(!n){ n = el("span"); n.id = "fname"; $("header h1").after(n); }
+  n.textContent = curName ? "📄 " + curName : "📄 ยังไม่ได้ตั้งชื่อ"; n.title = curName ? "ชื่อไฟล์ที่เปิดอยู่" : "กด ไฟล์ → บันทึกเป็น เพื่อตั้งชื่อ";
+}
+function resetBoard(d){ loadJSON(JSON.parse(JSON.stringify(d))); stopAll(); resetSprite(); cx.clearRect(0, 0, 480, 360); }
+async function saveCurrent(name){
+  const f = readFiles(); f[name] = { t: Date.now(), d: wsToJSON() };
+  if(writeFiles(f)){ curName = name; showName(); toast("บันทึกแล้ว: " + name + " ✅"); } else toast("บันทึกไม่สำเร็จ (พื้นที่เก็บข้อมูลของเบราว์เซอร์เต็มหรือถูกปิดไว้)");
+}
+async function saveAs(){
+  const r = await Swal.fire({ title:"บันทึกเป็น", input:"text", inputValue: curName || "โปรแกรมของฉัน", inputPlaceholder:"ตั้งชื่อโปรแกรม", showCancelButton:true, confirmButtonText:"บันทึก", cancelButtonText:"ยกเลิก", confirmButtonColor:"#4F46E5",
+    inputValidator: (v) => !v.trim() ? "กรุณาตั้งชื่อโปรแกรม" : v.trim().length > 40 ? "ชื่อยาวเกินไป (ไม่เกิน 40 ตัวอักษร)" : null });
+  if(!r.isConfirmed) return;
+  const name = r.value.trim();
+  if(name !== curName && readFiles()[name] && !(await askConfirm("มีไฟล์ชื่อ “" + name + "” อยู่แล้ว ต้องการบันทึกทับหรือไม่?", { title:"บันทึกทับ" }))) return;
+  await saveCurrent(name);
+}
+$("#fl-save").onclick = async () => {
+  if(VIEW) return toast("กำลังดูโปรแกรมที่แชร์มา — กด ✏️ คัดลอกไปแก้ไขต่อ ก่อน แล้วจึงบันทึกได้");
+  if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก");
+  if(!curName) return saveAs();
+  await saveCurrent(curName);
+};
+$("#fl-saveas").onclick = () => { if(VIEW) return toast("กำลังดูโปรแกรมที่แชร์มา — กด ✏️ คัดลอกไปแก้ไขต่อ ก่อน แล้วจึงบันทึกได้"); if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก"); saveAs(); };
+$("#fl-new").onclick = async () => {
+  if(allScripts().length && !(await askConfirm("เริ่มโปรแกรมใหม่? บล็อกที่ยังไม่ได้บันทึกจะหายไป", { title:"ใหม่" }))) return;
+  if(VIEW){ VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); }
+  resetBoard(SAMPLES["blank"]); curName = null; showName(); save(); toast("เริ่มโปรแกรมใหม่แล้ว");
+};
+$("#fl-open").onclick = () => {
+  const draw = () => {
+    const f = readFiles(), names = Object.keys(f).sort((a, b) => (f[b].t || 0) - (f[a].t || 0)), esc2 = (t) => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+    Swal.fire({ title:"เปิดโปรแกรมที่บันทึกไว้", showConfirmButton:false, showCloseButton:true, width:480,
+      html: names.length ? '<div style="display:grid;gap:8px;text-align:left">' + names.map((n, i) => `<div style="display:flex;gap:8px;align-items:center"><button type="button" data-o="${i}" style="flex:1;text-align:left;border:2px solid #E2E8F0;background:#fff;border-radius:12px;padding:9px 12px;font:inherit;cursor:pointer"><b>${esc2(n)}</b><br><small style="color:#64748B">${f[n].t ? new Date(f[n].t).toLocaleString("th-TH") : ""}</small></button><button type="button" data-x="${i}" title="ลบไฟล์นี้" style="border:none;background:#FEE2E2;color:#B91C1C;border-radius:10px;padding:8px 12px;cursor:pointer">🗑️</button></div>`).join("") + "</div>" : "<p>ยังไม่มีโปรแกรมที่บันทึกไว้ — ใช้ ไฟล์ → บันทึกเป็น</p>",
+      didOpen: (pop) => {
+        pop.querySelectorAll("[data-o]").forEach(b => b.onclick = async () => {
+          const n = names[+b.dataset.o]; Swal.close();
+          if(allScripts().length && !(await askConfirm("เปิดไฟล์นี้จะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"เปิดไฟล์" }))) return;
+          if(VIEW){ VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); }
+          resetBoard(f[n].d); curName = n; showName(); save(); toast("เปิดไฟล์: " + n);
+        });
+        pop.querySelectorAll("[data-x]").forEach(b => b.onclick = async () => {
+          const n = names[+b.dataset.x]; Swal.close();
+          if(await askConfirm("ลบไฟล์ “" + n + "” ถาวร?", { danger:true, title:"ลบไฟล์" })){ const g = readFiles(); delete g[n]; writeFiles(g); if(curName === n){ curName = null; showName(); } }
+          draw();
+        });
+      } });
+  };
+  draw();
+};
+document.addEventListener("keydown", (e) => { if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s"){ e.preventDefault(); $("#fl-save").click(); } });
+showName();
 $("#viewedit").onclick = () => { VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); save(); toast("คัดลอกโปรแกรมไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };
 
 /* ---------- เริ่มต้น ---------- */
