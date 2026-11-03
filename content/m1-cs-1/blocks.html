@@ -204,6 +204,7 @@
     <option value="temp">ภารกิจ 5: แปลงอุณหภูมิ F → C</option>
     <option value="score">ภารกิจ 6: ตรวจคะแนนมากกว่า 80</option>
     <option value="evenodd">ภารกิจ 7: เลขคู่หรือเลขคี่</option>
+    <option value="clone">โคลน: ดาวตกจากท้องฟ้า</option>
     <option value="multi">ตัวละครหลายตัว: แมววิ่งไปชนหมา</option>
     <option value="" disabled>— ตัวอย่างจากใบความรู้ —</option>
     <option value="ex-seq1">เรียงลำดับ 1: แปรงฟัน</option>
@@ -386,6 +387,9 @@ const SPEC = {
   stopall:   { cat:"control", kind:"stack", parts:["หยุดทั้งหมด ⏹"], cap:true },   // เก็บไว้ให้โปรแกรมเก่าที่บันทึก/แชร์ไว้ยังเปิดได้ (ไม่แสดงในชุดบล็อก)
   ask:       { cat:"sensing", kind:"stack", parts:["ถาม", T("คุณชื่ออะไร"), "และรอคำตอบ"] },
   answer:    { cat:"sensing", kind:"rep",   parts:["คำตอบ"] },
+  whenclone: { cat:"control", kind:"hat",   parts:["เมื่อฉันเริ่มเป็นโคลน 👯"] },
+  clone:     { cat:"control", kind:"stack", parts:["สร้างโคลนของ", { i:"spr", self:true }] },
+  delclone:  { cat:"control", kind:"stack", parts:["ลบโคลนนี้"], cap:true },
   touchspr:  { cat:"sensing", kind:"bool",  parts:["แตะตัวละคร", { i:"spr" }, "ไหม"] },
   touchmouse:{ cat:"sensing", kind:"bool",  parts:["แตะตัวชี้เมาส์ 🖱️ ไหม"] },
   touchedge: { cat:"sensing", kind:"bool",  parts:["แตะขอบเวทีไหม"] },
@@ -439,7 +443,7 @@ const CATS = [
   ["looks","รูปร่าง","#9966FF",["say","sayfor","think","thinkfor","setcost","costume","backdrop","nextbackdrop","changesize","setsize","changefx","setfx","clearfx","show","hide","costnum","bgnum","bgname","sizen"]],
   ["sound","เสียง","#CF63CF",["playuntil","startsound","stopsounds","changesfx","setsfx","clearsfx","changevol","setvol","playnote","restbeat","volume"]],
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
-  ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop"]],
+  ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop","whenclone","clone","delclone"]],
   ["sensing","รับค่า","#3AAAD1",["touchmouse","touchedge","touchspr","keydown","mousedown","mousex","mousey","distance","ask","answer","timer","resettimer","nowis"]],
   ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","rand","gt","lt","eq","and","or","not","join","letter","length","contains","mod","round","mathop"]],
   ["vars","ตัวแปร","#FF6B3D",[]]
@@ -456,7 +460,7 @@ function makeSlot(def, val){
   const s = el("span", "inp"); s.dataset.t = def.i;
   if(def.i === "bool") return s;
   if(def.i === "var" || def.i === "opt" || def.i === "list" || def.i === "spr"){
-    const sel = el("select");
+    const sel = el("select"); if(def.self) sel.dataset.self = "1";
     if(def.i === "var") fillVarSelect(sel, val);
     else if(def.i === "list") fillListSelect(sel, val);
     else if(def.i === "spr") fillSprSelect(sel, val);
@@ -479,8 +483,9 @@ function fillVarSelect(sel, keep){
 }
 function fillSprSelect(sel, keep){
   const cur = keep != null ? keep : sel.value; sel.innerHTML = "";
+  if(sel.dataset.self) sel.append(new Option("ตัวเอง", "ตัวเอง"));
   SPRS.forEach(o => sel.append(new Option(o.name, o.name)));
-  if(cur && SPRS.some(o => o.name === cur)) sel.value = cur;
+  if(cur && ((cur === "ตัวเอง" && sel.dataset.self) || SPRS.some(o => o.name === cur))) sel.value = cur;
 }
 function fillListSelect(sel, keep){
   const cur = keep != null ? keep : sel.value;
@@ -548,7 +553,7 @@ function mountScripts(){
   o.scripts = []; hint();
 }
 function loadJSON(d){
-  allScripts().forEach(x => x.remove());
+  allScripts().forEach(x => x.remove()); clearClones();
   SPRS.forEach(o => { o.el.remove(); o.bub.remove(); }); SPRS = [];
   VARS = (d.vars || []).slice(); LISTS = (d.lists || []).slice(); LISTS.forEach(l => { if(!LST[l]) LST[l] = []; });
   const list = d.sprites && d.sprites.length ? d.sprites : [{ preset:d.spr, scripts:d.scripts || [] }];
@@ -780,7 +785,10 @@ const COSTUMES = [[boySvg(0), boySvg(1)], [girlSvg(0), girlSvg(1)], ["🐱","�
 const cv = $("#pen"), cx = cv.getContext("2d"), stage = $("#stagebox");
 const PNAMES = ["นักเรียนชาย", "นักเรียนหญิง", "แมว", "หมา", "กบ", "จรวด"], PCOUNT = [1, 1, 3, 3, 2, 2];
 const DEFPOS = [[0, 0], [-110, 0], [110, 0], [-110, -90], [110, -90], [0, 90], [-170, 60], [170, 60]];
-let SPRS = [], SP = null, CUR = 0;       // ตัวละครทั้งหมด · ตัวที่กำลังรันคำสั่ง · ตัวที่เปิดแก้โค้ดอยู่
+let SPRS = [], SP = null, CUR = 0;
+let CLONES = [];                         // โคลนที่กำลังมีชีวิต (ไม่เก็บลงไฟล์ หายเมื่อกดหยุด/ธงเขียว)
+const MAXCLONES = 150;
+const allSprs = () => SPRS.concat(CLONES);       // ตัวละครทั้งหมด · ตัวที่กำลังรันคำสั่ง · ตัวที่เปิดแก้โค้ดอยู่
 // S = สถานะร่วมของโปรแกรม + สถานะของตัวละคร SP (x y dir ... ชี้ไปที่ตัวละครที่กำลังรันคำสั่ง)
 const S = { vars:{}, answer:"", bg:"ขาว", mx:0, my:0, cx:0, cy:0 };
 ["x", "y", "dir", "pen", "color", "size", "cost", "sz", "fx", "vis", "rs"].forEach(k => Object.defineProperty(S, k, { get(){ return SP[k]; }, set(v){ SP[k] = v; }, enumerable:true }));
@@ -804,6 +812,8 @@ function makeSprite(o, i){
 // คลิกที่ตัวละคร = เริ่มสคริปต์ "เมื่อคลิกที่ตัวละคร" · ลากตัวละคร = ย้ายตำแหน่งเริ่มต้น
 function attachSprite(sp){
   let st = null;
+  sp.el.addEventListener("click", () => { if(sp.noclick) return; const ls = hatEntries("spriteclick").filter(en => en.sp === sp); if(ls.length) launch(ls); });
+  if(sp.isClone) return;
   sp.el.addEventListener("pointerdown", e => { if(e.button !== 0) return; st = { px:e.clientX, py:e.clientY, x:sp.x, y:sp.y, moved:false }; try{ sp.el.setPointerCapture(e.pointerId); }catch(_){} });
   sp.el.addEventListener("pointermove", e => {
     if(!st) return; const k = stage.getBoundingClientRect().width / 480 || 1, dx = (e.clientX - st.px) / k, dy = (e.clientY - st.py) / k;
@@ -812,8 +822,16 @@ function attachSprite(sp){
   });
   const end = () => { if(!st) return; const m = st.moved; st = null; sp.el.style.transition = ""; if(m){ sp.x0 = Math.round(sp.x); sp.y0 = Math.round(sp.y); sp.noclick = true; setTimeout(() => { sp.noclick = false; }, 0); save(); } };
   sp.el.addEventListener("pointerup", end); sp.el.addEventListener("pointercancel", end);
-  sp.el.addEventListener("click", () => { if(sp.noclick) return; const ls = hatEntries("spriteclick").filter(en => en.sp === sp); if(ls.length) launch(ls); });
 }
+function clearClones(){ CLONES.forEach(c => { c.el.remove(); c.bub.remove(); }); CLONES = []; }
+function makeClone(src){
+  const root = src.parent || src;
+  const c = { name:src.name, parent:root, isClone:true, costumes:src.costumes, cost:src.cost, x:src.x, y:src.y, dir:src.dir, pen:src.pen, color:src.color, size:src.size, sz:src.sz, fx:Object.assign({}, src.fx), vis:src.vis, rs:src.rs, x0:src.x0, y0:src.y0, scripts:[], lastH:null, noclick:false };
+  c.el = el("div", "sprite"); c.bub = el("div", "bubble");
+  stage.insertBefore(c.el, src.el); stage.insertBefore(c.bub, $("#mon")); attachSprite(c);
+  CLONES.push(c); renderSprite(c); return c;
+}
+function removeClone(c){ const i = CLONES.indexOf(c); if(i >= 0) CLONES.splice(i, 1); c.el.remove(); c.bub.remove(); CTXS.forEach(x => { if(x.sp === c) x.dead = true; }); }
 function renderSprite(o){
   o = o && o.el ? o : SP;
   const h = costHtml(o.costumes[o.cost % o.costumes.length]);
@@ -874,7 +892,7 @@ function stopSounds(){ SPLAY.forEach(o => { try{ o.stop(); }catch(e){} }); SPLAY
 const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
 function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").style.background = BACKDROPS[S.bg]; }
 function resetSprite(){
-  T0 = performance.now(); setBackdrop("ขาว"); SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.answer = "";
+  clearClones(); T0 = performance.now(); setBackdrop("ขาว"); SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.answer = "";
   VARS.forEach(v => S.vars[v] = 0); LISTS.forEach(l => LST[l] = []); Object.keys(HID).forEach(k => delete HID[k]);
   SPRS.forEach(o => { o.rs = null; o.x = o.x0; o.y = o.y0; o.dir = 90; o.pen = false; o.color = "#EF4444"; o.size = 3; o.cost = 0; o.sz = 100; o.fx = {}; o.vis = true; o.bub.style.display = "none"; o.bub.className = ""; renderSprite(o); });
   SP = SPRS[CUR];
@@ -894,8 +912,7 @@ function val(a){
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
     case "volume": return Math.round(SND.vol);
-    case "touchspr": { const t = SPRS.find(x => x.name === a.a[0]); if(!t || t === SP || !t.vis || !SP.vis) return false;
-      const h1 = halfSz(SP), h2 = halfSz(t); return h1[0] > 0 && h2[0] > 0 && Math.abs(SP.x - t.x) <= (h1[0] + h2[0]) * 0.85 && Math.abs(SP.y - t.y) <= (h1[1] + h2[1]) * 0.85; }
+    case "touchspr": { if(!SP.vis) return false; const h1 = halfSz(SP); return h1[0] > 0 && allSprs().some(t => { if(t === SP || t.name !== a.a[0] || !t.vis) return false; const h2 = halfSz(t); return h2[0] > 0 && Math.abs(SP.x - t.x) <= (h1[0] + h2[0]) * 0.85 && Math.abs(SP.y - t.y) <= (h1[1] + h2[1]) * 0.85; }); }
     case "touchmouse": { const h = halfSz(); return S.vis && h[0] > 0 && Math.abs(S.mx - S.x) <= h[0] && Math.abs(S.my - S.y) <= h[1]; }
     case "touchedge": { const h = halfSz(); return S.vis && h[0] > 0 && (Math.abs(S.x) + h[0] >= 240 || Math.abs(S.y) + h[1] >= 180); }
     case "keydown": { const k = a.a[0] || "เว้นวรรค"; return k === "ปุ่มใดก็ได้" ? KD.size > 0 : KD.has(k); }
@@ -999,6 +1016,13 @@ const EXEC = {
   async think(j){ SP.bub.className = "think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
   async thinkfor(j, c){ SP.bub.className = "think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = S.vis ? "block" : "none"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
   async setcost(j){ const n = parseInt(String(j.a[0]).replace(/\D/g, ""), 10) || 1; S.cost = (n - 1) % SP.costumes.length; renderSprite(); },
+  async clone(j){
+    if(CLONES.length >= MAXCLONES) return;
+    const t = (!j.a[0] || j.a[0] === "ตัวเอง") ? SP : SPRS.find(x => x.name === j.a[0]); if(!t) return;
+    const c = makeClone(t), root = c.parent;
+    launch(hatEntries("whenclone").filter(en => en.sp === root).map(en => ({ sp:c, list:en.list })));
+  },
+  async delclone(j, c){ if(SP.isClone){ removeClone(SP); chk(c); } },
   async gotospr(j){ const t = SPRS.find(x => x.name === j.a[0]); if(t){ drawTo(t.x, t.y); renderSprite(); } },
   async nextbackdrop(){ const ks = Object.keys(BACKDROPS), n = ks[(ks.indexOf(S.bg) + 1) % ks.length]; setBackdrop(n); fireHats("backdropis", n); },
   async changesize(j){ S.sz = Math.min(500, Math.max(5, S.sz + num(val(j.a[0])))); renderSprite(); },
@@ -1072,14 +1096,17 @@ async function execBlock(j, c){
   finally{ if(j.el) j.el.classList.remove("run"); }
 }
 function stopAll(){
-  clearInterval(TI); stopSounds(); RUN++; sleepers.forEach(f => f()); sleepers.clear();
+  clearInterval(TI); stopSounds(); RUN++; clearClones(); sleepers.forEach(f => f()); sleepers.clear();
   if(askRes){ askRes(); askRes = null; } $("#askbar").style.display = "none";
   document.querySelectorAll(".blk.run").forEach(x => x.classList.remove("run"));
 }
 /* เหตุการณ์: เริ่มสคริปต์ที่ขึ้นต้นด้วยบล็อกหมวกที่ตรงเงื่อนไข โดยไม่หยุดสคริปต์ที่กำลังรันอยู่ */
 // รายการชุดบล็อกของตัวละคร (ตัวที่เปิดแก้อยู่ดึงจากพื้นที่เขียนโปรแกรม ตัวอื่นดึงจากที่เก็บไว้)
 const spriteLists = (o) => o === SPRS[CUR] ? allScripts().map(sc => [...sc.children].filter(x => x.classList.contains("blk")).map(ser)) : (o.scripts || []).map(sc => sc.b);
-const hatEntries = (id) => SPRS.flatMap(o => spriteLists(o).filter(l => l.length && l[0].t === id).map(l => ({ sp:o, vals:l[0].a, list:l.slice(1) })));
+const hatEntries = (id) => {
+  const cache = new Map(), L = (r) => { if(!cache.has(r)) cache.set(r, spriteLists(r)); return cache.get(r); };
+  return allSprs().flatMap(o => L(o.parent || o).filter(l => l.length && l[0].t === id).map(l => ({ sp:o, vals:l[0].a, list:l.slice(1) })));
+};
 const normEn = (l) => Array.isArray(l) ? { sp:SPRS[CUR], list:l } : l;
 function launch(ens){
   ens = ens.map(normEn); if(!ens.length) return Promise.resolve();
@@ -1156,6 +1183,10 @@ Object.assign(SAMPLES, {
 });
 Object.assign(SAMPLES, {
   "blank":  { vars:[], scripts:[{ x:24, y:24, b:[B("flag")] }] },
+  "clone":  { vars:[], cur:0, sprites:[
+    { name:"ดาว", costumes:[{ h:"⭐" }], x0:0, y0:150, scripts:[
+      { x:24, y:24, b:[B("flag"), B("hide"), B("repeat", [15], [[B("clone", ["ตัวเอง"]), B("wait", [0.3])]])] },
+      { x:24, y:230, b:[B("whenclone"), B("goto", [B("rand", [-200, 200]), 170]), B("show"), B("repeat", [17], [[B("changey", [-20]), B("wait", [0.03])]]), B("delclone")] }] }] },
   "multi":  { vars:[], cur:0, sprites:[
     { name:"แมว", preset:2, x0:-200, y0:0, scripts:[{ x:24, y:24, b:[B("flag"), B("sayfor", ["สวัสดีหมาน้อย ฉันมาแล้ว", 1.5]), B("repeat", [30], [[B("changex", [10]), B("wait", [0.05])]]), B("say", ["เอ๊ะ ชนกันหรือเปล่า"])] }] },
     { name:"หมา", preset:3, x0:110, y0:0, scripts:[{ x:24, y:24, b:[B("flag"), B("waituntil", [B("touchspr", ["แมว"])]), B("costume"), B("sayfor", ["โฮ่ง! ชนกันแล้ว", 2]), B("say", ["มาเล่นด้วยกันเถอะ"])] }] }] },
@@ -1165,7 +1196,7 @@ Object.assign(SAMPLES, {
   "ws-zoo": { vars:["height"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ส่วนสูงกี่เซนติเมตร"]), B("set", ["height", B("answer")]),
               B("ifelse", [B("gt", [V("height"), 120])], [[B("say", ["เสียค่าเข้าชม 20 บาท"])], [B("say", ["ไม่เสียค่าเข้าชม"])]])] }] }
 });
-const EXNAME2 = { "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
+const EXNAME2 = { "clone":"ดาวตกจากท้องฟ้า", "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
 const EXNAME = { "ex-seq1":"แปรงฟัน", "ex-seq2":"หาพื้นที่สี่เหลี่ยมผืนผ้า", "ex-sel1":"ตรวจผลสอบ", "ex-sel2":"เลขคู่หรือเลขคี่", "ex-loop1":"วาดสี่เหลี่ยมจัตุรัส", "ex-loop2":"หาผลรวม 1 ถึง 5" };
 $("#sample").onchange = async function(){
   const k = this.value; this.value = ""; if(!k) return;
@@ -1358,7 +1389,7 @@ $("#sprname").onchange = () => {
 function renameRefs(old, n){
   document.querySelectorAll("#wsin select").forEach(sel => { if(sel.parentElement.dataset.t === "spr" && sel.value === old){ sel.append(new Option(n, n)); sel.value = n; } });
   const walk = (list) => (list || []).forEach(j => { if(!j || typeof j !== "object") return;
-    if((j.t === "touchspr" || j.t === "gotospr") && j.a[0] === old) j.a[0] = n;
+    if((j.t === "touchspr" || j.t === "gotospr" || j.t === "clone") && j.a[0] === old) j.a[0] = n;
     (j.a || []).forEach(x => { if(x && typeof x === "object") walk([x]); }); (j.s || []).forEach(walk); });
   SPRS.forEach(o => (o.scripts || []).forEach(sc => walk(sc.b)));
 }
