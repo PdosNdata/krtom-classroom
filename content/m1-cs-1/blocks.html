@@ -190,6 +190,38 @@
   .addgrid button{ border:2px solid #E2E8F0; background:#fff; border-radius:14px; padding:6px 2px; font:inherit; cursor:pointer; font-size:.85rem; }
   .addgrid button .pv{ height:46px; display:flex; align-items:center; justify-content:center; font-size:36px; line-height:1; }
   .addgrid button .pv svg, .addgrid button .pv img{ height:44px; width:auto; }
+  #toast{ z-index:10001; }
+  .pnt2{ background:#fff; border-radius:16px; width:min(980px,98vw); max-height:96vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+  .p2-top{ display:flex; gap:8px; align-items:center; padding:8px 12px; background:#855CD6; color:#fff; flex-wrap:wrap; }
+  .p2-top b{ font-size:1.05rem; }
+  .p2-top .sp{ flex:1; }
+  .p2-name{ border:2px solid #fff; border-radius:8px; padding:4px 10px; font:inherit; font-size:.85rem; width:170px; }
+  .p2-top button{ border:none; border-radius:8px; padding:6px 14px; font:inherit; font-weight:700; cursor:pointer; background:#fff; color:#4C2A9B; }
+  .p2-top .ok{ background:#FFAB19; color:#fff; }
+  .p2-body{ display:flex; min-height:0; flex:1; }
+  .p2-tools{ display:flex; flex-direction:column; gap:4px; padding:8px; background:#E9EEF2; border-right:1px solid #CBD5E1; overflow:auto; }
+  .p2-tools button{ width:44px; height:44px; font-size:20px; line-height:1; border-radius:8px; border:2px solid transparent; background:#fff; cursor:pointer; padding:0; }
+  .p2-tools button.on{ border-color:#855CD6; background:#EDE7FB; }
+  .p2-main{ flex:1; min-width:0; display:flex; flex-direction:column; }
+  .p2-bar{ display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; padding:6px 10px; border-bottom:1px solid #CBD5E1; background:#F8FAFC; position:relative; font-size:.8rem; }
+  .p2-bar .grp{ display:flex; gap:5px; align-items:center; }
+  .p2-bar button{ border:1px solid #CBD5E1; background:#fff; border-radius:8px; padding:4px 9px; font:inherit; font-size:.8rem; cursor:pointer; }
+  .p2-bar button:disabled{ opacity:.4; cursor:default; }
+  .p2-bar .csw{ display:flex; align-items:center; gap:6px; }
+  .p2-bar .csw i{ display:inline-block; width:26px; height:26px; border-radius:6px; border:2px solid #fff; box-shadow:0 0 0 1px #94A3B8; background-size:10px 10px; }
+  .p2-bar .csw i.none{ background:linear-gradient(135deg,#fff 45%,#EF4444 45%,#EF4444 55%,#fff 55%); }
+  .p2-pop{ position:absolute; top:100%; left:10px; z-index:5; background:#fff; border:1px solid #94A3B8; border-radius:12px; padding:10px; width:250px; box-shadow:0 8px 24px rgba(0,0,0,.25); display:grid; gap:6px; }
+  .p2-pop label{ display:grid; grid-template-columns:70px 1fr 28px; gap:6px; align-items:center; font-size:.78rem; }
+  .p2-pop input[type=range]{ width:100%; }
+  .p2-pop .sws{ display:flex; flex-wrap:wrap; gap:4px; }
+  .p2-pop .sws button{ width:24px; height:24px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #94A3B8; padding:0; cursor:pointer; }
+  .p2-pop .acts{ display:flex; gap:6px; }
+  .p2-pop .acts button{ border:1px solid #CBD5E1; background:#fff; border-radius:8px; padding:3px 8px; font:inherit; font-size:.78rem; cursor:pointer; }
+  .p2-wrap{ flex:1; overflow:auto; padding:10px; background:#E5E7EB; min-height:200px; }
+  .p2-stack{ position:relative; width:100%; aspect-ratio:4/3; margin:0 auto; background:repeating-conic-gradient(#F1F5F9 0 25%, #fff 0 50%) 0 0/16px 16px; border:1px solid #94A3B8; touch-action:none; cursor:crosshair; }
+  .p2-stack canvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  .p2-text{ position:absolute; border:1px dashed #855CD6; background:rgba(255,255,255,.7); font-family:sans-serif; font-weight:700; padding:0; margin:0; outline:none; min-width:60px; }
+  @media (max-width:640px){ .p2-body{ flex-direction:column; } .p2-tools{ flex-direction:row; flex-wrap:wrap; border-right:none; border-bottom:1px solid #CBD5E1; } .p2-tools button{ width:38px; height:38px; } }
   .bggrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
   .bggrid button{ border:3px solid #E2E8F0; border-radius:12px; padding:0; cursor:pointer; background:#fff; overflow:hidden; font:inherit; font-size:.78rem; }
   .bggrid button .pv{ height:62px; border-bottom:1px solid #E2E8F0; }
@@ -573,7 +605,7 @@ const anyScripts = () => allScripts().length > 0 || SPRS.some(o => (o.scripts ||
 function wsToJSON(share){
   return { vars:VARS, lists:LISTS, bg:BG0, cur:CUR, sprites: SPRS.map((o, i) => ({
     name:o.name, x0:o.x0, y0:o.y0,
-    costumes:o.costumes.map(c => c.r ? { r:c.r } : { h: share && c.h.includes("data:image") ? "🖼️" : c.h }),
+    costumes:o.costumes.map(c => c.r ? { r:c.r, n:c.n } : { h: share && c.h.includes("data:image") ? "🖼️" : c.h, n:c.n }),
     scripts: i === CUR ? JSON.parse(JSON.stringify(domScripts())) : o.scripts })) };
 }
 function mountScripts(){
@@ -826,12 +858,13 @@ const costHtml = (c) => c.r ? COSTUMES[c.r[0]][c.r[1] % COSTUMES[c.r[0]].length]
 const presetCostumes = (k) => Array.from({ length:PCOUNT[k] }, (_, i) => ({ r:[k, i] }));
 const IMGH = /^<img src="data:image\/(?:png|webp|jpeg);base64,[A-Za-z0-9+\/=]+" alt="">$/;
 const cleanH = (h) => (typeof h === "string" && h.length < 400000 && (IMGH.test(h) || (h.length <= 12 && !/[<>&]/.test(h)))) ? h : "❓";
+const cleanN = (n) => typeof n === "string" && n.trim() ? n.trim().slice(0, 20) : undefined;
 function uniqueName(n){ let r = n, k = 2; while(SPRS.some(o => o.name === r)) r = n + " " + k++; return r; }
 function makeSprite(o, i){
   const k = Math.max(0, Math.min(5, +o.preset || 0));
   const sp = { name:"", costumes:[], cost:0, x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, sz:100, fx:{}, vis:true, rs:null, x0:0, y0:0, scripts:o.scripts || [], lastH:null, noclick:false };
   sp.costumes = Array.isArray(o.costumes) && o.costumes.length
-    ? o.costumes.slice(0, 12).map(c => (c && Array.isArray(c.r) && COSTUMES[c.r[0] | 0]) ? { r:[c.r[0] | 0, c.r[1] | 0] } : { h:cleanH(c && c.h) }) : presetCostumes(k);
+    ? o.costumes.slice(0, 12).map(c => (c && Array.isArray(c.r) && COSTUMES[c.r[0] | 0]) ? { r:[c.r[0] | 0, c.r[1] | 0], n:cleanN(c.n) } : { h:cleanH(c && c.h), n:cleanN(c && c.n) }) : presetCostumes(k);
   sp.name = uniqueName(String(o.name || PNAMES[k]).slice(0, 16));
   const dp = DEFPOS[i % DEFPOS.length]; sp.x0 = sp.x = Number.isFinite(+o.x0) && o.x0 != null ? +o.x0 : dp[0]; sp.y0 = sp.y = Number.isFinite(+o.y0) && o.y0 != null ? +o.y0 : dp[1];
   sp.el = el("div", "sprite"); sp.bub = el("div", "bubble");
@@ -1405,7 +1438,7 @@ $("#spradd").onclick = () => {
   Swal.fire({ title:"เพิ่มตัวละคร", html:'<div class="addgrid">' + items + "</div>", showConfirmButton:false, showCloseButton:true, width:440,
     didOpen: (pop) => pop.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
       const k = b.dataset.p; Swal.close();
-      if(k === "draw") openPainter(null, u => addSprite({ name:"วาดเอง", costumes:[{ h:imgH(u) }] }));
+      if(k === "draw") openPainter(null, (u, n) => addSprite({ name:n || "วาดเอง", costumes:[{ h:imgH(u), n:n || undefined }] }));
       else if(k === "up") pickImage(u => addSprite({ name:"รูปของฉัน", costumes:[{ h:imgH(u) }] }));
       else addSprite({ preset:+k });
     }) });
@@ -1449,21 +1482,22 @@ function showTab(cost){
 $("#tab-code").onclick = () => showTab(false); $("#tab-cost").onclick = () => showTab(true);
 const imgH = (u) => '<img src="' + u + '" alt="">';
 function costChanged(sp, keep){ sp.cost = Math.max(0, Math.min(sp.cost, sp.costumes.length - 1)); sp.lastH = null; renderSprite(sp); refreshSprUI(); save(); }
-function addCost(h){
+function addCost(h, n){
   const sp = SPRS[CUR]; if(sp.costumes.length >= 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด");
-  sp.costumes.push({ h }); sp.cost = sp.costumes.length - 1; costChanged(sp); toast("เพิ่มเป็นชุดที่ " + sp.costumes.length + " แล้ว — ใช้บล็อก “เปลี่ยนชุดเป็น” หรือ “ชุดถัดไป” ได้");
+  sp.costumes.push({ h, n:n || undefined }); sp.cost = sp.costumes.length - 1; costChanged(sp); toast("เพิ่มเป็นชุดที่ " + sp.costumes.length + " แล้ว — ใช้บล็อก “เปลี่ยนชุดเป็น” หรือ “ชุดถัดไป” ได้");
 }
 function renderCostPane(){
   const p = $("#costpane"), sp = SPRS[CUR]; p.innerHTML = "";
   const h = el("div", "ch"), t = el("span"); t.textContent = "👕 ชุดแต่งตัวของ “" + sp.name + "”"; h.append(t);
   const mk = (txt, fn) => { const b = el("button", "", txt); b.type = "button"; b.onclick = fn; h.append(b); };
-  mk("🖼️ อัปโหลดรูป", () => pickImage(u => addCost(imgH(u)))); mk("✏️ วาดชุดใหม่", () => openPainter(null, u => addCost(imgH(u)))); mk("😀 อีโมจิ", () => emojiDlg(addCost));
+  mk("🖼️ อัปโหลดรูป", () => pickImage(u => addCost(imgH(u)))); mk("✏️ วาดชุดใหม่", () => openPainter(null, (u, n) => addCost(imgH(u), n))); mk("😀 อีโมจิ", () => emojiDlg(addCost));
   const g = el("div"); g.id = "costgrid";
   sp.costumes.forEach((c, i) => {
     const card = el("div", "ccard" + (i === sp.cost % sp.costumes.length ? " on" : ""), '<div class="cth">' + costHtml(c) + '</div><div class="cn">ชุดที่ ' + (i + 1) + '</div><div class="ca"></div>');
+    if(c.n) card.querySelector(".cn").textContent = "ชุดที่ " + (i + 1) + " · " + c.n;
     card.onclick = () => { sp.cost = i; sp.lastH = null; renderSprite(sp); renderCostPane(); };
     const act = card.lastChild, ab = (txt, ttl, fn, dis) => { const b = el("button", "", txt); b.type = "button"; b.title = ttl; b.disabled = !!dis; b.onclick = (e) => { e.stopPropagation(); fn(); }; act.append(b); };
-    ab("✏️", "แก้ไข/วาดทับ", () => rasterize(costHtml(c), u => openPainter(u, nu => { delete c.r; c.h = imgH(nu); costChanged(sp); })));
+    ab("✏️", "แก้ไข/วาดทับ", () => rasterize(costHtml(c), u => openPainter(u, (nu, n) => { delete c.r; c.h = imgH(nu); c.n = n || undefined; costChanged(sp); }, c.n)));
     ab("⧉", "ทำซ้ำ", () => { if(sp.costumes.length >= 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด"); sp.costumes.splice(i + 1, 0, c.r ? { r:c.r.slice() } : { h:c.h }); costChanged(sp); });
     ab("🗑️", "ลบชุดนี้", () => { sp.costumes.splice(i, 1); if(sp.cost > i) sp.cost--; costChanged(sp); }, sp.costumes.length < 2);
     g.append(card);
@@ -1490,68 +1524,169 @@ function emojiDlg(cb){
 }
 // แปลงชุดแต่งตัว (SVG / รูป / อีโมจิ) เป็นรูปภาพ เพื่อนำไปวาดทับ
 function rasterize(h, cb){
-  const c = el("canvas"); c.width = c.height = 240; const g = c.getContext("2d");
-  const fit = (im) => { const k = Math.min(230 / (im.width || 1), 230 / (im.height || 1)); const w = im.width * k, hh = im.height * k; g.drawImage(im, (240 - w) / 2, (240 - hh) / 2, w, hh); cb(c.toDataURL("image/png")); };
+  const c = el("canvas"); c.width = 480; c.height = 360; const g = c.getContext("2d");
+  const fit = (im) => { const k = Math.min(440 / (im.width || 1), 330 / (im.height || 1)); const w = im.width * k, hh = im.height * k; g.drawImage(im, (480 - w) / 2, (360 - hh) / 2, w, hh); cb(c.toDataURL("image/png")); };
   const m = h.match(/^<img src="([^"]+)"/);
   if(m){ const im = new Image(); im.onload = () => fit(im); im.src = m[1]; return; }
   if(h.trim().startsWith("<svg")){ const im = new Image(), svg = h.replace("<svg ", '<svg width="200" height="300" ');
     im.onload = () => fit(im); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg); return; }
-  g.font = "180px sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(h, 120, 130); cb(c.toDataURL("image/png"));
+  g.font = "260px sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(h, 240, 190); cb(c.toDataURL("image/png"));
 }
-/* กระดานวาดชุดแต่งตัว */
-function openPainter(src, onSave){
-  const ov = el("div", "pnt-ov"), COLS = ["#1F2937", "#EF4444", "#F97316", "#EAB308", "#22C55E", "#0EA5E9", "#8B5CF6", "#EC4899", "#92400E", "#FFFFFF"];
-  ov.innerHTML = '<div class="pnt-box" role="dialog" aria-modal="true"><div class="pnt-head">✏️ วาดชุดแต่งตัว</div><canvas width="240" height="240"></canvas><div class="pnt-tools" id="pcols"></div>'
-    + '<div class="pnt-tools"><span>ขนาด</span><input type="range" id="pnsz" min="2" max="28" value="8"><button type="button" data-t="pen" class="on">✏️ ดินสอ</button><button type="button" data-t="era">🧽 ยางลบ</button><button type="button" data-t="clr">🗑️ ล้างหมด</button></div>'
-    + '<div class="pnt-foot"><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div></div>';
+/* กระดานวาดชุดแต่งตัว — หน้าตาและเครื่องมือเหมือนตัวแก้ไขภาพ Scratch (โหมดบิตแมป) */
+const hex2rgb = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const rgb2hex = (r, g, b) => "#" + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, "0")).join("");
+function hsb2hex(h, s, b){ s /= 100; b /= 100; const f = (n) => { const k = (n + h / 60) % 6; return b - b * s * Math.max(0, Math.min(k, 4 - k, 1)); }; return rgb2hex(f(5) * 255, f(3) * 255, f(1) * 255); }
+function hex2hsb(hex){
+  const [r, g, b] = hex2rgb(hex).map(v => v / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; let h = 0;
+  if(d){ h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; if(h < 0) h += 360; }
+  return [h, mx ? d / mx * 100 : 0, mx * 100];
+}
+function openPainter(src, onSave, name0){
+  const W = 480, H = 360, ov = el("div", "pnt-ov");
+  const TOOLS = [["select", "⬚", "เลือก (ลากเป็นกรอบ แล้วย้ายได้)"], ["brush", "🖌️", "พู่กัน"], ["eraser", "🧽", "ยางลบ"], ["fill", "🪣", "เทสี"], ["text", "T", "ข้อความ"], ["line", "╱", "เส้นตรง"], ["circle", "◯", "วงกลม/วงรี"], ["rect", "▭", "สี่เหลี่ยม"]];
+  ov.innerHTML = '<div class="pnt2" role="dialog" aria-modal="true"><div class="p2-top"><b>✏️ วาดชุดแต่งตัว</b><input class="p2-name" maxlength="20" placeholder="ชื่อชุดแต่งตัว" aria-label="ชื่อชุดแต่งตัว"><span class="sp"></span><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div>'
+    + '<div class="p2-body"><div class="p2-tools"></div><div class="p2-main"><div class="p2-bar"></div><div class="p2-wrap"><div class="p2-stack"><canvas class="base" width="480" height="360"></canvas><canvas class="ovl" width="480" height="360"></canvas></div></div></div></div></div>';
   document.body.append(ov);
-  const cvs = ov.querySelector("canvas"), g = cvs.getContext("2d"); let col = COLS[0], tool = "pen", down = false, last = null;
-  COLS.forEach((c, i) => { const b = el("button", "sw" + (i === 0 ? " on" : "")); b.type = "button"; b.style.background = c; b.setAttribute("aria-label", "สี " + c);
-    b.onclick = () => { col = c; tool = "pen"; ov.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", x === b)); ov.querySelectorAll("[data-t]").forEach(x => x.classList.toggle("on", x.dataset.t === "pen")); }; ov.querySelector("#pcols").append(b); });
-  ov.querySelectorAll("[data-t]").forEach(b => b.onclick = () => {
-    if(b.dataset.t === "clr"){ g.clearRect(0, 0, 240, 240); return; }
-    tool = b.dataset.t; ov.querySelectorAll("[data-t]").forEach(x => x.classList.toggle("on", x === b)); });
-  const pt = (e) => { const r = cvs.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 240, (e.clientY - r.top) / r.height * 240]; };
-  const stroke = (a, b) => { g.globalCompositeOperation = tool === "era" ? "destination-out" : "source-over"; g.strokeStyle = g.fillStyle = col; g.lineWidth = +ov.querySelector("#pnsz").value; g.lineCap = g.lineJoin = "round";
-    g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); };
-  cvs.addEventListener("pointerdown", e => { down = true; cvs.setPointerCapture(e.pointerId); last = pt(e); stroke(last, [last[0] + .01, last[1]]); });
-  cvs.addEventListener("pointermove", e => { if(!down) return; const q = pt(e); stroke(last, q); last = q; });
-  const up = () => { down = false; }; cvs.addEventListener("pointerup", up); cvs.addEventListener("pointercancel", up);
-  if(src){ const im = new Image(); im.onload = () => { const k = Math.min(240 / im.width, 240 / im.height, 1), w = im.width * k, h = im.height * k; g.drawImage(im, (240 - w) / 2, (240 - h) / 2, w, h); }; im.src = src; }
+  const q = (x) => ov.querySelector(x), stack = q(".p2-stack"), base = q("canvas.base"), ovl = q("canvas.ovl"), g = base.getContext("2d", { willReadFrequently:true }), o = ovl.getContext("2d");
+  q(".p2-name").value = name0 || "";
+  let tool = "brush", fill = "#9966FF", line = "#575E75", lw = 6, zoom = 1, sel = null, clip = null, picking = null, drag = null;
+  const undo = [], redo = [];
+  const pt = (e) => { const r = stack.getBoundingClientRect(); return { x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H }; };
+  const snap = () => { undo.push(g.getImageData(0, 0, W, H)); if(undo.length > 30) undo.shift(); redo.length = 0; syncBtns(); };
+  function drawSel(){ o.clearRect(0, 0, W, H); if(!sel) return; o.drawImage(sel.c, sel.x, sel.y); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#855CD6"; o.lineWidth = 2; o.strokeRect(sel.x, sel.y, sel.w, sel.h); o.restore(); }
+  function commit(){ if(!sel) return; g.drawImage(sel.c, sel.x, sel.y); sel = null; o.clearRect(0, 0, W, H); syncBtns(); }
+  // ---- แถบเครื่องมือด้านซ้าย ----
+  TOOLS.forEach(([k, ic, tt]) => { const b = el("button", k === tool ? "on" : "", ic); b.type = "button"; b.title = tt; b.setAttribute("aria-label", tt); b.dataset.k = k;
+    b.onclick = () => { commit(); tool = k; picking = null; q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); stack.style.cursor = k === "select" ? "default" : k === "text" ? "text" : "crosshair"; }; q(".p2-tools").append(b); });
+  // ---- แถบบน: สี ขนาด ย้อนกลับ กลับด้าน คัดลอก ซูม ----
+  const bar = q(".p2-bar");
+  bar.innerHTML = '<div class="grp csw" data-w="fill"><span>สีเติม</span><i></i></div><div class="grp csw" data-w="line"><span>สีขอบ</span><i></i></div>'
+    + '<div class="grp"><span>ขนาด</span><input type="range" id="p2sz" min="1" max="60" value="6"><b id="p2szn">6</b></div>'
+    + '<div class="grp"><button type="button" id="p2un" title="ย้อนกลับ (Ctrl+Z)">↶</button><button type="button" id="p2re" title="ทำซ้ำ (Ctrl+Y)">↷</button></div>'
+    + '<div class="grp"><button type="button" id="p2fh" title="กลับซ้าย–ขวา">⇋</button><button type="button" id="p2fv" title="กลับบน–ล่าง">⇅</button></div>'
+    + '<div class="grp"><button type="button" id="p2cp">คัดลอก</button><button type="button" id="p2ps">วาง</button><button type="button" id="p2dl">ลบ</button><button type="button" id="p2cl" title="ล้างภาพทั้งหมด">🗑️ ล้างหมด</button></div>'
+    + '<div class="grp"><button type="button" id="p2zo">−</button><span id="p2zl">100%</span><button type="button" id="p2zi">+</button></div>';
+  const sw = (w) => bar.querySelector('[data-w="' + w + '"] i');
+  const paintSw = () => { [["fill", fill], ["line", line]].forEach(([w, c]) => { const e = sw(w); e.classList.toggle("none", !c); e.style.background = c || ""; }); };
+  function syncBtns(){ q("#p2un").disabled = !undo.length; q("#p2re").disabled = !redo.length; q("#p2dl").disabled = !sel; q("#p2cp").disabled = !sel; q("#p2ps").disabled = !clip; }
+  paintSw(); syncBtns();
+  q("#p2sz").oninput = (e) => { lw = +e.target.value; q("#p2szn").textContent = lw; };
+  q("#p2zi").onclick = () => setZ(zoom * 1.25); q("#p2zo").onclick = () => setZ(zoom / 1.25);
+  function setZ(z){ zoom = Math.max(.5, Math.min(3, z)); stack.style.width = zoom * 100 + "%"; q("#p2zl").textContent = Math.round(zoom * 100) + "%"; }
+  // ---- กล่องเลือกสี (สี / ความอิ่มตัว / ความสว่าง) ----
+  let pop = null; const closePop = () => { if(pop){ pop.remove(); pop = null; } };
+  bar.querySelectorAll(".csw").forEach(c => c.onclick = (e) => {
+    e.stopPropagation(); const w = c.dataset.w; if(pop && pop.dataset.w === w){ closePop(); return; } closePop(); commit();
+    pop = el("div", "p2-pop"); pop.dataset.w = w; pop.onclick = (ev) => ev.stopPropagation();
+    const cur = (w === "fill" ? fill : line) || "#9966FF", hsb = hex2hsb(cur);
+    pop.innerHTML = '<label>สี<input type="range" min="0" max="100" data-i="0"><b></b></label><label>ความอิ่มตัว<input type="range" min="0" max="100" data-i="1"><b></b></label><label>ความสว่าง<input type="range" min="0" max="100" data-i="2"><b></b></label><div class="sws"></div><div class="acts"><button type="button" data-a="none">⊘ ไม่มีสี</button><button type="button" data-a="pick">💧 ดูดสีจากภาพ</button></div>';
+    const rs = [...pop.querySelectorAll("input")], nums = [...pop.querySelectorAll("b")];
+    const set = (hex) => { if(w === "fill") fill = hex; else line = hex; paintSw(); };
+    const upd = () => { const v = rs.map(r => +r.value); set(hsb2hex(v[0] * 3.6, v[1], v[2])); nums.forEach((n, k) => { n.textContent = v[k]; }); };
+    rs[0].value = Math.round(hsb[0] / 3.6); rs[1].value = Math.round(hsb[1]); rs[2].value = Math.round(hsb[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; });
+    rs.forEach(r => r.oninput = upd);
+    ["#000000", "#FFFFFF", "#EF4444", "#F97316", "#FACC15", "#22C55E", "#0EA5E9", "#855CD6", "#EC4899", "#92400E", "#F2C29B", "#94A3B8"].forEach(h => { const b = el("button"); b.type = "button"; b.style.background = h; b.setAttribute("aria-label", h);
+      b.onclick = () => { set(h); const x = hex2hsb(h); rs[0].value = Math.round(x[0] / 3.6); rs[1].value = Math.round(x[1]); rs[2].value = Math.round(x[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; }); }; pop.querySelector(".sws").append(b); });
+    pop.querySelector('[data-a="none"]').onclick = () => { set(null); closePop(); };
+    pop.querySelector('[data-a="pick"]').onclick = () => { picking = w; closePop(); stack.style.cursor = "copy"; toast("คลิกที่ภาพเพื่อดูดสี"); };
+    bar.append(pop);
+  });
+  ov.addEventListener("pointerdown", (e) => { if(pop && !e.target.closest(".p2-pop,.csw")) closePop(); });
+  // ---- ย้อนกลับ / กลับด้าน / คัดลอก ----
+  const restore = (from, to) => { commit(); if(!from.length) return; to.push(g.getImageData(0, 0, W, H)); g.putImageData(from.pop(), 0, 0); syncBtns(); };
+  q("#p2un").onclick = () => restore(undo, redo); q("#p2re").onclick = () => restore(redo, undo);
+  const flip = (cv, h) => { const t = el("canvas"); t.width = cv.width; t.height = cv.height; const x = t.getContext("2d"); x.translate(h ? cv.width : 0, h ? 0 : cv.height); x.scale(h ? -1 : 1, h ? 1 : -1); x.drawImage(cv, 0, 0); return t; };
+  const doFlip = (h) => { if(sel){ sel.c = flip(sel.c, h); drawSel(); } else { snap(); const t = flip(base, h); g.clearRect(0, 0, W, H); g.drawImage(t, 0, 0); } };
+  q("#p2fh").onclick = () => doFlip(true); q("#p2fv").onclick = () => doFlip(false);
+  q("#p2cp").onclick = () => { if(!sel) return; const c = el("canvas"); c.width = sel.w; c.height = sel.h; c.getContext("2d").drawImage(sel.c, 0, 0); clip = c; syncBtns(); toast("คัดลอกแล้ว กด “วาง” ได้เลย"); };
+  q("#p2ps").onclick = () => { if(!clip) return; commit(); snap(); const c = el("canvas"); c.width = clip.width; c.height = clip.height; c.getContext("2d").drawImage(clip, 0, 0); sel = { c, x:20, y:20, w:c.width, h:c.height }; tool = "select"; q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.k === "select")); drawSel(); syncBtns(); };
+  q("#p2dl").onclick = () => { if(!sel) return; sel = null; o.clearRect(0, 0, W, H); syncBtns(); };
+  q("#p2cl").onclick = () => { commit(); snap(); g.clearRect(0, 0, W, H); };
+  // ---- วาด ----
+  function shape(x, k, a, b){
+    x.lineCap = x.lineJoin = "round"; x.lineWidth = lw;
+    if(k === "line"){ if(!line) return; x.strokeStyle = line; x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x, b.y); x.stroke(); return; }
+    x.beginPath();
+    if(k === "rect") x.rect(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+    else x.ellipse((a.x + b.x) / 2, (a.y + b.y) / 2, Math.abs(b.x - a.x) / 2, Math.abs(b.y - a.y) / 2, 0, 0, 7);
+    if(fill){ x.fillStyle = fill; x.fill(); } if(line){ x.strokeStyle = line; x.stroke(); }
+  }
+  function bucket(px, py){
+    if(!fill) return; const id = g.getImageData(0, 0, W, H), d = id.data, x0 = Math.floor(px), y0 = Math.floor(py); if(x0 < 0 || y0 < 0 || x0 >= W || y0 >= H) return;
+    const i0 = (y0 * W + x0) * 4, t = [d[i0], d[i0 + 1], d[i0 + 2], d[i0 + 3]], [fr, fg, fb] = hex2rgb(fill);
+    if(t[3] === 255 && t[0] === fr && t[1] === fg && t[2] === fb) return;
+    const ok = (i) => Math.abs(d[i] - t[0]) + Math.abs(d[i + 1] - t[1]) + Math.abs(d[i + 2] - t[2]) + Math.abs(d[i + 3] - t[3]) <= 70;
+    snap(); const st = [[x0, y0]], seen = new Uint8Array(W * H);
+    while(st.length){ const [x, y] = st.pop(); if(x < 0 || y < 0 || x >= W || y >= H) continue; const k = y * W + x; if(seen[k]) continue; seen[k] = 1; const i = k * 4; if(!ok(i)) continue;
+      d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; d[i + 3] = 255; st.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]); }
+    g.putImageData(id, 0, 0);
+  }
+  function startText(p){
+    commit(); const inp = el("input", "p2-text"), k = stack.getBoundingClientRect().width / W, fs = 14 + lw * 3; let done = false;
+    inp.style.left = p.x / W * 100 + "%"; inp.style.top = p.y / H * 100 + "%"; inp.style.fontSize = fs * k + "px"; inp.style.color = fill || "#000"; stack.append(inp); setTimeout(() => inp.focus(), 0);
+    const fin = (ok) => { if(done) return; done = true; const v = inp.value; inp.remove();
+      if(ok && v.trim()){ snap(); g.font = "bold " + fs + "px sans-serif"; g.textBaseline = "top"; g.fillStyle = fill || "#000000"; g.fillText(v, p.x, p.y); } };
+    inp.onkeydown = (e) => { e.stopPropagation(); if(e.key === "Enter") fin(true); else if(e.key === "Escape") fin(false); };
+    inp.onblur = () => fin(true); inp.onpointerdown = (e) => e.stopPropagation();
+  }
+  stack.addEventListener("pointerdown", (e) => {
+    if(e.button !== 0 || e.target.classList.contains("p2-text")) return; try{ stack.setPointerCapture(e.pointerId); }catch(_){}
+    const p = pt(e);
+    if(picking){ const x = Math.max(0, Math.min(W - 1, Math.floor(p.x))), y = Math.max(0, Math.min(H - 1, Math.floor(p.y))), d = g.getImageData(x, y, 1, 1).data;
+      if(d[3] > 0){ const hx = rgb2hex(d[0], d[1], d[2]); if(picking === "fill") fill = hx; else line = hx; paintSw(); } picking = null; stack.style.cursor = tool === "select" ? "default" : "crosshair"; return; }
+    if(tool === "fill"){ bucket(p.x, p.y); return; }
+    if(tool === "text"){ startText(p); return; }
+    if(tool === "select"){
+      if(sel && p.x >= sel.x && p.x <= sel.x + sel.w && p.y >= sel.y && p.y <= sel.y + sel.h){ drag = { m:"move", ox:p.x - sel.x, oy:p.y - sel.y }; return; }
+      commit(); drag = { m:"box", a:p, b:p }; return;
+    }
+    snap(); drag = { m:tool, a:p, last:p };
+    if(tool === "brush" || tool === "eraser"){ drawSeg(p, { x:p.x + .01, y:p.y }); }
+  });
+  function drawSeg(a, b){
+    if(tool === "brush" && !fill) return;
+    g.globalCompositeOperation = tool === "eraser" ? "destination-out" : "source-over"; g.strokeStyle = fill || "#000"; g.lineWidth = lw; g.lineCap = g.lineJoin = "round";
+    g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke(); g.globalCompositeOperation = "source-over";
+  }
+  stack.addEventListener("pointermove", (e) => {
+    if(!drag) return; const p = pt(e);
+    if(drag.m === "brush" || drag.m === "eraser"){ drawSeg(drag.last, p); drag.last = p; }
+    else if(drag.m === "line" || drag.m === "rect" || drag.m === "circle"){ o.clearRect(0, 0, W, H); shape(o, drag.m, drag.a, p); drag.b = p; }
+    else if(drag.m === "move"){ sel.x = p.x - drag.ox; sel.y = p.y - drag.oy; drawSel(); }
+    else if(drag.m === "box"){ drag.b = p; o.clearRect(0, 0, W, H); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#855CD6"; o.lineWidth = 2; o.strokeRect(drag.a.x, drag.a.y, p.x - drag.a.x, p.y - drag.a.y); o.restore(); }
+  });
+  const up = () => {
+    if(!drag) return; const d = drag; drag = null;
+    if(d.m === "line" || d.m === "rect" || d.m === "circle"){ if(d.b){ shape(g, d.m, d.a, d.b); } o.clearRect(0, 0, W, H); }
+    else if(d.m === "box"){
+      o.clearRect(0, 0, W, H); const x = Math.max(0, Math.min(d.a.x, d.b.x)), y = Math.max(0, Math.min(d.a.y, d.b.y)), w = Math.min(W, Math.max(d.a.x, d.b.x)) - x, h = Math.min(H, Math.max(d.a.y, d.b.y)) - y;
+      if(w > 3 && h > 3){ snap(); const c = el("canvas"); c.width = Math.round(w); c.height = Math.round(h); c.getContext("2d").drawImage(base, Math.round(x), Math.round(y), c.width, c.height, 0, 0, c.width, c.height);
+        g.clearRect(Math.round(x), Math.round(y), c.width, c.height); sel = { c, x:Math.round(x), y:Math.round(y), w:c.width, h:c.height }; drawSel(); syncBtns(); }
+    }
+  };
+  stack.addEventListener("pointerup", up); stack.addEventListener("pointercancel", up);
+  // ---- เปิดรูปเดิมมาแก้ ----
+  if(src){ const im = new Image(); im.onload = () => { const k = Math.min(1, 440 / im.width, 330 / im.height), w = im.width * k, h = im.height * k; g.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); }; im.src = src; }
+  // ---- ปิด / บันทึก ----
   const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
-  function onKey(e){ if(e.key === "Escape"){ e.stopPropagation(); close(); } }
+  function onKey(e){
+    if(e.target.closest && e.target.closest(".p2-name,.p2-text")){ if(e.key === "Escape" && !e.target.closest(".p2-text")){ e.stopPropagation(); close(); } return; }
+    if(e.key === "Escape"){ e.stopPropagation(); if(pop) closePop(); else close(); }
+    else if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z"){ e.preventDefault(); e.stopPropagation(); (e.shiftKey ? q("#p2re") : q("#p2un")).click(); }
+    else if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y"){ e.preventDefault(); e.stopPropagation(); q("#p2re").click(); }
+    else if(e.key === "Delete" || e.key === "Backspace"){ if(sel){ e.preventDefault(); e.stopPropagation(); q("#p2dl").click(); } }
+  }
   document.addEventListener("keydown", onKey, true);
-  ov.querySelector(".cn").onclick = close;
-  ov.querySelector(".ok").onclick = () => {
-    const d = g.getImageData(0, 0, 240, 240).data; let x0 = 240, y0 = 240, x1 = -1, y1 = -1;
-    for(let y = 0; y < 240; y++) for(let x = 0; x < 240; x++) if(d[(y * 240 + x) * 4 + 3] > 8){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; }
+  q(".cn").onclick = close;
+  q(".ok").onclick = () => {
+    commit(); const d = g.getImageData(0, 0, W, H).data; let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for(let y = 0; y < H; y++) for(let x = 0; x < W; x++) if(d[(y * W + x) * 4 + 3] > 8){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; }
     if(x1 < 0) return toast("ยังไม่ได้วาดอะไรเลย");
-    x0 = Math.max(0, x0 - 4); y0 = Math.max(0, y0 - 4); x1 = Math.min(239, x1 + 4); y1 = Math.min(239, y1 + 4);
-    const c = el("canvas"); c.width = x1 - x0 + 1; c.height = y1 - y0 + 1; c.getContext("2d").drawImage(cvs, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
-    close(); onSave(c.toDataURL("image/webp", .9));
+    x0 = Math.max(0, x0 - 2); y0 = Math.max(0, y0 - 2); x1 = Math.min(W - 1, x1 + 2); y1 = Math.min(H - 1, y1 + 2);
+    const c = el("canvas"); c.width = x1 - x0 + 1; c.height = y1 - y0 + 1; c.getContext("2d").drawImage(base, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
+    const nm = q(".p2-name").value.trim().slice(0, 20); close(); onSave(c.toDataURL("image/webp", .92), nm);
   };
 }
-
-/* ---------- ปรับความกว้างแต่ละส่วนได้ (ลากแถบคั่น) ---------- */
-(function(){
-  const app = $("#app"), KEY = "krtomBlocksLayout:m1/cs/1"; let L = { c1:null, c2:null };
-  try{ Object.assign(L, JSON.parse(localStorage.getItem(KEY) || "{}")); }catch(e){}
-  const W = () => app.getBoundingClientRect().width - 16;       // ความกว้างใช้งานจริง (หักขอบ)
-  const lim = { c1:[130, () => W() * .45], c2:[250, () => W() * .72] };
-  const fit = (k, v) => { const o = k === "c1" ? "c2" : "c1", ov = L[o] != null ? L[o] : (o === "c1" ? 230 : W() * .36); return Math.max(lim[k][0], Math.min(v, lim[k][1](), W() - 20 - 220 - ov)); };
-  const apply = () => { app.style.setProperty("--c1", (L.c1 != null ? fit("c1", L.c1) : 230) + "px"); if(L.c2 != null) app.style.setProperty("--c2", fit("c2", L.c2) + "px"); else app.style.removeProperty("--c2"); };
-  const store = () => { try{ localStorage.setItem(KEY, JSON.stringify(L)); }catch(e){} };
-  const bind = (id, k) => { const h = $(id);
-    h.addEventListener("pointerdown", e => { if(e.button !== 0) return; e.preventDefault(); try{ h.setPointerCapture(e.pointerId); }catch(_){} h.classList.add("drag"); document.body.style.userSelect = "none"; });
-    h.addEventListener("pointermove", e => { if(!h.classList.contains("drag")) return; const r = app.getBoundingClientRect();
-      L[k] = fit(k, k === "c1" ? e.clientX - r.left - 8 - 5 : r.right - 8 - e.clientX - 5); apply(); });
-    const end = () => { if(!h.classList.contains("drag")) return; h.classList.remove("drag"); document.body.style.userSelect = ""; store(); };
-    h.addEventListener("pointerup", end); h.addEventListener("pointercancel", end);
-    h.addEventListener("dblclick", () => { L[k] = null; apply(); store(); });
-    h.addEventListener("keydown", e => { if(e.key !== "ArrowLeft" && e.key !== "ArrowRight") return; e.preventDefault();
-      const cur = k === "c1" ? $(".panel.pal").getBoundingClientRect().width : $("#right").getBoundingClientRect().width, d = (e.key === "ArrowRight" ? 1 : -1) * (k === "c1" ? 1 : -1) * 20; L[k] = fit(k, cur + d); apply(); store(); }); };
-  bind("#sp1", "c1"); bind("#sp2", "c2"); apply(); window.addEventListener("resize", apply);
-})();
 
 /* ---------- เริ่มต้น ---------- */
 buildPalette();
