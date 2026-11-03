@@ -10,9 +10,9 @@ $src      = $PSScriptRoot
 $dstRepo  = "D:\++ทำเว็บแอป\bkkschoolWeb"           # โปรเจ็กต์เว็บโรงเรียน (ผูกกับ Vercel)
 $dstSub   = "public\krtom-classroom"                  # โฟลเดอร์ย่อยที่เก็บเว็บ CAI
 $siteUrl  = "https://www.bankhodonkhan.ac.th/krtom-classroom/"
-$exclDirs = @("dltv", ".git", ".claude", "node_modules")              # ไม่ส่งขึ้นเว็บ (PDF ลิขสิทธิ์ DLTV ฯลฯ)
+$exclDirs = @("dltv", "แผนงาน", ".git", ".claude", "node_modules")              # ไม่ส่งขึ้นเว็บ (PDF ลิขสิทธิ์ DLTV ฯลฯ)
 $exclFiles = @("*-old.mp3", "เฉลยปรนัย*", "student.xlsx", "~`$*", "Thumbs.db", ".DS_Store", ".gitignore", "sync-deploy.ps1", "เผยแพร่ขึ้นเว็บ.bat", ".last-sync")
-$forbidden = "(^|/)dltv/|เฉลยปรนัย|-old\.mp3$|\.docx$|\.pdf$"          # ถ้าเจอใน commit ให้หยุดทันที
+$forbidden = "(^|/)dltv|แผนงาน|\\340\\271\\201|เฉลยปรนัย|-old\.mp3|\.docx|\.pdf"          # ถ้าเจอใน commit ให้หยุดทันที
 
 function Say($t, $c = "White") { Write-Host $t -ForegroundColor $c }
 function Pause2 { if (-not $Yes) { Read-Host "กด Enter เพื่อปิด" | Out-Null } }
