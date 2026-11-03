@@ -227,6 +227,60 @@
   .p2-ctr::before{ left:-14px; top:-1px; width:28px; height:2px; } .p2-ctr::after{ top:-14px; left:-1px; height:28px; width:2px; }
   .p2-stack svg{ position:absolute; inset:0; width:100%; height:100%; touch-action:none; }
   .p2-bar .sep{ width:1px; height:22px; background:#CBD5E1; }
+  .pt.pnt2{ width:min(1260px,98vw); max-height:96vh; border-radius:10px; background:#F9F9F9; color:#1F1F1F; font-family:"Segoe UI","Noto Sans Thai",system-ui,sans-serif; box-shadow:0 12px 40px rgba(0,0,0,.45); }
+  .pt-title{ display:flex; align-items:center; gap:8px; padding:0 0 0 14px; height:34px; background:#fff; font-size:.82rem; }
+  .pt-ttl{ flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .pt-x{ border:none; background:transparent; width:46px; height:34px; font-size:15px; cursor:pointer; color:#222; }
+  .pt-x:hover{ background:#C42B1C; color:#fff; }
+  .pt-menu{ display:flex; align-items:center; gap:2px; padding:2px 8px; background:#fff; border-bottom:1px solid #E5E5E5; position:relative; flex-wrap:wrap; }
+  .pt-menu .mnb, .pt-menu .ib{ border:none; background:transparent; padding:5px 11px; border-radius:6px; font:inherit; font-size:.85rem; cursor:pointer; color:#222; }
+  .pt-menu .mnb:hover, .pt-menu .ib:hover:not(:disabled), .mn.open > .mnb{ background:#EDEDED; }
+  .pt-menu .ib{ font-size:1.05rem; padding:3px 9px; } .pt-menu .ib:disabled{ opacity:.35; cursor:default; }
+  .pt-menu .vsep{ width:1px; height:20px; background:#DDD; margin:0 6px; } .pt-menu .sp{ flex:1; }
+  .pt-menu .p2-name{ border:1px solid #BDBDBD; border-radius:6px; padding:4px 10px; font:inherit; font-size:.82rem; width:170px; }
+  .pt-menu .cn, .pt-menu .ok{ border:1px solid #C8C8C8; background:#fff; border-radius:6px; padding:5px 14px; font:inherit; font-size:.82rem; cursor:pointer; margin-left:6px; }
+  .pt-menu .ok{ background:#0F6CBD; border-color:#0F6CBD; color:#fff; font-weight:700; } .pt-menu .ok:hover{ background:#115EA3; }
+  .mn{ position:relative; }
+  .mnl{ display:none; position:absolute; top:100%; left:0; min-width:200px; background:#fff; border:1px solid #D0D0D0; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.22); padding:4px; z-index:30; }
+  .mn.open > .mnl{ display:grid; }
+  .mnl button{ text-align:left; border:none; background:transparent; padding:7px 12px; border-radius:5px; font:inherit; font-size:.82rem; cursor:pointer; color:#222; }
+  .mnl button:hover:not(:disabled){ background:#E8F1FB; } .mnl button:disabled{ opacity:.4; cursor:default; }
+  .pt-rib{ display:flex; flex-wrap:wrap; align-items:stretch; background:#fff; border-bottom:1px solid #DCDCDC; padding:4px 6px; position:relative; }
+  .pg{ display:flex; flex-direction:column; align-items:center; padding:2px 9px; border-right:1px solid #E5E5E5; }
+  .pg:last-child{ border-right:none; }
+  .pgc{ display:flex; gap:2px; align-items:center; min-height:64px; position:relative; }
+  .pgl{ font-size:.68rem; color:#666; margin-top:2px; }
+  .pb{ border:1px solid transparent; background:transparent; border-radius:6px; padding:3px; cursor:pointer; display:flex; align-items:center; justify-content:center; font:inherit; font-size:.72rem; min-width:30px; min-height:30px; color:#222; }
+  .pb:hover:not(:disabled){ background:#EDEDED; } .pb.on{ background:#D6E8FB; border-color:#7FB5EE; } .pb:disabled{ opacity:.35; cursor:default; }
+  .pb.big{ flex-direction:column; min-width:56px; min-height:60px; gap:2px; } .pb.big svg{ width:30px; height:30px; }
+  .pb.txt{ padding:3px 7px; white-space:nowrap; font-size:.7rem; }
+  #rb-tools .pgc{ display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  #rb-img .pgc{ display:grid; grid-template-columns:repeat(2,auto); gap:2px; }
+  #rb-arr .pgc{ display:grid; grid-template-columns:repeat(3,auto); gap:2px; }
+  #rb-shapes .pgc{ display:grid; grid-template-columns:repeat(8,29px); gap:1px; }
+  #rb-shapes .pb{ min-width:29px; min-height:29px; padding:2px; }
+  #rb-brush .pgc{ gap:0; align-items:flex-start; } #rb-brush .mnb{ border:none; background:transparent; font-size:.75rem; cursor:pointer; padding:0 4px; height:60px; border-radius:6px; } #rb-brush .mnb:hover{ background:#EDEDED; }
+  #rb-colors .pgc{ gap:10px; }
+  .cols{ display:flex; gap:4px; }
+  .csw{ display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding:3px 5px; border:1px solid transparent; border-radius:8px; font-size:.62rem; color:#555; }
+  .csw.act{ background:#D6E8FB; border-color:#7FB5EE; }
+  .csw i{ display:block; width:30px; height:30px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px #888; }
+  .csw i.none{ background:linear-gradient(135deg,#fff 44%,#EF4444 44%,#EF4444 56%,#fff 56%); }
+  .pal{ display:grid; grid-template-columns:repeat(10,22px); gap:4px 3px; }
+  .pal button{ width:22px; height:22px; border-radius:50%; border:1px solid #8a8a8a; padding:0; cursor:pointer; } .pal button.empty{ background:#fff; border-color:#C8C8C8; }
+  .rainbow{ width:34px; height:34px; border-radius:50%; border:none; background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); box-shadow:0 0 0 2px #fff,0 0 0 3px #888; cursor:pointer; }
+  .pt .p2-pop{ top:100%; left:auto; right:0; }
+  .pt-work{ position:relative; flex:1; display:flex; min-height:240px; background:#E6E6E6; min-width:0; }
+  .pt-work .p2-wrap{ flex:1; background:#E6E6E6; padding:12px 16px 12px 84px; }
+  .pt-work .p2-stack{ background:repeating-conic-gradient(#F4F4F4 0 25%, #fff 0 50%) 0 0/16px 16px; box-shadow:0 1px 4px rgba(0,0,0,.25); border:none; }
+  .pt-sl{ position:absolute; left:10px; top:14px; z-index:3; display:flex; gap:10px; background:#fff; border:1px solid #D8D8D8; border-radius:10px; padding:8px 8px; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+  .pt-sl .sl{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:.7rem; color:#333; }
+  .pt-sl .sl span{ font-size:1rem; line-height:1; }
+  input.vr{ writing-mode:vertical-lr; direction:rtl; appearance:slider-vertical; -webkit-appearance:slider-vertical; width:22px; height:180px; accent-color:#0F6CBD; margin:0; }
+  .pt-status{ display:flex; align-items:center; gap:16px; padding:3px 12px; background:#fff; border-top:1px solid #DDD; font-size:.72rem; color:#444; flex-wrap:wrap; }
+  .pt-status .sp{ flex:1; } .pt-status button{ border:none; background:transparent; font-size:1rem; cursor:pointer; padding:0 6px; border-radius:4px; } .pt-status button:hover{ background:#EDEDED; }
+  .pt-status input[type=range]{ width:140px; accent-color:#0F6CBD; }
+  @media (max-width:700px){ .pt-work .p2-wrap{ padding:12px 10px 12px 70px; } .pt-menu .p2-name{ width:110px; } }
   .bggrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
   .bggrid button{ border:3px solid #E2E8F0; border-radius:12px; padding:0; cursor:pointer; background:#fff; overflow:hidden; font:inherit; font-size:.78rem; }
   .bggrid button .pv{ height:62px; border-bottom:1px solid #E2E8F0; }
@@ -1632,16 +1686,122 @@ function hex2hsb(hex){
   if(d){ h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; if(h < 0) h += 360; }
   return [h, mx ? d / mx * 100 : 0, mx * 100];
 }
+/* ===== หน้าตาโปรแกรมวาดรูปแบบ Paint ของ Windows (ใช้ร่วมกันทั้งโหมดบิตแมปและเวกเตอร์) ===== */
+const polyPts = (n, rot, inner) => {
+  const m = inner ? n * 2 : n, pts = [];
+  for(let i = 0; i < m; i++){ const a = rot + i * 2 * Math.PI / m, r = inner && i % 2 ? inner : 1; pts.push([Math.cos(a) * r, Math.sin(a) * r]); }
+  const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  return pts.map(q => [(q[0] - x0) / (x1 - x0), (q[1] - y0) / (y1 - y0)]);
+};
+const ARR_R = [[0, .35], [.58, .35], [.58, .08], [1, .5], [.58, .92], [.58, .65], [0, .65]];
+const SHAPE_PTS = { tri:[[.5, 0], [1, 1], [0, 1]], rtri:[[0, 0], [1, 1], [0, 1]], dia:[[.5, 0], [1, .5], [.5, 1], [0, .5]], pent:polyPts(5, -Math.PI / 2), hex:polyPts(6, 0),
+  arR:ARR_R, arL:ARR_R.map(q => [1 - q[0], q[1]]), arD:ARR_R.map(q => [q[1], q[0]]), arU:ARR_R.map(q => [q[1], 1 - q[0]]),
+  st4:polyPts(4, -Math.PI / 2, .4), st5:polyPts(5, -Math.PI / 2, .4), st6:polyPts(6, -Math.PI / 2, .5) };
+const SHAPES = [["line", "เส้นตรง"], ["circle", "วงกลม/วงรี"], ["rect", "สี่เหลี่ยม"], ["rrect", "สี่เหลี่ยมมุมมน"], ["tri", "สามเหลี่ยม"], ["rtri", "สามเหลี่ยมมุมฉาก"], ["dia", "สี่เหลี่ยมขนมเปียกปูน"], ["pent", "ห้าเหลี่ยม"],
+  ["hex", "หกเหลี่ยม"], ["arR", "ลูกศรขวา"], ["arL", "ลูกศรซ้าย"], ["arU", "ลูกศรขึ้น"], ["arD", "ลูกศรลง"], ["st4", "ดาว 4 แฉก"], ["st5", "ดาว 5 แฉก"], ["st6", "ดาว 6 แฉก"]];
+const isShapeTool = (k) => SHAPES.some(a => a[0] === k);
+const svgi = (inner) => '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1F2937" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' + inner + "</svg>";
+function shapeIcon(k){
+  if(k === "line") return svgi('<path d="M4 20L20 4"/>');
+  if(k === "circle") return svgi('<ellipse cx="12" cy="12" rx="9" ry="7"/>');
+  if(k === "rect") return svgi('<rect x="3" y="5" width="18" height="14"/>');
+  if(k === "rrect") return svgi('<rect x="3" y="5" width="18" height="14" rx="4"/>');
+  return svgi('<polygon points="' + SHAPE_PTS[k].map(q => (3 + q[0] * 18).toFixed(1) + "," + (3 + q[1] * 18).toFixed(1)).join(" ") + '"/>');
+}
+const PT_IC = {
+  select:svgi('<rect x="4" y="5" width="16" height="14" stroke="#2563EB" stroke-dasharray="3 2.2"/>'),
+  reshape:svgi('<path d="M12 3l8 9-8 9-8-9z" stroke="#2563EB"/><circle cx="12" cy="3" r="1.6" fill="#fff"/><circle cx="20" cy="12" r="1.6" fill="#fff"/><circle cx="12" cy="21" r="1.6" fill="#fff"/><circle cx="4" cy="12" r="1.6" fill="#fff"/>'),
+  pencil:svgi('<path d="M4 20l1-5L16 4l4 4L9 19z" fill="#FBBF24" stroke="#92400E"/><path d="M14 6l4 4" stroke="#92400E"/>'),
+  brush:svgi('<path d="M9 14L19 4l1.5 1.5L10.5 15.5z" fill="#93C5FD" stroke="#1E3A8A"/><path d="M9 14c-3 0-4 2-4 4 0 1.6-1 2-1 2 3 .5 7 0 7-4z" fill="#F59E0B" stroke="#92400E"/>'),
+  fill:svgi('<path d="M5 13l7-8 7 8-7 7z" fill="#93C5FD" stroke="#1E3A8A"/><path d="M20 15c1.5 2 1.8 3.4 0 3.4S18.5 17 20 15z" fill="#1E3A8A"/>'),
+  text:svgi('<path d="M5 19L12 5l7 14M8 14h8" stroke="#1F2937" stroke-width="2"/>'),
+  eraser:svgi('<path d="M4 15l8-9 8 6-6 7H8z" fill="#F9A8D4" stroke="#9D174D"/><path d="M10 11l6 5" stroke="#9D174D"/>'),
+  pick:svgi('<path d="M15 4l5 5-3 1-8 8-3 1 1-3 8-8z" fill="#E5E7EB" stroke="#374151"/><path d="M13 6l5 5" stroke="#374151"/>'),
+  zoom:svgi('<circle cx="10" cy="10" r="6" stroke="#374151" stroke-width="2"/><path d="M15 15l5 5" stroke="#374151" stroke-width="2"/>'),
+  center:svgi('<circle cx="12" cy="12" r="4" stroke="#7C3AED"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6" stroke="#7C3AED"/>'),
+  flipH:svgi('<path d="M12 3v18" stroke-dasharray="2 2"/><path d="M9 6L3 18h6zM15 6l6 12h-6z" fill="#BFDBFE"/>'),
+  flipV:svgi('<path d="M3 12h18" stroke-dasharray="2 2"/><path d="M6 9L18 3v6zM6 15l12 6v-6z" transform="translate(0 0)" fill="#BFDBFE"/>')
+};
+const PT_PAL = ["#000000", "#7F7F7F", "#880015", "#ED1C24", "#FF7F27", "#FFF200", "#22B14C", "#00A2E8", "#3F48CC", "#A349A4", "#FFFFFF", "#C3C3C3", "#B97A57", "#FFAEC9", "#FFC90E", "#EFE4B0", "#B5E61D", "#99D9EA", "#7092BE", "#C8BFE7"];
+// กล่องแก้ไขสี (สี / ความอิ่มตัว / ความสว่าง + ไม่มีสี)
+function colorPop(host, cur, set){
+  const pop = el("div", "p2-pop"); pop.onclick = (ev) => ev.stopPropagation();
+  pop.innerHTML = '<label>สี<input type="range" min="0" max="100"><b></b></label><label>ความอิ่มตัว<input type="range" min="0" max="100"><b></b></label><label>ความสว่าง<input type="range" min="0" max="100"><b></b></label><div class="acts"><button type="button" data-a="none">⊘ ไม่มีสี</button></div>';
+  const rs = [...pop.querySelectorAll("input")], nums = [...pop.querySelectorAll("b")], x = hex2hsb(cur || "#9966FF");
+  rs[0].value = Math.round(x[0] / 3.6); rs[1].value = Math.round(x[1]); rs[2].value = Math.round(x[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; });
+  rs.forEach(r => r.oninput = () => { const v = rs.map(y => +y.value); nums.forEach((n, k) => { n.textContent = v[k]; }); set(hsb2hex(v[0] * 3.6, v[1], v[2])); });
+  pop.querySelector('[data-a="none"]').onclick = () => set(null);
+  host.append(pop); return pop;
+}
+// ถ้ากด Shift: รูปทรงเป็นสัดส่วนเท่ากัน / เส้นตรงล็อกมุม 45°
+function constrainB(k, a, b, shift){
+  if(!shift) return b; const dx = b.x - a.x, dy = b.y - a.y;
+  if(k === "line"){ const ang = Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) * (Math.PI / 4), d = Math.hypot(dx, dy); return { x:a.x + Math.cos(ang) * d, y:a.y + Math.sin(ang) * d }; }
+  const m = Math.max(Math.abs(dx), Math.abs(dy)); return { x:a.x + (dx < 0 ? -m : m), y:a.y + (dy < 0 ? -m : m) };
+}
+function paintChrome(ov, mode, stackHtml){
+  const vec = mode === "vec";
+  const grp = (id, label) => '<div class="pg" id="' + id + '"><div class="pgc"></div><div class="pgl">' + label + "</div></div>";
+  ov.innerHTML = '<div class="pnt2 pt" role="dialog" aria-modal="true">'
+    + '<div class="pt-title"><span>🎨</span><span class="pt-ttl"></span><button type="button" class="pt-x" aria-label="ปิด" title="ปิด (ยกเลิก)">✕</button></div>'
+    + '<div class="pt-menu"><div class="mn" data-mn="file"><button type="button" class="mnb">ไฟล์</button><div class="mnl"></div></div><div class="mn" data-mn="edit"><button type="button" class="mnb">แก้ไข</button><div class="mnl"></div></div><div class="mn" data-mn="view"><button type="button" class="mnb">มุมมอง</button><div class="mnl"></div></div>'
+    + '<span class="vsep"></span><button type="button" class="ib" id="p2un" title="ย้อนกลับ (Ctrl+Z)">↶</button><button type="button" class="ib" id="p2re" title="ทำซ้ำ (Ctrl+Y)">↷</button><span class="sp"></span>'
+    + '<input class="p2-name" maxlength="20" placeholder="ชื่อชุดแต่งตัว" aria-label="ชื่อชุดแต่งตัว"><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div>'
+    + '<div class="pt-rib">' + grp("rb-sel", "เลือก") + grp("rb-img", "ภาพ") + grp("rb-tools", "เครื่องมือ") + (vec ? grp("rb-arr", "จัดเรียง") : grp("rb-brush", "แปรง")) + grp("rb-shapes", "รูปทรง")
+    + '<div class="pg" id="rb-colors"><div class="pgc"><div class="cols"><div class="csw" data-w="fill" title="สีเติม (สีของพู่กันและพื้นรูปทรง)"><i></i><span>สีเติม</span></div><div class="csw" data-w="line" title="สีขอบ (เส้นขอบรูปทรงและเส้นตรง)"><i></i><span>สีขอบ</span></div></div><div class="pal"></div><button type="button" class="rainbow" id="p2edc" title="แก้ไขสี"></button></div><div class="pgl">สี</div></div></div>'
+    + '<div class="pt-work"><div class="pt-sl"><div class="sl"><span title="ขนาดเส้น/พู่กัน">☰</span><input type="range" class="vr" id="p2sz" min="1" max="60" value="6" title="ขนาด"><b id="p2szn">6</b></div>'
+    + (vec ? "" : '<div class="sl"><span title="ความทึบ">💧</span><input type="range" class="vr" id="p2op" min="5" max="100" value="100" title="ความทึบ"><b id="p2opn">100</b></div>')
+    + '</div><div class="p2-wrap"><div class="p2-stack">' + stackHtml + '</div></div></div>'
+    + '<div class="pt-status"><span id="ptpos">⌖ 0, 0 px</span><span id="ptsz">⛶ 480 × 360px</span><span class="sp"></span><button type="button" id="p2fit" title="ซูม 100%">⤢</button><span id="p2zl">100%</span><button type="button" id="p2zo" title="ซูมออก">−</button><input type="range" id="p2zs" min="50" max="300" step="5" value="100"><button type="button" id="p2zi" title="ซูมเข้า">+</button></div></div>';
+  const q = (x) => ov.querySelector(x), stack = q(".p2-stack"), ch = { q, stack, onTool:null, onZoom:null };
+  let act = "fill", popEl = null, zoom = 1;
+  ch.g = (id) => q("#" + id + " .pgc");
+  ch.setName = (n) => { q(".p2-name").value = n || ""; q(".pt-ttl").textContent = (n || "ภาพไม่มีชื่อ") + " - วาดชุดแต่งตัว" + (vec ? " (เวกเตอร์)" : ""); };
+  q(".p2-name").addEventListener("input", () => ch.setName(q(".p2-name").value));
+  q(".pt-x").onclick = () => q(".cn").click();
+  ch.addTool = (gid, k, icon, title, label) => { const b = el("button", "pb" + (label ? " big" : ""), icon + (label ? "<span>" + label + "</span>" : "")); b.type = "button"; b.title = title; b.setAttribute("aria-label", title); b.dataset.k = k;
+    b.onclick = () => { if(ch.onTool) ch.onTool(k); }; ch.g(gid).append(b); return b; };
+  ch.addBtn = (gid, id, html, title, cls) => { const b = el("button", "pb " + (cls || ""), html); b.type = "button"; b.id = id; b.title = title; ch.g(gid).append(b); return b; };
+  ch.markTool = (k) => ov.querySelectorAll("[data-k]").forEach(x => x.classList.toggle("on", x.dataset.k === k));
+  // เมนู ไฟล์ / แก้ไข / มุมมอง
+  const closeMenus = () => ov.querySelectorAll(".mn.open").forEach(m => m.classList.remove("open"));
+  ov.addEventListener("click", (e) => { const b = e.target.closest(".mnb"); if(b){ e.stopPropagation(); const m = b.parentElement, was = m.classList.contains("open"); closeMenus(); if(!was) m.classList.add("open"); return; } if(e.target.closest(".mnl")) closeMenus(); });
+  ch.mi = (menu, label, id, fn) => { const b = el("button", "", label); b.type = "button"; if(id) b.id = id; if(fn) b.onclick = fn; q('[data-mn="' + menu + '"] .mnl').append(b); return b; };
+  // ซูม
+  ch.zoom = () => zoom;
+  const wrap = q(".p2-wrap"), fitW = () => Math.max(200, Math.min(wrap.clientWidth - 104, (wrap.clientHeight - 26) * 4 / 3));   // ความกว้างพอดีกับพื้นที่ที่มองเห็น (ซูม 100%)
+  ch.setZoom = (z) => { zoom = Math.max(.5, Math.min(3, z)); stack.style.width = Math.round(fitW() * zoom) + "px"; q("#p2zl").textContent = Math.round(zoom * 100) + "%"; q("#p2zs").value = Math.round(zoom * 100); if(ch.onZoom) ch.onZoom(zoom); };
+  q("#p2zi").onclick = () => ch.setZoom(zoom * 1.25); q("#p2zo").onclick = () => ch.setZoom(zoom / 1.25); q("#p2fit").onclick = () => ch.setZoom(1); q("#p2zs").oninput = (e) => ch.setZoom(+e.target.value / 100);
+  stack.addEventListener("pointermove", (e) => { const r = stack.getBoundingClientRect(); q("#ptpos").textContent = "⌖ " + Math.round((e.clientX - r.left) / r.width * 480) + ", " + Math.round((e.clientY - r.top) / r.height * 360) + " px"; });
+  // สี: วงกลมสีเติม/สีขอบ + จานสี + แก้ไขสี
+  ch.active = () => act;
+  ch.closePop = () => { if(popEl){ popEl.remove(); popEl = null; return true; } return false; };
+  ch.colors = (get, set) => {
+    const paint = () => ov.querySelectorAll(".csw").forEach(c => { const col = get(c.dataset.w), i = c.querySelector("i"); i.classList.toggle("none", !col); i.style.background = col || ""; c.classList.toggle("act", c.dataset.w === act); });
+    ov.querySelectorAll(".csw").forEach(c => { c.onclick = (e) => { e.stopPropagation(); act = c.dataset.w; paint(); }; });
+    const pal = q(".pal");
+    PT_PAL.forEach(h => { const b = el("button"); b.type = "button"; b.style.background = h; b.title = h; b.setAttribute("aria-label", h); b.onclick = () => { set(act, h); paint(); }; b.oncontextmenu = (e) => { e.preventDefault(); set(act === "fill" ? "line" : "fill", h); paint(); }; pal.append(b); });
+    const slots = []; for(let i = 0; i < 10; i++){ const b = el("button", "empty"); b.type = "button"; b.title = "สีที่กำหนดเอง"; b.disabled = true; pal.append(b); slots.push(b); }
+    const recent = [];
+    const addRecent = (hex) => { const k = recent.indexOf(hex); if(k >= 0) recent.splice(k, 1); recent.unshift(hex); recent.length = Math.min(recent.length, 10);
+      slots.forEach((b, i) => { const h = recent[i]; b.className = h ? "" : "empty"; b.disabled = !h; b.style.background = h || ""; b.title = h || "สีที่กำหนดเอง"; b.onclick = h ? () => { set(act, h); paint(); } : null; }); };
+    q("#p2edc").onclick = (e) => { e.stopPropagation(); if(ch.closePop()) return; popEl = colorPop(q("#rb-colors .pgc"), get(act), (hex) => { set(act, hex); paint(); if(hex) addRecent(hex); }); };
+    ch.paintSw = paint; ch.pickInto = (hex) => { set(act, hex); paint(); }; paint();
+  };
+  ov.addEventListener("pointerdown", (e) => { if(!e.target.closest(".mn")) closeMenus(); if(popEl && !e.target.closest(".p2-pop,#p2edc")) ch.closePop(); });
+  ch.setName("");
+  if(window.ResizeObserver) new ResizeObserver(() => ch.setZoom(zoom)).observe(wrap);
+  setTimeout(() => ch.setZoom(zoom), 0);
+  return ch;
+}
 function openPainter(src, onSave, name0, opts){
   opts = opts || {}; const W = 480, H = 360, ov = el("div", "pnt-ov");
-  const TOOLS = [["select", "⬚", "เลือก (ลากเป็นกรอบ แล้วย้ายได้)"], ["brush", "🖌️", "พู่กัน"], ["eraser", "🧽", "ยางลบ"], ["fill", "🪣", "เทสี"], ["text", "T", "ข้อความ"], ["line", "╱", "เส้นตรง"], ["circle", "◯", "วงกลม/วงรี"], ["rect", "▭", "สี่เหลี่ยม"], ["center", "⊕", "ตั้งจุดหมุน (ลากกากบาทไปจุดที่ต้องการให้เป็นศูนย์กลาง)"]];
-  ov.innerHTML = '<div class="pnt2" role="dialog" aria-modal="true"><div class="p2-top"><b>✏️ วาดชุดแต่งตัว</b><input class="p2-name" maxlength="20" placeholder="ชื่อชุดแต่งตัว" aria-label="ชื่อชุดแต่งตัว"><span class="sp"></span><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div>'
-    + '<div class="p2-body"><div class="p2-tools"></div><div class="p2-main"><div class="p2-bar"></div><div class="p2-wrap"><div class="p2-stack"><canvas class="base" width="480" height="360"></canvas><canvas class="ovl" width="480" height="360"></canvas></div></div></div></div></div>';
+  const ch = paintChrome(ov, "bmp", '<canvas class="base" width="480" height="360"></canvas><canvas class="ovl" width="480" height="360"></canvas>');
   document.body.append(ov);
-  const q = (x) => ov.querySelector(x), stack = q(".p2-stack"), base = q("canvas.base"), ovl = q("canvas.ovl"), g = base.getContext("2d", { willReadFrequently:true }), o = ovl.getContext("2d");
-  q(".p2-name").value = name0 || "";
-  let tool = "brush", fill = "#9966FF", line = "#575E75", lw = 6, zoom = 1, sel = null, clip = null, picking = null, drag = null, cpos = opts.ctr || null;
-  const undo = [], redo = [];
+  const q = ch.q, stack = ch.stack, base = q("canvas.base"), ovl = q("canvas.ovl"), g = base.getContext("2d", { willReadFrequently:true }), o = ovl.getContext("2d");
+  ch.setName(name0);
+  let tool = "brush", btype = "round", fill = "#9966FF", line = "#575E75", lw = 6, al = 100, sel = null, clip = null, drag = null, cpos = opts.ctr || null;
+  const undo = [], redo = [], IC = PT_IC;
   const pt = (e) => { const r = stack.getBoundingClientRect(); return { x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H }; };
   const ctr = el("div", "p2-ctr"); stack.append(ctr);
   function placeCtr(){ ctr.style.display = cpos ? "block" : "none"; if(cpos){ ctr.style.left = cpos.x / W * 100 + "%"; ctr.style.top = cpos.y / H * 100 + "%"; } }
@@ -1653,88 +1813,88 @@ function openPainter(src, onSave, name0, opts){
   function ensureCtr(){ if(cpos) return; const b = contentBox(0); cpos = b ? { x:(b.x0 + b.x1) / 2, y:(b.y0 + b.y1) / 2 } : { x:W / 2, y:H / 2 }; }
   function trimmed(){ commit(); const b = contentBox(2); if(!b) return null; const c = el("canvas"); c.width = b.x1 - b.x0 + 1; c.height = b.y1 - b.y0 + 1; c.getContext("2d").drawImage(base, b.x0, b.y0, c.width, c.height, 0, 0, c.width, c.height); return { c, x0:b.x0, y0:b.y0 }; }
   const snap = () => { undo.push(g.getImageData(0, 0, W, H)); if(undo.length > 30) undo.shift(); redo.length = 0; syncBtns(); };
-  function drawSel(){ o.clearRect(0, 0, W, H); if(!sel) return; o.drawImage(sel.c, sel.x, sel.y); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#855CD6"; o.lineWidth = 2; o.strokeRect(sel.x, sel.y, sel.w, sel.h); o.restore(); }
+  function drawSel(){ ovl.style.opacity = 1; o.clearRect(0, 0, W, H); if(!sel) return; o.drawImage(sel.c, sel.x, sel.y); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#0F6CBD"; o.lineWidth = 2; o.strokeRect(sel.x, sel.y, sel.w, sel.h); o.restore(); }
   function commit(){ if(!sel) return; g.drawImage(sel.c, sel.x, sel.y); sel = null; o.clearRect(0, 0, W, H); syncBtns(); }
-  // ---- แถบเครื่องมือด้านซ้าย ----
-  TOOLS.forEach(([k, ic, tt]) => { const b = el("button", k === tool ? "on" : "", ic); b.type = "button"; b.title = tt; b.setAttribute("aria-label", tt); b.dataset.k = k;
-    b.onclick = () => { commit(); tool = k; picking = null; if(k === "center") ensureCtr(); placeCtr(); q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); stack.style.cursor = k === "select" ? "default" : k === "text" ? "text" : "crosshair"; }; q(".p2-tools").append(b); });
-  // ---- แถบบน: สี ขนาด ย้อนกลับ กลับด้าน คัดลอก ซูม ----
-  const bar = q(".p2-bar");
-  bar.innerHTML = '<div class="grp csw" data-w="fill"><span>สีเติม</span><i></i></div><div class="grp csw" data-w="line"><span>สีขอบ</span><i></i></div>'
-    + '<div class="grp"><span>ขนาด</span><input type="range" id="p2sz" min="1" max="60" value="6"><b id="p2szn">6</b></div>'
-    + '<div class="grp"><button type="button" id="p2un" title="ย้อนกลับ (Ctrl+Z)">↶</button><button type="button" id="p2re" title="ทำซ้ำ (Ctrl+Y)">↷</button></div>'
-    + '<div class="grp"><button type="button" id="p2fh" title="กลับซ้าย–ขวา">⇋</button><button type="button" id="p2fv" title="กลับบน–ล่าง">⇅</button></div>'
-    + '<div class="grp"><button type="button" id="p2cp">คัดลอก</button><button type="button" id="p2ps">วาง</button><button type="button" id="p2dl">ลบ</button><button type="button" id="p2cl" title="ล้างภาพทั้งหมด">🗑️ ล้างหมด</button></div>'
-    + '<div class="grp"><button type="button" id="p2vec" title="เปลี่ยนเป็นโหมดเวกเตอร์ (ปรับรูปทรงภายหลังได้)">⇄ แปลงเป็นเวกเตอร์</button></div>'
-    + '<div class="grp"><button type="button" id="p2zo">−</button><span id="p2zl">100%</span><button type="button" id="p2zi">+</button></div>';
-  const sw = (w) => bar.querySelector('[data-w="' + w + '"] i');
-  const paintSw = () => { [["fill", fill], ["line", line]].forEach(([w, c]) => { const e = sw(w); e.classList.toggle("none", !c); e.style.background = c || ""; }); };
   function syncBtns(){ q("#p2un").disabled = !undo.length; q("#p2re").disabled = !redo.length; q("#p2dl").disabled = !sel; q("#p2cp").disabled = !sel; q("#p2ps").disabled = !clip; }
-  paintSw(); syncBtns();
+  // ---- เครื่องมือแบบ Paint ----
+  ch.addTool("rb-sel", "select", IC.select, "เลือก (ลากเป็นกรอบ แล้วย้ายได้)", "เลือก");
+  [["pencil", "ดินสอ"], ["fill", "เทสี"], ["text", "ข้อความ"], ["eraser", "ยางลบ"], ["pick", "ดูดสี (คลิกที่ภาพเพื่อเอาสีนั้น)"], ["zoom", "ซูม (คลิก = ขยาย, Shift+คลิก = ย่อ)"]].forEach(a => ch.addTool("rb-tools", a[0], IC[a[0]], a[1]));
+  ch.addBtn("rb-img", "p2fh", IC.flipH, "กลับซ้าย–ขวา"); ch.addBtn("rb-img", "p2fv", IC.flipV, "กลับบน–ล่าง");
+  ch.addTool("rb-img", "center", IC.center, "ตั้งจุดหมุน (ลากกากบาทไปจุดที่ต้องการให้เป็นศูนย์กลาง)");
+  ch.addBtn("rb-img", "p2vec", "⇄ เวกเตอร์", "เปลี่ยนเป็นโหมดเวกเตอร์ (ปรับรูปทรงภายหลังได้)", "txt");
+  ch.addTool("rb-brush", "brush", IC.brush, "แปรง", "แปรง");
+  { const mn = el("div", "mn", '<button type="button" class="mnb" title="เลือกชนิดแปรง">▾</button><div class="mnl"></div>'); ch.g("rb-brush").append(mn);
+    [["round", "พู่กัน"], ["spray", "สเปรย์"], ["marker", "ปากกาเน้นข้อความ"]].forEach(a => { const b = el("button", "", a[1]); b.type = "button"; b.onclick = () => { btype = a[0]; ch.onTool("brush"); }; mn.querySelector(".mnl").append(b); }); }
+  SHAPES.forEach(a => ch.addTool("rb-shapes", a[0], shapeIcon(a[0]), a[1]));
+  ch.onTool = (k) => { commit(); tool = k; if(k === "center") ensureCtr(); placeCtr(); ch.markTool(k); ovl.style.opacity = 1;
+    stack.style.cursor = k === "select" ? "default" : k === "text" ? "text" : k === "pick" ? "copy" : k === "zoom" ? "zoom-in" : "crosshair"; };
+  ch.markTool(tool); stack.style.cursor = "crosshair";
+  // ---- สี / ขนาด / ความทึบ ----
+  ch.colors((w) => w === "fill" ? fill : line, (w, h) => { if(w === "fill") fill = h; else line = h; });
   q("#p2sz").oninput = (e) => { lw = +e.target.value; q("#p2szn").textContent = lw; };
-  q("#p2zi").onclick = () => setZ(zoom * 1.25); q("#p2zo").onclick = () => setZ(zoom / 1.25);
-  function setZ(z){ zoom = Math.max(.5, Math.min(3, z)); stack.style.width = zoom * 100 + "%"; q("#p2zl").textContent = Math.round(zoom * 100) + "%"; }
-  // ---- กล่องเลือกสี (สี / ความอิ่มตัว / ความสว่าง) ----
-  let pop = null; const closePop = () => { if(pop){ pop.remove(); pop = null; } };
-  bar.querySelectorAll(".csw").forEach(c => c.onclick = (e) => {
-    e.stopPropagation(); const w = c.dataset.w; if(pop && pop.dataset.w === w){ closePop(); return; } closePop(); commit();
-    pop = el("div", "p2-pop"); pop.dataset.w = w; pop.onclick = (ev) => ev.stopPropagation();
-    const cur = (w === "fill" ? fill : line) || "#9966FF", hsb = hex2hsb(cur);
-    pop.innerHTML = '<label>สี<input type="range" min="0" max="100" data-i="0"><b></b></label><label>ความอิ่มตัว<input type="range" min="0" max="100" data-i="1"><b></b></label><label>ความสว่าง<input type="range" min="0" max="100" data-i="2"><b></b></label><div class="sws"></div><div class="acts"><button type="button" data-a="none">⊘ ไม่มีสี</button><button type="button" data-a="pick">💧 ดูดสีจากภาพ</button></div>';
-    const rs = [...pop.querySelectorAll("input")], nums = [...pop.querySelectorAll("b")];
-    const set = (hex) => { if(w === "fill") fill = hex; else line = hex; paintSw(); };
-    const upd = () => { const v = rs.map(r => +r.value); set(hsb2hex(v[0] * 3.6, v[1], v[2])); nums.forEach((n, k) => { n.textContent = v[k]; }); };
-    rs[0].value = Math.round(hsb[0] / 3.6); rs[1].value = Math.round(hsb[1]); rs[2].value = Math.round(hsb[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; });
-    rs.forEach(r => r.oninput = upd);
-    ["#000000", "#FFFFFF", "#EF4444", "#F97316", "#FACC15", "#22C55E", "#0EA5E9", "#855CD6", "#EC4899", "#92400E", "#F2C29B", "#94A3B8"].forEach(h => { const b = el("button"); b.type = "button"; b.style.background = h; b.setAttribute("aria-label", h);
-      b.onclick = () => { set(h); const x = hex2hsb(h); rs[0].value = Math.round(x[0] / 3.6); rs[1].value = Math.round(x[1]); rs[2].value = Math.round(x[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; }); }; pop.querySelector(".sws").append(b); });
-    pop.querySelector('[data-a="none"]').onclick = () => { set(null); closePop(); };
-    pop.querySelector('[data-a="pick"]').onclick = () => { picking = w; closePop(); stack.style.cursor = "copy"; toast("คลิกที่ภาพเพื่อดูดสี"); };
-    bar.append(pop);
-  });
-  ov.addEventListener("pointerdown", (e) => { if(pop && !e.target.closest(".p2-pop,.csw")) closePop(); });
+  q("#p2op").oninput = (e) => { al = +e.target.value; q("#p2opn").textContent = al; };
+  // ---- เมนู ----
+  ch.mi("file", "เปิดรูปจากเครื่อง…", "p2imp", () => pickImage(u => { const im = new Image(); im.onload = () => { commit(); snap(); const c = el("canvas"); c.width = im.width; c.height = im.height; c.getContext("2d").drawImage(im, 0, 0);
+    sel = { c, x:Math.round((W - c.width) / 2), y:Math.round((H - c.height) / 2), w:c.width, h:c.height }; ch.onTool("select"); drawSel(); syncBtns(); }; im.src = u; }));
+  ch.mi("file", "ล้างภาพทั้งหมด", "p2cl", () => { commit(); snap(); g.clearRect(0, 0, W, H); });
+  ch.mi("file", "ใช้ชุดนี้ (บันทึก)", "", () => q(".ok").click()); ch.mi("file", "ยกเลิก", "", () => q(".cn").click());
+  ch.mi("edit", "คัดลอก", "p2cp"); ch.mi("edit", "วาง", "p2ps"); ch.mi("edit", "ลบส่วนที่เลือก", "p2dl");
+  ch.mi("edit", "เลือกทั้งหมด", "p2sa", () => { commit(); snap(); const c = el("canvas"); c.width = W; c.height = H; c.getContext("2d").drawImage(base, 0, 0); g.clearRect(0, 0, W, H); sel = { c, x:0, y:0, w:W, h:H }; ch.onTool("select"); drawSel(); syncBtns(); });
+  ch.mi("view", "ซูมเข้า", "", () => ch.setZoom(ch.zoom() * 1.25)); ch.mi("view", "ซูมออก", "", () => ch.setZoom(ch.zoom() / 1.25)); ch.mi("view", "ซูม 100%", "", () => ch.setZoom(1));
+  syncBtns();
   // ---- ย้อนกลับ / กลับด้าน / คัดลอก ----
   const restore = (from, to) => { commit(); if(!from.length) return; to.push(g.getImageData(0, 0, W, H)); g.putImageData(from.pop(), 0, 0); syncBtns(); };
   q("#p2un").onclick = () => restore(undo, redo); q("#p2re").onclick = () => restore(redo, undo);
   const flip = (cv, h) => { const t = el("canvas"); t.width = cv.width; t.height = cv.height; const x = t.getContext("2d"); x.translate(h ? cv.width : 0, h ? 0 : cv.height); x.scale(h ? -1 : 1, h ? 1 : -1); x.drawImage(cv, 0, 0); return t; };
   const doFlip = (h) => { if(sel){ sel.c = flip(sel.c, h); drawSel(); } else { snap(); const t = flip(base, h); g.clearRect(0, 0, W, H); g.drawImage(t, 0, 0); } };
   q("#p2fh").onclick = () => doFlip(true); q("#p2fv").onclick = () => doFlip(false);
-  q("#p2cp").onclick = () => { if(!sel) return; const c = el("canvas"); c.width = sel.w; c.height = sel.h; c.getContext("2d").drawImage(sel.c, 0, 0); clip = c; syncBtns(); toast("คัดลอกแล้ว กด “วาง” ได้เลย"); };
-  q("#p2ps").onclick = () => { if(!clip) return; commit(); snap(); const c = el("canvas"); c.width = clip.width; c.height = clip.height; c.getContext("2d").drawImage(clip, 0, 0); sel = { c, x:20, y:20, w:c.width, h:c.height }; tool = "select"; q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x.dataset.k === "select")); drawSel(); syncBtns(); };
+  q("#p2cp").onclick = () => { if(!sel) return; const c = el("canvas"); c.width = sel.w; c.height = sel.h; c.getContext("2d").drawImage(sel.c, 0, 0); clip = c; syncBtns(); toast("คัดลอกแล้ว เลือก แก้ไข → วาง ได้เลย"); };
+  q("#p2ps").onclick = () => { if(!clip) return; commit(); snap(); const c = el("canvas"); c.width = clip.width; c.height = clip.height; c.getContext("2d").drawImage(clip, 0, 0); sel = { c, x:20, y:20, w:c.width, h:c.height }; ch.onTool("select"); drawSel(); syncBtns(); };
   q("#p2dl").onclick = () => { if(!sel) return; sel = null; o.clearRect(0, 0, W, H); syncBtns(); };
-  q("#p2cl").onclick = () => { commit(); snap(); g.clearRect(0, 0, W, H); };
   // ---- วาด ----
   function shape(x, k, a, b){
     x.lineCap = x.lineJoin = "round"; x.lineWidth = lw;
     if(k === "line"){ if(!line) return; x.strokeStyle = line; x.beginPath(); x.moveTo(a.x, a.y); x.lineTo(b.x, b.y); x.stroke(); return; }
+    const x0 = Math.min(a.x, b.x), y0 = Math.min(a.y, b.y), w = Math.abs(b.x - a.x), h = Math.abs(b.y - a.y);
     x.beginPath();
-    if(k === "rect") x.rect(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.abs(b.x - a.x), Math.abs(b.y - a.y));
-    else x.ellipse((a.x + b.x) / 2, (a.y + b.y) / 2, Math.abs(b.x - a.x) / 2, Math.abs(b.y - a.y) / 2, 0, 0, 7);
+    if(k === "rect") x.rect(x0, y0, w, h);
+    else if(k === "circle") x.ellipse(x0 + w / 2, y0 + h / 2, w / 2, h / 2, 0, 0, 7);
+    else if(k === "rrect"){ const r = Math.min(w, h) * .2; x.moveTo(x0 + r, y0); x.arcTo(x0 + w, y0, x0 + w, y0 + h, r); x.arcTo(x0 + w, y0 + h, x0, y0 + h, r); x.arcTo(x0, y0 + h, x0, y0, r); x.arcTo(x0, y0, x0 + w, y0, r); x.closePath(); }
+    else { SHAPE_PTS[k].forEach((c, i) => { if(i) x.lineTo(x0 + c[0] * w, y0 + c[1] * h); else x.moveTo(x0 + c[0] * w, y0 + c[1] * h); }); x.closePath(); }
     if(fill){ x.fillStyle = fill; x.fill(); } if(line){ x.strokeStyle = line; x.stroke(); }
   }
   function bucket(px, py){
     if(!fill) return; const id = g.getImageData(0, 0, W, H), d = id.data, x0 = Math.floor(px), y0 = Math.floor(py); if(x0 < 0 || y0 < 0 || x0 >= W || y0 >= H) return;
-    const i0 = (y0 * W + x0) * 4, t = [d[i0], d[i0 + 1], d[i0 + 2], d[i0 + 3]], [fr, fg, fb] = hex2rgb(fill);
-    if(t[3] === 255 && t[0] === fr && t[1] === fg && t[2] === fb) return;
+    const i0 = (y0 * W + x0) * 4, t = [d[i0], d[i0 + 1], d[i0 + 2], d[i0 + 3]], [fr, fg, fb] = hex2rgb(fill), fa = Math.round(al * 2.55);
+    if(t[3] === fa && t[0] === fr && t[1] === fg && t[2] === fb) return;
     const ok = (i) => Math.abs(d[i] - t[0]) + Math.abs(d[i + 1] - t[1]) + Math.abs(d[i + 2] - t[2]) + Math.abs(d[i + 3] - t[3]) <= 70;
     snap(); const st = [[x0, y0]], seen = new Uint8Array(W * H);
     while(st.length){ const [x, y] = st.pop(); if(x < 0 || y < 0 || x >= W || y >= H) continue; const k = y * W + x; if(seen[k]) continue; seen[k] = 1; const i = k * 4; if(!ok(i)) continue;
-      d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; d[i + 3] = 255; st.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]); }
+      d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; d[i + 3] = fa; st.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]); }
     g.putImageData(id, 0, 0);
   }
   function startText(p){
     commit(); const inp = el("input", "p2-text"), k = stack.getBoundingClientRect().width / W, fs = 14 + lw * 3; let done = false;
     inp.style.left = p.x / W * 100 + "%"; inp.style.top = p.y / H * 100 + "%"; inp.style.fontSize = fs * k + "px"; inp.style.color = fill || "#000"; stack.append(inp); setTimeout(() => inp.focus(), 0);
     const fin = (ok) => { if(done) return; done = true; const v = inp.value; inp.remove();
-      if(ok && v.trim()){ snap(); g.font = "bold " + fs + "px sans-serif"; g.textBaseline = "top"; g.fillStyle = fill || "#000000"; g.fillText(v, p.x, p.y); } };
+      if(ok && v.trim()){ snap(); g.globalAlpha = al / 100; g.font = "bold " + fs + "px sans-serif"; g.textBaseline = "top"; g.fillStyle = fill || "#000000"; g.fillText(v, p.x, p.y); g.globalAlpha = 1; } };
     inp.onkeydown = (e) => { e.stopPropagation(); if(e.key === "Enter") fin(true); else if(e.key === "Escape") fin(false); };
     inp.onblur = () => fin(true); inp.onpointerdown = (e) => e.stopPropagation();
   }
+  // แปรง/ดินสอ: วาดลงชั้นชั่วคราว (ovl) แล้วค่อยรวมลงภาพตอนปล่อยเมาส์ เพื่อให้ความทึบสม่ำเสมอ
+  const strokeAlpha = () => al / 100 * (tool === "brush" && btype === "marker" ? .5 : 1);
+  function strokeSeg(a, b){
+    if(!fill) return; o.strokeStyle = o.fillStyle = fill; o.lineJoin = "round";
+    if(tool === "brush" && btype === "spray"){ for(let n = 0; n < Math.ceil(lw * 1.3); n++){ const ang = Math.random() * 7, rr = Math.random() * lw * 1.6; o.fillRect(b.x + Math.cos(ang) * rr, b.y + Math.sin(ang) * rr, 1.4, 1.4); } return; }
+    o.lineWidth = tool === "pencil" ? Math.max(1, lw / 3) : tool === "brush" && btype === "marker" ? lw * 2 : lw; o.lineCap = tool === "pencil" ? "butt" : tool === "brush" && btype === "marker" ? "square" : "round";
+    o.beginPath(); o.moveTo(a.x, a.y); o.lineTo(b.x, b.y); o.stroke();
+  }
+  function eraseSeg(a, b){ g.globalCompositeOperation = "destination-out"; g.strokeStyle = "#000"; g.lineWidth = lw; g.lineCap = g.lineJoin = "round"; g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke(); g.globalCompositeOperation = "source-over"; }
   stack.addEventListener("pointerdown", (e) => {
     if(e.button !== 0 || e.target.classList.contains("p2-text")) return; try{ stack.setPointerCapture(e.pointerId); }catch(_){}
     const p = pt(e);
-    if(picking){ const x = Math.max(0, Math.min(W - 1, Math.floor(p.x))), y = Math.max(0, Math.min(H - 1, Math.floor(p.y))), d = g.getImageData(x, y, 1, 1).data;
-      if(d[3] > 0){ const hx = rgb2hex(d[0], d[1], d[2]); if(picking === "fill") fill = hx; else line = hx; paintSw(); } picking = null; stack.style.cursor = tool === "select" ? "default" : "crosshair"; return; }
+    if(tool === "pick"){ const x = Math.max(0, Math.min(W - 1, Math.floor(p.x))), y = Math.max(0, Math.min(H - 1, Math.floor(p.y))), d = g.getImageData(x, y, 1, 1).data; if(d[3] > 0) ch.pickInto(rgb2hex(d[0], d[1], d[2])); return; }
+    if(tool === "zoom"){ ch.setZoom(ch.zoom() * (e.shiftKey ? .8 : 1.25)); return; }
     if(tool === "center"){ cpos = { x:p.x, y:p.y }; placeCtr(); drag = { m:"ctr" }; return; }
     if(tool === "fill"){ bucket(p.x, p.y); return; }
     if(tool === "text"){ startText(p); return; }
@@ -1742,25 +1902,24 @@ function openPainter(src, onSave, name0, opts){
       if(sel && p.x >= sel.x && p.x <= sel.x + sel.w && p.y >= sel.y && p.y <= sel.y + sel.h){ drag = { m:"move", ox:p.x - sel.x, oy:p.y - sel.y }; return; }
       commit(); drag = { m:"box", a:p, b:p }; return;
     }
-    snap(); drag = { m:tool, a:p, last:p };
-    if(tool === "brush" || tool === "eraser"){ drawSeg(p, { x:p.x + .01, y:p.y }); }
+    snap();
+    if(tool === "brush" || tool === "pencil"){ ovl.style.opacity = strokeAlpha(); drag = { m:"stroke", last:p }; strokeSeg(p, { x:p.x + .01, y:p.y }); return; }
+    if(tool === "eraser"){ drag = { m:"eraser", last:p }; eraseSeg(p, { x:p.x + .01, y:p.y }); return; }
+    ovl.style.opacity = al / 100; drag = { m:"shape", k:tool, a:p, b:p };
   });
-  function drawSeg(a, b){
-    if(tool === "brush" && !fill) return;
-    g.globalCompositeOperation = tool === "eraser" ? "destination-out" : "source-over"; g.strokeStyle = fill || "#000"; g.lineWidth = lw; g.lineCap = g.lineJoin = "round";
-    g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke(); g.globalCompositeOperation = "source-over";
-  }
   stack.addEventListener("pointermove", (e) => {
     if(!drag) return; const p = pt(e);
     if(drag.m === "ctr"){ cpos = p; placeCtr(); return; }
-    if(drag.m === "brush" || drag.m === "eraser"){ drawSeg(drag.last, p); drag.last = p; }
-    else if(drag.m === "line" || drag.m === "rect" || drag.m === "circle"){ o.clearRect(0, 0, W, H); shape(o, drag.m, drag.a, p); drag.b = p; }
+    if(drag.m === "stroke"){ strokeSeg(drag.last, p); drag.last = p; }
+    else if(drag.m === "eraser"){ eraseSeg(drag.last, p); drag.last = p; }
+    else if(drag.m === "shape"){ o.clearRect(0, 0, W, H); drag.b = constrainB(drag.k, drag.a, p, e.shiftKey); shape(o, drag.k, drag.a, drag.b); }
     else if(drag.m === "move"){ sel.x = p.x - drag.ox; sel.y = p.y - drag.oy; drawSel(); }
-    else if(drag.m === "box"){ drag.b = p; o.clearRect(0, 0, W, H); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#855CD6"; o.lineWidth = 2; o.strokeRect(drag.a.x, drag.a.y, p.x - drag.a.x, p.y - drag.a.y); o.restore(); }
+    else if(drag.m === "box"){ drag.b = p; o.clearRect(0, 0, W, H); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#0F6CBD"; o.lineWidth = 2; o.strokeRect(drag.a.x, drag.a.y, p.x - drag.a.x, p.y - drag.a.y); o.restore(); }
   });
   const up = () => {
     if(!drag) return; const d = drag; drag = null;
-    if(d.m === "line" || d.m === "rect" || d.m === "circle"){ if(d.b){ shape(g, d.m, d.a, d.b); } o.clearRect(0, 0, W, H); }
+    if(d.m === "stroke"){ g.globalAlpha = strokeAlpha(); g.drawImage(ovl, 0, 0); g.globalAlpha = 1; o.clearRect(0, 0, W, H); ovl.style.opacity = 1; }
+    else if(d.m === "shape"){ g.globalAlpha = al / 100; shape(g, d.k, d.a, d.b); g.globalAlpha = 1; o.clearRect(0, 0, W, H); ovl.style.opacity = 1; }
     else if(d.m === "box"){
       o.clearRect(0, 0, W, H); const x = Math.max(0, Math.min(d.a.x, d.b.x)), y = Math.max(0, Math.min(d.a.y, d.b.y)), w = Math.min(W, Math.max(d.a.x, d.b.x)) - x, h = Math.min(H, Math.max(d.a.y, d.b.y)) - y;
       if(w > 3 && h > 3){ snap(); const c = el("canvas"); c.width = Math.round(w); c.height = Math.round(h); c.getContext("2d").drawImage(base, Math.round(x), Math.round(y), c.width, c.height, 0, 0, c.width, c.height);
@@ -1775,7 +1934,7 @@ function openPainter(src, onSave, name0, opts){
   const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
   function onKey(e){
     if(e.target.closest && e.target.closest(".p2-name,.p2-text")){ if(e.key === "Escape" && !e.target.closest(".p2-text")){ e.stopPropagation(); close(); } return; }
-    if(e.key === "Escape"){ e.stopPropagation(); if(pop) closePop(); else close(); }
+    if(e.key === "Escape"){ e.stopPropagation(); if(!ch.closePop()) close(); }
     else if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z"){ e.preventDefault(); e.stopPropagation(); (e.shiftKey ? q("#p2re") : q("#p2un")).click(); }
     else if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y"){ e.preventDefault(); e.stopPropagation(); q("#p2re").click(); }
     else if(e.key === "Delete" || e.key === "Backspace"){ if(sel){ e.preventDefault(); e.stopPropagation(); q("#p2dl").click(); } }
@@ -1826,13 +1985,11 @@ const rdp = (pts, eps) => {
 function openVectorPainter(onSave, name0, opts){
   opts = opts || {};
   const W = 480, H = 360, ov = el("div", "pnt-ov");
-  const TOOLS = [["select", "↖", "เลือก (ย้าย ย่อ/ขยาย หมุน)"], ["reshape", "◇", "ปรับรูปทรง: ลากจุดหรือเส้นโค้ง · คลิกบนเส้นเพื่อเพิ่มจุด · ดับเบิลคลิกจุดเพื่อสลับมุม/โค้ง · Delete = ลบจุด"], ["brush", "🖌️", "พู่กัน"], ["eraser", "🧽", "ยางลบ (ลบทั้งชิ้นที่ลากผ่าน)"], ["fill", "🪣", "เทสี (คลิกที่รูปทรง)"], ["text", "T", "ข้อความ"], ["line", "╱", "เส้นตรง"], ["circle", "◯", "วงกลม/วงรี"], ["rect", "▭", "สี่เหลี่ยม"], ["center", "⊕", "ตั้งจุดหมุน (ลากกากบาท)"]];
-  ov.innerHTML = '<div class="pnt2" role="dialog" aria-modal="true"><div class="p2-top"><b>✏️ วาดชุดแต่งตัว (เวกเตอร์)</b><input class="p2-name" maxlength="20" placeholder="ชื่อชุดแต่งตัว" aria-label="ชื่อชุดแต่งตัว"><span class="sp"></span><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div>'
-    + '<div class="p2-body"><div class="p2-tools"></div><div class="p2-main"><div class="p2-bar"></div><div class="p2-wrap"><div class="p2-stack"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><g id="vscene"></g><g id="vui"></g></svg></div></div></div></div></div>';
+  const ch = paintChrome(ov, "vec", '<svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><g id="vscene"></g><g id="vui"></g></svg>');
   document.body.append(ov);
-  const q = (x) => ov.querySelector(x), stack = q(".p2-stack"), svg = q("svg"), scene = q("#vscene"), ui = q("#vui");
-  q(".p2-name").value = name0 || "";
-  let items = [], sel = new Set(), tool = "brush", fill = "#9966FF", line = "#575E75", lw = 4, zoom = 1, nid = 1, cx = null, cy = null, drag = null, selNode = -1, clip = null, pop = null, styleT = 0;
+  const q = ch.q, stack = ch.stack, svg = q("svg"), scene = q("#vscene"), ui = q("#vui");
+  ch.setName(name0);
+  let items = [], sel = new Set(), tool = "brush", fill = "#9966FF", line = "#575E75", lw = 4, nid = 1, cx = null, cy = null, drag = null, selNode = -1, clip = null, styleT = 0;
   const undo = [], redo = [], mk = (o) => Object.assign({ id:nid++, m:[1, 0, 0, 1, 0, 0] }, o);
   const reid = (arr) => arr.forEach(i => { i.id = nid++; });
   if(opts.v){ const v = cleanV(opts.v); if(v){ items = v.items; cx = v.cx; cy = v.cy; reid(items); } }
@@ -1876,52 +2033,38 @@ function openVectorPainter(onSave, name0, opts){
     if(drag && drag.m === "marquee") h += '<rect x="' + Math.min(drag.a.x, drag.b.x) + '" y="' + Math.min(drag.a.y, drag.b.y) + '" width="' + Math.abs(drag.b.x - drag.a.x) + '" height="' + Math.abs(drag.b.y - drag.a.y) + '" fill="rgba(133,92,214,.12)" stroke="#855CD6" stroke-width="' + sw + '" stroke-dasharray="' + 4 * k + " " + 3 * k + '" pointer-events="none"/>';
     ui.innerHTML = h;
   }
-  // ----- แถบเครื่องมือ -----
-  TOOLS.forEach(a => { const b = el("button", a[0] === tool ? "on" : "", a[1]); b.type = "button"; b.title = a[2]; b.setAttribute("aria-label", a[2]); b.dataset.k = a[0];
-    b.onclick = () => { tool = a[0]; selNode = -1; if(tool === "reshape" && sel.size > 1){ const f = [...sel][0]; sel.clear(); sel.add(f); } q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); stack.style.cursor = tool === "select" || tool === "reshape" ? "default" : tool === "text" ? "text" : "crosshair"; drawUI(); }; q(".p2-tools").append(b); });
-  const bar = q(".p2-bar");
-  bar.innerHTML = '<div class="grp csw" data-w="fill"><span>สีเติม</span><i></i></div><div class="grp csw" data-w="line"><span>สีขอบ</span><i></i></div>'
-    + '<div class="grp"><span>ขนาดเส้น</span><input type="range" id="p2sz" min="0" max="60" value="4"><b id="p2szn">4</b></div><span class="sep"></span>'
-    + '<div class="grp"><button type="button" id="p2un" title="ย้อนกลับ (Ctrl+Z)">↶</button><button type="button" id="p2re" title="ทำซ้ำ (Ctrl+Y)">↷</button></div><span class="sep"></span>'
-    + '<div class="grp"><button type="button" id="p2gr" title="รวมชิ้นที่เลือกเป็นกลุ่ม">จัดกลุ่ม</button><button type="button" id="p2ug" title="แยกกลุ่ม">แยกกลุ่ม</button></div>'
-    + '<div class="grp"><button type="button" id="p2o1" title="ย้ายไปหน้าสุด">⤒ หน้าสุด</button><button type="button" id="p2o2" title="เลื่อนมาข้างหน้า 1 ชั้น">↑ หน้า</button><button type="button" id="p2o3" title="เลื่อนไปข้างหลัง 1 ชั้น">↓ หลัง</button><button type="button" id="p2o4" title="ย้ายไปหลังสุด">⤓ หลังสุด</button></div><span class="sep"></span>'
-    + '<div class="grp"><button type="button" id="p2fh" title="กลับซ้าย–ขวา">⇋</button><button type="button" id="p2fv" title="กลับบน–ล่าง">⇅</button></div>'
-    + '<div class="grp"><button type="button" id="p2cp">คัดลอก</button><button type="button" id="p2ps">วาง</button><button type="button" id="p2dl">ลบ</button></div><span class="sep"></span>'
-    + '<div class="grp"><button type="button" id="p2bm" title="เปลี่ยนเป็นโหมดบิตแมป (วาดเป็นพิกเซล)">⇄ แปลงเป็นบิตแมป</button></div>'
-    + '<div class="grp"><button type="button" id="p2zo">−</button><span id="p2zl">100%</span><button type="button" id="p2zi">+</button></div>';
-  const swEl = (w) => bar.querySelector('[data-w="' + w + '"] i');
-  const paintSw = () => [["fill", fill], ["line", line]].forEach(a => { const e = swEl(a[0]); e.classList.toggle("none", !a[1]); e.style.background = a[1] || ""; });
+  // ----- เครื่องมือแบบ Paint -----
+  const IC = PT_IC;
+  ch.addTool("rb-sel", "select", IC.select, "เลือก (ย้าย ย่อ/ขยาย หมุน)", "เลือก");
+  ch.addTool("rb-sel", "reshape", IC.reshape, "ปรับรูปทรง: ลากจุดหรือเส้นโค้ง · คลิกบนเส้นเพื่อเพิ่มจุด · ดับเบิลคลิกจุดเพื่อสลับมุม/โค้ง · Delete = ลบจุด", "ปรับรูปทรง");
+  [["brush", "พู่กัน"], ["fill", "เทสี (คลิกที่รูปทรง)"], ["text", "ข้อความ"], ["eraser", "ยางลบ (ลบทั้งชิ้นที่ลากผ่าน)"], ["pick", "ดูดสี (คลิกที่รูปทรง)"], ["zoom", "ซูม (คลิก = ขยาย, Shift+คลิก = ย่อ)"]].forEach(a => ch.addTool("rb-tools", a[0], IC[a[0]], a[1]));
+  ch.addBtn("rb-img", "p2fh", IC.flipH, "กลับซ้าย–ขวา"); ch.addBtn("rb-img", "p2fv", IC.flipV, "กลับบน–ล่าง");
+  ch.addTool("rb-img", "center", IC.center, "ตั้งจุดหมุน (ลากกากบาท)");
+  ch.addBtn("rb-img", "p2bm", "⇄ บิตแมป", "เปลี่ยนเป็นโหมดบิตแมป (วาดเป็นพิกเซล)", "txt");
+  [["p2gr", "จัดกลุ่ม", "รวมชิ้นที่เลือกเป็นกลุ่ม (Ctrl+G)"], ["p2ug", "แยกกลุ่ม", "แยกกลุ่ม (Ctrl+Shift+G)"], ["p2o1", "⤒ หน้าสุด", "ย้ายไปหน้าสุด"], ["p2o2", "↑ หน้า", "เลื่อนมาข้างหน้า 1 ชั้น"], ["p2o3", "↓ หลัง", "เลื่อนไปข้างหลัง 1 ชั้น"], ["p2o4", "⤓ หลังสุด", "ย้ายไปหลังสุด"]].forEach(a => ch.addBtn("rb-arr", a[0], a[1], a[2], "txt"));
+  SHAPES.forEach(a => ch.addTool("rb-shapes", a[0], shapeIcon(a[0]), a[1]));
+  ch.onTool = (k) => { tool = k; selNode = -1; if(tool === "reshape" && sel.size > 1){ const f = [...sel][0]; sel.clear(); sel.add(f); } ch.markTool(k);
+    stack.style.cursor = tool === "select" || tool === "reshape" ? "default" : tool === "text" ? "text" : tool === "pick" ? "copy" : tool === "zoom" ? "zoom-in" : "crosshair"; drawUI(); };
+  ch.markTool(tool); stack.style.cursor = "crosshair";
+  ch.mi("file", "เปิดรูปจากเครื่อง…", "p2imp", () => pickImage(u => { const im = new Image(); im.onload = () => { snap(); const t = mk({ t:"img", href:u, w:im.width, h:im.height, m:MT((W - im.width) / 2, (H - im.height) / 2) }); items.push(t); sel = new Set([t.id]); ch.onTool("select"); render(); }; im.src = u; }));
+  ch.mi("file", "ใช้ชุดนี้ (บันทึก)", "", () => q(".ok").click()); ch.mi("file", "ยกเลิก", "", () => q(".cn").click());
+  ch.mi("edit", "คัดลอก", "p2cp"); ch.mi("edit", "วาง", "p2ps"); ch.mi("edit", "ลบชิ้นที่เลือก", "p2dl");
+  ch.mi("edit", "เลือกทั้งหมด", "p2sa", () => { sel = new Set(items.map(i => i.id)); ch.onTool("select"); render(); });
+  ch.mi("view", "ซูมเข้า", "", () => ch.setZoom(ch.zoom() * 1.25)); ch.mi("view", "ซูมออก", "", () => ch.setZoom(ch.zoom() / 1.25)); ch.mi("view", "ซูม 100%", "", () => ch.setZoom(1));
+  q("#p2sz").min = 0; q("#p2sz").value = lw; q("#p2szn").textContent = lw;
   function sync(){
     q("#p2un").disabled = !undo.length; q("#p2re").disabled = !redo.length;
     const some = sel.size > 0, hasG = [...sel].some(id => { const it = byId(id); return it && it.t === "group"; });
     q("#p2gr").disabled = sel.size < 2; q("#p2ug").disabled = !hasG;
     ["#p2o1", "#p2o2", "#p2o3", "#p2o4", "#p2fh", "#p2fv", "#p2cp", "#p2dl"].forEach(x => { q(x).disabled = !some; }); q("#p2ps").disabled = !clip;
   }
-  const syncFromSel = () => { const it = selPath(); if(it){ fill = it.fill; line = it.line; if(it.lw != null){ lw = it.lw; q("#p2sz").value = lw; q("#p2szn").textContent = lw; } paintSw(); } };
-  paintSw();
   const styleSnap = () => { const n = Date.now(); if(n - styleT > 900) snap(); styleT = n; };
   function applyStyle(f){ if(!sel.size) return; styleSnap(); sel.forEach(id => { const it = byId(id); if(it) eachItem([it], f); }); render(); }
+  ch.colors((w) => w === "fill" ? fill : line, (w, hex) => { if(w === "fill") fill = hex; else line = hex;
+    applyStyle(i => { if(i.t === "path") i[w] = hex; else if(i.t === "text" && w === "fill" && hex) i.fill = hex; }); });
+  const syncFromSel = () => { const it = selPath(); if(it){ fill = it.fill; line = it.line; if(it.lw != null){ lw = it.lw; q("#p2sz").value = lw; q("#p2szn").textContent = lw; } ch.paintSw(); } };
   q("#p2sz").oninput = (e) => { lw = +e.target.value; q("#p2szn").textContent = lw; applyStyle(i => { if(i.t === "path") i.lw = lw; }); };
-  const setZ = (z) => { zoom = Math.max(.5, Math.min(3, z)); stack.style.width = zoom * 100 + "%"; q("#p2zl").textContent = Math.round(zoom * 100) + "%"; drawUI(); };
-  q("#p2zi").onclick = () => setZ(zoom * 1.25); q("#p2zo").onclick = () => setZ(zoom / 1.25);
-  // ----- กล่องเลือกสี -----
-  const closePop = () => { if(pop){ pop.remove(); pop = null; } };
-  bar.querySelectorAll(".csw").forEach(c => c.onclick = (e) => {
-    e.stopPropagation(); const w = c.dataset.w; if(pop && pop.dataset.w === w){ closePop(); return; } closePop();
-    pop = el("div", "p2-pop"); pop.dataset.w = w; pop.onclick = (ev) => ev.stopPropagation();
-    const cur = (w === "fill" ? fill : line) || "#9966FF", hsb = hex2hsb(cur);
-    pop.innerHTML = '<label>สี<input type="range" min="0" max="100"><b></b></label><label>ความอิ่มตัว<input type="range" min="0" max="100"><b></b></label><label>ความสว่าง<input type="range" min="0" max="100"><b></b></label><div class="sws"></div><div class="acts"><button type="button" data-a="none">⊘ ไม่มีสี</button></div>';
-    const rs = [...pop.querySelectorAll("input")], nums = [...pop.querySelectorAll("b")];
-    const set = (hex) => { if(w === "fill") fill = hex; else line = hex; paintSw();
-      applyStyle(i => { if(i.t === "path") i[w] = hex; else if(i.t === "text" && w === "fill" && hex) i.fill = hex; }); };
-    const show = (x) => { rs[0].value = Math.round(x[0] / 3.6); rs[1].value = Math.round(x[1]); rs[2].value = Math.round(x[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; }); };
-    show(hsb);
-    rs.forEach(r => r.oninput = () => { const v = rs.map(x => +x.value); nums.forEach((n, k) => { n.textContent = v[k]; }); set(hsb2hex(v[0] * 3.6, v[1], v[2])); });
-    ["#000000", "#FFFFFF", "#EF4444", "#F97316", "#FACC15", "#22C55E", "#0EA5E9", "#855CD6", "#EC4899", "#92400E", "#F2C29B", "#94A3B8"].forEach(h => { const b = el("button"); b.type = "button"; b.style.background = h; b.setAttribute("aria-label", h); b.onclick = () => { set(h); show(hex2hsb(h)); }; pop.querySelector(".sws").append(b); });
-    pop.querySelector('[data-a="none"]').onclick = () => { set(null); closePop(); };
-    bar.append(pop);
-  });
-  ov.addEventListener("pointerdown", (e) => { if(pop && !e.target.closest(".p2-pop,.csw")) closePop(); });
+  ch.onZoom = () => drawUI();
   // ----- แก้ไขชิ้นงาน: ย้อนกลับ จัดกลุ่ม ชั้น กลับด้าน คัดลอก -----
   q("#p2un").onclick = () => restore(undo, redo); q("#p2re").onclick = () => restore(redo, undo);
   q("#p2gr").onclick = () => {
@@ -1952,7 +2095,12 @@ function openVectorPainter(onSave, name0, opts){
     return [{ x:X, y:Y - ry, i:[-kx, 0], o:[kx, 0], sm:true }, { x:X + rx, y:Y, i:[0, -ky], o:[0, ky], sm:true }, { x:X, y:Y + ry, i:[kx, 0], o:[-kx, 0], sm:true }, { x:X - rx, y:Y, i:[0, ky], o:[0, -ky], sm:true }]; };
   function shapeItem(kind, a, b){
     if(kind === "line") return line || fill ? mk({ t:"path", closed:false, fill:null, line:line || fill, lw:Math.max(1, lw), nodes:[{ x:a.x, y:a.y, i:null, o:null, sm:false }, { x:b.x, y:b.y, i:null, o:null, sm:false }] }) : null;
-    return mk({ t:"path", closed:true, fill, line, lw, nodes:kind === "rect" ? rectNodes(a, b) : ellNodes(a, b) });
+    const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x), y0 = Math.min(a.y, b.y), y1 = Math.max(a.y, b.y), w = x1 - x0, h = y1 - y0; let nodes;
+    if(kind === "rect") nodes = rectNodes(a, b); else if(kind === "circle") nodes = ellNodes(a, b);
+    else if(kind === "rrect"){ const r = Math.min(w, h) * .2, k = r * KAPPA;
+      nodes = [{ x:x0 + r, y:y0, i:[-k, 0], o:null }, { x:x1 - r, y:y0, i:null, o:[k, 0] }, { x:x1, y:y0 + r, i:[0, -k], o:null }, { x:x1, y:y1 - r, i:null, o:[0, k] }, { x:x1 - r, y:y1, i:[k, 0], o:null }, { x:x0 + r, y:y1, i:null, o:[-k, 0] }, { x:x0, y:y1 - r, i:[0, k], o:null }, { x:x0, y:y0 + r, i:null, o:[0, -k] }].map(n => Object.assign(n, { sm:false })); }
+    else nodes = SHAPE_PTS[kind].map(c => ({ x:x0 + c[0] * w, y:y0 + c[1] * h, i:null, o:null, sm:false }));
+    return mk({ t:"path", closed:true, fill, line, lw, nodes });
   }
   function brushItem(pts){
     if(!fill) return null; const P = pts.length < 2 ? [pts[0], [pts[0][0] + .01, pts[0][1]]] : rdp(pts, 1.2);
@@ -2010,6 +2158,8 @@ function openVectorPainter(onSave, name0, opts){
     }
     if(tool === "center"){ cx = p.x; cy = p.y; drag = { m:"ctr" }; drawUI(); return; }
     if(tool === "fill"){ const g = hit("[data-id]"); if(g && fill !== undefined){ const it = byId(+g.dataset.id); snap(); eachItem([it], i => { if(i.t === "path") i.fill = fill; else if(i.t === "text" && fill) i.fill = fill; }); render(); } return; }
+    if(tool === "zoom"){ ch.setZoom(ch.zoom() * (e.shiftKey ? .8 : 1.25)); return; }
+    if(tool === "pick"){ const g = hit("[data-id]"); if(g){ let c = null; eachItem([byId(+g.dataset.id)], i => { if(!c && i.t === "path") c = i.fill || i.line; else if(!c && i.t === "text") c = i.fill; }); if(c) ch.pickInto(c); } return; }
     if(tool === "text"){ startText(p); return; }
     if(tool === "eraser"){ drag = { m:"eraser" }; eraseAt(e); return; }
     if(tool === "brush"){ drag = { m:"brush", pts:[[p.x, p.y]] }; return; }
@@ -2033,14 +2183,14 @@ function openVectorPainter(onSave, name0, opts){
     else if(d.m === "ctr"){ cx = p.x; cy = p.y; drawUI(); }
     else if(d.m === "eraser") eraseAt(e);
     else if(d.m === "brush"){ d.pts.push([p.x, p.y]); const t = mk({ t:"path", closed:false, fill:null, line:fill || "#000000", lw:Math.max(1, lw), nodes:d.pts.map(c => ({ x:c[0], y:c[1], i:null, o:null })) }); d.prev = itemSvg(t, false); drawUI(); }
-    else if(d.m === "line" || d.m === "rect" || d.m === "circle"){ d.b = p; const t = shapeItem(d.m, d.a, p); d.prev = t ? itemSvg(t, false) : ""; drawUI(); }
+    else if(isShapeTool(d.m)){ d.b = constrainB(d.m, d.a, p, e.shiftKey); const t = shapeItem(d.m, d.a, d.b); d.prev = t ? itemSvg(t, false) : ""; drawUI(); }
   });
   const up = () => {
     if(!drag) return; const d = drag; drag = null;
     if(d.m === "marquee"){ const x0 = Math.min(d.a.x, d.b.x), x1 = Math.max(d.a.x, d.b.x), y0 = Math.min(d.a.y, d.b.y), y1 = Math.max(d.a.y, d.b.y);
       if(x1 - x0 > 2 || y1 - y0 > 2) items.forEach(i => { const w = worldBox(i.id); if(w && w.x0 <= x1 && w.x1 >= x0 && w.y0 <= y1 && w.y1 >= y0) sel.add(i.id); }); syncFromSel(); render(); }
     else if(d.m === "brush"){ const t = brushItem(d.pts); if(t){ snap(); items.push(t); } render(); }
-    else if(d.m === "line" || d.m === "rect" || d.m === "circle"){ if(d.b && Math.hypot(d.b.x - d.a.x, d.b.y - d.a.y) > 2){ const t = shapeItem(d.m, d.a, d.b); if(t){ snap(); items.push(t); } } render(); }
+    else if(isShapeTool(d.m)){ if(d.b && Math.hypot(d.b.x - d.a.x, d.b.y - d.a.y) > 2){ const t = shapeItem(d.m, d.a, d.b); if(t){ snap(); items.push(t); } } render(); }
     else if(d.m === "ctr"){ snap(); drawUI(); }
     else render();
   };
@@ -2050,7 +2200,7 @@ function openVectorPainter(onSave, name0, opts){
   function onKey(e){
     if(e.target.closest && e.target.closest(".p2-name,.p2-text")){ if(e.key === "Escape" && !e.target.closest(".p2-text")){ e.stopPropagation(); close(); } return; }
     const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
-    if(e.key === "Escape"){ e.stopPropagation(); if(pop) closePop(); else close(); }
+    if(e.key === "Escape"){ e.stopPropagation(); if(!ch.closePop()) close(); }
     else if(mod && k === "z"){ e.preventDefault(); e.stopPropagation(); (e.shiftKey ? q("#p2re") : q("#p2un")).click(); }
     else if(mod && k === "y"){ e.preventDefault(); e.stopPropagation(); q("#p2re").click(); }
     else if(mod && k === "a"){ e.preventDefault(); e.stopPropagation(); sel = new Set(items.map(i => i.id)); render(); }
