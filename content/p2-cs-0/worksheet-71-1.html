@@ -46,6 +46,7 @@
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
   @media print{ header a,.actions{ display:none; } }
 </style>
+<link rel="stylesheet" href="../../assets/css/tts.css">
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button class="tts-btn" data-audio-src="audio/ws71-1.mp3" style="margin-left:8px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำชี้แจง</span></button></p>
     <p style="font-weight:400">กิจกรรมที่ทำที่บ้านมีหลายขั้นตอน ลากกิจกรรมไปวางเรียงตามลำดับขั้นตอนที่เหมาะสม ตั้งแต่ขั้นที่ 1 ถึงขั้นสุดท้าย ลองคิดว่าทำอะไรก่อน ทำอะไรทีหลัง ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
     <div class="example">💡 ตัวอย่าง: แปรงฟัน → บีบยาสีฟันก่อน แล้วจึงแปรง ล้างปากเป็นขั้นสุดท้าย</div>
   </div>
@@ -94,6 +95,11 @@
 
 <div id="answers" style="display:none"></div>
 <script>window.DRAGWS = { n:1, u:0, g:"p2" };</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const CHIPAUDIO = {"👕 ใส่เสื้อผ้า": "audio/wc-074c82d7.mp3", "💇 หวีผม": "audio/wc-794f0a4a.mp3", "👟 ใส่รองเท้า": "audio/wc-152e0072.mp3", "🧹 กวาดพื้น": "audio/wc-783af215.mp3", "🧽 ถูพื้น": "audio/wc-99a6a7ca.mp3", "🕸️ กวาดหยากไย่": "audio/wc-dba5369b.mp3", "💧 ล้างน้ำยาออก": "audio/wc-f03bf230.mp3", "🧻 เช็ดให้แห้ง": "audio/wc-12a2877c.mp3", "🚿 ล้างฝุ่นออก": "audio/wc-503087c1.mp3", "🧴 ล้างด้วยน้ำยาล้างรถ": "audio/wc-b08b17d7.mp3", "💧 รดน้ำต้นไม้": "audio/wc-2b8d6647.mp3", "🌱 ใส่ปุ๋ยคอก": "audio/wc-6fde9951.mp3", "🌿 ถอนหญ้า": "audio/wc-e89dd7ba.mp3", "⛏️ พรวนดิน": "audio/wc-16e4fb2b.mp3"};
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("pointerdown", () => { const f = CHIPAUDIO[c.textContent.trim()]; if(f) playAudio(f, null); }));
+</script>
 <script src="../../assets/js/dragws.js?v=4"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>

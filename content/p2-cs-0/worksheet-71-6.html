@@ -46,6 +46,7 @@
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
   @media print{ header a,.actions{ display:none; } }
 </style>
+<link rel="stylesheet" href="../../assets/css/tts.css">
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button class="tts-btn" data-audio-src="audio/ws71-6.mp3" style="margin-left:8px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำชี้แจง</span></button></p>
     <p style="font-weight:400">คิดอย่างเป็นระบบ คือนำข้อมูลมาตัดสิ่งที่เป็นไปไม่ได้ออกทีละอย่าง สิ่งที่เหลือคือคำตอบ ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
     <div class="example">💡 ตัวอย่าง: ถ้าผิดทั้ง 2 อย่าง แสดงว่า 2 อย่างนั้นไม่ใช่คำตอบ</div>
   </div>
@@ -89,6 +90,11 @@
 
 <div id="answers" style="display:none"></div>
 <script>window.DRAGWS = { n:6, u:0, g:"p2" };</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const CHIPAUDIO = {"⚽ ฟุตบอล": "audio/wc-e7ee8ca5.mp3", "🏐 ตะกร้อ": "audio/wc-191b1240.mp3", "🏃 วิ่งแข่ง": "audio/wc-e9297f83.mp3", "ตัดกีฬา 2 อย่างที่ผิดทั้งคู่ออก (ฟุตบอล ตะกร้อ)": "audio/wc-3bc993b9.mp3", "ดูคำถามที่ผิดทั้ง 2 อย่าง": "audio/wc-0908db04.mp3", "กีฬาที่เหลืออยู่คือคำตอบ": "audio/wc-a07d98fa.mp3", "เดาไปเรื่อย ๆ": "audio/wc-c397a81e.mp3"};
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("pointerdown", () => { const f = CHIPAUDIO[c.textContent.trim()]; if(f) playAudio(f, null); }));
+</script>
 <script src="../../assets/js/dragws.js?v=4"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>

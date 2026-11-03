@@ -46,6 +46,7 @@
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
   @media print{ header a,.actions{ display:none; } }
 </style>
+<link rel="stylesheet" href="../../assets/css/tts.css">
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button class="tts-btn" data-audio-src="audio/ws71-2.mp3" style="margin-left:8px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำชี้แจง</span></button></p>
     <p style="font-weight:400">การซื้อของมีหลายขั้นตอน ลากข้อความไปวางเรียงตามลำดับ เริ่มจากขั้นที่ 1 ไปจนถึงขั้นสุดท้าย ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
     <div class="example">💡 ตัวอย่าง: ต้องเดินไปที่ชั้นวางสินค้าก่อน จึงจะหยิบสินค้าได้</div>
   </div>
@@ -88,6 +89,11 @@
 
 <div id="answers" style="display:none"></div>
 <script>window.DRAGWS = { n:2, u:0, g:"p2" };</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const CHIPAUDIO = {"💵 จ่ายเงิน": "audio/wc-e7f62f5e.mp3", "🛍️ เลือกสินค้า": "audio/wc-59018884.mp3", "💰 รอรับเงินทอน": "audio/wc-6e10c4f3.mp3", "🏷️ ดูราคา": "audio/wc-e2f46736.mp3", "🚶 เดินไปที่ชั้นวางสินค้า": "audio/wc-a5d281d6.mp3", "🤲 หยิบสินค้า": "audio/wc-4d8ae55a.mp3", "⚖️ เปรียบเทียบราคากับคุณภาพสินค้า": "audio/wc-23c35e24.mp3"};
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("pointerdown", () => { const f = CHIPAUDIO[c.textContent.trim()]; if(f) playAudio(f, null); }));
+</script>
 <script src="../../assets/js/dragws.js?v=4"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>

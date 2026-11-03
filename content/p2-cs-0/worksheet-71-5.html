@@ -46,6 +46,7 @@
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
   @media print{ header a,.actions{ display:none; } }
 </style>
+<link rel="stylesheet" href="../../assets/css/tts.css">
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button class="tts-btn" data-audio-src="audio/ws71-5.mp3" style="margin-left:8px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำชี้แจง</span></button></p>
     <p style="font-weight:400">อ่านข้อมูลของเพื่อน ๆ ทีละบรรทัด แล้วใช้ข้อมูลที่ชัดเจนก่อน ค่อย ๆ หาลำดับของทุกคน ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
     <div class="example">💡 ตัวอย่าง: ถ้ารู้ว่า ก ถึงก่อน ข แสดงว่า ก อยู่ลำดับก่อน ข</div>
   </div>
@@ -89,6 +90,11 @@
 
 <div id="answers" style="display:none"></div>
 <script>window.DRAGWS = { n:5, u:0, g:"p2" };</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const CHIPAUDIO = {"นพ": "audio/wc-3f1fb362.mp3", "กิ๊ก": "audio/wc-47f874bb.mp3", "ต้อม": "audio/wc-17e736ed.mp3", "หนุ่ม": "audio/wc-5e1ce7b4.mp3", "เพราะรู้ว่าหนุ่มถึงเส้นชัยเป็นคนสุดท้าย": "audio/wc-9d2163c7.mp3", "เพราะหนุ่มวิ่งเร็วที่สุด": "audio/wc-eaf0dde5.mp3", "เพราะชื่อหนุ่มเขียนง่าย": "audio/wc-2f6c8b24.mp3"};
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("pointerdown", () => { const f = CHIPAUDIO[c.textContent.trim()]; if(f) playAudio(f, null); }));
+</script>
 <script src="../../assets/js/dragws.js?v=4"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>

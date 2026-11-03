@@ -46,6 +46,7 @@
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
   @media print{ header a,.actions{ display:none; } }
 </style>
+<link rel="stylesheet" href="../../assets/css/tts.css">
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button class="tts-btn" data-audio-src="audio/ws71-3.mp3" style="margin-left:8px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำชี้แจง</span></button></p>
     <p style="font-weight:400">เมื่อมีหลายอย่างที่ต้องทำ ให้วางแผนเป็นลำดับขั้นตอน ว่าต้องไปที่ไหนก่อน ไปที่ไหนทีหลัง จึงจะทำงานสำเร็จ ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
     <div class="example">💡 ตัวอย่าง: ถ้าเดินไปทางไหนไม่ได้ ต้องหาทางเดินอ้อมไปอีกทาง</div>
   </div>
@@ -87,6 +88,11 @@
 
 <div id="answers" style="display:none"></div>
 <script>window.DRAGWS = { n:3, u:0, g:"p2" };</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const CHIPAUDIO = {"🥁 กลอง": "audio/wc-ebae5e10.mp3", "🧹 ไม้กวาด": "audio/wc-3258e082.mp3", "⚽ ลูกบอล": "audio/wc-50f37eac.mp3", "📺 โทรทัศน์": "audio/wc-6d99ee6c.mp3", "🚪 ตู้เสื้อผ้า": "audio/wc-f2019213.mp3", "🗑️ ที่ตักขยะ": "audio/wc-397ffcd3.mp3", "🗄️ เก็บของทั้งหมดใส่ตู้เก็บของ": "audio/wc-e3f3cf33.mp3", "🛋️ นั่งพัก": "audio/wc-c149ca2a.mp3", "📺 เปิดโทรทัศน์": "audio/wc-6e11de05.mp3"};
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("pointerdown", () => { const f = CHIPAUDIO[c.textContent.trim()]; if(f) playAudio(f, null); }));
+</script>
 <script src="../../assets/js/dragws.js?v=4"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>

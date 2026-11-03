@@ -46,6 +46,7 @@
   #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
   @media print{ header a,.actions{ display:none; } }
 </style>
+<link rel="stylesheet" href="../../assets/css/tts.css">
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
 <body>
@@ -61,7 +62,7 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button class="tts-btn" data-audio-src="audio/ws71-4.mp3" style="margin-left:8px"><span class="tts-icon">🔊</span> <span class="tts-label">ฟังคำชี้แจง</span></button></p>
     <p style="font-weight:400">ถ้าต้องค้นหาสิ่งของให้ครบ ต้องหาอย่างเป็นระบบ คือแบ่งพื้นที่ แล้วหาทีละส่วนให้ทั่ว จะไม่ตกหล่นและไม่นับซ้ำ ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
     <div class="example">💡 ตัวอย่าง: หาของในห้อง ให้แบ่งเป็นมุมซ้าย มุมขวา มุมหลังห้อง แล้วหาทีละมุม</div>
   </div>
@@ -89,6 +90,11 @@
 
 <div id="answers" style="display:none"></div>
 <script>window.DRAGWS = { n:4, u:0, g:"p2" };</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script>
+const CHIPAUDIO = {"5": "audio/wc-e4da3b7f.mp3", "4": "audio/wc-a87ff679.mp3", "6": "audio/wc-1679091c.mp3", "3": "audio/wc-eccbc87e.mp3", "7": "audio/wc-8f14e45f.mp3", "แบ่งพื้นที่เป็นส่วน ๆ แล้วหาทีละส่วน": "audio/wc-a660c102.mp3", "หาจากซ้ายไปขวา และจากบนลงล่าง": "audio/wc-5fe0fe24.mp3", "นับทีละช่อง ไม่ข้ามช่อง": "audio/wc-ee3e8cc4.mp3", "ทำเครื่องหมายส่วนที่หาแล้ว": "audio/wc-50a630b5.mp3", "หามั่ว ๆ ไม่จำว่าหาที่ไหนแล้ว": "audio/wc-a4417867.mp3", "หาซ้ำที่เดิมหลายรอบ": "audio/wc-c0309723.mp3", "ข้ามบางช่องไปเลย": "audio/wc-18866503.mp3"};
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("pointerdown", () => { const f = CHIPAUDIO[c.textContent.trim()]; if(f) playAudio(f, null); }));
+</script>
 <script src="../../assets/js/dragws.js?v=4"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>
