@@ -118,10 +118,10 @@
   #right{ display:flex; flex-direction:column; gap:8px; min-height:0; overflow:auto; }
   #stagebox{ position:relative; container-type:inline-size; width:100%; aspect-ratio:4/3; background:#fff; border-radius:12px; overflow:hidden; border:2px solid var(--bd); flex:none; }
   #stagebox canvas{ position:absolute; inset:0; width:100%; height:100%; }
-  #sprite{ position:absolute; font-size:9cqw; line-height:1; transform:translate(-50%,-50%); transition:left .12s linear, top .12s linear; pointer-events:auto; cursor:pointer; }
-  #sprite svg, #sprite img{ height:15cqw; width:auto; display:block; }
-  #bubble.think{ border-style:dashed; border-radius:24px; }
-  #bubble{ position:absolute; background:#fff; border:2px solid #94A3B8; border-radius:14px; padding:3px 10px; font-weight:700; font-size:3.6cqw; max-width:60%; display:none; transform:translate(-50%,calc(-100% - 9cqw)); z-index:3; transition:left .12s linear, top .12s linear; }
+  .sprite{ position:absolute; font-size:9cqw; line-height:1; transform:translate(-50%,-50%); transition:left .12s linear, top .12s linear; pointer-events:auto; cursor:pointer; }
+  .sprite svg, .sprite img{ height:15cqw; width:auto; display:block; }
+  .bubble.think{ border-style:dashed; border-radius:24px; }
+  .bubble{ position:absolute; background:#fff; border:2px solid #94A3B8; border-radius:14px; padding:3px 10px; font-weight:700; font-size:3.6cqw; max-width:60%; display:none; transform:translate(-50%,calc(-100% - 9cqw)); z-index:3; transition:left .12s linear, top .12s linear; }
   #mon{ position:absolute; left:6px; top:6px; display:flex; flex-direction:column; gap:3px; z-index:3; }
   #mon span{ background:#FFEDD5; border:1px solid #FDBA74; border-radius:6px; padding:0 8px; font-size:3.3cqw; font-weight:700; color:#9A3412; }
   #askbar{ position:absolute; left:6px; right:6px; bottom:6px; background:#fff; border:2px solid #38BDF8; border-radius:12px; padding:6px; display:none; z-index:4; }
@@ -148,6 +148,46 @@
   }
   .swal2-popup{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif !important; font-size:1rem !important; }
   .swal2-title{ font-size:1.35rem !important; }
+
+  .wtab{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:3px 12px; font:inherit; font-size:.82rem; font-weight:700; cursor:pointer; }
+  .wtab.on{ background:#4F46E5; color:#fff; border-color:#4F46E5; }
+  #sprpane{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:6px 2px; }
+  #sprlist{ display:flex; gap:6px; flex-wrap:wrap; }
+  .sth{ border:2px solid var(--bd); background:#fff; border-radius:12px; padding:2px 6px; cursor:pointer; text-align:center; font:inherit; font-size:.7rem; width:68px; }
+  .sth.on{ border-color:#4F46E5; background:#EEF2FF; }
+  .sth .pv{ height:38px; display:flex; align-items:center; justify-content:center; font-size:30px; line-height:1; }
+  .sth .pv svg, .sth .pv img{ height:36px; width:auto; max-width:60px; }
+  .sth .nm{ overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  #sprpane .sbtn{ border:1px solid var(--bd); background:#fff; border-radius:10px; padding:5px 10px; font:inherit; font-size:.78rem; cursor:pointer; }
+  #sprname{ border:1px solid var(--bd); border-radius:8px; padding:4px 8px; font:inherit; font-size:.8rem; width:130px; }
+  #costpane{ flex:1; overflow:auto; padding:10px; display:none; background:#fff; }
+  #costpane .ch{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:10px; font-weight:700; }
+  #costpane button{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:4px 10px; font:inherit; font-size:.8rem; cursor:pointer; }
+  #costgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
+  .ccard{ border:3px solid var(--bd); border-radius:14px; padding:6px; text-align:center; cursor:pointer; background:repeating-conic-gradient(#F1F5F9 0 25%, #fff 0 50%) 0 0/14px 14px; }
+  .ccard.on{ border-color:#4F46E5; }
+  .ccard .cth{ height:84px; display:flex; align-items:center; justify-content:center; font-size:60px; line-height:1; }
+  .ccard .cth svg, .ccard .cth img{ height:80px; width:auto; max-width:100px; }
+  .ccard .cn{ font-size:.75rem; font-weight:700; background:#fff; border-radius:6px; }
+  .ccard .ca{ display:flex; gap:3px; justify-content:center; margin-top:4px; }
+  .ccard .ca button{ padding:1px 6px; font-size:.75rem; background:#fff; }
+  .pnt-ov{ position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:9999; display:flex; align-items:center; justify-content:center; padding:10px; }
+  .pnt-box{ background:#fff; border-radius:18px; padding:12px; max-width:340px; width:100%; display:grid; gap:8px; }
+  .pnt-head{ font-weight:800; font-size:1.1rem; }
+  .pnt-box canvas{ width:100%; aspect-ratio:1; border:2px solid var(--bd); border-radius:12px; touch-action:none; cursor:crosshair; background:repeating-conic-gradient(#F1F5F9 0 25%, #fff 0 50%) 0 0/16px 16px; }
+  .pnt-tools{ display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
+  .pnt-tools .sw{ width:26px; height:26px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 1px #94A3B8; cursor:pointer; padding:0; }
+  .pnt-tools .sw.on{ box-shadow:0 0 0 3px #4F46E5; }
+  .pnt-tools button, .pnt-foot button{ border:1px solid var(--bd); background:#fff; border-radius:8px; padding:4px 9px; font:inherit; font-size:.8rem; cursor:pointer; }
+  .pnt-tools button.on{ background:#4F46E5; color:#fff; }
+  .pnt-foot{ display:flex; gap:8px; justify-content:flex-end; }
+  .pnt-foot .ok{ background:#4F46E5; color:#fff; border-color:#4F46E5; font-weight:700; }
+  .addgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .addgrid button{ border:2px solid #E2E8F0; background:#fff; border-radius:14px; padding:6px 2px; font:inherit; cursor:pointer; font-size:.85rem; }
+  .addgrid button .pv{ height:46px; display:flex; align-items:center; justify-content:center; font-size:36px; line-height:1; }
+  .addgrid button .pv svg, .addgrid button .pv img{ height:44px; width:auto; }
+  .emogrid{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
+  .emogrid button{ border:2px solid #E2E8F0; background:#fff; border-radius:12px; font-size:30px; padding:2px; cursor:pointer; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -164,6 +204,7 @@
     <option value="temp">ภารกิจ 5: แปลงอุณหภูมิ F → C</option>
     <option value="score">ภารกิจ 6: ตรวจคะแนนมากกว่า 80</option>
     <option value="evenodd">ภารกิจ 7: เลขคู่หรือเลขคี่</option>
+    <option value="multi">ตัวละครหลายตัว: แมววิ่งไปชนหมา</option>
     <option value="" disabled>— ตัวอย่างจากใบความรู้ —</option>
     <option value="ex-seq1">เรียงลำดับ 1: แปรงฟัน</option>
     <option value="ex-seq2">เรียงลำดับ 2: พื้นที่สี่เหลี่ยมผืนผ้า</option>
@@ -198,11 +239,12 @@
 
   <div class="panel wsp">
     <div class="wsbar">
-      <span>🧩 พื้นที่เขียนโปรแกรม</span>
+      <button class="wtab on" id="tab-code">🧩 โค้ด</button><button class="wtab" id="tab-cost">👕 ชุดแต่งตัว</button>
       <button id="tidy">จัดเรียง</button>
       <button id="clearws">ลบทั้งหมด</button><span class="zoombar"><button id="zout" title="ซูมออก">−</button><span id="zlabel">100%</span><button id="zin" title="ซูมเข้า">+</button><button id="zfit" title="ปรับให้เห็นบล็อกทั้งหมด">⤢ พอดีจอ</button><button id="z100" title="กลับเป็น 100%">100%</button></span>
       <span style="color:#94A3B8">คลิกที่ชุดบล็อก = รันชุดนั้น · ลากไปวางที่คลังบล็อก = ลบ</span>
     </div>
+    <div id="costpane"></div>
     <div id="ws"><div id="wssizer"><div id="wsin"><div id="wshint">ลากบล็อกจากด้านซ้ายมาวางที่นี่<br>เริ่มด้วย 🟨 "เมื่อกดธงเขียว" แล้วต่อบล็อกข้างล่าง</div></div></div></div>
   </div>
 
@@ -216,20 +258,23 @@
     </div>
     <div id="stagebox">
       <canvas id="pen" width="480" height="360"></canvas>
-      <div id="sprite"></div>
-      <div id="bubble"></div>
       <div id="mon"></div>
       <div id="askbar"><div id="asktxt"></div><input id="askin" autocomplete="off"> <button id="askok">ตกลง</button></div>
     </div>
+    <div id="sprpane">
+      <span style="font-weight:700">🎭 ตัวละคร</span>
+      <div id="sprlist"></div>
+      <button class="sbtn" id="spradd">➕ เพิ่ม</button>
+      <input id="sprname" maxlength="16" placeholder="ชื่อตัวละคร" aria-label="ชื่อตัวละคร">
+      <button class="sbtn" id="sprdel" title="ลบตัวละครนี้">🗑️</button>
+    </div>
     <div id="ctl2" class="opt" style="gap:12px;flex-wrap:wrap">
-      <label class="opt">ตัวละคร
-        <select id="spr"><option value="0">🧒 นักเรียนชาย</option><option value="1">👧 นักเรียนหญิง</option><option value="2">🐱 แมว</option><option value="3">🐶 หมา</option><option value="4">🐸 กบ</option><option value="5">🚀 จรวด</option></select>
-      </label>
       <label class="opt"><input type="checkbox" id="rot"> หมุนตัวละครตามทิศ</label>
       <label class="opt"><input type="checkbox" id="autoclr" checked> ล้างลายเส้นก่อนรัน</label>
     </div>
     <div id="help">
       <b>วิธีใช้:</b> ① ลากบล็อกจากคลังมาวางในพื้นที่ตรงกลาง ② วางบล็อกให้ชิดใต้บล็อกอื่นจะต่อกันเอง ③ วางบล็อกวงรี/หกเหลี่ยมลงในช่องของบล็อกอื่นได้ ④ กด 🟩 ธงเขียว เพื่อดูผล
+      <br>🎭 กด ➕ เพิ่มตัวละครได้หลายตัว คลิกตัวไหนก็เขียนโค้ดของตัวนั้น · แท็บ 👕 ชุดแต่งตัว = อัปโหลดรูป วาดเอง หรือเลือกอีโมจิ · ลากตัวละครบนเวทีเพื่อย้ายตำแหน่งเริ่มต้น
       <br>⚡ ดูภารกิจตัวอย่างได้จากเมนู "โหลดตัวอย่างโปรแกรม" · ตัวอย่างตรงกับใบงาน 2.2–2.5
     </div>
   </div>
@@ -277,6 +322,7 @@ const SPEC = {
   move:      { cat:"motion",  kind:"stack", parts:["เดิน", N(10), "ก้าว"] },
   turnR:     { cat:"motion",  kind:"stack", parts:["หมุนขวา ↻", N(15), "องศา"] },
   turnL:     { cat:"motion",  kind:"stack", parts:["หมุนซ้าย ↺", N(15), "องศา"] },
+  gotospr:   { cat:"motion",  kind:"stack", parts:["ไปที่ตัวละคร", { i:"spr" }] },
   goto:      { cat:"motion",  kind:"stack", parts:["ไปที่ x:", N(0), "y:", N(0)] },
   point:     { cat:"motion",  kind:"stack", parts:["หันไปทาง", N(90), "องศา"] },
   changex:   { cat:"motion",  kind:"stack", parts:["เปลี่ยน x ทีละ", N(10)] },
@@ -296,7 +342,7 @@ const SPEC = {
   sayfor:    { cat:"looks",   kind:"stack", parts:["พูด", T("สวัสดี"), "เป็นเวลา", N(2), "วินาที"] },
   think:     { cat:"looks",   kind:"stack", parts:["คิด", T("อืมม...")] },
   thinkfor:  { cat:"looks",   kind:"stack", parts:["คิด", T("อืมม..."), "เป็นเวลา", N(2), "วินาที"] },
-  setcost:   { cat:"looks",   kind:"stack", parts:["เปลี่ยนชุดเป็น", { i:"opt", o:["ชุดที่ 1", "ชุดที่ 2", "ชุดที่ 3"], d:"ชุดที่ 1" }] },
+  setcost:   { cat:"looks",   kind:"stack", parts:["เปลี่ยนชุดเป็น", { i:"opt", o:Array.from({ length:10 }, (_, i) => "ชุดที่ " + (i + 1)), d:"ชุดที่ 1" }] },
   costume:   { cat:"looks",   kind:"stack", parts:["ชุดถัดไป"] },
   nextbackdrop:{ cat:"looks", kind:"stack", parts:["ฉากหลังถัดไป"] },
   changesize:{ cat:"looks",   kind:"stack", parts:["เปลี่ยนขนาดทีละ", N(10)] },
@@ -340,6 +386,17 @@ const SPEC = {
   stopall:   { cat:"control", kind:"stack", parts:["หยุดทั้งหมด ⏹"], cap:true },   // เก็บไว้ให้โปรแกรมเก่าที่บันทึก/แชร์ไว้ยังเปิดได้ (ไม่แสดงในชุดบล็อก)
   ask:       { cat:"sensing", kind:"stack", parts:["ถาม", T("คุณชื่ออะไร"), "และรอคำตอบ"] },
   answer:    { cat:"sensing", kind:"rep",   parts:["คำตอบ"] },
+  touchspr:  { cat:"sensing", kind:"bool",  parts:["แตะตัวละคร", { i:"spr" }, "ไหม"] },
+  touchmouse:{ cat:"sensing", kind:"bool",  parts:["แตะตัวชี้เมาส์ 🖱️ ไหม"] },
+  touchedge: { cat:"sensing", kind:"bool",  parts:["แตะขอบเวทีไหม"] },
+  keydown:   { cat:"sensing", kind:"bool",  parts:["กดปุ่ม", { i:"opt", o:["ปุ่มใดก็ได้"].concat(KEYOPTS), d:"เว้นวรรค" }, "อยู่ไหม"] },
+  mousedown: { cat:"sensing", kind:"bool",  parts:["กดเมาส์อยู่ไหม"] },
+  mousex:    { cat:"sensing", kind:"rep",   parts:["เมาส์ x"] },
+  mousey:    { cat:"sensing", kind:"rep",   parts:["เมาส์ y"] },
+  distance:  { cat:"sensing", kind:"rep",   parts:["ระยะห่างจาก", { i:"opt", o:["ตัวชี้เมาส์", "กึ่งกลางเวที"], d:"ตัวชี้เมาส์" }] },
+  timer:     { cat:"sensing", kind:"rep",   parts:["ตัวจับเวลา ⏱ (วินาที)"] },
+  resettimer:{ cat:"sensing", kind:"stack", parts:["รีเซ็ตตัวจับเวลา"] },
+  nowis:     { cat:"sensing", kind:"rep",   parts:[{ i:"opt", o:["ปี", "เดือน", "วันที่", "วันในสัปดาห์", "ชั่วโมง", "นาที", "วินาที"], d:"ชั่วโมง" }, "ตอนนี้"] },
   add:       { cat:"ops",     kind:"rep",   parts:[A(), "+", A()] },
   sub:       { cat:"ops",     kind:"rep",   parts:[A(), "−", A()] },
   mul:       { cat:"ops",     kind:"rep",   parts:[A(), "×", A()] },
@@ -378,12 +435,12 @@ const SPEC = {
 };
 const CATS = [
   ["event","เหตุการณ์","#F5B800",["flag","keyspace","spriteclick","backdropis","timerhat","recv","broadcast","broadcastwait"]],
-  ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","gotorand","goto","glidetorand","glide","point","towards","changex","setx","changey","sety","bounce","rotstyle","xpos","ypos","dirn"]],
+  ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","gotorand","gotospr","goto","glidetorand","glide","point","towards","changex","setx","changey","sety","bounce","rotstyle","xpos","ypos","dirn"]],
   ["looks","รูปร่าง","#9966FF",["say","sayfor","think","thinkfor","setcost","costume","backdrop","nextbackdrop","changesize","setsize","changefx","setfx","clearfx","show","hide","costnum","bgnum","bgname","sizen"]],
   ["sound","เสียง","#CF63CF",["playuntil","startsound","stopsounds","changesfx","setsfx","clearsfx","changevol","setvol","playnote","restbeat","volume"]],
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
   ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop"]],
-  ["sensing","รับค่า","#3AAAD1",["ask","answer"]],
+  ["sensing","รับค่า","#3AAAD1",["touchmouse","touchedge","touchspr","keydown","mousedown","mousex","mousey","distance","ask","answer","timer","resettimer","nowis"]],
   ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","rand","gt","lt","eq","and","or","not","join","letter","length","contains","mod","round","mathop"]],
   ["vars","ตัวแปร","#FF6B3D",[]]
 ];
@@ -398,12 +455,13 @@ let ZM = 1;
 function makeSlot(def, val){
   const s = el("span", "inp"); s.dataset.t = def.i;
   if(def.i === "bool") return s;
-  if(def.i === "var" || def.i === "opt" || def.i === "list"){
+  if(def.i === "var" || def.i === "opt" || def.i === "list" || def.i === "spr"){
     const sel = el("select");
     if(def.i === "var") fillVarSelect(sel, val);
     else if(def.i === "list") fillListSelect(sel, val);
+    else if(def.i === "spr") fillSprSelect(sel, val);
     else { def.o.forEach(o => sel.append(new Option(o, o))); sel.value = val != null ? val : def.d; }
-    if(def.i === "opt") sel.addEventListener("change", save);
+    if(def.i === "opt" || def.i === "spr") sel.addEventListener("change", save);
     s.append(sel); return s;
   }
   const inp = el("input"); inp.type = "text"; inp.value = val != null ? val : (def.d ?? "");
@@ -418,6 +476,11 @@ function fillVarSelect(sel, keep){
   if(!VARS.length) sel.append(new Option("(สร้างตัวแปรก่อน)", ""));
   VARS.forEach(v => sel.append(new Option(v, v)));
   if(cur && VARS.includes(cur)) sel.value = cur;
+}
+function fillSprSelect(sel, keep){
+  const cur = keep != null ? keep : sel.value; sel.innerHTML = "";
+  SPRS.forEach(o => sel.append(new Option(o.name, o.name)));
+  if(cur && SPRS.some(o => o.name === cur)) sel.value = cur;
 }
 function fillListSelect(sel, keep){
   const cur = keep != null ? keep : sel.value;
@@ -470,15 +533,28 @@ function bld(j){
 }
 function putRep(slot, rep){ slot.classList.add("has-rep"); slot.append(rep); }
 const allScripts = () => [...wsin.querySelectorAll(":scope > .script")];
-function wsToJSON(){
-  return { vars:VARS, lists:LISTS, spr:$("#spr").value, scripts: allScripts().map(sc => ({ x:parseInt(sc.style.left) || 0, y:parseInt(sc.style.top) || 0, b:[...sc.children].filter(x => x.classList.contains("blk")).map(ser) })) };
+const domScripts = () => allScripts().map(sc => ({ x:parseInt(sc.style.left) || 0, y:parseInt(sc.style.top) || 0, b:[...sc.children].filter(x => x.classList.contains("blk")).map(ser) }));
+const anyScripts = () => allScripts().length > 0 || SPRS.some(o => (o.scripts || []).length);
+// share = true: ภาพชุดแต่งตัวที่อัปโหลด/วาดเองไม่ส่งไปกับลิงก์ (ลิงก์จะยาวเกินไป) ใช้ 🖼️ แทน
+function wsToJSON(share){
+  return { vars:VARS, lists:LISTS, cur:CUR, sprites: SPRS.map((o, i) => ({
+    name:o.name, x0:o.x0, y0:o.y0,
+    costumes:o.costumes.map(c => c.r ? { r:c.r } : { h: share && c.h.includes("data:image") ? "🖼️" : c.h }),
+    scripts: i === CUR ? JSON.parse(JSON.stringify(domScripts())) : o.scripts })) };
+}
+function mountScripts(){
+  const o = SPRS[CUR]; allScripts().forEach(x => x.remove());
+  (o.scripts || []).forEach(sc => { const e = newScript(sc.x, sc.y); sc.b.forEach(j => e.append(bld(j))); });
+  o.scripts = []; hint();
 }
 function loadJSON(d){
-  allScripts().forEach(s => s.remove());
-  VARS = (d.vars || []).slice(); LISTS = (d.lists || []).slice(); LISTS.forEach(l => { if(!LST[l]) LST[l] = []; }); refreshVars();
-  if(d.spr != null){ $("#spr").value = d.spr; setSprite(); }
-  (d.scripts || []).forEach(s => { const sc = newScript(s.x, s.y); s.b.forEach(j => sc.append(bld(j))); });
-  hint();
+  allScripts().forEach(x => x.remove());
+  SPRS.forEach(o => { o.el.remove(); o.bub.remove(); }); SPRS = [];
+  VARS = (d.vars || []).slice(); LISTS = (d.lists || []).slice(); LISTS.forEach(l => { if(!LST[l]) LST[l] = []; });
+  const list = d.sprites && d.sprites.length ? d.sprites : [{ preset:d.spr, scripts:d.scripts || [] }];
+  list.slice(0, 8).forEach((o, i) => SPRS.push(makeSprite(o, i)));
+  CUR = Math.max(0, Math.min(+d.cur || 0, SPRS.length - 1)); SP = SPRS[CUR];
+  refreshVars(); mountScripts(); refreshSprUI(); SPRS.forEach(o => renderSprite(o));
 }
 function newScript(x, y){ const sc = el("div", "script"); sc.style.left = Math.max(0, x) + "px"; sc.style.top = Math.max(0, y) + "px"; wsin.append(sc); return sc; }
 function hint(){ $("#wshint").style.display = allScripts().length ? "none" : "block"; }
@@ -546,6 +622,7 @@ function newVar(isList){
 function refreshVars(){
   const top = $("#palette").scrollTop; buildPalette(); $("#palette").scrollTop = top;
   document.querySelectorAll("#wsin select").forEach(sel => { const t = sel.parentElement.dataset.t; if(t === "var") fillVarSelect(sel); else if(t === "list") fillListSelect(sel); });
+  refreshSprSelects();
 }
 
 /* ---------- ลาก–วาง ---------- */
@@ -699,26 +776,62 @@ const girlSvg = (pose) => `<svg viewBox="0 0 100 150" xmlns="http://www.w3.org/2
   <ellipse cx="37" cy="42" rx="3.4" ry="2" fill="#F9A8A8" opacity=".7"/><ellipse cx="63" cy="42" rx="3.4" ry="2" fill="#F9A8A8" opacity=".7"/>
 </svg>`;
 const COSTUMES = [[boySvg(0), boySvg(1)], [girlSvg(0), girlSvg(1)], ["🐱","😺","😸"], ["🐶","🐕","🦮"], ["🐸","🦎"], ["🚀","🛸"]];
-["boy", "girl"].forEach((k, i) => { const im = new Image(); im.onload = () => { COSTUMES[i] = [`<img src="img/${k}.webp" alt="">`]; renderSprite(); }; im.src = "img/" + k + ".webp"; });
-const S = { x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, cost:0, spr:0, vars:{}, answer:"", bg:"ขาว", rs:null, mx:0, my:0, sz:100, fx:{}, vis:true };
-const cv = $("#pen"), cx = cv.getContext("2d"), spriteEl = $("#sprite"), bubble = $("#bubble");
-function setSprite(){ S.spr = +$("#spr").value; S.cost = 0; renderSprite(); save(); }
-function renderSprite(){
-  spriteEl.innerHTML = COSTUMES[S.spr][S.cost % COSTUMES[S.spr].length];
-  spriteEl.style.left = ((S.x + 240) / 480 * 100) + "%"; spriteEl.style.top = ((180 - S.y) / 360 * 100) + "%";
-  const rs = S.rs || ($("#rot").checked ? "รอบทิศทาง" : "ไม่หมุน");
-  spriteEl.style.rotate = rs === "รอบทิศทาง" ? ((S.dir - 90) + "deg") : "0deg";
-  const flip = (rs === "ซ้าย-ขวา" && Math.sin(S.dir * Math.PI / 180) < -0.01) ? -1 : 1, k = Math.max(0, S.sz) / 100;
-  spriteEl.style.scale = (flip * k) + " " + k;
-  const fx = S.fx;
-  spriteEl.style.filter = "hue-rotate(" + ((fx["สี"] || 0) * 3.6) + "deg) brightness(" + Math.max(0, 1 + (fx["ความสว่าง"] || 0) / 100) + ") saturate(" + Math.max(0, 1 - (fx["ความซีด"] || 0) / 100) + ")";
-  spriteEl.style.opacity = Math.min(1, Math.max(0, 1 - (fx["โปร่งใส"] || 0) / 100));
-  spriteEl.style.display = S.vis ? "" : "none";
-  if(!S.vis) bubble.style.display = "none";
+["boy", "girl"].forEach((k, i) => { const im = new Image(); im.onload = () => { COSTUMES[i] = [`<img src="img/${k}.webp" alt="">`]; SPRS.forEach(o => { o.lastH = null; renderSprite(o); }); if(typeof refreshSprUI === "function") refreshSprUI(); }; im.src = "img/" + k + ".webp"; });
+const cv = $("#pen"), cx = cv.getContext("2d"), stage = $("#stagebox");
+const PNAMES = ["นักเรียนชาย", "นักเรียนหญิง", "แมว", "หมา", "กบ", "จรวด"], PCOUNT = [1, 1, 3, 3, 2, 2];
+const DEFPOS = [[0, 0], [-110, 0], [110, 0], [-110, -90], [110, -90], [0, 90], [-170, 60], [170, 60]];
+let SPRS = [], SP = null, CUR = 0;       // ตัวละครทั้งหมด · ตัวที่กำลังรันคำสั่ง · ตัวที่เปิดแก้โค้ดอยู่
+// S = สถานะร่วมของโปรแกรม + สถานะของตัวละคร SP (x y dir ... ชี้ไปที่ตัวละครที่กำลังรันคำสั่ง)
+const S = { vars:{}, answer:"", bg:"ขาว", mx:0, my:0, cx:0, cy:0 };
+["x", "y", "dir", "pen", "color", "size", "cost", "sz", "fx", "vis", "rs"].forEach(k => Object.defineProperty(S, k, { get(){ return SP[k]; }, set(v){ SP[k] = v; }, enumerable:true }));
+const costHtml = (c) => c.r ? COSTUMES[c.r[0]][c.r[1] % COSTUMES[c.r[0]].length] : c.h;
+const presetCostumes = (k) => Array.from({ length:PCOUNT[k] }, (_, i) => ({ r:[k, i] }));
+const IMGH = /^<img src="data:image\/(?:png|webp|jpeg);base64,[A-Za-z0-9+\/=]+" alt="">$/;
+const cleanH = (h) => (typeof h === "string" && h.length < 400000 && (IMGH.test(h) || (h.length <= 12 && !/[<>&]/.test(h)))) ? h : "❓";
+function uniqueName(n){ let r = n, k = 2; while(SPRS.some(o => o.name === r)) r = n + " " + k++; return r; }
+function makeSprite(o, i){
+  const k = Math.max(0, Math.min(5, +o.preset || 0));
+  const sp = { name:"", costumes:[], cost:0, x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, sz:100, fx:{}, vis:true, rs:null, x0:0, y0:0, scripts:o.scripts || [], lastH:null, noclick:false };
+  sp.costumes = Array.isArray(o.costumes) && o.costumes.length
+    ? o.costumes.slice(0, 12).map(c => (c && Array.isArray(c.r) && COSTUMES[c.r[0] | 0]) ? { r:[c.r[0] | 0, c.r[1] | 0] } : { h:cleanH(c && c.h) }) : presetCostumes(k);
+  sp.name = uniqueName(String(o.name || PNAMES[k]).slice(0, 16));
+  const dp = DEFPOS[i % DEFPOS.length]; sp.x0 = sp.x = Number.isFinite(+o.x0) && o.x0 != null ? +o.x0 : dp[0]; sp.y0 = sp.y = Number.isFinite(+o.y0) && o.y0 != null ? +o.y0 : dp[1];
+  sp.el = el("div", "sprite"); sp.bub = el("div", "bubble");
+  stage.insertBefore(sp.el, $("#mon")); stage.insertBefore(sp.bub, $("#mon"));
+  attachSprite(sp);
+  return sp;
+}
+// คลิกที่ตัวละคร = เริ่มสคริปต์ "เมื่อคลิกที่ตัวละคร" · ลากตัวละคร = ย้ายตำแหน่งเริ่มต้น
+function attachSprite(sp){
+  let st = null;
+  sp.el.addEventListener("pointerdown", e => { if(e.button !== 0) return; st = { px:e.clientX, py:e.clientY, x:sp.x, y:sp.y, moved:false }; try{ sp.el.setPointerCapture(e.pointerId); }catch(_){} });
+  sp.el.addEventListener("pointermove", e => {
+    if(!st) return; const k = stage.getBoundingClientRect().width / 480 || 1, dx = (e.clientX - st.px) / k, dy = (e.clientY - st.py) / k;
+    if(!st.moved && Math.hypot(dx, dy) < 5) return; st.moved = true; sp.el.style.transition = "none";
+    sp.x = Math.max(-240, Math.min(240, st.x + dx)); sp.y = Math.max(-180, Math.min(180, st.y - dy)); renderSprite(sp);
+  });
+  const end = () => { if(!st) return; const m = st.moved; st = null; sp.el.style.transition = ""; if(m){ sp.x0 = Math.round(sp.x); sp.y0 = Math.round(sp.y); sp.noclick = true; setTimeout(() => { sp.noclick = false; }, 0); save(); } };
+  sp.el.addEventListener("pointerup", end); sp.el.addEventListener("pointercancel", end);
+  sp.el.addEventListener("click", () => { if(sp.noclick) return; const ls = hatEntries("spriteclick").filter(en => en.sp === sp); if(ls.length) launch(ls); });
+}
+function renderSprite(o){
+  o = o && o.el ? o : SP;
+  const h = costHtml(o.costumes[o.cost % o.costumes.length]);
+  if(o.lastH !== h){ o.el.innerHTML = h; o.lastH = h; }
+  o.el.style.left = ((o.x + 240) / 480 * 100) + "%"; o.el.style.top = ((180 - o.y) / 360 * 100) + "%";
+  const rs = o.rs || ($("#rot").checked ? "รอบทิศทาง" : "ไม่หมุน");
+  o.el.style.rotate = rs === "รอบทิศทาง" ? ((o.dir - 90) + "deg") : "0deg";
+  const flip = (rs === "ซ้าย-ขวา" && Math.sin(o.dir * Math.PI / 180) < -0.01) ? -1 : 1, k = Math.max(0, o.sz) / 100;
+  o.el.style.scale = (flip * k) + " " + k;
+  const fx = o.fx;
+  o.el.style.filter = "hue-rotate(" + ((fx["สี"] || 0) * 3.6) + "deg) brightness(" + Math.max(0, 1 + (fx["ความสว่าง"] || 0) / 100) + ") saturate(" + Math.max(0, 1 - (fx["ความซีด"] || 0) / 100) + ")";
+  o.el.style.opacity = Math.min(1, Math.max(0, 1 - (fx["โปร่งใส"] || 0) / 100));
+  o.el.style.display = o.vis ? "" : "none";
+  if(!o.vis) o.bub.style.display = "none";
   // ให้กรอบคำพูดอยู่เหนือหัวตัวละคร (ถ้าตัวละครชิดขอบบนให้ไปอยู่ใต้เท้า) และไม่ล้นเวที
-  const xp = (S.x + 240) / 480 * 100, yp = (180 - S.y) / 360 * 100;
-  bubble.style.left = Math.min(70, Math.max(30, xp)) + "%"; bubble.style.top = yp + "%";
-  bubble.style.transform = yp < 26 ? "translate(-50%, 9cqw)" : "translate(-50%, calc(-100% - 9cqw))";
+  const xp = (o.x + 240) / 480 * 100, yp = (180 - o.y) / 360 * 100;
+  o.bub.style.left = Math.min(70, Math.max(30, xp)) + "%"; o.bub.style.top = yp + "%";
+  o.bub.style.transform = yp < 26 ? "translate(-50%, 9cqw)" : "translate(-50%, calc(-100% - 9cqw))";
   renderMon();
 }
 function renderMon(){
@@ -760,13 +873,18 @@ function playSnd(n){
 function stopSounds(){ SPLAY.forEach(o => { try{ o.stop(); }catch(e){} }); SPLAY.clear(); }
 const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
 function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").style.background = BACKDROPS[S.bg]; }
-function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.cost = 0; S.sz = 100; S.fx = {}; S.vis = true; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); LISTS.forEach(l => LST[l] = []); Object.keys(HID).forEach(k => delete HID[k]); bubble.style.display = "none"; bubble.className = ""; renderSprite(); }
+function resetSprite(){
+  T0 = performance.now(); setBackdrop("ขาว"); SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.answer = "";
+  VARS.forEach(v => S.vars[v] = 0); LISTS.forEach(l => LST[l] = []); Object.keys(HID).forEach(k => delete HID[k]);
+  SPRS.forEach(o => { o.rs = null; o.x = o.x0; o.y = o.y0; o.dir = 90; o.pen = false; o.color = "#EF4444"; o.size = 3; o.cost = 0; o.sz = 100; o.fx = {}; o.vis = true; o.bub.style.display = "none"; o.bub.className = ""; renderSprite(o); });
+  SP = SPRS[CUR];
+}
 
 /* ---------- ตัวแปลสั่งงาน ---------- */
 const STOP = { stop:true };
 let RUN = 0, sleepers = new Set(), askRes = null, cnt = 0;
 const sleep = (ms) => new Promise(res => { const t = setTimeout(() => { sleepers.delete(f); res(); }, ms); const f = () => { clearTimeout(t); res(); }; sleepers.add(f); });
-const chk = (c) => { if(c.my !== RUN || c.dead) throw STOP; };
+const chk = (c) => { if(c.my !== RUN || c.dead) throw STOP; if(c.sp) SP = c.sp; };
 let CTXS = [];          // บริบทของแต่ละสคริปต์ที่กำลังรัน (ใช้กับบล็อก "หยุด สคริปต์นี้/สคริปต์อื่น ๆ")
 const num = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
 const isNum = (v) => typeof v === "number" || (typeof v === "string" && v.trim() !== "" && Number.isFinite(Number(v)));
@@ -776,12 +894,24 @@ function val(a){
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
     case "volume": return Math.round(SND.vol);
+    case "touchspr": { const t = SPRS.find(x => x.name === a.a[0]); if(!t || t === SP || !t.vis || !SP.vis) return false;
+      const h1 = halfSz(SP), h2 = halfSz(t); return h1[0] > 0 && h2[0] > 0 && Math.abs(SP.x - t.x) <= (h1[0] + h2[0]) * 0.85 && Math.abs(SP.y - t.y) <= (h1[1] + h2[1]) * 0.85; }
+    case "touchmouse": { const h = halfSz(); return S.vis && h[0] > 0 && Math.abs(S.mx - S.x) <= h[0] && Math.abs(S.my - S.y) <= h[1]; }
+    case "touchedge": { const h = halfSz(); return S.vis && h[0] > 0 && (Math.abs(S.x) + h[0] >= 240 || Math.abs(S.y) + h[1] >= 180); }
+    case "keydown": { const k = a.a[0] || "เว้นวรรค"; return k === "ปุ่มใดก็ได้" ? KD.size > 0 : KD.has(k); }
+    case "mousedown": return MDOWN;
+    case "mousex": return S.mx;
+    case "mousey": return S.my;
+    case "distance": { const tx = a.a[0] === "กึ่งกลางเวที" ? 0 : S.mx, ty = a.a[0] === "กึ่งกลางเวที" ? 0 : S.my; return Math.round(Math.hypot(S.x - tx, S.y - ty) * 100) / 100; }
+    case "timer": return Math.round((performance.now() - T0) / 10) / 100;
+    case "nowis": { const d = new Date(), f = a.a[0] || "ชั่วโมง";
+      return { "ปี":d.getFullYear(), "เดือน":d.getMonth() + 1, "วันที่":d.getDate(), "วันในสัปดาห์":d.getDay() + 1, "ชั่วโมง":d.getHours(), "นาที":d.getMinutes(), "วินาที":d.getSeconds() }[f] ?? 0; }
     case "listall": return (LST[a.a[0]] || []).map(fmt).join(" ");
     case "litem": { const L = LST[a.a[1]] || [], i = lidx(val(a.a[0]), L.length); return i >= 1 && i <= L.length ? L[i - 1] : ""; }
     case "lidx": { const L = LST[a.a[1]] || [], t = val(a.a[0]), k = L.findIndex(x => cmp(x, t) === 0); return k + 1; }
     case "llen": return (LST[a.a[0]] || []).length;
     case "lhas": { const L = LST[a.a[0]] || [], t = val(a.a[1]); return L.some(x => cmp(x, t) === 0); }
-    case "costnum": return S.cost % COSTUMES[S.spr].length + 1;
+    case "costnum": return S.cost % SP.costumes.length + 1;
     case "bgnum": return Object.keys(BACKDROPS).indexOf(S.bg) + 1;
     case "bgname": return S.bg;
     case "sizen": return Math.round(S.sz);
@@ -830,7 +960,15 @@ async function glideTo(tx, ty, sec, c){
   while(performance.now() - t0 < ms){ const f = (performance.now() - t0) / ms; drawTo(x0 + (tx - x0) * f, y0 + (ty - y0) * f); renderSprite(); await sleep(16); chk(c); }
   drawTo(tx, ty); renderSprite();
 }
-$("#stagebox").addEventListener("mousemove", (e) => { const r = $("#stagebox").getBoundingClientRect(); S.mx = Math.round((e.clientX - r.left) / r.width * 480 - 240); S.my = Math.round(180 - (e.clientY - r.top) / r.height * 360); });
+let T0 = performance.now(), MDOWN = false;
+function halfSz(o = SP){ const r = o.el.getBoundingClientRect(), k = stage.getBoundingClientRect().width / 480 || 1; return [r.width / k / 2, r.height / k / 2]; }   // ครึ่งขนาดตัวละครในหน่วยเวที (ไม่ขึ้นกับตำแหน่ง)
+const KD = new Set();
+$("#stagebox").addEventListener("pointerdown", () => { MDOWN = true; });
+document.addEventListener("pointerup", () => { MDOWN = false; });
+document.addEventListener("keydown", e => { if(e.target.closest("input,select,textarea")) return; const n = KEYMAP[e.code] || (e.key.length === 1 ? e.key.toLowerCase() : ""); if(n) KD.add(n); });
+document.addEventListener("keyup", e => { const n = KEYMAP[e.code] || (e.key.length === 1 ? e.key.toLowerCase() : ""); if(n) KD.delete(n); });
+window.addEventListener("blur", () => { KD.clear(); MDOWN = false; });
+$("#stagebox").addEventListener("mousemove", (e) => { S.cx = e.clientX; S.cy = e.clientY; const r = $("#stagebox").getBoundingClientRect(); S.mx = Math.round((e.clientX - r.left) / r.width * 480 - 240); S.my = Math.round(180 - (e.clientY - r.top) / r.height * 360); });
 async function pace(c){
   chk(c); const m = spd();
   if(m === "slow") await sleep(420); else if(m === "normal") await sleep(45); else if(++cnt % 250 === 0) await sleep(0);
@@ -857,10 +995,11 @@ const EXEC = {
   async point(j){ S.dir = num(val(j.a[0])); renderSprite(); },
   async changex(j){ drawTo(S.x + num(val(j.a[0])), S.y); renderSprite(); },
   async changey(j){ drawTo(S.x, S.y + num(val(j.a[0]))); renderSprite(); },
-  async say(j){ bubble.className = ""; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = bubble.textContent && S.vis ? "block" : "none"; },
-  async think(j){ bubble.className = "think"; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = bubble.textContent && S.vis ? "block" : "none"; },
-  async thinkfor(j, c){ bubble.className = "think"; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = S.vis ? "block" : "none"; await sleep(num(val(j.a[1])) * 1000); chk(c); bubble.style.display = "none"; },
-  async setcost(j){ const n = parseInt(String(j.a[0]).replace(/\D/g, ""), 10) || 1; S.cost = (n - 1) % COSTUMES[S.spr].length; renderSprite(); },
+  async say(j){ SP.bub.className = ""; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
+  async think(j){ SP.bub.className = "think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
+  async thinkfor(j, c){ SP.bub.className = "think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = S.vis ? "block" : "none"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
+  async setcost(j){ const n = parseInt(String(j.a[0]).replace(/\D/g, ""), 10) || 1; S.cost = (n - 1) % SP.costumes.length; renderSprite(); },
+  async gotospr(j){ const t = SPRS.find(x => x.name === j.a[0]); if(t){ drawTo(t.x, t.y); renderSprite(); } },
   async nextbackdrop(){ const ks = Object.keys(BACKDROPS), n = ks[(ks.indexOf(S.bg) + 1) % ks.length]; setBackdrop(n); fireHats("backdropis", n); },
   async changesize(j){ S.sz = Math.min(500, Math.max(5, S.sz + num(val(j.a[0])))); renderSprite(); },
   async setsize(j){ S.sz = Math.min(500, Math.max(5, num(val(j.a[0])))); renderSprite(); },
@@ -869,8 +1008,8 @@ const EXEC = {
   async clearfx(){ S.fx = {}; renderSprite(); },
   async show(){ S.vis = true; renderSprite(); },
   async hide(){ S.vis = false; renderSprite(); },
-  async sayfor(j, c){ bubble.className = ""; bubble.textContent = fmt(val(j.a[0])); bubble.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); bubble.style.display = "none"; },
-  async costume(){ S.cost = (S.cost + 1) % COSTUMES[S.spr].length; renderSprite(); },
+  async sayfor(j, c){ SP.bub.className = ""; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
+  async costume(){ S.cost = (S.cost + 1) % SP.costumes.length; renderSprite(); },
   async backdrop(j){ const n = j.a[0] || "ขาว"; setBackdrop(n); fireHats("backdropis", n); },
   async broadcast(j){ fireHats("recv", j.a[0] || "ข้อความ 1"); },
   async broadcastwait(j, c){ await fireHats("recv", j.a[0] || "ข้อความ 1"); chk(c); },
@@ -919,6 +1058,7 @@ const EXEC = {
   async lrep(j){ const L = LST[j.a[1]]; if(!L) return; const i = lidx(val(j.a[0]), L.length); if(i >= 1 && i <= L.length) L[i - 1] = val(j.a[2]); renderMon(); },
   async set(j){ if(j.a[0]) S.vars[j.a[0]] = val(j.a[1]); renderMon(); },
   async change(j){ if(j.a[0]) S.vars[j.a[0]] = num(S.vars[j.a[0]]) + num(val(j.a[1])); renderMon(); },
+  async resettimer(){ T0 = performance.now(); },
   async ask(j, c){
     $("#asktxt").textContent = fmt(val(j.a[0])); $("#askin").value = ""; $("#askbar").style.display = "block"; $("#askin").focus();
     await new Promise(res => { askRes = res; });
@@ -927,9 +1067,9 @@ const EXEC = {
 };
 async function execList(list, c){ for(const j of (list || [])) await execBlock(j, c); }
 async function execBlock(j, c){
-  chk(c); j.el.classList.add("run");
+  chk(c); if(j.el) j.el.classList.add("run");
   try{ await EXEC[j.t](j, c); await pace(c); }
-  finally{ j.el.classList.remove("run"); }
+  finally{ if(j.el) j.el.classList.remove("run"); }
 }
 function stopAll(){
   clearInterval(TI); stopSounds(); RUN++; sleepers.forEach(f => f()); sleepers.clear();
@@ -937,33 +1077,36 @@ function stopAll(){
   document.querySelectorAll(".blk.run").forEach(x => x.classList.remove("run"));
 }
 /* เหตุการณ์: เริ่มสคริปต์ที่ขึ้นต้นด้วยบล็อกหมวกที่ตรงเงื่อนไข โดยไม่หยุดสคริปต์ที่กำลังรันอยู่ */
-const hatEntries = (id) => allScripts().map(sc => [...sc.children].filter(x => x.classList.contains("blk"))).filter(l => l.length && l[0].dataset.id === id).map(l => ({ hat:l[0], list:l.slice(1).map(ser) }));
-const hatVals = (h) => slotsOf(h).map(slotValue);
-function launch(lists){
-  if(!lists.length) return Promise.resolve();
-  const my = RUN, ctxs = lists.map(() => ({ my, dead:false })); CTXS.push(...ctxs);
-  return Promise.all(lists.map((l, i) => execList(l, ctxs[i]).catch(err => { if(err !== STOP){ console.error(err); toast("เกิดข้อผิดพลาดในโปรแกรม: " + (err.message || err)); } })));
+// รายการชุดบล็อกของตัวละคร (ตัวที่เปิดแก้อยู่ดึงจากพื้นที่เขียนโปรแกรม ตัวอื่นดึงจากที่เก็บไว้)
+const spriteLists = (o) => o === SPRS[CUR] ? allScripts().map(sc => [...sc.children].filter(x => x.classList.contains("blk")).map(ser)) : (o.scripts || []).map(sc => sc.b);
+const hatEntries = (id) => SPRS.flatMap(o => spriteLists(o).filter(l => l.length && l[0].t === id).map(l => ({ sp:o, vals:l[0].a, list:l.slice(1) })));
+const normEn = (l) => Array.isArray(l) ? { sp:SPRS[CUR], list:l } : l;
+function launch(ens){
+  ens = ens.map(normEn); if(!ens.length) return Promise.resolve();
+  const my = RUN, ctxs = ens.map(en => ({ my, dead:false, sp:en.sp })); CTXS.push(...ctxs);
+  return Promise.all(ens.map((en, i) => execList(en.list, ctxs[i]).catch(err => { if(err !== STOP){ console.error(err); toast("เกิดข้อผิดพลาดในโปรแกรม: " + (err.message || err)); } })));
 }
-function fireHats(id, v){ return launch(hatEntries(id).filter(en => { const a = hatVals(en.hat)[0]; return (a == null || a === "" ? (id === "keyspace" ? "เว้นวรรค" : a) : a) === v; }).map(en => en.list)); }
+function fireHats(id, v){ return launch(hatEntries(id).filter(en => { const a = en.vals[0]; return (a == null || a === "" ? (id === "keyspace" ? "เว้นวรรค" : a) : a) === v; })); }
 let TMR = null, TI = 0;
 function startTimerHats(){
   clearInterval(TI); const ents = hatEntries("timerhat"); if(!ents.length) return;
   TMR = { t0: performance.now(), fired: new Set() };
   TI = setInterval(() => { const el_ = (performance.now() - TMR.t0) / 1000;
-    ents.forEach((en, i) => { if(!TMR.fired.has(i) && el_ >= num(hatVals(en.hat)[0])){ TMR.fired.add(i); launch([en.list]); } }); }, 100);
+    ents.forEach((en, i) => { if(!TMR.fired.has(i) && el_ >= num(en.vals[0])){ TMR.fired.add(i); launch([en]); } }); }, 100);
 }
 async function runScriptsList(lists, fresh){
-  stopAll(); const my = RUN; CTXS = lists.map(() => ({ my, dead:false }));
+  lists = lists.map(normEn);
+  stopAll(); const my = RUN; CTXS = lists.map(en => ({ my, dead:false, sp:en.sp }));
   if(fresh){ resetSprite(); if($("#autoclr").checked) cx.clearRect(0, 0, 480, 360); }
   if(fresh) startTimerHats();
-  try{ await Promise.all(lists.map((l, i) => execList(l, CTXS[i]).catch(err => { if(err !== STOP) throw err; }))); }
+  try{ await Promise.all(lists.map((en, i) => execList(en.list, CTXS[i]).catch(err => { if(err !== STOP) throw err; }))); }
   catch(err){ if(err !== STOP){ console.error(err); toast("เกิดข้อผิดพลาดในโปรแกรม: " + (err.message || err)); } }
 }
-const hatLists = (id) => allScripts().map(sc => [...sc.children].filter(x => x.classList.contains("blk"))).filter(l => l.length && l[0].dataset.id === id).map(l => l.slice(1).map(ser));
+const hatLists = (id) => hatEntries(id);
 function runStack(blk){
   const sc = blk.closest(".script"); if(!sc) return;
   const l = [...sc.children].filter(x => x.classList.contains("blk")).map(ser);
-  runScriptsList([l[0] && SPEC[l[0].t].kind === "hat" ? l.slice(1) : l], true);
+  runScriptsList([{ sp:SPRS[CUR], list: l[0] && SPEC[l[0].t].kind === "hat" ? l.slice(1) : l }], true);
 }
 $("#flag").onclick = () => { const ls = hatLists("flag"); if(!ls.length) return toast("ยังไม่มีชุดบล็อกที่ขึ้นต้นด้วย \"เมื่อกดธงเขียว\""); runScriptsList(ls, true); };
 $("#stop").onclick = stopAll;
@@ -971,13 +1114,12 @@ const KEYMAP = { Space:"เว้นวรรค", ArrowUp:"ลูกศรข�
 document.addEventListener("keydown", e => {
   if(e.target.closest("input,select,textarea,button") || e.ctrlKey || e.metaKey || e.altKey) return;
   const name = KEYMAP[e.code] || (e.key.length === 1 ? e.key.toLowerCase() : ""); if(!name) return;
-  const ls = hatEntries("keyspace").filter(en => (hatVals(en.hat)[0] || "เว้นวรรค") === name).map(en => en.list);
+  const ls = hatEntries("keyspace").filter(en => (en.vals[0] || "เว้นวรรค") === name);
   if(ls.length){ e.preventDefault(); if(!e.repeat) launch(ls); }
 });
-spriteEl.addEventListener("click", () => { const ls = hatEntries("spriteclick").map(en => en.list); if(ls.length) launch(ls); });
 $("#askok").onclick = () => { S.answer = $("#askin").value; if(askRes){ askRes(); askRes = null; } };
 $("#askin").addEventListener("keydown", e => { if(e.key === "Enter") $("#askok").click(); });
-$("#spr").onchange = setSprite; $("#rot").onchange = renderSprite;
+$("#rot").onchange = () => SPRS.forEach(o => renderSprite(o));
 
 /* ---------- แถบเครื่องมือ ---------- */
 $("#clearws").onclick = async () => { if(!allScripts().length || await askConfirm("ลบบล็อกทั้งหมดในพื้นที่เขียนโปรแกรม?", { danger:true, title:"ลบทั้งหมดไหม?", confirmText:"ลบเลย" })){ allScripts().forEach(s => s.remove()); hint(); save(); } };
@@ -1014,17 +1156,20 @@ Object.assign(SAMPLES, {
 });
 Object.assign(SAMPLES, {
   "blank":  { vars:[], scripts:[{ x:24, y:24, b:[B("flag")] }] },
+  "multi":  { vars:[], cur:0, sprites:[
+    { name:"แมว", preset:2, x0:-200, y0:0, scripts:[{ x:24, y:24, b:[B("flag"), B("sayfor", ["สวัสดีหมาน้อย ฉันมาแล้ว", 1.5]), B("repeat", [30], [[B("changex", [10]), B("wait", [0.05])]]), B("say", ["เอ๊ะ ชนกันหรือเปล่า"])] }] },
+    { name:"หมา", preset:3, x0:110, y0:0, scripts:[{ x:24, y:24, b:[B("flag"), B("waituntil", [B("touchspr", ["แมว"])]), B("costume"), B("sayfor", ["โฮ่ง! ชนกันแล้ว", 2]), B("say", ["มาเล่นด้วยกันเถอะ"])] }] }] },
   "ws-egg": { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("sayfor", ["แม่ไก่ออกไข่", 1.5]), B("sayfor", ["ตอกไข่ลงในกระทะที่ใส่น้ำมันตั้งไฟ", 1.5]), B("sayfor", ["รอไข่สุก 1-2 นาที", 1.5]), B("costume"), B("say", ["นำไข่ดาวใส่จาน"])] }] },
   "ws-cat": { vars:["times"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ให้แมวร้องกี่ครั้ง"]), B("set", ["times", B("answer")]),
               B("repeat", [V("times")], [[B("beep"), B("say", ["เหมียว"]), B("wait", [0.5])]]), B("say", ["ร้องครบแล้ว"])] }] },
   "ws-zoo": { vars:["height"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ส่วนสูงกี่เซนติเมตร"]), B("set", ["height", B("answer")]),
               B("ifelse", [B("gt", [V("height"), 120])], [[B("say", ["เสียค่าเข้าชม 20 บาท"])], [B("say", ["ไม่เสียค่าเข้าชม"])]])] }] }
 });
-const EXNAME2 = { "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
+const EXNAME2 = { "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
 const EXNAME = { "ex-seq1":"แปรงฟัน", "ex-seq2":"หาพื้นที่สี่เหลี่ยมผืนผ้า", "ex-sel1":"ตรวจผลสอบ", "ex-sel2":"เลขคู่หรือเลขคี่", "ex-loop1":"วาดสี่เหลี่ยมจัตุรัส", "ex-loop2":"หาผลรวม 1 ถึง 5" };
 $("#sample").onchange = async function(){
   const k = this.value; this.value = ""; if(!k) return;
-  if(allScripts().length && !(await askConfirm("โหลดตัวอย่างจะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"โหลดตัวอย่าง?", confirmText:"โหลดเลย" }))) return;
+  if(anyScripts() && !(await askConfirm("โหลดตัวอย่างจะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"โหลดตัวอย่าง?", confirmText:"โหลดเลย" }))) return;
   loadJSON(JSON.parse(JSON.stringify(SAMPLES[k]))); stopAll(); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
   toast("โหลดตัวอย่างแล้ว — กด 🟩 ธงเขียว เพื่อรัน");
 };
@@ -1060,7 +1205,7 @@ const PART = Math.max(1, Math.min(3, parseInt(new URLSearchParams(location.searc
 const QS = new URLSearchParams(location.search), BACK = (QS.get("back") || "").match(/^(?:worksheet-(\d)-(\d)|quiz)\.html$/);
 const b64e = (o) => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const b64d = (t) => JSON.parse(decodeURIComponent(escape(atob(t.replace(/-/g, "+").replace(/_/g, "/")))));
-function shareURL(){ const u = new URL("blocks.html", location.href); u.search = ""; u.searchParams.set("p", b64e(wsToJSON())); return u.href; }
+function shareURL(){ const u = new URL("blocks.html", location.href); u.search = ""; u.searchParams.set("p", b64e(wsToJSON(true))); return u.href; }
 function lbl(j){
   if(j.t === "var") return j.name;
   const sp = SPEC[j.t]; let si = 0;
@@ -1075,9 +1220,14 @@ function outline(list, ind){
     return out; }).join("\n");
 }
 function programText(){
-  const d = wsToJSON();
-  if(!d.scripts.length) return "(ยังไม่ได้ต่อบล็อก)";
-  let t = d.scripts.map((sc, i) => (d.scripts.length > 1 ? "ชุดที่ " + (i + 1) + "\n" : "") + outline(sc.b, 0)).join("\n\n");
+  const d = wsToJSON(), parts = [];
+  d.sprites.forEach(o => {
+    if(!o.scripts.length) return;
+    const t = o.scripts.map((sc, i) => (o.scripts.length > 1 ? "ชุดที่ " + (i + 1) + "\n" : "") + outline(sc.b, 0)).join("\n\n");
+    parts.push(d.sprites.length > 1 ? "ตัวละคร: " + o.name + "\n" + t : t);
+  });
+  if(!parts.length) return "(ยังไม่ได้ต่อบล็อก)";
+  let t = parts.join("\n\n");
   if(d.vars.length) t = "ตัวแปร: " + d.vars.join(", ") + "\n" + t;
   return t;
 }
@@ -1089,7 +1239,7 @@ const menu = $("#sharemenu");
 $("#sharebtn").onclick = (e) => { e.stopPropagation(); menu.classList.toggle("open"); };
 document.addEventListener("click", () => menu.classList.remove("open"));
 if(!BACK) $("#sh-ws").disabled = true, $("#sh-ws").title = "เปิด CODE BLOCKS จากปุ่มในใบงาน จึงจะส่งไปใบงานได้";
-$("#sh-link").onclick = async () => { if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์โปรแกรมแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
+$("#sh-link").onclick = async () => { if(!anyScripts()) return toast("ยังไม่ได้ต่อบล็อก"); toast((await copyText(shareURL())) ? "คัดลอกลิงก์โปรแกรมแล้ว — นำไปวางส่งครูได้" : "คัดลอกไม่สำเร็จ"); };
 $("#sh-text").onclick = async () => { toast((await copyText(programText())) ? "คัดลอกข้อความคำสั่งแล้ว" : "คัดลอกไม่สำเร็จ"); };
 $("#sh-png").onclick = () => {
   const c = el("canvas"); c.width = 480; c.height = 360; const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, 480, 360); g.drawImage(cv, 0, 0);
@@ -1097,7 +1247,7 @@ $("#sh-png").onclick = () => {
 };
 $("#sh-ws").onclick = () => {
   if(!BACK) return;
-  if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก");
+  if(!anyScripts()) return toast("ยังไม่ได้ต่อบล็อก");
   const key = "krtomws:m1/cs/1:" + (BACK[2] || "quiz");
   const txt = "ลิงก์โปรแกรม (ครูกดเปิดดูได้):\n" + shareURL() + "\n\nบล็อกที่ใช้:\n" + programText();
   try{
@@ -1132,13 +1282,13 @@ async function saveAs(){
 }
 $("#fl-save").onclick = async () => {
   if(VIEW) return toast("กำลังดูโปรแกรมที่แชร์มา — กด ✏️ คัดลอกไปแก้ไขต่อ ก่อน แล้วจึงบันทึกได้");
-  if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก");
+  if(!anyScripts()) return toast("ยังไม่ได้ต่อบล็อก");
   if(!curName) return saveAs();
   await saveCurrent(curName);
 };
-$("#fl-saveas").onclick = () => { if(VIEW) return toast("กำลังดูโปรแกรมที่แชร์มา — กด ✏️ คัดลอกไปแก้ไขต่อ ก่อน แล้วจึงบันทึกได้"); if(!allScripts().length) return toast("ยังไม่ได้ต่อบล็อก"); saveAs(); };
+$("#fl-saveas").onclick = () => { if(VIEW) return toast("กำลังดูโปรแกรมที่แชร์มา — กด ✏️ คัดลอกไปแก้ไขต่อ ก่อน แล้วจึงบันทึกได้"); if(!anyScripts()) return toast("ยังไม่ได้ต่อบล็อก"); saveAs(); };
 $("#fl-new").onclick = async () => {
-  if(allScripts().length && !(await askConfirm("เริ่มโปรแกรมใหม่? บล็อกที่ยังไม่ได้บันทึกจะหายไป", { title:"ใหม่" }))) return;
+  if(anyScripts() && !(await askConfirm("เริ่มโปรแกรมใหม่? บล็อกที่ยังไม่ได้บันทึกจะหายไป", { title:"ใหม่" }))) return;
   if(VIEW){ VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); }
   resetBoard(SAMPLES["blank"]); curName = null; showName(); save(); toast("เริ่มโปรแกรมใหม่แล้ว");
 };
@@ -1150,7 +1300,7 @@ $("#fl-open").onclick = () => {
       didOpen: (pop) => {
         pop.querySelectorAll("[data-o]").forEach(b => b.onclick = async () => {
           const n = names[+b.dataset.o]; Swal.close();
-          if(allScripts().length && !(await askConfirm("เปิดไฟล์นี้จะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"เปิดไฟล์" }))) return;
+          if(anyScripts() && !(await askConfirm("เปิดไฟล์นี้จะแทนที่บล็อกที่เขียนไว้ตอนนี้ ต้องการทำต่อหรือไม่?", { title:"เปิดไฟล์" }))) return;
           if(VIEW){ VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); }
           resetBoard(f[n].d); curName = n; showName(); save(); toast("เปิดไฟล์: " + n);
         });
@@ -1167,9 +1317,155 @@ document.addEventListener("keydown", (e) => { if((e.ctrlKey || e.metaKey) && e.k
 showName();
 $("#viewedit").onclick = () => { VIEW = false; $("#viewbar").style.display = "none"; history.replaceState(null, "", location.pathname + (BACK ? "?back=" + BACK[0] : "")); save(); toast("คัดลอกโปรแกรมไว้ในเครื่องแล้ว แก้ไขต่อได้เลย"); };
 
+/* ---------- ตัวละครหลายตัว + ชุดแต่งตัว ---------- */
+let COSTTAB = false;
+function refreshSprSelects(){ document.querySelectorAll("#wsin select, #palette select").forEach(sel => { if(sel.parentElement.dataset.t === "spr") fillSprSelect(sel); }); }
+function refreshSprUI(){
+  const L = $("#sprlist"); L.innerHTML = "";
+  SPRS.forEach((o, i) => {
+    const b = el("button", "sth" + (i === CUR ? " on" : ""), '<div class="pv">' + costHtml(o.costumes[0]) + '</div><div class="nm"></div>');
+    b.type = "button"; b.lastChild.textContent = o.name; b.title = o.name; b.onclick = () => selectSprite(i); L.append(b);
+  });
+  $("#sprname").value = SPRS[CUR].name; $("#sprdel").disabled = SPRS.length < 2; $("#spradd").disabled = SPRS.length >= 8;
+  refreshSprSelects(); if(COSTTAB) renderCostPane();
+}
+function selectSprite(i){
+  if(i === CUR || !SPRS[i]) return;
+  SPRS[CUR].scripts = JSON.parse(JSON.stringify(domScripts()));
+  CUR = i; SP = SPRS[i]; mountScripts(); refreshSprUI(); save();
+}
+function addSprite(o){
+  if(SPRS.length >= 8) return toast("เพิ่มตัวละครได้ไม่เกิน 8 ตัว");
+  const sp = makeSprite(o, SPRS.length); SPRS.push(sp); renderSprite(sp); selectSprite(SPRS.length - 1); toast("เพิ่มตัวละคร “" + sp.name + "” แล้ว — เขียนโค้ดของตัวนี้ได้เลย");
+}
+$("#spradd").onclick = () => {
+  const items = PNAMES.map((n, i) => `<button type="button" data-p="${i}"><div class="pv">${costHtml({ r:[i, 0] })}</div>${n}</button>`).join("")
+    + '<button type="button" data-p="draw"><div class="pv">✏️</div>วาดเอง</button><button type="button" data-p="up"><div class="pv">🖼️</div>อัปโหลดรูป</button>';
+  Swal.fire({ title:"เพิ่มตัวละคร", html:'<div class="addgrid">' + items + "</div>", showConfirmButton:false, showCloseButton:true, width:440,
+    didOpen: (pop) => pop.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
+      const k = b.dataset.p; Swal.close();
+      if(k === "draw") openPainter(null, u => addSprite({ name:"วาดเอง", costumes:[{ h:imgH(u) }] }));
+      else if(k === "up") pickImage(u => addSprite({ name:"รูปของฉัน", costumes:[{ h:imgH(u) }] }));
+      else addSprite({ preset:+k });
+    }) });
+};
+$("#sprname").onchange = () => {
+  const sp = SPRS[CUR], n = $("#sprname").value.trim().slice(0, 16);
+  if(!n || n === sp.name){ $("#sprname").value = sp.name; return; }
+  if(SPRS.some(o => o !== sp && o.name === n)){ toast("มีตัวละครชื่อ “" + n + "” แล้ว"); $("#sprname").value = sp.name; return; }
+  const old = sp.name; sp.name = n; renameRefs(old, n); refreshSprUI(); save();
+};
+function renameRefs(old, n){
+  document.querySelectorAll("#wsin select").forEach(sel => { if(sel.parentElement.dataset.t === "spr" && sel.value === old){ sel.append(new Option(n, n)); sel.value = n; } });
+  const walk = (list) => (list || []).forEach(j => { if(!j || typeof j !== "object") return;
+    if((j.t === "touchspr" || j.t === "gotospr") && j.a[0] === old) j.a[0] = n;
+    (j.a || []).forEach(x => { if(x && typeof x === "object") walk([x]); }); (j.s || []).forEach(walk); });
+  SPRS.forEach(o => (o.scripts || []).forEach(sc => walk(sc.b)));
+}
+$("#sprdel").onclick = async () => {
+  if(SPRS.length < 2) return; const sp = SPRS[CUR];
+  if(!(await askConfirm("ลบตัวละคร “" + sp.name + "” พร้อมโค้ดและชุดแต่งตัวของตัวนี้?", { danger:true, title:"ลบตัวละคร", confirmText:"ลบเลย" }))) return;
+  stopAll(); allScripts().forEach(x => x.remove()); sp.el.remove(); sp.bub.remove(); SPRS.splice(CUR, 1);
+  CUR = Math.min(CUR, SPRS.length - 1); SP = SPRS[CUR]; mountScripts(); refreshSprUI(); save();
+};
+
+/* แท็บ โค้ด / ชุดแต่งตัว */
+function showTab(cost){
+  COSTTAB = cost; $("#tab-code").classList.toggle("on", !cost); $("#tab-cost").classList.toggle("on", cost);
+  $("#ws").style.display = cost ? "none" : ""; $("#costpane").style.display = cost ? "block" : "none";
+  document.querySelectorAll(".wsbar > :not(.wtab)").forEach(e => { e.style.display = cost ? "none" : ""; });
+  if(cost) renderCostPane();
+}
+$("#tab-code").onclick = () => showTab(false); $("#tab-cost").onclick = () => showTab(true);
+const imgH = (u) => '<img src="' + u + '" alt="">';
+function costChanged(sp, keep){ sp.cost = Math.max(0, Math.min(sp.cost, sp.costumes.length - 1)); sp.lastH = null; renderSprite(sp); refreshSprUI(); save(); }
+function addCost(h){
+  const sp = SPRS[CUR]; if(sp.costumes.length >= 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด");
+  sp.costumes.push({ h }); sp.cost = sp.costumes.length - 1; costChanged(sp); toast("เพิ่มเป็นชุดที่ " + sp.costumes.length + " แล้ว — ใช้บล็อก “เปลี่ยนชุดเป็น” หรือ “ชุดถัดไป” ได้");
+}
+function renderCostPane(){
+  const p = $("#costpane"), sp = SPRS[CUR]; p.innerHTML = "";
+  const h = el("div", "ch"), t = el("span"); t.textContent = "👕 ชุดแต่งตัวของ “" + sp.name + "”"; h.append(t);
+  const mk = (txt, fn) => { const b = el("button", "", txt); b.type = "button"; b.onclick = fn; h.append(b); };
+  mk("🖼️ อัปโหลดรูป", () => pickImage(u => addCost(imgH(u)))); mk("✏️ วาดชุดใหม่", () => openPainter(null, u => addCost(imgH(u)))); mk("😀 อีโมจิ", () => emojiDlg(addCost));
+  const g = el("div"); g.id = "costgrid";
+  sp.costumes.forEach((c, i) => {
+    const card = el("div", "ccard" + (i === sp.cost % sp.costumes.length ? " on" : ""), '<div class="cth">' + costHtml(c) + '</div><div class="cn">ชุดที่ ' + (i + 1) + '</div><div class="ca"></div>');
+    card.onclick = () => { sp.cost = i; sp.lastH = null; renderSprite(sp); renderCostPane(); };
+    const act = card.lastChild, ab = (txt, ttl, fn, dis) => { const b = el("button", "", txt); b.type = "button"; b.title = ttl; b.disabled = !!dis; b.onclick = (e) => { e.stopPropagation(); fn(); }; act.append(b); };
+    ab("✏️", "แก้ไข/วาดทับ", () => rasterize(costHtml(c), u => openPainter(u, nu => { delete c.r; c.h = imgH(nu); costChanged(sp); })));
+    ab("⧉", "ทำซ้ำ", () => { if(sp.costumes.length >= 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด"); sp.costumes.splice(i + 1, 0, c.r ? { r:c.r.slice() } : { h:c.h }); costChanged(sp); });
+    ab("🗑️", "ลบชุดนี้", () => { sp.costumes.splice(i, 1); if(sp.cost > i) sp.cost--; costChanged(sp); }, sp.costumes.length < 2);
+    g.append(card);
+  });
+  p.append(h, g);
+}
+function fileToCostume(file, cb){
+  const rd = new FileReader();
+  rd.onload = () => { const im = new Image();
+    im.onload = () => { const k = Math.min(1, 240 / Math.max(im.width, im.height, 1)), c = el("canvas"); c.width = Math.max(1, Math.round(im.width * k)); c.height = Math.max(1, Math.round(im.height * k));
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); cb(c.toDataURL("image/webp", .88)); };
+    im.onerror = () => toast("เปิดรูปนี้ไม่ได้ ลองใช้ไฟล์ .png หรือ .jpg"); im.src = rd.result; };
+  rd.readAsDataURL(file);
+}
+function pickImage(cb){
+  const inp = el("input"); inp.type = "file"; inp.accept = "image/*";
+  inp.onchange = () => { if(inp.files[0]) fileToCostume(inp.files[0], cb); };
+  inp.click();
+}
+function emojiDlg(cb){
+  const E = ["🐱", "🐶", "🐸", "🐰", "🐻", "🐼", "🦁", "🐯", "🐵", "🐧", "🦄", "🐢", "🚗", "🚀", "✈️", "⚽", "🍎", "🍌", "⭐", "❤️", "🌈", "🎈", "🏠", "🌳"];
+  Swal.fire({ title:"เลือกอีโมจิ", html:'<div class="emogrid">' + E.map(e => `<button type="button">${e}</button>`).join("") + "</div>", showConfirmButton:false, showCloseButton:true, width:420,
+    didOpen: (pop) => pop.querySelectorAll(".emogrid button").forEach(b => b.onclick = () => { Swal.close(); cb(b.textContent); }) });
+}
+// แปลงชุดแต่งตัว (SVG / รูป / อีโมจิ) เป็นรูปภาพ เพื่อนำไปวาดทับ
+function rasterize(h, cb){
+  const c = el("canvas"); c.width = c.height = 240; const g = c.getContext("2d");
+  const fit = (im) => { const k = Math.min(230 / (im.width || 1), 230 / (im.height || 1)); const w = im.width * k, hh = im.height * k; g.drawImage(im, (240 - w) / 2, (240 - hh) / 2, w, hh); cb(c.toDataURL("image/png")); };
+  const m = h.match(/^<img src="([^"]+)"/);
+  if(m){ const im = new Image(); im.onload = () => fit(im); im.src = m[1]; return; }
+  if(h.trim().startsWith("<svg")){ const im = new Image(), svg = h.replace("<svg ", '<svg width="200" height="300" ');
+    im.onload = () => fit(im); im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg); return; }
+  g.font = "180px sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(h, 120, 130); cb(c.toDataURL("image/png"));
+}
+/* กระดานวาดชุดแต่งตัว */
+function openPainter(src, onSave){
+  const ov = el("div", "pnt-ov"), COLS = ["#1F2937", "#EF4444", "#F97316", "#EAB308", "#22C55E", "#0EA5E9", "#8B5CF6", "#EC4899", "#92400E", "#FFFFFF"];
+  ov.innerHTML = '<div class="pnt-box" role="dialog" aria-modal="true"><div class="pnt-head">✏️ วาดชุดแต่งตัว</div><canvas width="240" height="240"></canvas><div class="pnt-tools" id="pcols"></div>'
+    + '<div class="pnt-tools"><span>ขนาด</span><input type="range" id="pnsz" min="2" max="28" value="8"><button type="button" data-t="pen" class="on">✏️ ดินสอ</button><button type="button" data-t="era">🧽 ยางลบ</button><button type="button" data-t="clr">🗑️ ล้างหมด</button></div>'
+    + '<div class="pnt-foot"><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div></div>';
+  document.body.append(ov);
+  const cvs = ov.querySelector("canvas"), g = cvs.getContext("2d"); let col = COLS[0], tool = "pen", down = false, last = null;
+  COLS.forEach((c, i) => { const b = el("button", "sw" + (i === 0 ? " on" : "")); b.type = "button"; b.style.background = c; b.setAttribute("aria-label", "สี " + c);
+    b.onclick = () => { col = c; tool = "pen"; ov.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", x === b)); ov.querySelectorAll("[data-t]").forEach(x => x.classList.toggle("on", x.dataset.t === "pen")); }; ov.querySelector("#pcols").append(b); });
+  ov.querySelectorAll("[data-t]").forEach(b => b.onclick = () => {
+    if(b.dataset.t === "clr"){ g.clearRect(0, 0, 240, 240); return; }
+    tool = b.dataset.t; ov.querySelectorAll("[data-t]").forEach(x => x.classList.toggle("on", x === b)); });
+  const pt = (e) => { const r = cvs.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 240, (e.clientY - r.top) / r.height * 240]; };
+  const stroke = (a, b) => { g.globalCompositeOperation = tool === "era" ? "destination-out" : "source-over"; g.strokeStyle = g.fillStyle = col; g.lineWidth = +ov.querySelector("#pnsz").value; g.lineCap = g.lineJoin = "round";
+    g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); };
+  cvs.addEventListener("pointerdown", e => { down = true; cvs.setPointerCapture(e.pointerId); last = pt(e); stroke(last, [last[0] + .01, last[1]]); });
+  cvs.addEventListener("pointermove", e => { if(!down) return; const q = pt(e); stroke(last, q); last = q; });
+  const up = () => { down = false; }; cvs.addEventListener("pointerup", up); cvs.addEventListener("pointercancel", up);
+  if(src){ const im = new Image(); im.onload = () => { const k = Math.min(240 / im.width, 240 / im.height, 1), w = im.width * k, h = im.height * k; g.drawImage(im, (240 - w) / 2, (240 - h) / 2, w, h); }; im.src = src; }
+  const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
+  function onKey(e){ if(e.key === "Escape"){ e.stopPropagation(); close(); } }
+  document.addEventListener("keydown", onKey, true);
+  ov.querySelector(".cn").onclick = close;
+  ov.querySelector(".ok").onclick = () => {
+    const d = g.getImageData(0, 0, 240, 240).data; let x0 = 240, y0 = 240, x1 = -1, y1 = -1;
+    for(let y = 0; y < 240; y++) for(let x = 0; x < 240; x++) if(d[(y * 240 + x) * 4 + 3] > 8){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; }
+    if(x1 < 0) return toast("ยังไม่ได้วาดอะไรเลย");
+    x0 = Math.max(0, x0 - 4); y0 = Math.max(0, y0 - 4); x1 = Math.min(239, x1 + 4); y1 = Math.min(239, y1 + 4);
+    const c = el("canvas"); c.width = x1 - x0 + 1; c.height = y1 - y0 + 1; c.getContext("2d").drawImage(cvs, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
+    close(); onSave(c.toDataURL("image/webp", .9));
+  };
+}
+
 /* ---------- เริ่มต้น ---------- */
 buildPalette();
-try{ const d = JSON.parse(localStorage.getItem("krtomBlocks:m1/cs/1") || "null"); if(d && d.scripts) loadJSON(d); }catch(e){}
+try{ const d = JSON.parse(localStorage.getItem("krtomBlocks:m1/cs/1") || "null"); if(d && (d.scripts || d.sprites)) loadJSON(d); }catch(e){}
+if(!SPRS.length) loadJSON({});
 resetSprite(); hint();
 
 try{
@@ -1182,7 +1478,7 @@ try{
   if(ex && SAMPLES[ex] && !VIEW){ loadJSON(JSON.parse(JSON.stringify(SAMPLES[ex]))); resetSprite(); cx.clearRect(0, 0, 480, 360); save();
     toast(ex === "blank" ? "เริ่มจากกระดานว่าง — ลากบล็อกมาต่อใต้ \"เมื่อกดธงเขียว\" แล้วกด 🟩 ธงเขียว" : "ระบบเขียนโปรแกรม \"" + (EXNAME[ex] || EXNAME2[ex] || ex) + "\" ให้แล้ว — กด 🟩 ธงเขียว เพื่อรัน"); }
 }catch(e){}
-window.__blocks = { SAMPLES, loadJSON, wsToJSON, S, runScriptsList, hatLists, stopAll };   // สำหรับทดสอบ
+window.__blocks = { get sprs(){ return SPRS; }, selectSprite, addSprite, SAMPLES, loadJSON, wsToJSON, S, runScriptsList, hatLists, stopAll };   // สำหรับทดสอบ
 
 /* ปุ่มบนขวา: ปิดแท็บนี้ (แท็บเดิมยังเปิดค้างอยู่) ถ้าปิดไม่ได้ ให้ไปหน้าแรก/ใบงาน */
 (function(){ const bl = document.getElementById("backlink"); if(!bl) return;
