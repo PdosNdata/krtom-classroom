@@ -260,6 +260,7 @@ const SNDS = ["ปิ๊ง", "เหมียว", "กลอง", "ตบม�
 const SFXOPTS = ["ระดับเสียงสูงต่ำ", "ซ้าย-ขวา"];
 const NOTES = { "C":0, "D":2, "E":4, "F":5, "G":7, "A":9, "B":11 };
 const NOTEOPTS = ["C", "D", "E", "F", "G", "A", "B", "C สูง"];
+const MATHOPS = ["ค่าสัมบูรณ์", "ปัดลง", "ปัดขึ้น", "รากที่สอง", "sin", "cos", "tan", "asin", "acos", "atan", "ln", "log", "e^", "10^"];
 const FXOPTS = ["สี", "ความสว่าง", "ความซีด", "โปร่งใส"];
 const MSGS = ["ข้อความ 1", "ข้อความ 2", "ข้อความ 3", "เริ่ม", "จบ"];
 const BACKDROPS = { "ขาว":"#FFFFFF", "ฟ้าอ่อน":"#DBEAFE", "เขียวอ่อน":"#DCFCE7", "เหลืองอ่อน":"#FEF9C3", "ชมพูอ่อน":"#FCE7F3" };
@@ -351,6 +352,11 @@ const SPEC = {
   and:       { cat:"ops",     kind:"bool",  parts:[BL, "และ", BL] },
   or:        { cat:"ops",     kind:"bool",  parts:[BL, "หรือ", BL] },
   not:       { cat:"ops",     kind:"bool",  parts:["ไม่", BL] },
+  letter:    { cat:"ops",     kind:"rep",   parts:["ตัวอักษรตัวที่", N(1), "ของ", T("สวัสดี")] },
+  length:    { cat:"ops",     kind:"rep",   parts:["ความยาวของ", T("สวัสดี")] },
+  contains:  { cat:"ops",     kind:"bool",  parts:[T("สวัสดี"), "มีคำว่า", T("ส"), "ไหม"] },
+  round:     { cat:"ops",     kind:"rep",   parts:["ปัดเศษของ", A(3.5)] },
+  mathop:    { cat:"ops",     kind:"rep",   parts:[{ i:"opt", o:MATHOPS, d:"ค่าสัมบูรณ์" }, "ของ", A(-10)] },
   set:       { cat:"vars",    kind:"stack", parts:["กำหนด", { i:"var" }, "เป็น", A(0)] },
   change:    { cat:"vars",    kind:"stack", parts:["เปลี่ยน", { i:"var" }, "ทีละ", N(1)] },
   var:       { cat:"vars",    kind:"rep",   parts:[] }
@@ -363,7 +369,7 @@ const CATS = [
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
   ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop"]],
   ["sensing","รับค่า","#3AAAD1",["ask","answer"]],
-  ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","mod","rand","join","gt","lt","eq","and","or","not"]],
+  ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","rand","gt","lt","eq","and","or","not","join","letter","length","contains","mod","round","mathop"]],
   ["vars","ตัวแปร","#FF6B3D",[]]
 ];
 
@@ -762,6 +768,15 @@ function val(a){
     case "and": return !!val(a.a[0]) && !!val(a.a[1]);
     case "or": return !!val(a.a[0]) || !!val(a.a[1]);
     case "not": return !val(a.a[0]);
+    case "letter": { const n = Math.floor(num(val(a.a[0]))), t = fmt(val(a.a[1])); return n >= 1 && n <= t.length ? t.charAt(n - 1) : ""; }
+    case "length": return fmt(val(a.a[0])).length;
+    case "contains": return fmt(val(a.a[0])).toLowerCase().includes(fmt(val(a.a[1])).toLowerCase());
+    case "round": return Math.round(num(val(a.a[0])));
+    case "mathop": { const x = num(val(a.a[1])), d = Math.PI / 180, f = a.a[0] || "ค่าสัมบูรณ์";
+      const r = { "ค่าสัมบูรณ์":() => Math.abs(x), "ปัดลง":() => Math.floor(x), "ปัดขึ้น":() => Math.ceil(x), "รากที่สอง":() => Math.sqrt(x),
+        sin:() => Math.round(Math.sin(x * d) * 1e10) / 1e10, cos:() => Math.round(Math.cos(x * d) * 1e10) / 1e10, tan:() => Math.round(Math.tan(x * d) * 1e10) / 1e10,
+        asin:() => Math.asin(x) / d, acos:() => Math.acos(x) / d, atan:() => Math.atan(x) / d, ln:() => Math.log(x), log:() => Math.log10(x), "e^":() => Math.exp(x), "10^":() => Math.pow(10, x) }[f];
+      return r ? r() : 0; }
   }
   return 0;
 }
