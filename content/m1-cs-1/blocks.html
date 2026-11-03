@@ -249,6 +249,7 @@
     <option value="temp">ภารกิจ 5: แปลงอุณหภูมิ F → C</option>
     <option value="score">ภารกิจ 6: ตรวจคะแนนมากกว่า 80</option>
     <option value="evenodd">ภารกิจ 7: เลขคู่หรือเลขคี่</option>
+    <option value="stamp">ตราประทับ: วงสีรุ้ง</option>
     <option value="clone">โคลน: ดาวตกจากท้องฟ้า</option>
     <option value="multi">ตัวละครหลายตัว: แมววิ่งไปชนหมา</option>
     <option value="" disabled>— ตัวอย่างจากใบความรู้ —</option>
@@ -354,6 +355,7 @@ const COLORS = { "แดง":"#EF4444", "ส้ม":"#F97316", "เหลือ�
 const N = (d) => ({ i:"num", d }), T = (d) => ({ i:"text", d }), A = (d = "") => ({ i:"any", d }), BL = { i:"bool" };
 const KEYOPTS = ["เว้นวรรค", "ลูกศรขึ้น", "ลูกศรลง", "ลูกศรซ้าย", "ลูกศรขวา"].concat("abcdefghijklmnopqrstuvwxyz0123456789".split(""));
 const SNDS = ["ปิ๊ง", "เหมียว", "กลอง", "ตบมือ", "เหรียญ", "ไซเรน"];
+const PENPS = ["สี", "ความอิ่มตัว", "ความสว่าง", "ความโปร่งใส"];
 const SFXOPTS = ["ระดับเสียงสูงต่ำ", "ซ้าย-ขวา"];
 const NOTES = { "C":0, "D":2, "E":4, "F":5, "G":7, "A":9, "B":11 };
 const NOTEOPTS = ["C", "D", "E", "F", "G", "A", "B", "C สูง"];
@@ -441,6 +443,14 @@ const SPEC = {
   penclear:  { cat:"pen",     kind:"stack", parts:["ล้างลายเส้น"] },
   pencolor:  { cat:"pen",     kind:"stack", parts:["ตั้งสีปากกาเป็น", { i:"opt", o:Object.keys(COLORS), d:"แดง" }] },
   pensize:   { cat:"pen",     kind:"stack", parts:["ตั้งขนาดปากกา", N(3)] },
+  changepensize:{ cat:"pen",  kind:"stack", parts:["เปลี่ยนขนาดปากกาทีละ", N(1)] },
+  setpenp:   { cat:"pen",     kind:"stack", parts:["ตั้ง", { i:"opt", o:PENPS, d:"สี" }, "ปากกาเป็น", N(50)] },
+  changepenp:{ cat:"pen",     kind:"stack", parts:["เปลี่ยน", { i:"opt", o:PENPS, d:"สี" }, "ปากกาทีละ", N(10)] },
+  stamp:     { cat:"pen",     kind:"stack", parts:["ตราประทับ 🔖"] },
+  tofront:   { cat:"looks",   kind:"stack", parts:["ไปที่ชั้นหน้าสุด ⬆️"] },
+  toback:    { cat:"looks",   kind:"stack", parts:["ไปที่ชั้นหลังสุด ⬇️"] },
+  layerfwd:  { cat:"looks",   kind:"stack", parts:["เลื่อนไปข้างหน้า", N(1), "ชั้น"] },
+  layerbwd:  { cat:"looks",   kind:"stack", parts:["เลื่อนไปข้างหลัง", N(1), "ชั้น"] },
   wait:      { cat:"control", kind:"stack", parts:["รอ", N(1), "วินาที"] },
   repeat:    { cat:"control", kind:"c",     parts:["ทำซ้ำ", N(10), "รอบ"] },
   forever:   { cat:"control", kind:"c",     parts:["วนซ้ำตลอด ♾️"], cap:true },
@@ -506,9 +516,9 @@ const SPEC = {
 const CATS = [
   ["event","เหตุการณ์","#F5B800",["flag","keyspace","spriteclick","backdropis","timerhat","recv","broadcast","broadcastwait"]],
   ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","gotorand","gotospr","goto","glidetorand","glide","point","towards","changex","setx","changey","sety","bounce","rotstyle","xpos","ypos","dirn"]],
-  ["looks","รูปร่าง","#9966FF",["say","sayfor","think","thinkfor","setcost","costume","backdrop","nextbackdrop","changesize","setsize","changefx","setfx","clearfx","show","hide","costnum","bgnum","bgname","sizen"]],
+  ["looks","รูปร่าง","#9966FF",["say","sayfor","think","thinkfor","setcost","costume","backdrop","nextbackdrop","changesize","setsize","changefx","setfx","clearfx","show","hide","tofront","toback","layerfwd","layerbwd","costnum","bgnum","bgname","sizen"]],
   ["sound","เสียง","#CF63CF",["playuntil","startsound","stopsounds","changesfx","setsfx","clearsfx","changevol","setvol","playnote","restbeat","volume"]],
-  ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
+  ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","setpenp","changepenp","pensize","changepensize","stamp","penclear"]],
   ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop","whenclone","clone","delclone"]],
   ["sensing","รับค่า","#3AAAD1",["touchmouse","touchedge","touchspr","keydown","mousedown","mousex","mousey","distance","ask","answer","timer","resettimer","nowis"]],
   ["ops","ตัวดำเนินการ","#59C059",["add","sub","mul","div","rand","gt","lt","eq","and","or","not","join","letter","length","contains","mod","round","mathop"]],
@@ -858,7 +868,7 @@ const MAXCLONES = 150;
 const allSprs = () => SPRS.concat(CLONES);       // ตัวละครทั้งหมด · ตัวที่กำลังรันคำสั่ง · ตัวที่เปิดแก้โค้ดอยู่
 // S = สถานะร่วมของโปรแกรม + สถานะของตัวละคร SP (x y dir ... ชี้ไปที่ตัวละครที่กำลังรันคำสั่ง)
 const S = { vars:{}, answer:"", bg:"ขาว", mx:0, my:0, cx:0, cy:0 };
-["x", "y", "dir", "pen", "color", "size", "cost", "sz", "fx", "vis", "rs"].forEach(k => Object.defineProperty(S, k, { get(){ return SP[k]; }, set(v){ SP[k] = v; }, enumerable:true }));
+["x", "y", "dir", "pen", "color", "penA", "size", "cost", "sz", "fx", "vis", "rs"].forEach(k => Object.defineProperty(S, k, { get(){ return SP[k]; }, set(v){ SP[k] = v; }, enumerable:true }));
 const costHtml = (c) => c.r ? COSTUMES[c.r[0]][c.r[1] % COSTUMES[c.r[0]].length] : c.h;
 const presetCostumes = (k) => Array.from({ length:PCOUNT[k] }, (_, i) => ({ r:[k, i] }));
 const IMGH = /^<img src="data:image\/(?:png|webp|jpeg|svg\+xml);base64,[A-Za-z0-9+\/=]+" alt="">$/;
@@ -887,7 +897,7 @@ const cleanN = (n) => typeof n === "string" && n.trim() ? n.trim().slice(0, 20) 
 function uniqueName(n){ let r = n, k = 2; while(SPRS.some(o => o.name === r)) r = n + " " + k++; return r; }
 function makeSprite(o, i){
   const k = Math.max(0, Math.min(5, +o.preset || 0));
-  const sp = { name:"", costumes:[], cost:0, x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, sz:100, fx:{}, vis:true, rs:null, x0:0, y0:0, scripts:o.scripts || [], lastH:null, noclick:false };
+  const sp = { name:"", costumes:[], cost:0, x:0, y:0, dir:90, pen:false, color:"#EF4444", penA:0, size:3, sz:100, fx:{}, vis:true, rs:null, x0:0, y0:0, scripts:o.scripts || [], lastH:null, noclick:false };
   sp.costumes = Array.isArray(o.costumes) && o.costumes.length
     ? o.costumes.slice(0, 12).map(c => (c && Array.isArray(c.r) && COSTUMES[c.r[0] | 0]) ? { r:[c.r[0] | 0, c.r[1] | 0], n:cleanN(c.n) } : { h:cleanH(c && c.h), n:cleanN(c && c.n), v:cleanV(c && c.v), ox:cleanO(c && c.ox), oy:cleanO(c && c.oy) }) : presetCostumes(k);
   sp.name = uniqueName(String(o.name || PNAMES[k]).slice(0, 16));
@@ -914,7 +924,7 @@ function attachSprite(sp){
 function clearClones(){ CLONES.forEach(c => { c.el.remove(); c.bub.remove(); }); CLONES = []; }
 function makeClone(src){
   const root = src.parent || src;
-  const c = { name:src.name, parent:root, isClone:true, costumes:src.costumes, cost:src.cost, x:src.x, y:src.y, dir:src.dir, pen:src.pen, color:src.color, size:src.size, sz:src.sz, fx:Object.assign({}, src.fx), vis:src.vis, rs:src.rs, x0:src.x0, y0:src.y0, scripts:[], lastH:null, noclick:false };
+  const c = { name:src.name, parent:root, isClone:true, costumes:src.costumes, cost:src.cost, x:src.x, y:src.y, dir:src.dir, pen:src.pen, color:src.color, penA:src.penA, size:src.size, sz:src.sz, fx:Object.assign({}, src.fx), vis:src.vis, rs:src.rs, x0:src.x0, y0:src.y0, scripts:[], lastH:null, noclick:false };
   c.el = el("div", "sprite"); c.bub = el("div", "bubble");
   stage.insertBefore(c.el, src.el); stage.insertBefore(c.bub, $("#mon")); attachSprite(c);
   CLONES.push(c); renderSprite(c); return c;
@@ -984,7 +994,7 @@ function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").s
 function resetSprite(){
   clearClones(); T0 = performance.now(); setBackdrop(BG0); SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.answer = "";
   VARS.forEach(v => S.vars[v] = 0); LISTS.forEach(l => LST[l] = []); Object.keys(HID).forEach(k => delete HID[k]);
-  SPRS.forEach(o => { o.rs = null; o.x = o.x0; o.y = o.y0; o.dir = 90; o.pen = false; o.color = "#EF4444"; o.size = 3; o.cost = 0; o.sz = 100; o.fx = {}; o.vis = true; o.bub.style.display = "none"; o.bub.className = ""; renderSprite(o); });
+  SPRS.forEach(o => { o.rs = null; o.x = o.x0; o.y = o.y0; o.dir = 90; o.pen = false; o.color = "#EF4444"; o.penA = 0; o.size = 3; o.cost = 0; o.sz = 100; o.fx = {}; o.vis = true; o.bub.style.display = "none"; o.bub.className = ""; renderSprite(o); });
   SP = SPRS[CUR];
 }
 
@@ -1055,8 +1065,48 @@ function lidx(n, len){ const t = String(n).trim(); if(t === "สุดท้า�
 function cmp(x, y){ if(typeof x === "number" && typeof y === "number") return x === y ? 0 : x > y ? 1 : -1; x = fmt(x).toLowerCase(); y = fmt(y).toLowerCase(); return x === y ? 0 : x > y ? 1 : -1; }
 const cond = (a) => a == null ? false : !!val(a);
 
+/* ปากกา: สี / ความอิ่มตัว / ความสว่าง / ความโปร่งใส (0-100 แบบ Scratch) */
+function penParam(name, v, rel){
+  if(name === "ความโปร่งใส"){ S.penA = Math.max(0, Math.min(100, rel ? S.penA + v : v)); return; }
+  const h = hex2hsb(S.color); let hue = h[0], sat = h[1], bri = h[2];
+  if(name === "สี") hue = (((rel ? hue / 3.6 + v : v) % 100) + 100) % 100 * 3.6;
+  else if(name === "ความอิ่มตัว") sat = Math.max(0, Math.min(100, rel ? sat + v : v));
+  else bri = Math.max(0, Math.min(100, rel ? bri + v : v));
+  S.color = hsb2hex(hue, sat, bri);
+}
+/* ตราประทับ: วาดภาพตัวละครตอนนี้ลงบนลายเส้น */
+const STAMPC = new Map();
+function costumeImage(h){
+  if(STAMPC.has(h)) return STAMPC.get(h);
+  const pr = new Promise(res => {
+    const im = new Image(); im.onload = () => res({ im, w:im.width, h:im.height }); im.onerror = () => res(null);
+    const m = h.match(/^<img src="([^"]+)"/);
+    if(m){ im.src = m[1]; return; }
+    if(h.trim().startsWith("<svg")){ const vb = h.match(/viewBox="[-\d.]+ [-\d.]+ ([\d.]+) ([\d.]+)"/), w = vb ? +vb[1] : 100, hh = vb ? +vb[2] : 150;
+      im.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(h.replace("<svg ", '<svg width="' + w * 3 + '" height="' + hh * 3 + '" ')); return; }
+    const c = el("canvas"); c.width = c.height = 160; const g = c.getContext("2d"); g.font = "120px sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(h, 80, 90); res({ im:c, w:160, h:160, emoji:true });
+  });
+  STAMPC.set(h, pr); return pr;
+}
+function stampSprite(o, ci){
+  if(!ci || !o.vis) return;
+  const c = o.costumes[o.cost % o.costumes.length], ox = c.ox != null ? c.ox : .5, oy = c.oy != null ? c.oy : .5, k = Math.max(0, o.sz) / 100;
+  const dh = (ci.emoji ? 43.2 : 72) * (ci.emoji ? 1 : 1) * k, dw = ci.emoji ? dh : dh * ci.w / ci.h, rs = o.rs || ($("#rot").checked ? "รอบทิศทาง" : "ไม่หมุน");
+  const flip = (rs === "ซ้าย-ขวา" && Math.sin(o.dir * Math.PI / 180) < -0.01) ? -1 : 1, fx = o.fx || {};
+  cx.save(); cx.translate(o.x + 240, 180 - o.y); if(rs === "รอบทิศทาง") cx.rotate((o.dir - 90) * Math.PI / 180); cx.scale(flip, 1);
+  cx.globalAlpha = Math.min(1, Math.max(0, 1 - (fx["โปร่งใส"] || 0) / 100));
+  try{ cx.filter = "hue-rotate(" + ((fx["สี"] || 0) * 3.6) + "deg) brightness(" + Math.max(0, 1 + (fx["ความสว่าง"] || 0) / 100) + ") saturate(" + Math.max(0, 1 - (fx["ความซีด"] || 0) / 100) + ")"; }catch(_){}
+  cx.drawImage(ci.im, -ox * dw, -oy * dh, dw, dh); cx.restore();
+}
+function moveLayer(e, n){
+  for(let i = 0; i < Math.abs(n); i++){
+    let t = n > 0 ? e.nextElementSibling : e.previousElementSibling;
+    while(t && !t.classList.contains("sprite")) t = n > 0 ? t.nextElementSibling : t.previousElementSibling;
+    if(!t) break; if(n > 0) t.after(e); else t.before(e);
+  }
+}
 function drawTo(nx, ny){
-  if(S.pen){ cx.strokeStyle = S.color; cx.lineWidth = S.size; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(S.x + 240, 180 - S.y); cx.lineTo(nx + 240, 180 - ny); cx.stroke(); }
+  if(S.pen){ cx.globalAlpha = 1 - S.penA / 100; cx.strokeStyle = S.color; cx.lineWidth = S.size; cx.lineCap = "round"; cx.beginPath(); cx.moveTo(S.x + 240, 180 - S.y); cx.lineTo(nx + 240, 180 - ny); cx.stroke(); cx.globalAlpha = 1; }
   S.x = nx; S.y = ny;
   S.x = Math.max(-1000, Math.min(1000, S.x)); S.y = Math.max(-1000, Math.min(1000, S.y));
 }
@@ -1142,11 +1192,19 @@ const EXEC = {
     const k = Math.pow(2, -SND.pitch / 120); tone("triangle", f * k, f * k, Math.max(0.05, b), 0.5); await sleep(b * 1000); chk(c);
   },
   async restbeat(j, c){ await sleep(Math.max(0, num(val(j.a[0]))) * 500); chk(c); },
-  async pendown(){ S.pen = true; cx.fillStyle = S.color; cx.beginPath(); cx.arc(S.x + 240, 180 - S.y, S.size / 2, 0, 7); cx.fill(); },
+  async pendown(){ S.pen = true; cx.globalAlpha = 1 - S.penA / 100; cx.fillStyle = S.color; cx.beginPath(); cx.arc(S.x + 240, 180 - S.y, S.size / 2, 0, 7); cx.fill(); cx.globalAlpha = 1; },
   async penup(){ S.pen = false; },
   async penclear(){ cx.clearRect(0, 0, 480, 360); },
   async pencolor(j){ S.color = COLORS[j.a[0]] || "#EF4444"; },
   async pensize(j){ S.size = Math.max(1, num(val(j.a[0]))); },
+  async changepensize(j){ S.size = Math.max(1, S.size + num(val(j.a[0]))); },
+  async setpenp(j){ penParam(j.a[0] || "สี", num(val(j.a[1])), false); },
+  async changepenp(j){ penParam(j.a[0] || "สี", num(val(j.a[1])), true); },
+  async stamp(j, c){ const im = await costumeImage(costHtml(SP.costumes[SP.cost % SP.costumes.length])); chk(c); stampSprite(SP, im); },
+  async tofront(){ const last = [...stage.querySelectorAll(":scope > .sprite")].pop(); if(last && last !== SP.el) last.after(SP.el); },
+  async toback(){ const first = stage.querySelector(":scope > .sprite"); if(first && first !== SP.el) first.before(SP.el); },
+  async layerfwd(j){ moveLayer(SP.el, Math.round(num(val(j.a[0])))); },
+  async layerbwd(j){ moveLayer(SP.el, -Math.round(num(val(j.a[0])))); },
   async wait(j, c){ await sleep(Math.max(0, num(val(j.a[0]))) * 1000); chk(c); },
   async repeat(j, c){ const n = Math.floor(num(val(j.a[0]))); for(let i = 0; i < n; i++){ await execList(j.s[0], c); await pace(c); } },
   async while(j, c){ let g = 0; while(cond(j.a[0])){ await execList(j.s[0], c); await pace(c); if(++g > 100000) break; } },
@@ -1274,6 +1332,7 @@ Object.assign(SAMPLES, {
 });
 Object.assign(SAMPLES, {
   "blank":  { vars:[], scripts:[{ x:24, y:24, b:[B("flag")] }] },
+  "stamp":  { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("pensize", [8]), B("setpenp", ["ความโปร่งใส", 40]), B("pendown"), B("repeat", [24], [[B("changepenp", ["สี", 4]), B("changefx", ["สี", 5]), B("stamp"), B("turnR", [15]), B("move", [14])]])] }] },
   "clone":  { vars:[], cur:0, sprites:[
     { name:"ดาว", costumes:[{ h:"⭐" }], x0:0, y0:150, scripts:[
       { x:24, y:24, b:[B("flag"), B("hide"), B("repeat", [15], [[B("clone", ["ตัวเอง"]), B("wait", [0.3])]])] },
@@ -1287,7 +1346,7 @@ Object.assign(SAMPLES, {
   "ws-zoo": { vars:["height"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ส่วนสูงกี่เซนติเมตร"]), B("set", ["height", B("answer")]),
               B("ifelse", [B("gt", [V("height"), 120])], [[B("say", ["เสียค่าเข้าชม 20 บาท"])], [B("say", ["ไม่เสียค่าเข้าชม"])]])] }] }
 });
-const EXNAME2 = { "clone":"ดาวตกจากท้องฟ้า", "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
+const EXNAME2 = { "stamp":"วงตราประทับสีรุ้ง", "clone":"ดาวตกจากท้องฟ้า", "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
 const EXNAME = { "ex-seq1":"แปรงฟัน", "ex-seq2":"หาพื้นที่สี่เหลี่ยมผืนผ้า", "ex-sel1":"ตรวจผลสอบ", "ex-sel2":"เลขคู่หรือเลขคี่", "ex-loop1":"วาดสี่เหลี่ยมจัตุรัส", "ex-loop2":"หาผลรวม 1 ถึง 5" };
 $("#sample").onchange = async function(){
   const k = this.value; this.value = ""; if(!k) return;
