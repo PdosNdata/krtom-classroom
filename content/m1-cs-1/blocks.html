@@ -121,7 +121,7 @@
   #right{ display:flex; flex-direction:column; gap:8px; min-height:0; overflow:auto; }
   #stagebox{ position:relative; container-type:inline-size; width:100%; aspect-ratio:4/3; background:#fff; border-radius:12px; overflow:hidden; border:2px solid var(--bd); flex:none; }
   #stagebox canvas{ position:absolute; inset:0; width:100%; height:100%; }
-  .sprite{ position:absolute; font-size:9cqw; line-height:1; transform:translate(-50%,-50%); transition:left .12s linear, top .12s linear; pointer-events:auto; cursor:pointer; }
+  .sprite{ position:absolute; font-size:9cqw; line-height:1; transition:left .12s linear, top .12s linear; pointer-events:auto; cursor:pointer; }
   .sprite svg, .sprite img{ height:15cqw; width:auto; display:block; }
   .bubble.think{ border-style:dashed; border-radius:24px; }
   .bubble{ position:absolute; background:#fff; border:2px solid #94A3B8; border-radius:14px; padding:3px 10px; font-weight:700; font-size:3.6cqw; max-width:60%; display:none; transform:translate(-50%,calc(-100% - 9cqw)); z-index:3; transition:left .12s linear, top .12s linear; }
@@ -222,6 +222,11 @@
   .p2-stack canvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
   .p2-text{ position:absolute; border:1px dashed #855CD6; background:rgba(255,255,255,.7); font-family:sans-serif; font-weight:700; padding:0; margin:0; outline:none; min-width:60px; }
   @media (max-width:640px){ .p2-body{ flex-direction:column; } .p2-tools{ flex-direction:row; flex-wrap:wrap; border-right:none; border-bottom:1px solid #CBD5E1; } .p2-tools button{ width:38px; height:38px; } }
+  .p2-ctr{ position:absolute; width:0; height:0; pointer-events:none; display:none; }
+  .p2-ctr::before, .p2-ctr::after{ content:""; position:absolute; background:#855CD6; box-shadow:0 0 0 1px #fff; }
+  .p2-ctr::before{ left:-14px; top:-1px; width:28px; height:2px; } .p2-ctr::after{ top:-14px; left:-1px; height:28px; width:2px; }
+  .p2-stack svg{ position:absolute; inset:0; width:100%; height:100%; touch-action:none; }
+  .p2-bar .sep{ width:1px; height:22px; background:#CBD5E1; }
   .bggrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
   .bggrid button{ border:3px solid #E2E8F0; border-radius:12px; padding:0; cursor:pointer; background:#fff; overflow:hidden; font:inherit; font-size:.78rem; }
   .bggrid button .pv{ height:62px; border-bottom:1px solid #E2E8F0; }
@@ -605,7 +610,7 @@ const anyScripts = () => allScripts().length > 0 || SPRS.some(o => (o.scripts ||
 function wsToJSON(share){
   return { vars:VARS, lists:LISTS, bg:BG0, cur:CUR, sprites: SPRS.map((o, i) => ({
     name:o.name, x0:o.x0, y0:o.y0,
-    costumes:o.costumes.map(c => c.r ? { r:c.r, n:c.n } : { h: share && c.h.includes("data:image") ? "🖼️" : c.h, n:c.n }),
+    costumes:o.costumes.map(c => c.r ? { r:c.r, n:c.n } : share ? { h: c.h.includes("data:image") ? "🖼️" : c.h, n:c.n } : { h:c.h, n:c.n, v:c.v, ox:c.ox, oy:c.oy }),
     scripts: i === CUR ? JSON.parse(JSON.stringify(domScripts())) : o.scripts })) };
 }
 function mountScripts(){
@@ -856,15 +861,35 @@ const S = { vars:{}, answer:"", bg:"ขาว", mx:0, my:0, cx:0, cy:0 };
 ["x", "y", "dir", "pen", "color", "size", "cost", "sz", "fx", "vis", "rs"].forEach(k => Object.defineProperty(S, k, { get(){ return SP[k]; }, set(v){ SP[k] = v; }, enumerable:true }));
 const costHtml = (c) => c.r ? COSTUMES[c.r[0]][c.r[1] % COSTUMES[c.r[0]].length] : c.h;
 const presetCostumes = (k) => Array.from({ length:PCOUNT[k] }, (_, i) => ({ r:[k, i] }));
-const IMGH = /^<img src="data:image\/(?:png|webp|jpeg);base64,[A-Za-z0-9+\/=]+" alt="">$/;
+const IMGH = /^<img src="data:image\/(?:png|webp|jpeg|svg\+xml);base64,[A-Za-z0-9+\/=]+" alt="">$/;
 const cleanH = (h) => (typeof h === "string" && h.length < 400000 && (IMGH.test(h) || (h.length <= 12 && !/[<>&]/.test(h)))) ? h : "❓";
+const cleanO = (n) => n != null && Number.isFinite(+n) ? Math.max(-3, Math.min(4, +n)) : undefined;
+const HEXC = /^#[0-9a-fA-F]{6}$/, DIMG = /^data:image\/(?:png|webp|jpeg);base64,[A-Za-z0-9+\/=]+$/;
+// ตรวจและล้างข้อมูลเวกเตอร์ที่มาจากไฟล์/ลิงก์ (กันโค้ดแปลกปลอม)
+function cleanV(v){
+  if(!v || typeof v !== "object" || !Array.isArray(v.items)) return undefined;
+  let count = 0; const num = (x) => Number.isFinite(+x) ? Math.max(-6000, Math.min(6000, +x)) : 0, col = (c) => typeof c === "string" && HEXC.test(c) ? c : null;
+  const pair = (a) => Array.isArray(a) ? [num(a[0]), num(a[1])] : null;
+  const item = (it, d) => {
+    if(!it || typeof it !== "object" || ++count > 400) return null;
+    const b = { id:0, m:Array.isArray(it.m) && it.m.length === 6 ? it.m.map(num) : [1, 0, 0, 1, 0, 0] };
+    if(it.t === "path" && Array.isArray(it.nodes)) return Object.assign(b, { t:"path", closed:!!it.closed, fill:col(it.fill), line:col(it.line), lw:Math.max(0, Math.min(100, num(it.lw))),
+      nodes:it.nodes.slice(0, 500).map(n => ({ x:num(n && n.x), y:num(n && n.y), i:pair(n && n.i), o:pair(n && n.o), sm:!!(n && n.sm) })) });
+    if(it.t === "text") return Object.assign(b, { t:"text", s:String(it.s == null ? "" : it.s).slice(0, 80), fs:Math.max(4, Math.min(300, num(it.fs))), fill:col(it.fill) || "#000000" });
+    if(it.t === "img" && typeof it.href === "string" && it.href.length < 400000 && DIMG.test(it.href)) return Object.assign(b, { t:"img", href:it.href, w:Math.max(1, Math.min(3000, num(it.w))), h:Math.max(1, Math.min(3000, num(it.h))) });
+    if(it.t === "group" && d < 4 && Array.isArray(it.kids)) return Object.assign(b, { t:"group", kids:it.kids.slice(0, 200).map(k => item(k, d + 1)).filter(Boolean) });
+    return null;
+  };
+  const items = v.items.slice(0, 200).map(i => item(i, 0)).filter(Boolean);
+  return { items, cx:v.cx == null ? null : num(v.cx), cy:v.cy == null ? null : num(v.cy) };
+}
 const cleanN = (n) => typeof n === "string" && n.trim() ? n.trim().slice(0, 20) : undefined;
 function uniqueName(n){ let r = n, k = 2; while(SPRS.some(o => o.name === r)) r = n + " " + k++; return r; }
 function makeSprite(o, i){
   const k = Math.max(0, Math.min(5, +o.preset || 0));
   const sp = { name:"", costumes:[], cost:0, x:0, y:0, dir:90, pen:false, color:"#EF4444", size:3, sz:100, fx:{}, vis:true, rs:null, x0:0, y0:0, scripts:o.scripts || [], lastH:null, noclick:false };
   sp.costumes = Array.isArray(o.costumes) && o.costumes.length
-    ? o.costumes.slice(0, 12).map(c => (c && Array.isArray(c.r) && COSTUMES[c.r[0] | 0]) ? { r:[c.r[0] | 0, c.r[1] | 0], n:cleanN(c.n) } : { h:cleanH(c && c.h), n:cleanN(c && c.n) }) : presetCostumes(k);
+    ? o.costumes.slice(0, 12).map(c => (c && Array.isArray(c.r) && COSTUMES[c.r[0] | 0]) ? { r:[c.r[0] | 0, c.r[1] | 0], n:cleanN(c.n) } : { h:cleanH(c && c.h), n:cleanN(c && c.n), v:cleanV(c && c.v), ox:cleanO(c && c.ox), oy:cleanO(c && c.oy) }) : presetCostumes(k);
   sp.name = uniqueName(String(o.name || PNAMES[k]).slice(0, 16));
   const dp = DEFPOS[i % DEFPOS.length]; sp.x0 = sp.x = Number.isFinite(+o.x0) && o.x0 != null ? +o.x0 : dp[0]; sp.y0 = sp.y = Number.isFinite(+o.y0) && o.y0 != null ? +o.y0 : dp[1];
   sp.el = el("div", "sprite"); sp.bub = el("div", "bubble");
@@ -899,6 +924,8 @@ function renderSprite(o){
   o = o && o.el ? o : SP;
   const h = costHtml(o.costumes[o.cost % o.costumes.length]);
   if(o.lastH !== h){ o.el.innerHTML = h; o.lastH = h; }
+  const cc = o.costumes[o.cost % o.costumes.length], ox = cc.ox != null ? cc.ox : .5, oy = cc.oy != null ? cc.oy : .5;   // จุดหมุนของชุดแต่งตัว (สัดส่วนของรูป)
+  o.el.style.transformOrigin = ox * 100 + "% " + oy * 100 + "%"; o.el.style.translate = -ox * 100 + "% " + -oy * 100 + "%";
   o.el.style.left = ((o.x + 240) / 480 * 100) + "%"; o.el.style.top = ((180 - o.y) / 360 * 100) + "%";
   const rs = o.rs || ($("#rot").checked ? "รอบทิศทาง" : "ไม่หมุน");
   o.el.style.rotate = rs === "รอบทิศทาง" ? ((o.dir - 90) + "deg") : "0deg";
@@ -975,9 +1002,9 @@ function val(a){
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
     case "volume": return Math.round(SND.vol);
-    case "touchspr": { if(!SP.vis) return false; const h1 = halfSz(SP); return h1[0] > 0 && allSprs().some(t => { if(t === SP || t.name !== a.a[0] || !t.vis) return false; const h2 = halfSz(t); return h2[0] > 0 && Math.abs(SP.x - t.x) <= (h1[0] + h2[0]) * 0.85 && Math.abs(SP.y - t.y) <= (h1[1] + h2[1]) * 0.85; }); }
-    case "touchmouse": { const h = halfSz(); return S.vis && h[0] > 0 && Math.abs(S.mx - S.x) <= h[0] && Math.abs(S.my - S.y) <= h[1]; }
-    case "touchedge": { const h = halfSz(); return S.vis && h[0] > 0 && (Math.abs(S.x) + h[0] >= 240 || Math.abs(S.y) + h[1] >= 180); }
+    case "touchspr": { if(!SP.vis) return false; const b1 = boxCtr(SP); return b1[2] > 0 && allSprs().some(t => { if(t === SP || t.name !== a.a[0] || !t.vis) return false; const b2 = boxCtr(t); return b2[2] > 0 && Math.abs(b1[0] - b2[0]) <= (b1[2] + b2[2]) * 0.85 && Math.abs(b1[1] - b2[1]) <= (b1[3] + b2[3]) * 0.85; }); }
+    case "touchmouse": { const b = boxCtr(SP); return S.vis && b[2] > 0 && Math.abs(S.mx - b[0]) <= b[2] && Math.abs(S.my - b[1]) <= b[3]; }
+    case "touchedge": { const b = boxCtr(SP); return S.vis && b[2] > 0 && (Math.abs(b[0]) + b[2] >= 240 || Math.abs(b[1]) + b[3] >= 180); }
     case "keydown": { const k = a.a[0] || "เว้นวรรค"; return k === "ปุ่มใดก็ได้" ? KD.size > 0 : KD.has(k); }
     case "mousedown": return MDOWN;
     case "mousex": return S.mx;
@@ -1041,6 +1068,7 @@ async function glideTo(tx, ty, sec, c){
   drawTo(tx, ty); renderSprite();
 }
 let T0 = performance.now(), MDOWN = false;
+function boxCtr(o){ const h = halfSz(o), c = o.costumes[o.cost % o.costumes.length], ox = c.ox != null ? c.ox : .5, oy = c.oy != null ? c.oy : .5; return [o.x + (.5 - ox) * 2 * h[0], o.y - (.5 - oy) * 2 * h[1], h[0], h[1]]; }   // จุดกึ่งกลางกรอบตัวละครบนเวที
 function halfSz(o = SP){ const r = o.el.getBoundingClientRect(), k = stage.getBoundingClientRect().width / 480 || 1; return [r.width / k / 2, r.height / k / 2]; }   // ครึ่งขนาดตัวละครในหน่วยเวที (ไม่ขึ้นกับตำแหน่ง)
 const KD = new Set();
 $("#stagebox").addEventListener("pointerdown", () => { MDOWN = true; });
@@ -1438,7 +1466,7 @@ $("#spradd").onclick = () => {
   Swal.fire({ title:"เพิ่มตัวละคร", html:'<div class="addgrid">' + items + "</div>", showConfirmButton:false, showCloseButton:true, width:440,
     didOpen: (pop) => pop.querySelectorAll("[data-p]").forEach(b => b.onclick = () => {
       const k = b.dataset.p; Swal.close();
-      if(k === "draw") openPainter(null, (u, n) => addSprite({ name:n || "วาดเอง", costumes:[{ h:imgH(u), n:n || undefined }] }));
+      if(k === "draw") openVectorPainter((u, n, x) => addSprite({ name:n || "วาดเอง", costumes:[Object.assign({ h:imgH(u), n:n || undefined }, x || {})] }));
       else if(k === "up") pickImage(u => addSprite({ name:"รูปของฉัน", costumes:[{ h:imgH(u) }] }));
       else addSprite({ preset:+k });
     }) });
@@ -1482,22 +1510,26 @@ function showTab(cost){
 $("#tab-code").onclick = () => showTab(false); $("#tab-cost").onclick = () => showTab(true);
 const imgH = (u) => '<img src="' + u + '" alt="">';
 function costChanged(sp, keep){ sp.cost = Math.max(0, Math.min(sp.cost, sp.costumes.length - 1)); sp.lastH = null; renderSprite(sp); refreshSprUI(); save(); }
-function addCost(h, n){
+function addCost(h, n, x){
   const sp = SPRS[CUR]; if(sp.costumes.length >= 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด");
-  sp.costumes.push({ h, n:n || undefined }); sp.cost = sp.costumes.length - 1; costChanged(sp); toast("เพิ่มเป็นชุดที่ " + sp.costumes.length + " แล้ว — ใช้บล็อก “เปลี่ยนชุดเป็น” หรือ “ชุดถัดไป” ได้");
+  sp.costumes.push(Object.assign({ h, n:n || undefined }, x || {})); sp.cost = sp.costumes.length - 1; costChanged(sp); toast("เพิ่มเป็นชุดที่ " + sp.costumes.length + " แล้ว — ใช้บล็อก “เปลี่ยนชุดเป็น” หรือ “ชุดถัดไป” ได้");
 }
 function renderCostPane(){
   const p = $("#costpane"), sp = SPRS[CUR]; p.innerHTML = "";
   const h = el("div", "ch"), t = el("span"); t.textContent = "👕 ชุดแต่งตัวของ “" + sp.name + "”"; h.append(t);
   const mk = (txt, fn) => { const b = el("button", "", txt); b.type = "button"; b.onclick = fn; h.append(b); };
-  mk("🖼️ อัปโหลดรูป", () => pickImage(u => addCost(imgH(u)))); mk("✏️ วาดชุดใหม่", () => openPainter(null, (u, n) => addCost(imgH(u), n))); mk("😀 อีโมจิ", () => emojiDlg(addCost));
+  mk("🖼️ อัปโหลดรูป", () => pickImage(u => addCost(imgH(u)))); mk("✏️ วาดชุดใหม่", () => openVectorPainter((u, n, x) => addCost(imgH(u), n, x))); mk("😀 อีโมจิ", () => emojiDlg(addCost));
   const g = el("div"); g.id = "costgrid";
   sp.costumes.forEach((c, i) => {
     const card = el("div", "ccard" + (i === sp.cost % sp.costumes.length ? " on" : ""), '<div class="cth">' + costHtml(c) + '</div><div class="cn">ชุดที่ ' + (i + 1) + '</div><div class="ca"></div>');
     if(c.n) card.querySelector(".cn").textContent = "ชุดที่ " + (i + 1) + " · " + c.n;
     card.onclick = () => { sp.cost = i; sp.lastH = null; renderSprite(sp); renderCostPane(); };
     const act = card.lastChild, ab = (txt, ttl, fn, dis) => { const b = el("button", "", txt); b.type = "button"; b.title = ttl; b.disabled = !!dis; b.onclick = (e) => { e.stopPropagation(); fn(); }; act.append(b); };
-    ab("✏️", "แก้ไข/วาดทับ", () => rasterize(costHtml(c), u => openPainter(u, (nu, n) => { delete c.r; c.h = imgH(nu); c.n = n || undefined; costChanged(sp); }, c.n)));
+    ab("✏️", "แก้ไข/วาดทับ", () => {
+      const done = (nu, n, x) => { delete c.r; c.h = imgH(nu); c.n = n || undefined; c.v = c.ox = c.oy = undefined; Object.assign(c, x || {}); costChanged(sp); };
+      if(c.v) openVectorPainter(done, c.n, { v:c.v });
+      else rasterize(costHtml(c), (u, info) => openPainter(u, done, c.n, { ctr: c.ox != null && info ? { x:240 + (c.ox - .5) * info.w * info.k, y:180 + (c.oy - .5) * info.h * info.k } : null }));
+    });
     ab("⧉", "ทำซ้ำ", () => { if(sp.costumes.length >= 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด"); sp.costumes.splice(i + 1, 0, c.r ? { r:c.r.slice() } : { h:c.h }); costChanged(sp); });
     ab("🗑️", "ลบชุดนี้", () => { sp.costumes.splice(i, 1); if(sp.cost > i) sp.cost--; costChanged(sp); }, sp.costumes.length < 2);
     g.append(card);
@@ -1525,7 +1557,7 @@ function emojiDlg(cb){
 // แปลงชุดแต่งตัว (SVG / รูป / อีโมจิ) เป็นรูปภาพ เพื่อนำไปวาดทับ
 function rasterize(h, cb){
   const c = el("canvas"); c.width = 480; c.height = 360; const g = c.getContext("2d");
-  const fit = (im) => { const k = Math.min(440 / (im.width || 1), 330 / (im.height || 1)); const w = im.width * k, hh = im.height * k; g.drawImage(im, (480 - w) / 2, (360 - hh) / 2, w, hh); cb(c.toDataURL("image/png")); };
+  const fit = (im) => { const k = Math.min(440 / (im.width || 1), 330 / (im.height || 1)); const w = im.width * k, hh = im.height * k; g.drawImage(im, (480 - w) / 2, (360 - hh) / 2, w, hh); cb(c.toDataURL("image/png"), { k, w:im.width, h:im.height }); };
   const m = h.match(/^<img src="([^"]+)"/);
   if(m){ const im = new Image(); im.onload = () => fit(im); im.src = m[1]; return; }
   if(h.trim().startsWith("<svg")){ const im = new Image(), svg = h.replace("<svg ", '<svg width="200" height="300" ');
@@ -1541,23 +1573,32 @@ function hex2hsb(hex){
   if(d){ h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60; if(h < 0) h += 360; }
   return [h, mx ? d / mx * 100 : 0, mx * 100];
 }
-function openPainter(src, onSave, name0){
-  const W = 480, H = 360, ov = el("div", "pnt-ov");
-  const TOOLS = [["select", "⬚", "เลือก (ลากเป็นกรอบ แล้วย้ายได้)"], ["brush", "🖌️", "พู่กัน"], ["eraser", "🧽", "ยางลบ"], ["fill", "🪣", "เทสี"], ["text", "T", "ข้อความ"], ["line", "╱", "เส้นตรง"], ["circle", "◯", "วงกลม/วงรี"], ["rect", "▭", "สี่เหลี่ยม"]];
+function openPainter(src, onSave, name0, opts){
+  opts = opts || {}; const W = 480, H = 360, ov = el("div", "pnt-ov");
+  const TOOLS = [["select", "⬚", "เลือก (ลากเป็นกรอบ แล้วย้ายได้)"], ["brush", "🖌️", "พู่กัน"], ["eraser", "🧽", "ยางลบ"], ["fill", "🪣", "เทสี"], ["text", "T", "ข้อความ"], ["line", "╱", "เส้นตรง"], ["circle", "◯", "วงกลม/วงรี"], ["rect", "▭", "สี่เหลี่ยม"], ["center", "⊕", "ตั้งจุดหมุน (ลากกากบาทไปจุดที่ต้องการให้เป็นศูนย์กลาง)"]];
   ov.innerHTML = '<div class="pnt2" role="dialog" aria-modal="true"><div class="p2-top"><b>✏️ วาดชุดแต่งตัว</b><input class="p2-name" maxlength="20" placeholder="ชื่อชุดแต่งตัว" aria-label="ชื่อชุดแต่งตัว"><span class="sp"></span><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div>'
     + '<div class="p2-body"><div class="p2-tools"></div><div class="p2-main"><div class="p2-bar"></div><div class="p2-wrap"><div class="p2-stack"><canvas class="base" width="480" height="360"></canvas><canvas class="ovl" width="480" height="360"></canvas></div></div></div></div></div>';
   document.body.append(ov);
   const q = (x) => ov.querySelector(x), stack = q(".p2-stack"), base = q("canvas.base"), ovl = q("canvas.ovl"), g = base.getContext("2d", { willReadFrequently:true }), o = ovl.getContext("2d");
   q(".p2-name").value = name0 || "";
-  let tool = "brush", fill = "#9966FF", line = "#575E75", lw = 6, zoom = 1, sel = null, clip = null, picking = null, drag = null;
+  let tool = "brush", fill = "#9966FF", line = "#575E75", lw = 6, zoom = 1, sel = null, clip = null, picking = null, drag = null, cpos = opts.ctr || null;
   const undo = [], redo = [];
   const pt = (e) => { const r = stack.getBoundingClientRect(); return { x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H }; };
+  const ctr = el("div", "p2-ctr"); stack.append(ctr);
+  function placeCtr(){ ctr.style.display = cpos ? "block" : "none"; if(cpos){ ctr.style.left = cpos.x / W * 100 + "%"; ctr.style.top = cpos.y / H * 100 + "%"; } }
+  function contentBox(pad){
+    const d = g.getImageData(0, 0, W, H).data; let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for(let y = 0; y < H; y++) for(let x = 0; x < W; x++) if(d[(y * W + x) * 4 + 3] > 8){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; }
+    return x1 < 0 ? null : { x0:Math.max(0, x0 - pad), y0:Math.max(0, y0 - pad), x1:Math.min(W - 1, x1 + pad), y1:Math.min(H - 1, y1 + pad) };
+  }
+  function ensureCtr(){ if(cpos) return; const b = contentBox(0); cpos = b ? { x:(b.x0 + b.x1) / 2, y:(b.y0 + b.y1) / 2 } : { x:W / 2, y:H / 2 }; }
+  function trimmed(){ commit(); const b = contentBox(2); if(!b) return null; const c = el("canvas"); c.width = b.x1 - b.x0 + 1; c.height = b.y1 - b.y0 + 1; c.getContext("2d").drawImage(base, b.x0, b.y0, c.width, c.height, 0, 0, c.width, c.height); return { c, x0:b.x0, y0:b.y0 }; }
   const snap = () => { undo.push(g.getImageData(0, 0, W, H)); if(undo.length > 30) undo.shift(); redo.length = 0; syncBtns(); };
   function drawSel(){ o.clearRect(0, 0, W, H); if(!sel) return; o.drawImage(sel.c, sel.x, sel.y); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#855CD6"; o.lineWidth = 2; o.strokeRect(sel.x, sel.y, sel.w, sel.h); o.restore(); }
   function commit(){ if(!sel) return; g.drawImage(sel.c, sel.x, sel.y); sel = null; o.clearRect(0, 0, W, H); syncBtns(); }
   // ---- แถบเครื่องมือด้านซ้าย ----
   TOOLS.forEach(([k, ic, tt]) => { const b = el("button", k === tool ? "on" : "", ic); b.type = "button"; b.title = tt; b.setAttribute("aria-label", tt); b.dataset.k = k;
-    b.onclick = () => { commit(); tool = k; picking = null; q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); stack.style.cursor = k === "select" ? "default" : k === "text" ? "text" : "crosshair"; }; q(".p2-tools").append(b); });
+    b.onclick = () => { commit(); tool = k; picking = null; if(k === "center") ensureCtr(); placeCtr(); q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); stack.style.cursor = k === "select" ? "default" : k === "text" ? "text" : "crosshair"; }; q(".p2-tools").append(b); });
   // ---- แถบบน: สี ขนาด ย้อนกลับ กลับด้าน คัดลอก ซูม ----
   const bar = q(".p2-bar");
   bar.innerHTML = '<div class="grp csw" data-w="fill"><span>สีเติม</span><i></i></div><div class="grp csw" data-w="line"><span>สีขอบ</span><i></i></div>'
@@ -1565,6 +1606,7 @@ function openPainter(src, onSave, name0){
     + '<div class="grp"><button type="button" id="p2un" title="ย้อนกลับ (Ctrl+Z)">↶</button><button type="button" id="p2re" title="ทำซ้ำ (Ctrl+Y)">↷</button></div>'
     + '<div class="grp"><button type="button" id="p2fh" title="กลับซ้าย–ขวา">⇋</button><button type="button" id="p2fv" title="กลับบน–ล่าง">⇅</button></div>'
     + '<div class="grp"><button type="button" id="p2cp">คัดลอก</button><button type="button" id="p2ps">วาง</button><button type="button" id="p2dl">ลบ</button><button type="button" id="p2cl" title="ล้างภาพทั้งหมด">🗑️ ล้างหมด</button></div>'
+    + '<div class="grp"><button type="button" id="p2vec" title="เปลี่ยนเป็นโหมดเวกเตอร์ (ปรับรูปทรงภายหลังได้)">⇄ แปลงเป็นเวกเตอร์</button></div>'
     + '<div class="grp"><button type="button" id="p2zo">−</button><span id="p2zl">100%</span><button type="button" id="p2zi">+</button></div>';
   const sw = (w) => bar.querySelector('[data-w="' + w + '"] i');
   const paintSw = () => { [["fill", fill], ["line", line]].forEach(([w, c]) => { const e = sw(w); e.classList.toggle("none", !c); e.style.background = c || ""; }); };
@@ -1634,6 +1676,7 @@ function openPainter(src, onSave, name0){
     const p = pt(e);
     if(picking){ const x = Math.max(0, Math.min(W - 1, Math.floor(p.x))), y = Math.max(0, Math.min(H - 1, Math.floor(p.y))), d = g.getImageData(x, y, 1, 1).data;
       if(d[3] > 0){ const hx = rgb2hex(d[0], d[1], d[2]); if(picking === "fill") fill = hx; else line = hx; paintSw(); } picking = null; stack.style.cursor = tool === "select" ? "default" : "crosshair"; return; }
+    if(tool === "center"){ cpos = { x:p.x, y:p.y }; placeCtr(); drag = { m:"ctr" }; return; }
     if(tool === "fill"){ bucket(p.x, p.y); return; }
     if(tool === "text"){ startText(p); return; }
     if(tool === "select"){
@@ -1650,6 +1693,7 @@ function openPainter(src, onSave, name0){
   }
   stack.addEventListener("pointermove", (e) => {
     if(!drag) return; const p = pt(e);
+    if(drag.m === "ctr"){ cpos = p; placeCtr(); return; }
     if(drag.m === "brush" || drag.m === "eraser"){ drawSeg(drag.last, p); drag.last = p; }
     else if(drag.m === "line" || drag.m === "rect" || drag.m === "circle"){ o.clearRect(0, 0, W, H); shape(o, drag.m, drag.a, p); drag.b = p; }
     else if(drag.m === "move"){ sel.x = p.x - drag.ox; sel.y = p.y - drag.oy; drawSel(); }
@@ -1666,7 +1710,8 @@ function openPainter(src, onSave, name0){
   };
   stack.addEventListener("pointerup", up); stack.addEventListener("pointercancel", up);
   // ---- เปิดรูปเดิมมาแก้ ----
-  if(src){ const im = new Image(); im.onload = () => { const k = Math.min(1, 440 / im.width, 330 / im.height), w = im.width * k, h = im.height * k; g.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); }; im.src = src; }
+  if(src){ const im = new Image(); im.onload = () => { if(im.width === W && im.height === H){ g.drawImage(im, 0, 0); } else { const k = Math.min(1, 440 / im.width, 330 / im.height), w = im.width * k, h = im.height * k; g.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); } placeCtr(); }; im.src = src; }
+  q("#p2vec").onclick = () => { const t = trimmed(), nm = q(".p2-name").value.trim().slice(0, 20); close(); openVectorPainter(onSave, nm, t ? { img:{ href:t.c.toDataURL("image/png"), x:t.x0, y:t.y0, w:t.c.width, h:t.c.height }, ctr:cpos ? { x:cpos.x, y:cpos.y } : null } : {}); };
   // ---- ปิด / บันทึก ----
   const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
   function onKey(e){
@@ -1679,13 +1724,302 @@ function openPainter(src, onSave, name0){
   document.addEventListener("keydown", onKey, true);
   q(".cn").onclick = close;
   q(".ok").onclick = () => {
-    commit(); const d = g.getImageData(0, 0, W, H).data; let x0 = W, y0 = H, x1 = -1, y1 = -1;
-    for(let y = 0; y < H; y++) for(let x = 0; x < W; x++) if(d[(y * W + x) * 4 + 3] > 8){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; }
-    if(x1 < 0) return toast("ยังไม่ได้วาดอะไรเลย");
-    x0 = Math.max(0, x0 - 2); y0 = Math.max(0, y0 - 2); x1 = Math.min(W - 1, x1 + 2); y1 = Math.min(H - 1, y1 + 2);
-    const c = el("canvas"); c.width = x1 - x0 + 1; c.height = y1 - y0 + 1; c.getContext("2d").drawImage(base, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
-    const nm = q(".p2-name").value.trim().slice(0, 20); close(); onSave(c.toDataURL("image/webp", .92), nm);
+    const t = trimmed(); if(!t) return toast("ยังไม่ได้วาดอะไรเลย");
+    const extra = { v:undefined, ox:cpos ? (cpos.x - t.x0) / t.c.width : undefined, oy:cpos ? (cpos.y - t.y0) / t.c.height : undefined };
+    const nm = q(".p2-name").value.trim().slice(0, 20); close(); onSave(t.c.toDataURL("image/webp", .92), nm, extra);
   };
+}
+
+/* ===== ตัวแก้ไขภาพแบบเวกเตอร์ (เหมือนโหมดเวกเตอร์ของ Scratch) ===== */
+const KAPPA = .5523;
+const mmul = (a, b) => [a[0] * b[0] + a[2] * b[1], a[1] * b[0] + a[3] * b[1], a[0] * b[2] + a[2] * b[3], a[1] * b[2] + a[3] * b[3], a[0] * b[4] + a[2] * b[5] + a[4], a[1] * b[4] + a[3] * b[5] + a[5]];
+const minv = (m) => { const d = m[0] * m[3] - m[1] * m[2] || 1e-9; return [m[3] / d, -m[1] / d, -m[2] / d, m[0] / d, (m[2] * m[5] - m[3] * m[4]) / d, (m[1] * m[4] - m[0] * m[5]) / d]; };
+const mpt = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+const MT = (x, y) => [1, 0, 0, 1, x, y];
+const mAbout = (lin, px, py) => mmul(mmul(MT(px, py), lin), MT(-px, -py));
+const r2 = (n) => Math.round(n * 100) / 100;
+const escX = (t) => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const bzSeg = (a, b) => [[a.x, a.y], [a.x + (a.o ? a.o[0] : 0), a.y + (a.o ? a.o[1] : 0)], [b.x + (b.i ? b.i[0] : 0), b.y + (b.i ? b.i[1] : 0)], [b.x, b.y]];
+function pathD(p){
+  const n = p.nodes; if(!n.length) return "";
+  const seg = (a, b) => (a.o || b.i) ? " C" + bzSeg(a, b).slice(1).map(q => r2(q[0]) + " " + r2(q[1])).join(" ") : " L" + r2(b.x) + " " + r2(b.y);
+  let d = "M" + r2(n[0].x) + " " + r2(n[0].y);
+  for(let k = 1; k < n.length; k++) d += seg(n[k - 1], n[k]);
+  if(p.closed && n.length > 1) d += seg(n[n.length - 1], n[0]) + "Z";
+  return d;
+}
+function itemSvg(it, ui){
+  let inner;
+  if(it.t === "path"){
+    const d = pathD(it);
+    inner = '<path d="' + d + '" fill="' + (it.fill || "none") + '"' + (it.line ? ' stroke="' + it.line + '" stroke-width="' + it.lw + '" stroke-linecap="round" stroke-linejoin="round"' : ' stroke="none"') + "/>";
+    if(ui && !it.fill) inner += '<path d="' + d + '" fill="none" stroke="transparent" stroke-width="' + Math.max(it.lw || 0, 14) + '" stroke-linecap="round"/>';
+  } else if(it.t === "text") inner = '<text x="0" y="0" dominant-baseline="hanging" font-family="sans-serif" font-weight="700" font-size="' + it.fs + '" fill="' + it.fill + '">' + escX(it.s) + "</text>";
+  else if(it.t === "img") inner = '<image href="' + it.href + '" x="0" y="0" width="' + it.w + '" height="' + it.h + '"/>';
+  else inner = it.kids.map(k => itemSvg(k, false)).join("");
+  return "<g" + (ui ? ' data-id="' + it.id + '"' : "") + ' transform="matrix(' + it.m.map(r2).join(" ") + ')">' + inner + "</g>";
+}
+const rdp = (pts, eps) => {
+  if(pts.length < 3) return pts; let mx = 0, id = 0; const a = pts[0], b = pts[pts.length - 1], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
+  for(let k = 1; k < pts.length - 1; k++){ const d = Math.abs(dy * pts[k][0] - dx * pts[k][1] + b[0] * a[1] - b[1] * a[0]) / L; if(d > mx){ mx = d; id = k; } }
+  return mx > eps ? rdp(pts.slice(0, id + 1), eps).slice(0, -1).concat(rdp(pts.slice(id), eps)) : [a, b];
+};
+function openVectorPainter(onSave, name0, opts){
+  opts = opts || {};
+  const W = 480, H = 360, ov = el("div", "pnt-ov");
+  const TOOLS = [["select", "↖", "เลือก (ย้าย ย่อ/ขยาย หมุน)"], ["reshape", "◇", "ปรับรูปทรง: ลากจุดหรือเส้นโค้ง · คลิกบนเส้นเพื่อเพิ่มจุด · ดับเบิลคลิกจุดเพื่อสลับมุม/โค้ง · Delete = ลบจุด"], ["brush", "🖌️", "พู่กัน"], ["eraser", "🧽", "ยางลบ (ลบทั้งชิ้นที่ลากผ่าน)"], ["fill", "🪣", "เทสี (คลิกที่รูปทรง)"], ["text", "T", "ข้อความ"], ["line", "╱", "เส้นตรง"], ["circle", "◯", "วงกลม/วงรี"], ["rect", "▭", "สี่เหลี่ยม"], ["center", "⊕", "ตั้งจุดหมุน (ลากกากบาท)"]];
+  ov.innerHTML = '<div class="pnt2" role="dialog" aria-modal="true"><div class="p2-top"><b>✏️ วาดชุดแต่งตัว (เวกเตอร์)</b><input class="p2-name" maxlength="20" placeholder="ชื่อชุดแต่งตัว" aria-label="ชื่อชุดแต่งตัว"><span class="sp"></span><button type="button" class="cn">ยกเลิก</button><button type="button" class="ok">✔ ใช้ชุดนี้</button></div>'
+    + '<div class="p2-body"><div class="p2-tools"></div><div class="p2-main"><div class="p2-bar"></div><div class="p2-wrap"><div class="p2-stack"><svg viewBox="0 0 480 360" xmlns="http://www.w3.org/2000/svg"><g id="vscene"></g><g id="vui"></g></svg></div></div></div></div></div>';
+  document.body.append(ov);
+  const q = (x) => ov.querySelector(x), stack = q(".p2-stack"), svg = q("svg"), scene = q("#vscene"), ui = q("#vui");
+  q(".p2-name").value = name0 || "";
+  let items = [], sel = new Set(), tool = "brush", fill = "#9966FF", line = "#575E75", lw = 4, zoom = 1, nid = 1, cx = null, cy = null, drag = null, selNode = -1, clip = null, pop = null, styleT = 0;
+  const undo = [], redo = [], mk = (o) => Object.assign({ id:nid++, m:[1, 0, 0, 1, 0, 0] }, o);
+  const reid = (arr) => arr.forEach(i => { i.id = nid++; });
+  if(opts.v){ const v = cleanV(opts.v); if(v){ items = v.items; cx = v.cx; cy = v.cy; reid(items); } }
+  else if(opts.img){ items = [mk({ t:"img", href:opts.img.href, w:opts.img.w, h:opts.img.h, m:MT(opts.img.x, opts.img.y) })]; if(opts.ctr){ cx = opts.ctr.x; cy = opts.ctr.y; } }
+  const pt = (e) => { const r = stack.getBoundingClientRect(); return { x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H }; };
+  const byId = (id) => items.find(i => i.id === id);
+  const state = () => JSON.stringify({ items, cx, cy });
+  const snap = () => { undo.push(state()); if(undo.length > 40) undo.shift(); redo.length = 0; };
+  const restore = (from, to) => { if(!from.length) return; to.push(state()); const o = JSON.parse(from.pop()); items = o.items; cx = o.cx; cy = o.cy; sel.clear(); selNode = -1; render(); };
+  const selPath = () => { if(sel.size !== 1) return null; const it = byId([...sel][0]); return it && it.t === "path" ? it : null; };
+  const eachItem = (arr, fn) => arr.forEach(i => { fn(i); if(i.kids) eachItem(i.kids, fn); });
+  // ----- ขนาด/ตำแหน่งในพิกัดเวที -----
+  function worldBox(id){
+    const it = byId(id), g = scene.querySelector('[data-id="' + id + '"]'); if(!it || !g) return null; const b = g.getBBox(); if(!b.width && !b.height && !g.firstChild) return null;
+    const cs = [[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]].map(c => mpt(it.m, c[0], c[1]));
+    return { x0:Math.min(...cs.map(c => c[0])), y0:Math.min(...cs.map(c => c[1])), x1:Math.max(...cs.map(c => c[0])), y1:Math.max(...cs.map(c => c[1])) };
+  }
+  const unionBox = (ids) => { let b = null; ids.forEach(id => { const w = worldBox(id); if(!w) return; b = b ? { x0:Math.min(b.x0, w.x0), y0:Math.min(b.y0, w.y0), x1:Math.max(b.x1, w.x1), y1:Math.max(b.y1, w.y1) } : w; }); return b; };
+  const ctrPos = () => { if(cx != null) return { x:cx, y:cy }; const b = unionBox(items.map(i => i.id)); return b ? { x:(b.x0 + b.x1) / 2, y:(b.y0 + b.y1) / 2 } : { x:W / 2, y:H / 2 }; };
+  // ----- วาดหน้าจอ -----
+  function render(){ scene.innerHTML = items.map(i => itemSvg(i, true)).join(""); drawUI(); sync(); }
+  function drawUI(){
+    const k = 480 / (stack.clientWidth || 480), hs = 5 * k, sw = 1.5 * k; let h = "";
+    if(tool === "center"){ const c = ctrPos(); h += '<g pointer-events="none" stroke="#855CD6" stroke-width="' + 2 * k + '"><circle cx="' + c.x + '" cy="' + c.y + '" r="' + 9 * k + '" fill="none"/><path d="M' + (c.x - 16 * k) + " " + c.y + "H" + (c.x + 16 * k) + "M" + c.x + " " + (c.y - 16 * k) + "V" + (c.y + 16 * k) + '"/></g>'; }
+    else if(tool === "select" && sel.size){
+      const b = unionBox([...sel]);
+      if(b){ const xm = (b.x0 + b.x1) / 2, ym = (b.y0 + b.y1) / 2;
+        h += '<rect x="' + b.x0 + '" y="' + b.y0 + '" width="' + (b.x1 - b.x0) + '" height="' + (b.y1 - b.y0) + '" fill="none" stroke="#855CD6" stroke-width="' + sw + '" stroke-dasharray="' + 4 * k + " " + 3 * k + '" pointer-events="none"/>';
+        h += '<path d="M' + xm + " " + b.y0 + "V" + (b.y0 - 22 * k) + '" stroke="#855CD6" stroke-width="' + sw + '" pointer-events="none"/><circle data-h="rot" cx="' + xm + '" cy="' + (b.y0 - 22 * k) + '" r="' + hs * 1.2 + '" fill="#855CD6" stroke="#fff" stroke-width="' + sw + '" style="cursor:grab"/>';
+        [["nw", b.x0, b.y0, "nwse"], ["n", xm, b.y0, "ns"], ["ne", b.x1, b.y0, "nesw"], ["e", b.x1, ym, "ew"], ["se", b.x1, b.y1, "nwse"], ["s", xm, b.y1, "ns"], ["sw", b.x0, b.y1, "nesw"], ["w", b.x0, ym, "ew"]]
+          .forEach(a => { h += '<rect data-h="' + a[0] + '" x="' + (a[1] - hs) + '" y="' + (a[2] - hs) + '" width="' + 2 * hs + '" height="' + 2 * hs + '" fill="#fff" stroke="#855CD6" stroke-width="' + sw + '" style="cursor:' + a[3] + '-resize"/>'; }); }
+    } else if(tool === "reshape"){
+      const it = selPath();
+      if(it){ it.nodes.forEach((n, i) => { const w = mpt(it.m, n.x, n.y);
+          [["i", n.i], ["o", n.o]].forEach(a => { if(!a[1]) return; const hp = mpt(it.m, n.x + a[1][0], n.y + a[1][1]);
+            h += '<path d="M' + w[0] + " " + w[1] + "L" + hp[0] + " " + hp[1] + '" stroke="#855CD6" stroke-width="' + sw + '" pointer-events="none"/><circle data-hh="' + i + ":" + a[0] + '" cx="' + hp[0] + '" cy="' + hp[1] + '" r="' + hs * .85 + '" fill="#855CD6" stroke="#fff" stroke-width="' + sw + '"/>'; }); });
+        it.nodes.forEach((n, i) => { const w = mpt(it.m, n.x, n.y);
+          h += '<rect data-n="' + i + '" x="' + (w[0] - hs) + '" y="' + (w[1] - hs) + '" width="' + 2 * hs + '" height="' + 2 * hs + '" fill="' + (i === selNode ? "#855CD6" : "#fff") + '" stroke="#855CD6" stroke-width="' + sw + '" style="cursor:move"/>'; }); }
+    }
+    if(drag && drag.prev) h += drag.prev;
+    if(drag && drag.m === "marquee") h += '<rect x="' + Math.min(drag.a.x, drag.b.x) + '" y="' + Math.min(drag.a.y, drag.b.y) + '" width="' + Math.abs(drag.b.x - drag.a.x) + '" height="' + Math.abs(drag.b.y - drag.a.y) + '" fill="rgba(133,92,214,.12)" stroke="#855CD6" stroke-width="' + sw + '" stroke-dasharray="' + 4 * k + " " + 3 * k + '" pointer-events="none"/>';
+    ui.innerHTML = h;
+  }
+  // ----- แถบเครื่องมือ -----
+  TOOLS.forEach(a => { const b = el("button", a[0] === tool ? "on" : "", a[1]); b.type = "button"; b.title = a[2]; b.setAttribute("aria-label", a[2]); b.dataset.k = a[0];
+    b.onclick = () => { tool = a[0]; selNode = -1; if(tool === "reshape" && sel.size > 1){ const f = [...sel][0]; sel.clear(); sel.add(f); } q(".p2-tools").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b)); stack.style.cursor = tool === "select" || tool === "reshape" ? "default" : tool === "text" ? "text" : "crosshair"; drawUI(); }; q(".p2-tools").append(b); });
+  const bar = q(".p2-bar");
+  bar.innerHTML = '<div class="grp csw" data-w="fill"><span>สีเติม</span><i></i></div><div class="grp csw" data-w="line"><span>สีขอบ</span><i></i></div>'
+    + '<div class="grp"><span>ขนาดเส้น</span><input type="range" id="p2sz" min="0" max="60" value="4"><b id="p2szn">4</b></div><span class="sep"></span>'
+    + '<div class="grp"><button type="button" id="p2un" title="ย้อนกลับ (Ctrl+Z)">↶</button><button type="button" id="p2re" title="ทำซ้ำ (Ctrl+Y)">↷</button></div><span class="sep"></span>'
+    + '<div class="grp"><button type="button" id="p2gr" title="รวมชิ้นที่เลือกเป็นกลุ่ม">จัดกลุ่ม</button><button type="button" id="p2ug" title="แยกกลุ่ม">แยกกลุ่ม</button></div>'
+    + '<div class="grp"><button type="button" id="p2o1" title="ย้ายไปหน้าสุด">⤒ หน้าสุด</button><button type="button" id="p2o2" title="เลื่อนมาข้างหน้า 1 ชั้น">↑ หน้า</button><button type="button" id="p2o3" title="เลื่อนไปข้างหลัง 1 ชั้น">↓ หลัง</button><button type="button" id="p2o4" title="ย้ายไปหลังสุด">⤓ หลังสุด</button></div><span class="sep"></span>'
+    + '<div class="grp"><button type="button" id="p2fh" title="กลับซ้าย–ขวา">⇋</button><button type="button" id="p2fv" title="กลับบน–ล่าง">⇅</button></div>'
+    + '<div class="grp"><button type="button" id="p2cp">คัดลอก</button><button type="button" id="p2ps">วาง</button><button type="button" id="p2dl">ลบ</button></div><span class="sep"></span>'
+    + '<div class="grp"><button type="button" id="p2bm" title="เปลี่ยนเป็นโหมดบิตแมป (วาดเป็นพิกเซล)">⇄ แปลงเป็นบิตแมป</button></div>'
+    + '<div class="grp"><button type="button" id="p2zo">−</button><span id="p2zl">100%</span><button type="button" id="p2zi">+</button></div>';
+  const swEl = (w) => bar.querySelector('[data-w="' + w + '"] i');
+  const paintSw = () => [["fill", fill], ["line", line]].forEach(a => { const e = swEl(a[0]); e.classList.toggle("none", !a[1]); e.style.background = a[1] || ""; });
+  function sync(){
+    q("#p2un").disabled = !undo.length; q("#p2re").disabled = !redo.length;
+    const some = sel.size > 0, hasG = [...sel].some(id => { const it = byId(id); return it && it.t === "group"; });
+    q("#p2gr").disabled = sel.size < 2; q("#p2ug").disabled = !hasG;
+    ["#p2o1", "#p2o2", "#p2o3", "#p2o4", "#p2fh", "#p2fv", "#p2cp", "#p2dl"].forEach(x => { q(x).disabled = !some; }); q("#p2ps").disabled = !clip;
+  }
+  const syncFromSel = () => { const it = selPath(); if(it){ fill = it.fill; line = it.line; if(it.lw != null){ lw = it.lw; q("#p2sz").value = lw; q("#p2szn").textContent = lw; } paintSw(); } };
+  paintSw();
+  const styleSnap = () => { const n = Date.now(); if(n - styleT > 900) snap(); styleT = n; };
+  function applyStyle(f){ if(!sel.size) return; styleSnap(); sel.forEach(id => { const it = byId(id); if(it) eachItem([it], f); }); render(); }
+  q("#p2sz").oninput = (e) => { lw = +e.target.value; q("#p2szn").textContent = lw; applyStyle(i => { if(i.t === "path") i.lw = lw; }); };
+  const setZ = (z) => { zoom = Math.max(.5, Math.min(3, z)); stack.style.width = zoom * 100 + "%"; q("#p2zl").textContent = Math.round(zoom * 100) + "%"; drawUI(); };
+  q("#p2zi").onclick = () => setZ(zoom * 1.25); q("#p2zo").onclick = () => setZ(zoom / 1.25);
+  // ----- กล่องเลือกสี -----
+  const closePop = () => { if(pop){ pop.remove(); pop = null; } };
+  bar.querySelectorAll(".csw").forEach(c => c.onclick = (e) => {
+    e.stopPropagation(); const w = c.dataset.w; if(pop && pop.dataset.w === w){ closePop(); return; } closePop();
+    pop = el("div", "p2-pop"); pop.dataset.w = w; pop.onclick = (ev) => ev.stopPropagation();
+    const cur = (w === "fill" ? fill : line) || "#9966FF", hsb = hex2hsb(cur);
+    pop.innerHTML = '<label>สี<input type="range" min="0" max="100"><b></b></label><label>ความอิ่มตัว<input type="range" min="0" max="100"><b></b></label><label>ความสว่าง<input type="range" min="0" max="100"><b></b></label><div class="sws"></div><div class="acts"><button type="button" data-a="none">⊘ ไม่มีสี</button></div>';
+    const rs = [...pop.querySelectorAll("input")], nums = [...pop.querySelectorAll("b")];
+    const set = (hex) => { if(w === "fill") fill = hex; else line = hex; paintSw();
+      applyStyle(i => { if(i.t === "path") i[w] = hex; else if(i.t === "text" && w === "fill" && hex) i.fill = hex; }); };
+    const show = (x) => { rs[0].value = Math.round(x[0] / 3.6); rs[1].value = Math.round(x[1]); rs[2].value = Math.round(x[2]); nums.forEach((n, k) => { n.textContent = rs[k].value; }); };
+    show(hsb);
+    rs.forEach(r => r.oninput = () => { const v = rs.map(x => +x.value); nums.forEach((n, k) => { n.textContent = v[k]; }); set(hsb2hex(v[0] * 3.6, v[1], v[2])); });
+    ["#000000", "#FFFFFF", "#EF4444", "#F97316", "#FACC15", "#22C55E", "#0EA5E9", "#855CD6", "#EC4899", "#92400E", "#F2C29B", "#94A3B8"].forEach(h => { const b = el("button"); b.type = "button"; b.style.background = h; b.setAttribute("aria-label", h); b.onclick = () => { set(h); show(hex2hsb(h)); }; pop.querySelector(".sws").append(b); });
+    pop.querySelector('[data-a="none"]').onclick = () => { set(null); closePop(); };
+    bar.append(pop);
+  });
+  ov.addEventListener("pointerdown", (e) => { if(pop && !e.target.closest(".p2-pop,.csw")) closePop(); });
+  // ----- แก้ไขชิ้นงาน: ย้อนกลับ จัดกลุ่ม ชั้น กลับด้าน คัดลอก -----
+  q("#p2un").onclick = () => restore(undo, redo); q("#p2re").onclick = () => restore(redo, undo);
+  q("#p2gr").onclick = () => {
+    if(sel.size < 2) return; snap(); const ids = new Set(sel), ord = items.filter(i => ids.has(i.id)), top = items.indexOf(ord[ord.length - 1]);
+    const g = mk({ t:"group", kids:ord }); items = items.filter(i => !ids.has(i.id)); items.splice(Math.max(0, top - ord.length + 1), 0, g); sel = new Set([g.id]); render();
+  };
+  q("#p2ug").onclick = () => {
+    snap(); const out = []; const ns = new Set();
+    items.forEach(i => { if(sel.has(i.id) && i.t === "group"){ i.kids.forEach(k => { k.m = mmul(i.m, k.m); k.id = nid++; ns.add(k.id); out.push(k); }); } else { out.push(i); if(sel.has(i.id)) ns.add(i.id); } });
+    items = out; sel = ns; render();
+  };
+  function reorder(kind){
+    if(!sel.size) return; snap(); const S = items.filter(i => sel.has(i.id)), R = items.filter(i => !sel.has(i.id));
+    if(kind === "front") items = R.concat(S); else if(kind === "back") items = S.concat(R);
+    else { const a = items.slice(); if(kind === "fwd"){ for(let k = a.length - 2; k >= 0; k--) if(sel.has(a[k].id) && !sel.has(a[k + 1].id)){ const t = a[k]; a[k] = a[k + 1]; a[k + 1] = t; } }
+      else { for(let k = 1; k < a.length; k++) if(sel.has(a[k].id) && !sel.has(a[k - 1].id)){ const t = a[k]; a[k] = a[k - 1]; a[k - 1] = t; } } items = a; }
+    render();
+  }
+  q("#p2o1").onclick = () => reorder("front"); q("#p2o2").onclick = () => reorder("fwd"); q("#p2o3").onclick = () => reorder("bwd"); q("#p2o4").onclick = () => reorder("back");
+  function flip(h){ const b = unionBox([...sel]); if(!b) return; snap(); const c = h ? (b.x0 + b.x1) / 2 : (b.y0 + b.y1) / 2, M = h ? [-1, 0, 0, 1, 2 * c, 0] : [1, 0, 0, -1, 0, 2 * c]; sel.forEach(id => { const it = byId(id); it.m = mmul(M, it.m); }); render(); }
+  q("#p2fh").onclick = () => flip(true); q("#p2fv").onclick = () => flip(false);
+  q("#p2cp").onclick = () => { if(!sel.size) return; clip = JSON.stringify(items.filter(i => sel.has(i.id))); sync(); toast("คัดลอกแล้ว กด “วาง” ได้เลย"); };
+  q("#p2ps").onclick = () => { if(!clip) return; snap(); const arr = JSON.parse(clip); arr.forEach(i => { i.id = nid++; i.m = mmul(MT(14, 14), i.m); }); items = items.concat(arr); sel = new Set(arr.map(i => i.id)); clip = JSON.stringify(arr); render(); };
+  q("#p2dl").onclick = () => { if(!sel.size) return; snap(); items = items.filter(i => !sel.has(i.id)); sel.clear(); render(); };
+  // ----- สร้างรูปทรง -----
+  const rectNodes = (a, b) => { const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x), y0 = Math.min(a.y, b.y), y1 = Math.max(a.y, b.y); return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].map(c => ({ x:c[0], y:c[1], i:null, o:null, sm:false })); };
+  const ellNodes = (a, b) => { const X = (a.x + b.x) / 2, Y = (a.y + b.y) / 2, rx = Math.abs(b.x - a.x) / 2, ry = Math.abs(b.y - a.y) / 2, kx = rx * KAPPA, ky = ry * KAPPA;
+    return [{ x:X, y:Y - ry, i:[-kx, 0], o:[kx, 0], sm:true }, { x:X + rx, y:Y, i:[0, -ky], o:[0, ky], sm:true }, { x:X, y:Y + ry, i:[kx, 0], o:[-kx, 0], sm:true }, { x:X - rx, y:Y, i:[0, ky], o:[0, -ky], sm:true }]; };
+  function shapeItem(kind, a, b){
+    if(kind === "line") return line || fill ? mk({ t:"path", closed:false, fill:null, line:line || fill, lw:Math.max(1, lw), nodes:[{ x:a.x, y:a.y, i:null, o:null, sm:false }, { x:b.x, y:b.y, i:null, o:null, sm:false }] }) : null;
+    return mk({ t:"path", closed:true, fill, line, lw, nodes:kind === "rect" ? rectNodes(a, b) : ellNodes(a, b) });
+  }
+  function brushItem(pts){
+    if(!fill) return null; const P = pts.length < 2 ? [pts[0], [pts[0][0] + .01, pts[0][1]]] : rdp(pts, 1.2);
+    const nodes = P.map((q2, k) => { const pr = P[k - 1] || q2, nx = P[k + 1] || q2, t = [(nx[0] - pr[0]) / 6, (nx[1] - pr[1]) / 6]; return { x:q2[0], y:q2[1], i:[-t[0], -t[1]], o:t, sm:true }; });
+    return mk({ t:"path", closed:false, fill:null, line:fill, lw:Math.max(1, lw), nodes });
+  }
+  function startText(p){
+    const inp = el("input", "p2-text"), k = stack.getBoundingClientRect().width / W, fs = 14 + lw * 3; let done = false;
+    inp.style.left = p.x / W * 100 + "%"; inp.style.top = p.y / H * 100 + "%"; inp.style.fontSize = fs * k + "px"; inp.style.color = fill || "#000"; stack.append(inp); setTimeout(() => inp.focus(), 0);
+    const fin = (ok) => { if(done) return; done = true; const v = inp.value; inp.remove(); if(ok && v.trim()){ snap(); const t = mk({ t:"text", s:v.slice(0, 80), fs, fill:fill || "#000000", m:MT(p.x, p.y) }); items.push(t); sel = new Set([t.id]); render(); } };
+    inp.onkeydown = (e) => { e.stopPropagation(); if(e.key === "Enter") fin(true); else if(e.key === "Escape") fin(false); };
+    inp.onblur = () => fin(true); inp.onpointerdown = (e) => e.stopPropagation();
+  }
+  // ----- ปรับรูปทรง -----
+  function evalSeg(a, b, t){ const P = bzSeg(a, b), u = 1 - t; return [u * u * u * P[0][0] + 3 * u * u * t * P[1][0] + 3 * u * t * t * P[2][0] + t * t * t * P[3][0], u * u * u * P[0][1] + 3 * u * u * t * P[1][1] + 3 * u * t * t * P[2][1] + t * t * t * P[3][1]]; }
+  function splitSeg(a, b, t){
+    const P = bzSeg(a, b), Lr = (u, v) => [u[0] + (v[0] - u[0]) * t, u[1] + (v[1] - u[1]) * t];
+    const p01 = Lr(P[0], P[1]), p12 = Lr(P[1], P[2]), p23 = Lr(P[2], P[3]), p012 = Lr(p01, p12), p123 = Lr(p12, p23), m = Lr(p012, p123), straight = !a.o && !b.i;
+    if(!straight){ a.o = [p01[0] - P[0][0], p01[1] - P[0][1]]; b.i = [p23[0] - P[3][0], p23[1] - P[3][1]]; }
+    return { x:m[0], y:m[1], i:straight ? null : [p012[0] - m[0], p012[1] - m[1]], o:straight ? null : [p123[0] - m[0], p123[1] - m[1]], sm:!straight };
+  }
+  function insertNode(it, p){
+    const lp = mpt(minv(it.m), p.x, p.y), n = it.nodes, segs = []; for(let k = 0; k < n.length - 1; k++) segs.push(k); if(it.closed && n.length > 1) segs.push(n.length - 1);
+    let best = null; segs.forEach(k => { const a = n[k], b = n[(k + 1) % n.length]; for(let s = 0; s <= 24; s++){ const t = s / 24, e = evalSeg(a, b, t), d = Math.hypot(e[0] - lp[0], e[1] - lp[1]); if(!best || d < best.d) best = { d, k, t }; } });
+    if(!best || best.t <= 0 || best.t >= 1) return; snap(); const a = n[best.k], b = n[(best.k + 1) % n.length], nn = splitSeg(a, b, best.t); n.splice(best.k + 1, 0, nn); selNode = best.k + 1; render();
+  }
+  stack.addEventListener("dblclick", (e) => {
+    const t = e.target.closest && e.target.closest("[data-n]"), it = selPath(); if(!t || !it || tool !== "reshape") return;
+    const k = +t.dataset.n, n = it.nodes[k]; snap();
+    if(n.i || n.o){ n.i = n.o = null; n.sm = false; }
+    else { const pr = it.nodes[(k - 1 + it.nodes.length) % it.nodes.length], nx = it.nodes[(k + 1) % it.nodes.length], d = [(nx.x - pr.x) / 6, (nx.y - pr.y) / 6]; n.i = [-d[0], -d[1]]; n.o = d; n.sm = true; }
+    render();
+  });
+  // ----- เมาส์/นิ้ว -----
+  const baseOf = () => new Map([...sel].map(id => [id, byId(id).m.slice()]));
+  const touch = () => { if(!drag.dirty){ snap(); drag.dirty = true; } };
+  stack.addEventListener("pointerdown", (e) => {
+    if(e.button !== 0 || (e.target.classList && e.target.classList.contains("p2-text"))) return; try{ stack.setPointerCapture(e.pointerId); }catch(_){}
+    const p = pt(e), t = e.target, hit = (s) => t.closest && t.closest(s);
+    if(tool === "select"){
+      const hh = hit("[data-h]");
+      if(hh && sel.size){ const B = unionBox([...sel]), c = [(B.x0 + B.x1) / 2, (B.y0 + B.y1) / 2]; drag = hh.dataset.h === "rot" ? { m:"rot", c, a0:Math.atan2(p.y - c[1], p.x - c[0]), base:baseOf() } : { m:"scale", h:hh.dataset.h, B, base:baseOf() }; return; }
+      const g = hit("[data-id]");
+      if(g){ const id = +g.dataset.id; if(e.shiftKey){ if(sel.has(id)) sel.delete(id); else sel.add(id); } else if(!sel.has(id)){ sel = new Set([id]); } syncFromSel(); drag = { m:"move", p0:p, base:baseOf() }; render(); return; }
+      if(!e.shiftKey) sel.clear(); drag = { m:"marquee", a:p, b:p }; render(); return;
+    }
+    if(tool === "reshape"){
+      const it0 = selPath(), nEl = hit("[data-n]"), hEl = hit("[data-hh]");
+      if(nEl && it0){ selNode = +nEl.dataset.n; drag = { m:"node", k:selNode, inv:minv(it0.m), it:it0 }; drawUI(); return; }
+      if(hEl && it0){ const a = hEl.dataset.hh.split(":"); drag = { m:"hand", k:+a[0], w:a[1], inv:minv(it0.m), it:it0 }; return; }
+      const g = hit("[data-id]");
+      if(g){ const id = +g.dataset.id; if(it0 && it0.id === id) insertNode(it0, p); else { sel = new Set([id]); selNode = -1; syncFromSel(); render(); } }
+      else { sel.clear(); selNode = -1; render(); }
+      return;
+    }
+    if(tool === "center"){ cx = p.x; cy = p.y; drag = { m:"ctr" }; drawUI(); return; }
+    if(tool === "fill"){ const g = hit("[data-id]"); if(g && fill !== undefined){ const it = byId(+g.dataset.id); snap(); eachItem([it], i => { if(i.t === "path") i.fill = fill; else if(i.t === "text" && fill) i.fill = fill; }); render(); } return; }
+    if(tool === "text"){ startText(p); return; }
+    if(tool === "eraser"){ drag = { m:"eraser" }; eraseAt(e); return; }
+    if(tool === "brush"){ drag = { m:"brush", pts:[[p.x, p.y]] }; return; }
+    drag = { m:tool, a:p };
+  });
+  function eraseAt(e){ const el2 = document.elementFromPoint(e.clientX, e.clientY), g = el2 && el2.closest && el2.closest("#vscene [data-id]"); if(!g) return; if(!drag.dirty){ snap(); drag.dirty = true; } const id = +g.dataset.id; items = items.filter(i => i.id !== id); sel.delete(id); render(); }
+  stack.addEventListener("pointermove", (e) => {
+    if(!drag) return; const p = pt(e), d = drag;
+    if(d.m === "move"){ const dx = p.x - d.p0.x, dy = p.y - d.p0.y; if(!d.dirty && Math.hypot(dx, dy) < 2) return; touch(); sel.forEach(id => { byId(id).m = mmul(MT(dx, dy), d.base.get(id)); }); render(); }
+    else if(d.m === "scale"){
+      touch(); const B = d.B, w = B.x1 - B.x0 || 1, h = B.y1 - B.y0 || 1, hx = { nw:-1, w:-1, sw:-1, ne:1, e:1, se:1 }[d.h] || 0, hy = { nw:-1, n:-1, ne:-1, sw:1, s:1, se:1 }[d.h] || 0;
+      let sx = hx > 0 ? (p.x - B.x0) / w : hx < 0 ? (B.x1 - p.x) / w : 1, sy = hy > 0 ? (p.y - B.y0) / h : hy < 0 ? (B.y1 - p.y) / h : 1;
+      if(e.shiftKey && hx && hy){ const u = Math.max(Math.abs(sx), Math.abs(sy)); sx = Math.sign(sx || 1) * u; sy = Math.sign(sy || 1) * u; }
+      const fx = Math.abs(sx) < .02 ? .02 * (Math.sign(sx) || 1) : sx, fy = Math.abs(sy) < .02 ? .02 * (Math.sign(sy) || 1) : sy, ax = hx > 0 ? B.x0 : B.x1, ay = hy > 0 ? B.y0 : B.y1, M = mAbout([fx, 0, 0, fy, 0, 0], ax, ay);
+      sel.forEach(id => { byId(id).m = mmul(M, d.base.get(id)); }); render();
+    }
+    else if(d.m === "rot"){ touch(); let da = Math.atan2(p.y - d.c[1], p.x - d.c[0]) - d.a0; if(e.shiftKey) da = Math.round(da / (Math.PI / 12)) * (Math.PI / 12); const co = Math.cos(da), si = Math.sin(da), M = mAbout([co, si, -si, co, 0, 0], d.c[0], d.c[1]); sel.forEach(id => { byId(id).m = mmul(M, d.base.get(id)); }); render(); }
+    else if(d.m === "marquee"){ d.b = p; drawUI(); }
+    else if(d.m === "node"){ touch(); const lp = mpt(d.inv, p.x, p.y), n = d.it.nodes[d.k]; n.x = lp[0]; n.y = lp[1]; render(); }
+    else if(d.m === "hand"){ touch(); const lp = mpt(d.inv, p.x, p.y), n = d.it.nodes[d.k], v = [lp[0] - n.x, lp[1] - n.y]; n[d.w] = v; if(n.sm) n[d.w === "i" ? "o" : "i"] = [-v[0], -v[1]]; render(); }
+    else if(d.m === "ctr"){ cx = p.x; cy = p.y; drawUI(); }
+    else if(d.m === "eraser") eraseAt(e);
+    else if(d.m === "brush"){ d.pts.push([p.x, p.y]); const t = mk({ t:"path", closed:false, fill:null, line:fill || "#000000", lw:Math.max(1, lw), nodes:d.pts.map(c => ({ x:c[0], y:c[1], i:null, o:null })) }); d.prev = itemSvg(t, false); drawUI(); }
+    else if(d.m === "line" || d.m === "rect" || d.m === "circle"){ d.b = p; const t = shapeItem(d.m, d.a, p); d.prev = t ? itemSvg(t, false) : ""; drawUI(); }
+  });
+  const up = () => {
+    if(!drag) return; const d = drag; drag = null;
+    if(d.m === "marquee"){ const x0 = Math.min(d.a.x, d.b.x), x1 = Math.max(d.a.x, d.b.x), y0 = Math.min(d.a.y, d.b.y), y1 = Math.max(d.a.y, d.b.y);
+      if(x1 - x0 > 2 || y1 - y0 > 2) items.forEach(i => { const w = worldBox(i.id); if(w && w.x0 <= x1 && w.x1 >= x0 && w.y0 <= y1 && w.y1 >= y0) sel.add(i.id); }); syncFromSel(); render(); }
+    else if(d.m === "brush"){ const t = brushItem(d.pts); if(t){ snap(); items.push(t); } render(); }
+    else if(d.m === "line" || d.m === "rect" || d.m === "circle"){ if(d.b && Math.hypot(d.b.x - d.a.x, d.b.y - d.a.y) > 2){ const t = shapeItem(d.m, d.a, d.b); if(t){ snap(); items.push(t); } } render(); }
+    else if(d.m === "ctr"){ snap(); drawUI(); }
+    else render();
+  };
+  stack.addEventListener("pointerup", up); stack.addEventListener("pointercancel", up);
+  // ----- ปิด / บันทึก / เปลี่ยนโหมด -----
+  const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
+  function onKey(e){
+    if(e.target.closest && e.target.closest(".p2-name,.p2-text")){ if(e.key === "Escape" && !e.target.closest(".p2-text")){ e.stopPropagation(); close(); } return; }
+    const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+    if(e.key === "Escape"){ e.stopPropagation(); if(pop) closePop(); else close(); }
+    else if(mod && k === "z"){ e.preventDefault(); e.stopPropagation(); (e.shiftKey ? q("#p2re") : q("#p2un")).click(); }
+    else if(mod && k === "y"){ e.preventDefault(); e.stopPropagation(); q("#p2re").click(); }
+    else if(mod && k === "a"){ e.preventDefault(); e.stopPropagation(); sel = new Set(items.map(i => i.id)); render(); }
+    else if(mod && k === "g"){ e.preventDefault(); e.stopPropagation(); (e.shiftKey ? q("#p2ug") : q("#p2gr")).click(); }
+    else if(e.key === "Delete" || e.key === "Backspace"){
+      const it = selPath();
+      if(tool === "reshape" && it && selNode >= 0 && it.nodes.length > 2){ e.preventDefault(); e.stopPropagation(); snap(); it.nodes.splice(selNode, 1); selNode = -1; render(); }
+      else if(sel.size){ e.preventDefault(); e.stopPropagation(); q("#p2dl").click(); }
+    }
+  }
+  document.addEventListener("keydown", onKey, true);
+  q(".cn").onclick = close;
+  function exportCostume(){
+    if(!items.length) return null; const bb = scene.getBBox(); if(!bb.width && !bb.height) return null;
+    let pad = 2; eachItem(items, i => { if(i.t === "path" && i.line) pad = Math.max(pad, i.lw / 2 + 2); });
+    const x = bb.x - pad, y = bb.y - pad, w = Math.max(2, bb.width + pad * 2), h = Math.max(2, bb.height + pad * 2);
+    const svgTxt = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + [x, y, w, h].map(r2).join(" ") + '" width="' + r2(w) + '" height="' + r2(h) + '">' + items.map(i => itemSvg(i, false)).join("") + "</svg>";
+    const c = ctrPos();
+    return { url:"data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgTxt))), extra:{ v:JSON.parse(JSON.stringify({ items, cx, cy })), ox:cx == null ? undefined : (cx - x) / w, oy:cy == null ? undefined : (cy - y) / h }, c, box:{ x, y, w, h } };
+  }
+  q(".ok").onclick = () => { const ex = exportCostume(); if(!ex) return toast("ยังไม่ได้วาดอะไรเลย"); const nm = q(".p2-name").value.trim().slice(0, 20); close(); onSave(ex.url, nm, ex.extra); };
+  q("#p2bm").onclick = async () => {
+    const nm = q(".p2-name").value.trim().slice(0, 20), ex = exportCostume();
+    if(!ex){ close(); openPainter(null, onSave, nm, {}); return; }
+    if(!(await askConfirm("แปลงเป็นบิตแมปแล้ว จะปรับรูปทรง จัดกลุ่ม หรือจัดชั้นภายหลังไม่ได้อีก ต้องการทำต่อหรือไม่?", { title:"แปลงเป็นบิตแมป", confirmText:"แปลงเลย" }))) return;
+    rasterize(imgH(ex.url), (u, info) => { close(); openPainter(u, onSave, nm, { ctr: cx != null && info ? { x:240 + ((cx - ex.box.x) / ex.box.w - .5) * info.w * info.k, y:180 + ((cy - ex.box.y) / ex.box.h - .5) * info.h * info.k } : null }); });
+  };
+  render();
 }
 
 /* ---------- เริ่มต้น ---------- */
