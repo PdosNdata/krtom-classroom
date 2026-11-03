@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.1: ปริศนาที่มีคำตอบ — ป.6 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:24px; --c1:#60A5FA; --c2:#1D4ED8; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.2rem; } header p{ margin:4px 0 0; font-size:.85rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.85rem; text-decoration:none; }
+  main{ max-width:740px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.88rem; color:#475569; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.02rem; }
+  .fn{ width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.9rem; flex:none; }
+  .hint{ color:#64748B; font-size:.85rem; margin:2px 0 6px 38px; }
+  textarea{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; resize:vertical; background:#fff; }
+  textarea:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(0,0,0,.05); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.9rem; color:#475569; }
+  .chk{ margin-top:16px; border:2px solid #C7D2FE; border-radius:18px; padding:14px 16px; background:#F8FAFF; display:none; }
+  .chk h3{ margin:0 0 8px; font-size:1.05rem; }
+  .chk .big{ font-size:1.5rem; font-weight:800; }
+  .chk .row{ padding:6px 0; border-top:1px dashed #E2E8F0; font-size:.88rem; line-height:1.55; }
+  .chk .ok{ color:#047857; font-weight:800; } .chk .bad{ color:#B45309; font-weight:800; }
+  .chk ul{ margin:2px 0 0 1.2em; padding:0; color:#92400E; } .chk .note{ color:#64748B; font-size:.78rem; }
+  .chk .foot{ margin-top:8px; font-size:.78rem; color:#64748B; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:13px 30px; font-weight:700; font-size:1.05rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🧠 ใบงานที่ 1.1 ปริศนาที่มีคำตอบ</h1>
+    <p>ใช้เหตุผลเชิงตรรกะ · ตัดข้อมูลที่ไม่ถูกต้อง · ป.6 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">ใช้เหตุผลเชิงตรรกะ พิจารณาข้อมูลที่กำหนดให้ทีละประเด็น แล้วตัดข้อมูลที่ไม่ถูกต้องออกจนเหลือคำตอบที่ถูกต้อง ตอบทั้ง 3 ปริศนา พร้อมอธิบายวิธีคิด</p>
+    <div class="example"><b>ปริศนาที่ 1</b> พี่มาลีไปจ่ายตลาด ได้ของมา 3 อย่าง อยู่ในตะกร้า ข้อมูลในตารางบอกว่าแต่ละแถวมีของที่ถูกกี่อย่าง<table style="border-collapse:collapse;margin:8px 0;font-size:.92rem;"><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ไข่ไก่</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">นม</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">แครอท</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ถูก 1 อย่าง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">น้ำผลไม้</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ข้าวโพด</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">แตงโม</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ถูก 1 อย่าง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ข้าวโพด</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">แครอท</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">โยเกิร์ต</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ไม่มีข้อใดถูก</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">แครอท</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ไข่ไก่</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">คุกกี้</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ถูก 1 อย่าง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">นม</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ข้าวโพด</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">โยเกิร์ต</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ถูก 1 อย่าง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ไข่ไก่</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">น้ำผลไม้</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">คุกกี้</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ถูก 1 อย่าง</td></tr></table><b>ปริศนาที่ 2</b> หารหัสปลดล็อกกระเป๋า 3 หลักของปังปอง<table style="border-collapse:collapse;margin:8px 0;font-size:.92rem;"><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">2 3 9</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ตัวเลขถูก 1 ตัว แต่อยู่ในตำแหน่งที่ผิด</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">4 5 1</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ตัวเลขถูก 1 ตัว และอยู่ในตำแหน่งที่ถูกต้อง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">2 5 6</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ไม่มีข้อใดถูก</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">6 3 1</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ตัวเลขถูก 1 ตัว และอยู่ในตำแหน่งที่ถูกต้อง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">9 7 4</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ตัวเลขถูก 1 ตัว และอยู่ในตำแหน่งที่ถูกต้อง</td></tr><tr><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">3 2 8</td><td style="border:1px solid #CBD5E1;padding:4px 12px;text-align:center;">ตัวเลขถูก 1 ตัว แต่อยู่ในตำแหน่งที่ผิด</td></tr></table><b>ปริศนาที่ 3</b> เด็ก 6 คนนั่งล้อมโต๊ะหกเหลี่ยม ข้อมูล (1) เมษานั่งข้างขวาของอิงฟ้า แต่เว้นไว้ 1 คน (2) พราวนั่งประจันหน้ากับข้าวหอม (3) ว่านนั่งด้านซ้ายของมุก แต่เว้นไว้ 1 คน (4) มุกไม่ได้นั่งข้างข้าวหอม (5) เมษานั่งหัวโต๊ะ<br>วิธีอ่านตำแหน่ง: ให้ตำแหน่งที่ 1 คือหัวโต๊ะ แล้วนับตามเข็มนาฬิกา (เมื่อมองจากด้านบน) เป็นตำแหน่งที่ 2, 3, 4, 5 และ 6</div>
+  </div>
+
+  <div class="card" id="form">
+    <div class="field">
+      <label for="f0"><span class="fn">1</span> ปริศนาที่ 1: ในตะกร้าของพี่มาลีมีของ 3 อย่าง อะไรบ้าง</label>
+      <div class="hint">เขียนชื่อของทั้ง 3 อย่าง</div>
+      <textarea id="f0" rows="2" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f1"><span class="fn">2</span> ปริศนาที่ 1: อธิบายวิธีคิด แถวใดที่ทำให้ตัดของออกได้ทันที และตัดอะไรออก</label>
+      <div class="hint">เล่าสั้น ๆ ว่าตัดข้อมูลอย่างไรจึงเหลือ 3 อย่าง</div>
+      <textarea id="f1" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f2"><span class="fn">3</span> ปริศนาที่ 2: รหัสปลดล็อกกระเป๋าของปังปองคืออะไร</label>
+      <div class="hint">ตอบเลข 3 หลัก</div>
+      <textarea id="f2" rows="1" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f3"><span class="fn">4</span> ปริศนาที่ 2: อธิบายวิธีคิดหารหัส</label>
+      <div class="hint">บอกว่าตัดตัวเลขใดออกก่อน และเลขใดอยู่ตำแหน่งใด เพราะอะไร</div>
+      <textarea id="f3" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f4"><span class="fn">5</span> ปริศนาที่ 3: เรียงชื่อเด็ก 6 คนตามตำแหน่งที่ 1 ถึง 6 (ตามเข็มนาฬิกา เริ่มจากหัวโต๊ะ)</label>
+      <div class="hint">เช่น 1) ... 2) ... ให้ครบ 6 คน</div>
+      <textarea id="f4" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="field">
+      <label for="f5"><span class="fn">6</span> ปริศนาที่ 3: อธิบายว่าใช้ข้อมูลข้อใดก่อน แล้วหาตำแหน่งของคนอื่นต่อได้อย่างไร</label>
+      <div class="hint">เล่าลำดับการคิด</div>
+      <textarea id="f5" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea>
+    </div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/6 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/wscheck.js?v=17"></script>
+<script>
+const U = { g:"p6", s:"cs", i:0 }, N = 1, TOTAL = 6;
+const KEY = "krtomws:p6/cs/0:" + N, DONE = "krtomws-done:p6/cs/0:" + N;
+const boxes = [...document.querySelectorAll("textarea")];
+const answered = () => boxes.filter(b => b.value.trim().length >= 8).length;   // นับข้อที่ตอบอย่างน้อย 8 ตัวอักษร
+
+function refresh(){
+  const n = answered();
+  document.getElementById("bar").style.width = (n / TOTAL * 100) + "%";
+  document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ";
+}
+// บันทึกร่างอัตโนมัติ (เก็บในเครื่องนี้)
+try{
+  const saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+  boxes.forEach((b, i) => { if(saved[i]) b.value = saved[i]; });
+}catch(e){}
+boxes.forEach(b => b.addEventListener("input", () => {
+  try{ localStorage.setItem(KEY, JSON.stringify(boxes.map(x => x.value))); }catch(e){}
+  refresh();
+}));
+refresh();
+
+// ───── ระบบตรวจใบงานเบื้องต้น (ตรวจตอนกดส่ง ไม่แสดงผลหรือเฉลยให้นักเรียน — ส่งคะแนนให้ครู) ─────
+function silentCheck(){ try{ return window.WSCheck && WSCheck.run1 ? WSCheck.run1("u61-" + N, boxes.map(b => b.value)) : null; }catch(e){ return null; } }
+
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), n = answered();
+  if(n < TOTAL){ st.style.color = "#DC2626"; st.textContent = "กรุณาตอบให้ครบทุกข้อก่อนส่ง (แต่ละข้อพิมพ์อย่างน้อย 8 ตัวอักษร)"; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    const rr = silentCheck();
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", rr ? rr.score : n, TOTAL);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" style="text-decoration:none;display:inline-block" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/unitinfo.js?v=5"></script>
+</body>
+</html>

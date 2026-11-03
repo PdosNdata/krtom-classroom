@@ -256,6 +256,10 @@ const COLORS = { "แดง":"#EF4444", "ส้ม":"#F97316", "เหลือ�
  */
 const N = (d) => ({ i:"num", d }), T = (d) => ({ i:"text", d }), A = (d = "") => ({ i:"any", d }), BL = { i:"bool" };
 const KEYOPTS = ["เว้นวรรค", "ลูกศรขึ้น", "ลูกศรลง", "ลูกศรซ้าย", "ลูกศรขวา"].concat("abcdefghijklmnopqrstuvwxyz0123456789".split(""));
+const SNDS = ["ปิ๊ง", "เหมียว", "กลอง", "ตบมือ", "เหรียญ", "ไซเรน"];
+const SFXOPTS = ["ระดับเสียงสูงต่ำ", "ซ้าย-ขวา"];
+const NOTES = { "C":0, "D":2, "E":4, "F":5, "G":7, "A":9, "B":11 };
+const NOTEOPTS = ["C", "D", "E", "F", "G", "A", "B", "C สูง"];
 const FXOPTS = ["สี", "ความสว่าง", "ความซีด", "โปร่งใส"];
 const MSGS = ["ข้อความ 1", "ข้อความ 2", "ข้อความ 3", "เริ่ม", "จบ"];
 const BACKDROPS = { "ขาว":"#FFFFFF", "ฟ้าอ่อน":"#DBEAFE", "เขียวอ่อน":"#DCFCE7", "เหลืองอ่อน":"#FEF9C3", "ชมพูอ่อน":"#FCE7F3" };
@@ -306,6 +310,17 @@ const SPEC = {
   sizen:     { cat:"looks",   kind:"rep",   parts:["ขนาด"] },
   backdrop:  { cat:"looks",   kind:"stack", parts:["เปลี่ยนฉากหลังเป็น", { i:"opt", o:Object.keys(BACKDROPS), d:"ขาว" }] },
   beep:      { cat:"sound",   kind:"stack", parts:["เล่นเสียง ปิ๊ง 🔔"] },
+  playuntil: { cat:"sound",   kind:"stack", parts:["เล่นเสียง", { i:"opt", o:SNDS, d:"ปิ๊ง" }, "จนจบ"] },
+  startsound:{ cat:"sound",   kind:"stack", parts:["เริ่มเล่นเสียง", { i:"opt", o:SNDS, d:"ปิ๊ง" }] },
+  stopsounds:{ cat:"sound",   kind:"stack", parts:["หยุดเสียงทั้งหมด"] },
+  changesfx: { cat:"sound",   kind:"stack", parts:["เปลี่ยนเอฟเฟกต์", { i:"opt", o:SFXOPTS, d:"ระดับเสียงสูงต่ำ" }, "ทีละ", N(10)] },
+  setsfx:    { cat:"sound",   kind:"stack", parts:["กำหนดเอฟเฟกต์", { i:"opt", o:SFXOPTS, d:"ระดับเสียงสูงต่ำ" }, "เป็น", N(100)] },
+  clearsfx:  { cat:"sound",   kind:"stack", parts:["ล้างเอฟเฟกต์เสียง"] },
+  changevol: { cat:"sound",   kind:"stack", parts:["เปลี่ยนระดับเสียงทีละ", N(-10)] },
+  setvol:    { cat:"sound",   kind:"stack", parts:["กำหนดระดับเสียงเป็น", N(100), "%"] },
+  playnote:  { cat:"sound",   kind:"stack", parts:["เล่นโน้ต", { i:"opt", o:NOTEOPTS, d:"C" }, "นาน", N(0.5), "จังหวะ"] },
+  restbeat:  { cat:"sound",   kind:"stack", parts:["พักนาน", N(0.25), "จังหวะ"] },
+  volume:    { cat:"sound",   kind:"rep",   parts:["ระดับเสียง"] },
   pendown:   { cat:"pen",     kind:"stack", parts:["ปากกา ลง ✏️"] },
   penup:     { cat:"pen",     kind:"stack", parts:["ปากกา ขึ้น"] },
   penclear:  { cat:"pen",     kind:"stack", parts:["ล้างลายเส้น"] },
@@ -344,7 +359,7 @@ const CATS = [
   ["event","เหตุการณ์","#F5B800",["flag","keyspace","spriteclick","backdropis","timerhat","recv","broadcast","broadcastwait"]],
   ["motion","การเคลื่อนที่","#4C97FF",["move","turnR","turnL","gotorand","goto","glidetorand","glide","point","towards","changex","setx","changey","sety","bounce","rotstyle","xpos","ypos","dirn"]],
   ["looks","รูปร่าง","#9966FF",["say","sayfor","think","thinkfor","setcost","costume","backdrop","nextbackdrop","changesize","setsize","changefx","setfx","clearfx","show","hide","costnum","bgnum","bgname","sizen"]],
-  ["sound","เสียง","#CF63CF",["beep"]],
+  ["sound","เสียง","#CF63CF",["playuntil","startsound","stopsounds","changesfx","setsfx","clearsfx","changevol","setvol","playnote","restbeat","volume"]],
   ["pen","ปากกา","#0FBD8C",["pendown","penup","pencolor","pensize","penclear"]],
   ["control","ควบคุม","#FF9F1C",["wait","repeat","forever","if","ifelse","waituntil","repeatuntil","while","stop"]],
   ["sensing","รับค่า","#3AAAD1",["ask","answer"]],
@@ -676,9 +691,41 @@ function renderMon(){
   const m = $("#mon"); m.innerHTML = "";
   VARS.forEach(v => { const s = el("span", "", v + " = " + fmt(S.vars[v] ?? 0)); m.append(s); });
 }
+/* ---------- เสียง: สังเคราะห์ด้วย Web Audio ---------- */
+let AC = null; const SPLAY = new Set();
+const SND = { vol:100, pitch:0, pan:0 };
+function actx(){ try{ if(!AC){ const C = window.AudioContext || window.webkitAudioContext; AC = C ? new C() : null; } if(AC && AC.state === "suspended") AC.resume(); }catch(e){ AC = null; } return AC; }
+// เล่นโทนเดียว: ชนิดคลื่น, ความถี่เริ่ม→จบ (Hz), ความยาว (วินาที), ความดัง 0-1, เริ่มหลังกี่วินาที
+function tone(type, f0, f1, dur, v, at){
+  const a = actx(); if(!a) return;
+  const k = Math.pow(2, SND.pitch / 120), t0 = a.currentTime + (at || 0), g = a.createGain(), o = a.createOscillator();
+  o.type = type; o.frequency.setValueAtTime(f0 * k, t0); o.frequency.exponentialRampToValueAtTime(Math.max(20, f1 * k), t0 + dur);
+  const vol = v * Math.max(0, SND.vol) / 100; g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0008, t0 + dur);
+  let out = g; if(a.createStereoPanner){ const pn = a.createStereoPanner(); pn.pan.value = Math.max(-1, Math.min(1, SND.pan / 100)); g.connect(pn); out = pn; }
+  o.connect(g); out.connect(a.destination); o.start(t0); o.stop(t0 + dur + 0.02); SPLAY.add(o); o.onended = () => SPLAY.delete(o);
+}
+function noise(dur, v, at){
+  const a = actx(); if(!a) return; const n = Math.floor(a.sampleRate * dur), buf = a.createBuffer(1, n, a.sampleRate), d = buf.getChannelData(0);
+  for(let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  const src = a.createBufferSource(), g = a.createGain(), t0 = a.currentTime + (at || 0); src.buffer = buf; g.gain.value = v * Math.max(0, SND.vol) / 100;
+  src.connect(g); g.connect(a.destination); src.start(t0); SPLAY.add(src); src.onended = () => SPLAY.delete(src);
+}
+const SNDLEN = { "ปิ๊ง":0.45, "เหมียว":0.6, "กลอง":0.3, "ตบมือ":0.25, "เหรียญ":0.4, "ไซเรน":1 };
+function playSnd(n){
+  switch(n){
+    case "เหมียว": tone("sawtooth", 500, 900, 0.25, 0.25); tone("sawtooth", 900, 450, 0.35, 0.25, 0.25); break;
+    case "กลอง": tone("sine", 180, 45, 0.3, 0.7); break;
+    case "ตบมือ": noise(0.12, 0.6); noise(0.12, 0.6, 0.13); break;
+    case "เหรียญ": tone("square", 988, 988, 0.08, 0.2); tone("square", 1319, 1319, 0.32, 0.2, 0.08); break;
+    case "ไซเรน": tone("triangle", 600, 1000, 0.5, 0.35); tone("triangle", 1000, 600, 0.5, 0.35, 0.5); break;
+    default: tone("sine", 880, 880, 0.45, 0.5);
+  }
+  return SNDLEN[n] || 0.45;
+}
+function stopSounds(){ SPLAY.forEach(o => { try{ o.stop(); }catch(e){} }); SPLAY.clear(); }
 const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
 function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").style.background = BACKDROPS[S.bg]; }
-function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; S.cost = 0; S.sz = 100; S.fx = {}; S.vis = true; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; bubble.className = ""; renderSprite(); }
+function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.cost = 0; S.sz = 100; S.fx = {}; S.vis = true; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; bubble.className = ""; renderSprite(); }
 
 /* ---------- ตัวแปลสั่งงาน ---------- */
 const STOP = { stop:true };
@@ -693,6 +740,7 @@ function val(a){
   if(typeof a !== "object") return isNum(a) ? Number(a) : a;
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
+    case "volume": return Math.round(SND.vol);
     case "costnum": return S.cost % COSTUMES[S.spr].length + 1;
     case "bgnum": return Object.keys(BACKDROPS).indexOf(S.bg) + 1;
     case "bgname": return S.bg;
@@ -776,7 +824,20 @@ const EXEC = {
   async backdrop(j){ const n = j.a[0] || "ขาว"; setBackdrop(n); fireHats("backdropis", n); },
   async broadcast(j){ fireHats("recv", j.a[0] || "ข้อความ 1"); },
   async broadcastwait(j, c){ await fireHats("recv", j.a[0] || "ข้อความ 1"); chk(c); },
-  async beep(){ if(window.sfx) sfx.coin(); },
+  async beep(){ playSnd("ปิ๊ง"); },
+  async startsound(j){ playSnd(j.a[0] || "ปิ๊ง"); },
+  async playuntil(j, c){ const d = playSnd(j.a[0] || "ปิ๊ง"); await sleep(d * 1000); chk(c); },
+  async stopsounds(){ stopSounds(); },
+  async changesfx(j){ if((j.a[0] || "") === "ซ้าย-ขวา") SND.pan = Math.max(-100, Math.min(100, SND.pan + num(val(j.a[1])))); else SND.pitch = Math.max(-360, Math.min(360, SND.pitch + num(val(j.a[1])))); },
+  async setsfx(j){ if((j.a[0] || "") === "ซ้าย-ขวา") SND.pan = Math.max(-100, Math.min(100, num(val(j.a[1])))); else SND.pitch = Math.max(-360, Math.min(360, num(val(j.a[1])))); },
+  async clearsfx(){ SND.pitch = 0; SND.pan = 0; },
+  async changevol(j){ SND.vol = Math.max(0, Math.min(100, SND.vol + num(val(j.a[0])))); },
+  async setvol(j){ SND.vol = Math.max(0, Math.min(100, num(val(j.a[0])))); },
+  async playnote(j, c){
+    const nm = j.a[0] || "C", hi = /สูง/.test(nm), semi = (NOTES[nm.charAt(0)] || 0) + (hi ? 12 : 0), f = 261.63 * Math.pow(2, semi / 12), b = Math.max(0, num(val(j.a[1]))) * 0.5;
+    const k = Math.pow(2, -SND.pitch / 120); tone("triangle", f * k, f * k, Math.max(0.05, b), 0.5); await sleep(b * 1000); chk(c);
+  },
+  async restbeat(j, c){ await sleep(Math.max(0, num(val(j.a[0]))) * 500); chk(c); },
   async pendown(){ S.pen = true; cx.fillStyle = S.color; cx.beginPath(); cx.arc(S.x + 240, 180 - S.y, S.size / 2, 0, 7); cx.fill(); },
   async penup(){ S.pen = false; },
   async penclear(){ cx.clearRect(0, 0, 480, 360); },
@@ -812,7 +873,7 @@ async function execBlock(j, c){
   finally{ j.el.classList.remove("run"); }
 }
 function stopAll(){
-  clearInterval(TI); RUN++; sleepers.forEach(f => f()); sleepers.clear();
+  clearInterval(TI); stopSounds(); RUN++; sleepers.forEach(f => f()); sleepers.clear();
   if(askRes){ askRes(); askRes = null; } $("#askbar").style.display = "none";
   document.querySelectorAll(".blk.run").forEach(x => x.classList.remove("run"));
 }

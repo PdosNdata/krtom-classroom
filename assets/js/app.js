@@ -317,8 +317,8 @@ const READY_CONTENT = {
     game:      { href:"content/p5-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p6/cs/0": {
-    knowledge: { href:"content/p6-cs-0/knowledge.html", title:"การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ" },
-    worksheet: { href:"content/p6-cs-0/worksheet.html", title:"ใบงานที่ 1.1 เหตุผลเชิงตรรกะและผังงาน" },
+    knowledge: { href:"content/p6-cs-0/knowledge.html", title:"การแก้ปัญหา: เหตุผลเชิงตรรกะ รหัสลำลอง และผังงาน" },
+    worksheet: { href:"content/p6-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.9 เหตุผลเชิงตรรกะ รหัสลำลอง และผังงาน" },
     quiz:      { href:"content/p6-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game: {
       href:"content/p6-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
@@ -363,7 +363,7 @@ function findSubject(grade, id){ return grade.subjects.find(s => s.id === id); }
 // ป.1–3 (เด็กเล็ก) ใช้ตัวอักษรใหญ่กว่าปกติ 2 เท่าทั้งเว็บ เพื่อให้อ่านง่ายขึ้น
 const LARGE_TEXT_GRADES = ["p1", "p2", "p3"];
 const MID_TEXT_GRADES = ["m1", "m2", "m3"];
-const P5_TEXT_GRADES = ["p5"];   // ป.5: ใหญ่ขึ้น 2 เท่า (16px → 32px)
+const P5_TEXT_GRADES = ["p5", "p6"];   // ป.5–ป.6: ใหญ่ขึ้น 2 เท่า (16px → 32px)
 function applyTextSize(gradeId){
   document.documentElement.classList.toggle("large-text", LARGE_TEXT_GRADES.includes(gradeId));
   document.documentElement.classList.toggle("mid-text", MID_TEXT_GRADES.includes(gradeId));
@@ -740,7 +740,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
@@ -830,7 +830,7 @@ async function renderFlowSteps(grade, subject, idx, unit){
   if(set && wsTotal && KrtomFlow.mode() === "student" && set.has(`${u.g}/${u.s}/${u.i}/worksheet`)){
     try{
       const tk = sessionStorage.getItem("krtomStudentToken");
-      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : u.g === "p4" ? 40 : u.g === "m2" ? 20 : 0) + u.i + 1}-${k + 1}` })));
+      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : u.g === "p4" ? 40 : u.g === "m2" ? 20 : u.g === "p6" ? 60 : 0) + u.i + 1}-${k + 1}` })));
       wsLeft = open.filter(Boolean).length;                 // true = ยังไม่ส่ง (หรือครูเปิดให้ส่งใหม่)
       if(wsLeft > 0){ set = new Set(set); set.delete(`${u.g}/${u.s}/${u.i}/worksheet`); }
     }catch(e){ wsLeft = null; }                              // ยังไม่ได้ติดตั้ง SQL / ออฟไลน์: ใช้ความคืบหน้าเดิม

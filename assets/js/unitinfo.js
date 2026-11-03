@@ -32,13 +32,21 @@
          "อธิบายหลักการเขียนอัลกอริทึมด้วยข้อความและรหัสลำลองได้ (K)", "อธิบายหลักการทำงานของอัลกอริทึมด้วยผังงานได้ (K)", "แสดงอัลกอริทึมเพื่อแก้ปัญหาด้วยข้อความ รหัสลำลอง และผังงานได้อย่างถูกต้อง (K, P, A)"],
       P:{ knowledge:[1,2,3,4,5,6], list:[1,2,3,4,5,6], quiz:[1,2,4,5],
           "worksheet-41-1":[1,2,3], "worksheet-41-2":[1,4,5], "worksheet-41-3":[2,4], "worksheet-41-4":[1,5], "worksheet-41-5":[2,3,6], "worksheet-41-6":[1,2,4,5] } },
+    "p6-cs-0": { name:"ป.6 หน่วยที่ 1 การแก้ปัญหา", ind:["ว 4.2 ป.6/1", "ใช้เหตุผลเชิงตรรกะในการอธิบายและออกแบบวิธีการแก้ปัญหาที่พบในชีวิตประจำวัน"],
+      O:["ใช้เหตุผลเชิงตรรกะในการแก้ปัญหา (K)", "อธิบายขั้นตอนการทำงานและผลลัพธ์ของรหัสลำลอง (K)", "แก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ (K)", "อธิบายขั้นตอนการทำงานและผลลัพธ์ของผังงาน (K)", "วิเคราะห์สถานการณ์และการทำงานของผังงานที่มีการตรวจสอบเงื่อนไข (K)", "อธิบายขั้นตอนการทำงานหรือแก้ปัญหาที่มีหลายทางเลือก (K)",
+         "แก้ปัญหาโดยใช้เหตุผลเชิงตรรกะในสถานการณ์ที่หลากหลาย (P)", "เขียนรหัสลำลองแสดงขั้นตอนการแก้ปัญหาหรือการทำงานแบบลำดับในชีวิตประจำวัน (P)", "แก้ปัญหาและแสดงขั้นตอนการแก้ปัญหาด้วยรหัสลำลอง (P)", "เขียนผังงานแสดงขั้นตอนการแก้ปัญหาหรือการทำงานในชีวิตประจำวัน (P)", "เขียนผังงานแสดงขั้นตอนการแก้ปัญหาที่มีการตรวจสอบเงื่อนไข (P)", "เขียนผังงานแสดงวิธีการทำงานหรือแก้ปัญหาที่มีหลายทางเลือก (P)"],
+      CP:["แก้ปัญหาโดยใช้เหตุผลเชิงตรรกะในสถานการณ์ที่หลากหลาย", "เขียนรหัสลำลองแสดงขั้นตอนการแก้ปัญหาหรือการทำงานแบบลำดับในชีวิตประจำวัน", "เขียนรหัสลำลองแสดงวิธีในการแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ", "เขียนผังงานแสดงขั้นตอนการทำงานในชีวิตประจำวัน", "วิเคราะห์สถานการณ์และเขียนขั้นตอนการแก้ปัญหาที่มีการตรวจสอบเงื่อนไขโดยใช้ผังงาน", "แสดงวิธีในการทำงานหรือแก้ปัญหาที่มีหลายทางเลือกโดยใช้ผังงาน"],
+      TR:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"],
+      P:{ knowledge:[1,2,3,4,5,6], list:[1,2,3,4,5,6,7,8,9,10,11,12], quiz:[1,2,4,5],
+          "worksheet-61-1":[1,7], "worksheet-61-2":[2,8], "worksheet-61-3":[3,9], "worksheet-61-4":[4,10], "worksheet-61-5":[5,11], "worksheet-61-6":[6,12], "worksheet-61-7":[4,6,10,12], "worksheet-61-8":[1,2,3,4,5,6], "worksheet-61-9":[4,5,10,11] },
+      CPM:{ knowledge:[1,2,3,4,5,6], list:[1,2,3,4,5,6], quiz:[1,4,5], "worksheet-61-1":[1], "worksheet-61-2":[2], "worksheet-61-3":[3], "worksheet-61-4":[4], "worksheet-61-5":[5], "worksheet-61-6":[6], "worksheet-61-7":[4,6], "worksheet-61-8":[1,2,3,4,5,6], "worksheet-61-9":[4,5] } },
     "m1-cs-2": { name:"ม.1 หน่วยที่ 3 การจัดการข้อมูลและสารสนเทศ", ind:["ว 4.2 ม.1/3", "รวบรวมข้อมูลปฐมภูมิ ประมวลผล ประเมินผล นำเสนอข้อมูล และสารสนเทศ ตามวัตถุประสงค์โดยใช้ซอฟต์แวร์หรือบริการบนอินเทอร์เน็ตที่หลากหลาย"],
       O:["อธิบายความแตกต่างระหว่างข้อมูลปฐมภูมิและข้อมูลทุติยภูมิ และวัฏจักรการประมวลผลสารสนเทศได้", "จำแนกประเภทซอฟต์แวร์และเลือกใช้ให้เหมาะสมกับงานได้", "สืบค้น รวบรวม ประมวลผล และนำเสนอสารสนเทศได้อย่างถูกต้องและน่าเชื่อถือ"],
       P:{ knowledge:[1,2,3], list:[1,2,3], quiz:[1,2,3],
           "worksheet-3-1":[1,2], "worksheet-3-2":[1,3], "worksheet-3-3":[1], "worksheet-3-4":[1,2], "worksheet-3-5":[1,3], "worksheet-3-6":[1,3], "worksheet-3-7":[2], "worksheet-3-8":[3], "worksheet-3-9":[1,2,3] } }
   };
   const TESTS = ["quiz", "worksheet-31-7", "worksheet-32-9", "worksheet-3-9", "worksheet-41-6", "worksheet-21-5"];
-  const DRAGS = ["worksheet-31-2", "worksheet-31-4", "worksheet-32-2", "worksheet-32-7", "worksheet-3-4", "worksheet-41-2", "worksheet-41-4", "worksheet-21-2"];
+  const DRAGS = ["worksheet-31-2", "worksheet-31-4", "worksheet-32-2", "worksheet-32-7", "worksheet-3-4", "worksheet-41-2", "worksheet-41-4", "worksheet-21-2", "worksheet-61-9"];
   const kind = file === "knowledge" ? "know" : TESTS.includes(file) ? "test" : (DRAGS.includes(file) || /^worksheet-21-(7|8|9|10|11|12|13|14|16|18|20|21)$/.test(file)) ? "drag" : file === "worksheet" ? "list" : "text";
   const cs = { know:["C1", "C2", "C5"], list:["C1", "C2", "C3", "C5"], text:["C1", "C2", "C3", "C5"], drag:["C2", "C5"], test:["C2", "C3"] }[kind];
   const TR = { know:["ใฝ่เรียนรู้"], list:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน", "ซื่อสัตย์สุจริต"], text:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], drag:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], test:["ซื่อสัตย์สุจริต", "มีวินัย"] }[kind];
@@ -59,13 +67,14 @@
   @media print{ .ui-box{ box-shadow:none; } }`;
   document.head.appendChild(css);
   // inds = [[รหัส, ข้อความ], ...] · objs = ข้อความจุดประสงค์ (ว่าง = ไม่แสดง) · compact = แสดงเฉพาะตัวชี้วัดกับคุณลักษณะ (หน้าที่มีกล่องสมรรถนะของตัวเองอยู่แล้ว)
-  function render(inds, objs, extraTraits, compact){
-    const ts = TR.concat(extraTraits || []);
+  function render(inds, objs, extraTraits, compact, comps, traits){
+    const ts = (traits || TR).concat(extraTraits || []);
     const box = document.createElement("div");
     box.className = "ui-box";
     box.innerHTML = `<div class="ui-h">🎯 ${esc(what)}ทำแล้วได้ตามตัวชี้วัด${compact ? "" : "และจุดประสงค์"}</div>` +
       inds.map(r => `<div class="ui-ind">📌 <b>ตัวชี้วัด ${esc(r[0])}</b> ${esc(r[1])}</div>`).join("") +
       (!compact && objs && objs.length ? `<div>🎯 <b>จุดประสงค์การเรียนรู้</b></div><ul>${objs.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : "") +
+      (!compact && comps && comps.length ? `<div>🧩 <b>สมรรถนะที่ต้องการให้เกิดกับผู้เรียน (KSA)</b></div><ul>${comps.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : "") +
       (compact ? "" : `<div class="ui-row"><span class="ui-lab">🧠 สมรรถนะสำคัญของผู้เรียน:</span>${cs.map(k => `<span class="ui-chip ui-c">${esc(C[k])}</span>`).join("")}</div>`) +
       `<div class="ui-row"><span class="ui-lab">🌟 คุณลักษณะอันพึงประสงค์:</span>${ts.map(t => `<span class="ui-chip ui-t">${esc(t)}</span>`).join("")}</div>` +
       `<div class="ui-std">มาตรฐาน ${esc(STD)}</div>`;
@@ -79,7 +88,8 @@
   const U = UNITS[dir];
   if(U){
     const idx = U.P[file === "worksheet" ? "list" : file]; if(!idx) return;
-    render([U.ind], idx.map(i => U.O[i - 1]), (U.MORE && U.MORE[file]) || [], false);
+    const ck = file === "worksheet" ? "list" : file;
+    render([U.ind], idx.map(i => U.O[i - 1]), (U.MORE && U.MORE[file]) || [], false, U.CP && U.CPM && U.CPM[ck] ? U.CPM[ck].map(i => U.CP[i - 1]) : null, U.TR || null);
     return;
   }
   // หน่วยอื่น ๆ: ดึงตัวชี้วัดจาก standards.js และจุดประสงค์จาก .obj-box ของใบความรู้หน่วยเดียวกัน
