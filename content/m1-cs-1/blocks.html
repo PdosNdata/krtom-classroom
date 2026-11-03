@@ -58,6 +58,7 @@
   #vdlg .vfoot button{ font:inherit; font-weight:800; font-size:1rem; padding:9px 26px; border-radius:999px; cursor:pointer; }
   #vdlg .vcancel{ background:#fff; color:#C2410C; border:3px solid #FDBA74; } #vdlg .vcancel:hover{ background:#FFF7ED; }
   #vdlg .vok{ background:#FF6B3D; color:#fff; border:3px solid #E5532A; } #vdlg .vok:hover:not(:disabled){ background:#F25A2B; } #vdlg .vok:disabled{ opacity:.4; cursor:not-allowed; }
+  #newlist{ border:2px dashed #EF4444; background:#FEF2F2; color:#B91C1C; font:inherit; font-weight:700; font-size:.8rem; border-radius:10px; padding:4px 10px; margin:6px 0; cursor:pointer; }
   #newvar{ border:2px dashed #FB923C; background:#FFF7ED; color:#C2410C; font:inherit; font-weight:700; font-size:.8rem; border-radius:10px; padding:4px 10px; cursor:pointer; margin-bottom:6px; }
 
   /* ───── พื้นที่เขียนโปรแกรม ───── */
@@ -359,6 +360,20 @@ const SPEC = {
   mathop:    { cat:"ops",     kind:"rep",   parts:[{ i:"opt", o:MATHOPS, d:"ค่าสัมบูรณ์" }, "ของ", A(-10)] },
   set:       { cat:"vars",    kind:"stack", parts:["กำหนด", { i:"var" }, "เป็น", A(0)] },
   change:    { cat:"vars",    kind:"stack", parts:["เปลี่ยน", { i:"var" }, "ทีละ", N(1)] },
+  showvar:   { cat:"vars",    kind:"stack", parts:["แสดงตัวแปร", { i:"var" }] },
+  hidevar:   { cat:"vars",    kind:"stack", parts:["ซ่อนตัวแปร", { i:"var" }] },
+  listall:   { cat:"vars",    kind:"rep",   parts:["รายการ", { i:"list" }, "ทั้งหมด"] },
+  ladd:      { cat:"vars",    kind:"stack", parts:["เพิ่ม", T("สิ่งของ"), "ไปที่รายการ", { i:"list" }] },
+  ldel:      { cat:"vars",    kind:"stack", parts:["ลบรายการที่", A(1), "ของ", { i:"list" }] },
+  ldelall:   { cat:"vars",    kind:"stack", parts:["ลบทั้งหมดของ", { i:"list" }] },
+  lins:      { cat:"vars",    kind:"stack", parts:["แทรก", T("สิ่งของ"), "ที่ตำแหน่ง", A(1), "ของ", { i:"list" }] },
+  lrep:      { cat:"vars",    kind:"stack", parts:["แทนที่รายการที่", A(1), "ของ", { i:"list" }, "ด้วย", T("สิ่งของ")] },
+  litem:     { cat:"vars",    kind:"rep",   parts:["รายการที่", A(1), "ของ", { i:"list" }] },
+  lidx:      { cat:"vars",    kind:"rep",   parts:["ตำแหน่งของ", T("สิ่งของ"), "ใน", { i:"list" }] },
+  llen:      { cat:"vars",    kind:"rep",   parts:["ความยาวของรายการ", { i:"list" }] },
+  lhas:      { cat:"vars",    kind:"bool",  parts:[{ i:"list" }, "มี", T("สิ่งของ"), "ไหม"] },
+  showlist:  { cat:"vars",    kind:"stack", parts:["แสดงรายการ", { i:"list" }] },
+  hidelist:  { cat:"vars",    kind:"stack", parts:["ซ่อนรายการ", { i:"list" }] },
   var:       { cat:"vars",    kind:"rep",   parts:[] }
 };
 const CATS = [
@@ -374,6 +389,8 @@ const CATS = [
 ];
 
 let VARS = [];                       // รายชื่อตัวแปร
+let LISTS = [];                      // รายชื่อรายการ (list)
+const LST = {}, HID = {};            // เนื้อหารายการ · ชื่อที่ซ่อนจอแสดงผล
 const wsin = $("#wsin"), ws = $("#ws");
 let ZM = 1;
 
@@ -381,9 +398,10 @@ let ZM = 1;
 function makeSlot(def, val){
   const s = el("span", "inp"); s.dataset.t = def.i;
   if(def.i === "bool") return s;
-  if(def.i === "var" || def.i === "opt"){
+  if(def.i === "var" || def.i === "opt" || def.i === "list"){
     const sel = el("select");
     if(def.i === "var") fillVarSelect(sel, val);
+    else if(def.i === "list") fillListSelect(sel, val);
     else { def.o.forEach(o => sel.append(new Option(o, o))); sel.value = val != null ? val : def.d; }
     if(def.i === "opt") sel.addEventListener("change", save);
     s.append(sel); return s;
@@ -400,6 +418,13 @@ function fillVarSelect(sel, keep){
   if(!VARS.length) sel.append(new Option("(สร้างตัวแปรก่อน)", ""));
   VARS.forEach(v => sel.append(new Option(v, v)));
   if(cur && VARS.includes(cur)) sel.value = cur;
+}
+function fillListSelect(sel, keep){
+  const cur = keep != null ? keep : sel.value;
+  sel.innerHTML = "";
+  if(!LISTS.length) sel.append(new Option("(สร้างรายการก่อน)", ""));
+  LISTS.forEach(v => sel.append(new Option(v, v)));
+  if(cur && LISTS.includes(cur)) sel.value = cur;
 }
 function makeBlock(id, vals, varName){
   const sp = SPEC[id], b = el("div", "blk k-" + sp.kind + " cat-" + sp.cat + (sp.cap ? " cap" : ""));
@@ -446,11 +471,11 @@ function bld(j){
 function putRep(slot, rep){ slot.classList.add("has-rep"); slot.append(rep); }
 const allScripts = () => [...wsin.querySelectorAll(":scope > .script")];
 function wsToJSON(){
-  return { vars:VARS, spr:$("#spr").value, scripts: allScripts().map(sc => ({ x:parseInt(sc.style.left) || 0, y:parseInt(sc.style.top) || 0, b:[...sc.children].filter(x => x.classList.contains("blk")).map(ser) })) };
+  return { vars:VARS, lists:LISTS, spr:$("#spr").value, scripts: allScripts().map(sc => ({ x:parseInt(sc.style.left) || 0, y:parseInt(sc.style.top) || 0, b:[...sc.children].filter(x => x.classList.contains("blk")).map(ser) })) };
 }
 function loadJSON(d){
   allScripts().forEach(s => s.remove());
-  VARS = (d.vars || []).slice(); refreshVars();
+  VARS = (d.vars || []).slice(); LISTS = (d.lists || []).slice(); LISTS.forEach(l => { if(!LST[l]) LST[l] = []; }); refreshVars();
   if(d.spr != null){ $("#spr").value = d.spr; setSprite(); }
   (d.scripts || []).forEach(s => { const sc = newScript(s.x, s.y); s.b.forEach(j => sc.append(bld(j))); });
   hint();
@@ -471,25 +496,28 @@ function buildPalette(){
     cats.append(b);
     const h = el("h4", "", name); h.id = "h-" + key; pal.append(h);
     if(key === "vars"){
-      const nb = el("button", "", "➕ สร้างตัวแปร"); nb.id = "newvar"; nb.onclick = newVar; pal.append(nb);
+      const nb = el("button", "", "➕ สร้างตัวแปร"); nb.id = "newvar"; nb.onclick = () => newVar(false); pal.append(nb);
       VARS.forEach(v => { const w = el("div", "pitem"); w.append(makeBlock("var", null, v)); pal.append(w); });
-      ["set", "change"].forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
+      ["set", "change", "showvar", "hidevar"].forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
+      const nl = el("button", "", "➕ สร้างรายการ"); nl.id = "newlist"; nl.onclick = () => newVar(true); pal.append(nl);
+      if(LISTS.length) ["listall", "ladd", "ldel", "ldelall", "lins", "lrep", "litem", "lidx", "llen", "lhas", "showlist", "hidelist"].forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
       return;
     }
     ids.forEach(id => { const w = el("div", "pitem"); w.append(makeBlock(id)); pal.append(w); });
   });
 }
 /* กล่องสร้างตัวแปร (สไตล์ Scratch) */
-function newVar(){
+function newVar(isList){
   if(document.getElementById("vdlg")) return;
+  const W = isList ? "รายการ" : "ตัวแปร", ARR = isList ? LISTS : VARS;
   const ov = el("div", ""); ov.id = "vdlg";
-  ov.innerHTML = `<div class="vbox" role="dialog" aria-modal="true" aria-label="ตัวแปรใหม่">
-    <div class="vhead">ตัวแปรใหม่<button type="button" class="vx" aria-label="ปิด">✕</button></div>
+  ov.innerHTML = `<div class="vbox" role="dialog" aria-modal="true" aria-label="${W}ใหม่">
+    <div class="vhead">${W}ใหม่<button type="button" class="vx" aria-label="ปิด">✕</button></div>
     <div class="vbody">
-      <label for="vname">ตั้งชื่อตัวแปร <span>(ควรสื่อความหมาย)</span></label>
-      <input id="vname" maxlength="20" autocomplete="off" spellcheck="false" placeholder="เช่น คะแนน">
-      <div class="vprev"><span class="vpill" id="vpill">ชื่อตัวแปร</span></div>
-      <div class="vchips">ลองใช้: ${["คะแนน", "จำนวนรอบ", "ผลรวม", "อุณหภูมิ"].map(t => `<button type="button" class="vchip">${t}</button>`).join("")}</div>
+      <label for="vname">ตั้งชื่อ${W} <span>(ควรสื่อความหมาย)</span></label>
+      <input id="vname" maxlength="20" autocomplete="off" spellcheck="false" placeholder="เช่น ${isList ? "รายชื่อเพื่อน" : "คะแนน"}">
+      <div class="vprev"><span class="vpill" id="vpill">ชื่อ${W}</span></div>
+      <div class="vchips">ลองใช้: ${(isList ? ["รายชื่อเพื่อน", "คะแนนสอบ", "ของที่ต้องซื้อ"] : ["คะแนน", "จำนวนรอบ", "ผลรวม", "อุณหภูมิ"]).map(t => `<button type="button" class="vchip">${t}</button>`).join("")}</div>
       <div class="verr" id="verr"></div>
     </div>
     <div class="vfoot"><button type="button" class="vcancel">ยกเลิก</button><button type="button" class="vok" disabled>ตกลง</button></div>
@@ -498,13 +526,13 @@ function newVar(){
   const inp = ov.querySelector("#vname"), ok = ov.querySelector(".vok"), err = ov.querySelector("#verr"), pill = ov.querySelector("#vpill");
   const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
   const check = () => {
-    const n = inp.value.trim(); pill.textContent = n || "ชื่อตัวแปร"; pill.classList.toggle("empty", !n);
-    const dup = n && VARS.includes(n); err.textContent = dup ? "มีตัวแปรชื่อ \"" + n + "\" อยู่แล้ว ลองตั้งชื่ออื่น" : "";
+    const n = inp.value.trim(); pill.textContent = n || "ชื่อ" + W; pill.classList.toggle("empty", !n);
+    const dup = n && (VARS.includes(n) || LISTS.includes(n)); err.textContent = dup ? "มีตัวแปรหรือรายการชื่อ \"" + n + "\" อยู่แล้ว ลองตั้งชื่ออื่น" : "";
     ok.disabled = !n || dup; return !ok.disabled;
   };
   const done = () => {
     if(!check()) return; const n = inp.value.trim();
-    VARS.push(n); refreshVars(); save(); close(); toast("สร้างตัวแปร \"" + n + "\" แล้ว");
+    ARR.push(n); if(isList) LST[n] = []; refreshVars(); save(); close(); toast("สร้าง" + W + " \"" + n + "\" แล้ว");
     if(window.sfx && sfx.coin) try{ sfx.coin(); }catch(e){}
   };
   function onKey(e){ if(e.key === "Escape"){ e.stopPropagation(); close(); } else if(e.key === "Enter" && document.activeElement === inp){ e.preventDefault(); done(); } }
@@ -517,7 +545,7 @@ function newVar(){
 }
 function refreshVars(){
   const top = $("#palette").scrollTop; buildPalette(); $("#palette").scrollTop = top;
-  document.querySelectorAll("#wsin select").forEach(sel => { if(sel.parentElement.dataset.t === "var") fillVarSelect(sel); });
+  document.querySelectorAll("#wsin select").forEach(sel => { const t = sel.parentElement.dataset.t; if(t === "var") fillVarSelect(sel); else if(t === "list") fillListSelect(sel); });
 }
 
 /* ---------- ลาก–วาง ---------- */
@@ -571,7 +599,7 @@ function startDrag(e){
 function clearHot(){ document.querySelectorAll(".inp.hot").forEach(x => x.classList.remove("hot")); ins.style.display = "none"; }
 function slotAccepts(slot, first){
   const t = slot.dataset.t;
-  if(t === "var" || t === "opt") return false;
+  if(t === "var" || t === "opt" || t === "list") return false;
   if(slot.querySelector(":scope > .blk")) return false;
   if(t === "bool") return first.classList.contains("k-bool");
   return true;
@@ -695,7 +723,8 @@ function renderSprite(){
 }
 function renderMon(){
   const m = $("#mon"); m.innerHTML = "";
-  VARS.forEach(v => { const s = el("span", "", v + " = " + fmt(S.vars[v] ?? 0)); m.append(s); });
+  VARS.forEach(v => { if(HID[v]) return; const s = el("span", "", v + " = " + fmt(S.vars[v] ?? 0)); m.append(s); });
+  LISTS.forEach(l => { if(HID["list:" + l]) return; const a = LST[l] || [], s = el("span", "", "▤ " + l + " (" + a.length + "): " + (a.length ? a.slice(0, 8).map(fmt).join(", ") + (a.length > 8 ? " …" : "") : "ว่าง")); m.append(s); });
 }
 /* ---------- เสียง: สังเคราะห์ด้วย Web Audio ---------- */
 let AC = null; const SPLAY = new Set();
@@ -731,7 +760,7 @@ function playSnd(n){
 function stopSounds(){ SPLAY.forEach(o => { try{ o.stop(); }catch(e){} }); SPLAY.clear(); }
 const fmt = (v) => typeof v === "number" ? (Number.isFinite(v) ? String(+v.toFixed(6)) : "ไม่มีค่า") : String(v);
 function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").style.background = BACKDROPS[S.bg]; }
-function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.cost = 0; S.sz = 100; S.fx = {}; S.vis = true; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); bubble.style.display = "none"; bubble.className = ""; renderSprite(); }
+function resetSprite(){ setBackdrop("ขาว"); S.rs = null; S.x = 0; S.y = 0; S.dir = 90; S.pen = false; S.color = "#EF4444"; S.size = 3; SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.cost = 0; S.sz = 100; S.fx = {}; S.vis = true; S.answer = ""; VARS.forEach(v => S.vars[v] = 0); LISTS.forEach(l => LST[l] = []); Object.keys(HID).forEach(k => delete HID[k]); bubble.style.display = "none"; bubble.className = ""; renderSprite(); }
 
 /* ---------- ตัวแปลสั่งงาน ---------- */
 const STOP = { stop:true };
@@ -747,6 +776,11 @@ function val(a){
   switch(a.t){
     case "answer": return isNum(S.answer) ? Number(S.answer) : S.answer;
     case "volume": return Math.round(SND.vol);
+    case "listall": return (LST[a.a[0]] || []).map(fmt).join(" ");
+    case "litem": { const L = LST[a.a[1]] || [], i = lidx(val(a.a[0]), L.length); return i >= 1 && i <= L.length ? L[i - 1] : ""; }
+    case "lidx": { const L = LST[a.a[1]] || [], t = val(a.a[0]), k = L.findIndex(x => cmp(x, t) === 0); return k + 1; }
+    case "llen": return (LST[a.a[0]] || []).length;
+    case "lhas": { const L = LST[a.a[0]] || [], t = val(a.a[1]); return L.some(x => cmp(x, t) === 0); }
     case "costnum": return S.cost % COSTUMES[S.spr].length + 1;
     case "bgnum": return Object.keys(BACKDROPS).indexOf(S.bg) + 1;
     case "bgname": return S.bg;
@@ -780,6 +814,7 @@ function val(a){
   }
   return 0;
 }
+function lidx(n, len){ const t = String(n).trim(); if(t === "สุดท้าย") return len; if(t === "สุ่ม") return 1 + Math.floor(Math.random() * len); return Math.floor(num(n)); }
 function cmp(x, y){ if(typeof x === "number" && typeof y === "number") return x === y ? 0 : x > y ? 1 : -1; x = fmt(x).toLowerCase(); y = fmt(y).toLowerCase(); return x === y ? 0 : x > y ? 1 : -1; }
 const cond = (a) => a == null ? false : !!val(a);
 
@@ -873,6 +908,15 @@ const EXEC = {
     CTXS.forEach(x => { if(x !== c) x.dead = true; }); sleepers.forEach(f => f());      // สคริปต์อื่น ๆ
   },
   async stopall(){ stopAll(); },
+  async showvar(j){ if(j.a[0]) delete HID[j.a[0]]; renderMon(); },
+  async hidevar(j){ if(j.a[0]) HID[j.a[0]] = 1; renderMon(); },
+  async showlist(j){ if(j.a[0]) delete HID["list:" + j.a[0]]; renderMon(); },
+  async hidelist(j){ if(j.a[0]) HID["list:" + j.a[0]] = 1; renderMon(); },
+  async ladd(j){ const L = LST[j.a[1]]; if(L){ L.push(val(j.a[0])); renderMon(); } },
+  async ldelall(j){ if(LST[j.a[0]]){ LST[j.a[0]] = []; renderMon(); } },
+  async ldel(j){ const L = LST[j.a[1]]; if(!L) return; if(String(val(j.a[0])).trim() === "ทั้งหมด") LST[j.a[1]] = []; else { const i = lidx(val(j.a[0]), L.length); if(i >= 1 && i <= L.length) L.splice(i - 1, 1); } renderMon(); },
+  async lins(j){ const L = LST[j.a[2]]; if(!L) return; const i = lidx(val(j.a[1]), L.length + 1); if(i >= 1 && i <= L.length + 1) L.splice(i - 1, 0, val(j.a[0])); renderMon(); },
+  async lrep(j){ const L = LST[j.a[1]]; if(!L) return; const i = lidx(val(j.a[0]), L.length); if(i >= 1 && i <= L.length) L[i - 1] = val(j.a[2]); renderMon(); },
   async set(j){ if(j.a[0]) S.vars[j.a[0]] = val(j.a[1]); renderMon(); },
   async change(j){ if(j.a[0]) S.vars[j.a[0]] = num(S.vars[j.a[0]]) + num(val(j.a[1])); renderMon(); },
   async ask(j, c){
