@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.2: ซื้อสินค้า — ป.2 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:32px; --c1:#38BDF8; --c2:#0369A1; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.75rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.75rem; text-decoration:none; }
+  main{ max-width:900px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.85rem; color:#475569; }
+  .meter{ height:12px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.8rem; color:#475569; }
+  h3.sub{ font-size:1.05rem; margin:18px 0 8px; padding:8px 14px; border-radius:12px; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); }
+  h4{ margin:10px 0 4px; font-size:.95rem; color:var(--c2); } .hint{ color:#64748B; font-size:.78rem; margin:0 0 8px; }
+  .fixed{ text-align:center; font-weight:800; color:var(--c2); background:#F1F5F9; border-radius:12px; padding:4px; margin:6px 0; }
+  .tray{ display:flex; flex-wrap:wrap; gap:10px; padding:12px; margin-bottom:12px; background:#F1F5F9; border:2px dashed #CBD5E1; border-radius:14px; min-height:56px; }
+  .tray:empty::after{ content:"วางครบแล้ว"; color:#94A3B8; font-size:.8rem; }
+  .chip{ background:#fff; border:3px solid #CBD5E1; border-radius:999px; padding:6px 18px; font-weight:700; font-size:.85rem; cursor:grab; box-shadow:0 2px 6px rgba(0,0,0,.1); touch-action:none; user-select:none; }
+  .chip.picked{ border-color:var(--c2); background:#ECFDF5; box-shadow:0 0 0 5px rgba(16,185,129,.25); }
+  .chip.lifting{ opacity:.3; } .chip.ghost{ position:fixed; transform:translate(-50%,-50%); pointer-events:none; z-index:999; opacity:.92; }
+  .zones{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; margin-bottom:8px; }
+  .zone{ background:#fff; border:3px dashed #C9D0E5; border-radius:14px; padding:8px 10px 10px; min-height:96px; transition:border-color .15s, background .15s; }
+  .zone.over{ border-color:var(--c2); background:#F0FDFA; } .zone.has{ border-style:solid; border-color:#94A3B8; }
+  .zone .zt{ font-weight:800; font-size:.9rem; margin-bottom:6px; } .zone .zt small{ display:block; font-weight:400; color:#64748B; font-size:.68rem; }
+  .zbody{ display:flex; flex-wrap:wrap; gap:6px; min-height:40px; }
+  .ordering{ display:grid; gap:8px; margin-bottom:10px; } .ordering .zone{ display:flex; align-items:center; gap:12px; min-height:0; padding:8px 12px; } .ordering .zone .zt{ margin:0; flex:none; min-width:4.6em; color:var(--c2); } .ordering .zbody{ flex:1; }
+  .clues{ background:#FFFBEB; border:2px solid #FDE68A; border-radius:14px; padding:10px 16px; margin-bottom:10px; font-size:.88rem; } .clues ul{ margin:4px 0 0; padding-left:1.3em; }
+  .mapstrip{ background:#F0FDF4; border:2px solid #86EFAC; border-radius:14px; padding:10px 14px; font-size:.9rem; font-weight:700; margin-bottom:10px; text-align:center; } .mapstrip small{ font-weight:400; color:#475569; }
+  .shelves{ display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#A8A29E; padding:10px; border-radius:14px; margin-bottom:12px; }
+  .shelf{ background:#FFF7ED; border-radius:10px; padding:8px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center; font-size:1.5rem; min-height:60px; }
+  .sum{ background:#ECFDF5; border:2px solid #6EE7B7; border-radius:14px; padding:10px 14px; font-size:.85rem; margin:14px 0 6px; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 30px; font-weight:700; font-size:.95rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; font-size:.85rem; }
+  @media print{ header a,.actions{ display:none; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🥛 ใบงานที่ 1.2 ซื้อสินค้า</h1>
+    <p>เรียงลำดับขั้นตอนการซื้อของ · ป.2 หน่วยที่ 1 การแก้ปัญหา</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">การซื้อของมีหลายขั้นตอน ลากข้อความไปวางเรียงตามลำดับ เริ่มจากขั้นที่ 1 ไปจนถึงขั้นสุดท้าย ลากเปลี่ยนที่ได้จนกว่าจะพอใจ แล้วกดส่ง · ใช้นิ้วแตะเลือกแล้วแตะช่องก็ได้</p>
+    <div class="example">💡 ตัวอย่าง: ต้องเดินไปที่ชั้นวางสินค้าก่อน จึงจะหยิบสินค้าได้</div>
+  </div>
+
+  <div class="card" id="form">
+    <h3 class="sub">1. ขั้นตอนการซื้อนม 🥛</h3>
+    <p class="hint">เด็กหญิงไปซื้อนมที่ร้านขายของ ลากข้อความไปวางตามลำดับขั้นตอนที่เหมาะสม</p>
+    <div class="fixed">เริ่มต้น 🚩</div><div class="tray" data-id="t1"><div class="chip" data-ans="m5">💵 จ่ายเงิน</div><div class="chip" data-ans="m3">🛍️ เลือกสินค้า</div><div class="chip" data-ans="m6">💰 รอรับเงินทอน</div><div class="chip" data-ans="m2">🏷️ ดูราคา</div><div class="chip" data-ans="m1">🚶 เดินไปที่ชั้นวางสินค้า</div><div class="chip" data-ans="m4">🤲 หยิบสินค้า</div></div>
+    <div class="ordering"><div class="zone" data-key="m1" data-mode="one" data-title="ซื้อนม ขั้นที่ 1"><div class="zt">ขั้นที่ 1</div><div class="zbody"></div></div><div class="zone" data-key="m2" data-mode="one" data-title="ซื้อนม ขั้นที่ 2"><div class="zt">ขั้นที่ 2</div><div class="zbody"></div></div><div class="zone" data-key="m3" data-mode="one" data-title="ซื้อนม ขั้นที่ 3"><div class="zt">ขั้นที่ 3</div><div class="zbody"></div></div><div class="zone" data-key="m4" data-mode="one" data-title="ซื้อนม ขั้นที่ 4"><div class="zt">ขั้นที่ 4</div><div class="zbody"></div></div><div class="zone" data-key="m5" data-mode="one" data-title="ซื้อนม ขั้นที่ 5"><div class="zt">ขั้นที่ 5</div><div class="zbody"></div></div><div class="zone" data-key="m6" data-mode="one" data-title="ซื้อนม ขั้นที่ 6"><div class="zt">ขั้นที่ 6</div><div class="zbody"></div></div></div>
+<div class="fixed">จบ 🏁</div><h3 class="sub">2. คำถามหลังทำกิจกรรม: เพิ่มขั้นตอนใหม่</h3>
+    <p class="hint">นักเรียนคิดว่ามีขั้นตอนอื่นเพิ่มเติมไหม เช่น <b>เปรียบเทียบราคากับคุณภาพสินค้า</b> ให้เรียงขั้นตอนใหม่ทั้ง 7 ขั้นตอน</p>
+    <div class="fixed">เริ่มต้น 🚩</div><div class="tray" data-id="t2"><div class="chip" data-ans="n6">💵 จ่ายเงิน</div><div class="chip" data-ans="n4">🛍️ เลือกสินค้า</div><div class="chip" data-ans="n7">💰 รอรับเงินทอน</div><div class="chip" data-ans="n2">🏷️ ดูราคา</div><div class="chip" data-ans="n1">🚶 เดินไปที่ชั้นวางสินค้า</div><div class="chip" data-ans="n5">🤲 หยิบสินค้า</div><div class="chip" data-ans="n3">⚖️ เปรียบเทียบราคากับคุณภาพสินค้า</div></div>
+    <div class="ordering"><div class="zone" data-key="n1" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 1"><div class="zt">ขั้นที่ 1</div><div class="zbody"></div></div><div class="zone" data-key="n2" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 2"><div class="zt">ขั้นที่ 2</div><div class="zbody"></div></div><div class="zone" data-key="n3" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 3"><div class="zt">ขั้นที่ 3</div><div class="zbody"></div></div><div class="zone" data-key="n4" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 4"><div class="zt">ขั้นที่ 4</div><div class="zbody"></div></div><div class="zone" data-key="n5" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 5"><div class="zt">ขั้นที่ 5</div><div class="zbody"></div></div><div class="zone" data-key="n6" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 6"><div class="zt">ขั้นที่ 6</div><div class="zbody"></div></div><div class="zone" data-key="n7" data-mode="one" data-title="เรียงใหม่ซื้อนม ขั้นที่ 7"><div class="zt">ขั้นที่ 7</div><div class="zbody"></div></div></div>
+<div class="fixed">จบ 🏁</div><div class="sum">📌 <b>สรุป:</b> การแก้ปัญหาทำได้ตามลำดับขั้นตอน โดยทำให้ครบทุกขั้นตอน หรือเพิ่มขั้นตอนบางอย่างได้ บางปัญหาสามารถสลับขั้นตอนและได้ผลลัพธ์เช่นเดียวกัน</div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t"></div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<div id="answers" style="display:none"></div>
+<script>window.DRAGWS = { n:2, u:0, g:"p2" };</script>
+<script src="../../assets/js/dragws.js?v=4"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/unitinfo.js?v=6"></script>
+</body>
+</html>

@@ -193,8 +193,8 @@ const READY_CONTENT = {
     ar: { href:"content/p1-cs-4/ar-game-nocamera.html", title:"เลือกให้เหมาะสม" }
   },
   "p2/cs/0": {
-    knowledge: { href:"content/p2-cs-0/knowledge.html", title:"การแก้ปัญหาอย่างง่าย" },
-    worksheet: { href:"content/p2-cs-0/worksheet.html", title:"ใบงานที่ 1.1 จับคู่สัญลักษณ์ทิศทาง" },
+    knowledge: { href:"content/p2-cs-0/knowledge.html", title:"การแก้ปัญหา: เรียงลำดับขั้นตอนและคิดอย่างเป็นระบบ" },
+    worksheet: { href:"content/p2-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.7 เรียงลำดับขั้นตอน ค้นหาและคิดอย่างเป็นระบบ" },
     quiz:      { href:"content/p2-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game: {
       href:"content/p2-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
@@ -740,7 +740,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
@@ -830,7 +830,7 @@ async function renderFlowSteps(grade, subject, idx, unit){
   if(set && wsTotal && KrtomFlow.mode() === "student" && set.has(`${u.g}/${u.s}/${u.i}/worksheet`)){
     try{
       const tk = sessionStorage.getItem("krtomStudentToken");
-      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : u.g === "p4" ? 40 : u.g === "m2" ? 20 : u.g === "p6" ? 60 : 0) + u.i + 1}-${k + 1}` })));
+      const open = await Promise.all(Array.from({ length: wsTotal }, (_, k) => KrtomFlow.rpc("krtom_work_can_submit", { p_token: tk, p_activity: `worksheet-${(u.g === "m3" ? 30 : u.g === "p4" ? 40 : u.g === "m2" ? 20 : u.g === "p6" ? 60 : u.g === "p2" ? 70 : 0) + u.i + 1}-${k + 1}` })));
       wsLeft = open.filter(Boolean).length;                 // true = ยังไม่ส่ง (หรือครูเปิดให้ส่งใหม่)
       if(wsLeft > 0){ set = new Set(set); set.delete(`${u.g}/${u.s}/${u.i}/worksheet`); }
     }catch(e){ wsLeft = null; }                              // ยังไม่ได้ติดตั้ง SQL / ออฟไลน์: ใช้ความคืบหน้าเดิม
