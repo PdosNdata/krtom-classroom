@@ -961,15 +961,21 @@ const cleanH = (h) => (typeof h === "string" && h.length < 400000 && (IMGH.test(
 const cleanO = (n) => n != null && Number.isFinite(+n) ? Math.max(-3, Math.min(4, +n)) : undefined;
 const HEXC = /^#[0-9a-fA-F]{6}$/, DIMG = /^data:image\/(?:png|webp|jpeg);base64,[A-Za-z0-9+\/=]+$/;
 // ตรวจและล้างข้อมูลเวกเตอร์ที่มาจากไฟล์/ลิงก์ (กันโค้ดแปลกปลอม)
+function cleanSubs(subs, left, cn1){
+  const out = []; if(!Array.isArray(subs)) return out;
+  for(const sb of subs.slice(0, 300)){ if(!Array.isArray(sb) || left <= 0) break; const c = sb.slice(0, left).map(cn1); left -= c.length; if(c.length > 2) out.push(c); }
+  return out;
+}
 function cleanV(v){
   if(!v || typeof v !== "object" || !Array.isArray(v.items)) return undefined;
   let count = 0; const num = (x) => Number.isFinite(+x) ? Math.max(-6000, Math.min(6000, +x)) : 0, col = (c) => typeof c === "string" && HEXC.test(c) ? c : null;
   const pair = (a) => Array.isArray(a) ? [num(a[0]), num(a[1])] : null;
+  const cn1 = (n) => ({ x:num(n && n.x), y:num(n && n.y), i:pair(n && n.i), o:pair(n && n.o), sm:!!(n && n.sm) });
   const item = (it, d) => {
     if(!it || typeof it !== "object" || ++count > 400) return null;
     const b = { id:0, m:Array.isArray(it.m) && it.m.length === 6 ? it.m.map(num) : [1, 0, 0, 1, 0, 0] };
     if(it.t === "path" && Array.isArray(it.nodes)) return Object.assign(b, { t:"path", closed:!!it.closed, fill:col(it.fill), line:col(it.line), lw:Math.max(0, Math.min(100, num(it.lw))),
-      nodes:it.nodes.slice(0, 500).map(n => ({ x:num(n && n.x), y:num(n && n.y), i:pair(n && n.i), o:pair(n && n.o), sm:!!(n && n.sm) })) });
+      nodes:it.nodes.slice(0, 1200).map(cn1), subs:cleanSubs(it.subs, 1200 - Math.min(1200, it.nodes.length), cn1) });
     if(it.t === "text") return Object.assign(b, { t:"text", s:String(it.s == null ? "" : it.s).slice(0, 80), fs:Math.max(4, Math.min(300, num(it.fs))), fill:col(it.fill) || "#000000" });
     if(it.t === "img" && typeof it.href === "string" && it.href.length < 400000 && DIMG.test(it.href)) return Object.assign(b, { t:"img", href:it.href, w:Math.max(1, Math.min(3000, num(it.w))), h:Math.max(1, Math.min(3000, num(it.h))) });
     if(it.t === "group" && d < 4 && Array.isArray(it.kids)) return Object.assign(b, { t:"group", kids:it.kids.slice(0, 200).map(k => item(k, d + 1)).filter(Boolean) });
@@ -2028,7 +2034,7 @@ function openPainter(src, onSave, name0, opts){
   stack.addEventListener("pointerup", up); stack.addEventListener("pointercancel", up);
   // ---- เปิดรูปเดิมมาแก้ ----
   if(src){ const im = new Image(); im.onload = () => { if(im.width === W && im.height === H){ g.drawImage(im, 0, 0); } else { const k = Math.min(1, 440 / im.width, 330 / im.height), w = im.width * k, h = im.height * k; g.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); } placeCtr(); }; im.src = src; }
-  q("#p2vec").onclick = () => { const t = trimmed(), nm = q(".p2-name").value.trim().slice(0, 20); close(); openVectorPainter(onSave, nm, t ? { img:{ href:t.c.toDataURL("image/png"), x:t.x0, y:t.y0, w:t.c.width, h:t.c.height }, ctr:cpos ? { x:cpos.x, y:cpos.y } : null } : {}); };
+  q("#p2vec").onclick = () => { const t = trimmed(), nm = q(".p2-name").value.trim().slice(0, 20); close(); openVectorPainter(onSave, nm, t ? { img:{ href:t.c.toDataURL("image/png"), x:t.x0, y:t.y0, w:t.c.width, h:t.c.height }, ctr:cpos ? { x:cpos.x, y:cpos.y } : null, autoTrace:true } : {}); };
   // ---- ปิด / บันทึก ----
   const close = () => { document.removeEventListener("keydown", onKey, true); ov.remove(); };
   function onKey(e){
@@ -2058,18 +2064,21 @@ const r2 = (n) => Math.round(n * 100) / 100;
 const escX = (t) => String(t).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
 const bzSeg = (a, b) => [[a.x, a.y], [a.x + (a.o ? a.o[0] : 0), a.y + (a.o ? a.o[1] : 0)], [b.x + (b.i ? b.i[0] : 0), b.y + (b.i ? b.i[1] : 0)], [b.x, b.y]];
 function pathD(p){
-  const n = p.nodes; if(!n.length) return "";
+  let d = nodesD(p.nodes, p.closed); if(p.subs) p.subs.forEach(sb => { d += nodesD(sb, true); }); return d;
+}
+function nodesD(n, closed){
+  if(!n.length) return "";
   const seg = (a, b) => (a.o || b.i) ? " C" + bzSeg(a, b).slice(1).map(q => r2(q[0]) + " " + r2(q[1])).join(" ") : " L" + r2(b.x) + " " + r2(b.y);
   let d = "M" + r2(n[0].x) + " " + r2(n[0].y);
   for(let k = 1; k < n.length; k++) d += seg(n[k - 1], n[k]);
-  if(p.closed && n.length > 1) d += seg(n[n.length - 1], n[0]) + "Z";
+  if(closed && n.length > 1) d += seg(n[n.length - 1], n[0]) + "Z";
   return d;
 }
 function itemSvg(it, ui){
   let inner;
   if(it.t === "path"){
     const d = pathD(it);
-    inner = '<path d="' + d + '" fill="' + (it.fill || "none") + '"' + (it.line ? ' stroke="' + it.line + '" stroke-width="' + it.lw + '" stroke-linecap="round" stroke-linejoin="round"' : ' stroke="none"') + "/>";
+    inner = '<path d="' + d + '" fill="' + (it.fill || "none") + '"' + (it.subs && it.subs.length ? ' fill-rule="evenodd"' : "") + (it.line ? ' stroke="' + it.line + '" stroke-width="' + it.lw + '" stroke-linecap="round" stroke-linejoin="round"' : ' stroke="none"') + "/>";
     if(ui && !it.fill) inner += '<path d="' + d + '" fill="none" stroke="transparent" stroke-width="' + Math.max(it.lw || 0, 14) + '" stroke-linecap="round"/>';
   } else if(it.t === "text") inner = '<text x="0" y="0" dominant-baseline="hanging" font-family="sans-serif" font-weight="700" font-size="' + it.fs + '" fill="' + it.fill + '">' + escX(it.s) + "</text>";
   else if(it.t === "img") inner = '<image href="' + it.href + '" x="0" y="0" width="' + it.w + '" height="' + it.h + '"/>';
@@ -2081,6 +2090,175 @@ const rdp = (pts, eps) => {
   for(let k = 1; k < pts.length - 1; k++){ const d = Math.abs(dy * pts[k][0] - dx * pts[k][1] + b[0] * a[1] - b[1] * a[0]) / L; if(d > mx){ mx = d; id = k; } }
   return mx > eps ? rdp(pts.slice(0, id + 1), eps).slice(0, -1).concat(rdp(pts.slice(id), eps)) : [a, b];
 };
+
+/* ===== แปลงภาพพิกเซลเป็นเวกเตอร์: ลดจำนวนสี → ตามขอบสี → ทำให้เรียบเป็นเส้นโค้ง ===== */
+const TR_DET = { 1:{ tol:1.8, minA:14, side:220, name:"เรียบ" }, 2:{ tol:1.0, minA:6, side:300, name:"ปานกลาง" }, 3:{ tol:.6, minA:3, side:380, name:"ละเอียด" } };
+const trHex = (c) => "#" + c.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+function trQuant(d, w, h, K){
+  const n = w * h, lab = new Int16Array(n).fill(-1), idx = []; let clear = 0;
+  for(let i = 0; i < n; i++){ if(d[i * 4 + 3] >= 128) idx.push(i); else clear++; }
+  if(idx.length < 4) return null;
+  const st = Math.max(1, Math.floor(idx.length / 9000)), S = [];
+  for(let j = 0; j < idx.length; j += st){ const i = idx[j] * 4; S.push([d[i], d[i + 1], d[i + 2]]); }
+  const dist = (a, b) => (a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]);
+  // เลือกสีตั้งต้นให้ต่างกันมากที่สุด แล้วปรับด้วย k-means
+  let m0 = [0, 0, 0]; S.forEach(c => { m0[0] += c[0]; m0[1] += c[1]; m0[2] += c[2]; }); m0 = m0.map(v => v / S.length);
+  let f = 0, fd = -1; S.forEach((c, j) => { const e = dist(c, m0); if(e > fd){ fd = e; f = j; } });
+  const C = [S[f].slice()];
+  const md = S.map(c => dist(c, C[0]));
+  while(C.length < K){ let bj = -1, bd = 0; for(let j = 0; j < S.length; j++) if(md[j] > bd){ bd = md[j]; bj = j; } if(bj < 0) break; C.push(S[bj].slice()); for(let j = 0; j < S.length; j++){ const e = dist(S[j], S[bj]); if(e < md[j]) md[j] = e; } }
+  const near = (p) => { let b = 0, bd = 1e12; for(let c = 0; c < C.length; c++){ const e = dist(p, C[c]); if(e < bd){ bd = e; b = c; } } return b; };
+  for(let it = 0; it < 8; it++){
+    const sum = C.map(() => [0, 0, 0, 0]);
+    for(const s of S){ const u = sum[near(s)]; u[0] += s[0]; u[1] += s[1]; u[2] += s[2]; u[3]++; }
+    sum.forEach((u, c) => { if(u[3]) C[c] = [u[0] / u[3], u[1] / u[3], u[2] / u[3]]; });
+  }
+  for(const i of idx) lab[i] = near([d[i * 4], d[i * 4 + 1], d[i * 4 + 2]]);
+  // กรองจุดรบกวน (เสียงรบกวนเล็ก ๆ) ด้วยสีที่พบมากที่สุดรอบข้าง
+  const cnt = new Uint8Array(C.length);
+  for(let pass = 0; pass < 2; pass++){
+    const o = lab.slice();
+    for(let y = 0; y < h; y++) for(let x = 0; x < w; x++){
+      const i = y * w + x; if(o[i] < 0) continue; cnt.fill(0); let best = o[i], bc = 0;
+      for(let dy = -1; dy <= 1; dy++) for(let dx = -1; dx <= 1; dx++){ const nx = x + dx, ny = y + dy; if(nx < 0 || ny < 0 || nx >= w || ny >= h) continue; const l = o[ny * w + nx]; if(l < 0) continue; const c = ++cnt[l]; if(c > bc || (c === bc && l === o[i])){ bc = c; best = l; } }
+      lab[i] = best;
+    }
+  }
+  // สัดส่วนสีที่ติดขอบภาพมากที่สุด (ใช้เดาว่ามีพื้นหลังหรือไม่)
+  const bc2 = new Array(C.length).fill(0); let bn = 0;
+  const bd2 = (i) => { const l = lab[i]; if(l >= 0){ bc2[l]++; bn++; } };
+  for(let x = 0; x < w; x++){ bd2(x); bd2((h - 1) * w + x); } for(let y = 1; y < h - 1; y++){ bd2(y * w); bd2(y * w + w - 1); }
+  let bl = 0; bc2.forEach((c, l) => { if(c > bc2[bl]) bl = l; });
+  return { lab, C, clear, bgLab:bl, bgShare: bn ? bc2[bl] / bn : 0 };
+}
+function trCut(lab0, w, h, L){
+  const lab = lab0.slice(), st = [];
+  const go = (i) => { if(lab[i] === L){ lab[i] = -1; st.push(i); } };
+  for(let x = 0; x < w; x++){ go(x); go((h - 1) * w + x); } for(let y = 0; y < h; y++){ go(y * w); go(y * w + w - 1); }
+  while(st.length){ const i = st.pop(), x = i % w, y = (i / w) | 0; if(x > 0) go(i - 1); if(x < w - 1) go(i + 1); if(y > 0) go(i - w); if(y < h - 1) go(i + w); }
+  return lab;
+}
+// ตามขอบของบริเวณ (เส้นปิด) ทุกเส้น รวมรูตรงกลาง
+function trLoops(m, w, h){
+  const W1 = w + 1, V = W1 * (h + 1), o1 = new Int32Array(V).fill(-1), o2 = new Int32Array(V).fill(-1);
+  const add = (a, b) => { if(o1[a] < 0) o1[a] = b; else o2[a] = b; };
+  for(let y = 0; y < h; y++) for(let x = 0; x < w; x++){
+    if(!m[y * w + x]) continue; const v = y * W1 + x;
+    if(y === 0 || !m[(y - 1) * w + x]) add(v, v + 1);
+    if(x === w - 1 || !m[y * w + x + 1]) add(v + 1, v + 1 + W1);
+    if(y === h - 1 || !m[(y + 1) * w + x]) add(v + 1 + W1, v + W1);
+    if(x === 0 || !m[y * w + x - 1]) add(v + W1, v);
+  }
+  const take = (a, b) => { if(o1[a] === b) o1[a] = -1; else o2[a] = -1; }, loops = [];
+  for(let s = 0; s < V; s++){
+    while(o1[s] >= 0 || o2[s] >= 0){
+      const pts = []; let a = s, b = o1[s] >= 0 ? o1[s] : o2[s];
+      for(;;){
+        take(a, b); pts.push([a % W1, (a / W1) | 0]);
+        if(b === s) break;
+        const dx = (b % W1) - (a % W1), dy = ((b / W1) | 0) - ((a / W1) | 0), c1 = o1[b], c2 = o2[b]; let nb;
+        if(c1 >= 0 && c2 >= 0){ const sc = (c) => ((c % W1) - (b % W1)) * -dy + (((c / W1) | 0) - ((b / W1) | 0)) * dx; nb = sc(c1) >= sc(c2) ? c1 : c2; }
+        else nb = c1 >= 0 ? c1 : c2;
+        if(nb < 0) break; a = b; b = nb;
+      }
+      // ตัดจุดที่อยู่แนวเส้นตรงเดียวกันทิ้ง
+      const n = pts.length, out = [];
+      for(let i = 0; i < n; i++){ const pr = pts[(i - 1 + n) % n], c = pts[i], nx = pts[(i + 1) % n]; if((c[0] - pr[0]) * (nx[1] - c[1]) - (c[1] - pr[1]) * (nx[0] - c[0]) !== 0) out.push(c); }
+      if(out.length >= 3){ let ar = 0; for(let i = 0; i < out.length; i++){ const c = out[i], nx = out[(i + 1) % out.length]; ar += c[0] * nx[1] - nx[0] * c[1]; } loops.push({ p:out, area:Math.abs(ar) / 2 }); }
+    }
+  }
+  return loops;
+}
+function trLayers(lab, w, h, C){
+  const cnt = new Array(C.length).fill(0); lab.forEach(l => { if(l >= 0) cnt[l]++; });
+  const ord = cnt.map((c, i) => [c, i]).filter(a => a[0] > 0).sort((a, b) => b[0] - a[0]).map(a => a[1]);
+  const rank = new Int16Array(C.length).fill(-1); ord.forEach((l, r) => { rank[l] = r; });
+  // วางซ้อนกัน: สีพื้นที่ใหญ่อยู่ล่างสุด แต่ละชั้นรวมพื้นที่ของสีที่อยู่เหนือกว่า → ไม่มีรอยแยกระหว่างสี
+  return ord.map((l, r) => {
+    const m = new Uint8Array(w * h); for(let i = 0; i < w * h; i++){ const q = lab[i]; if(q >= 0 && rank[q] >= r) m[i] = 1; }
+    return { fill:trHex(C[l]), loops:trLoops(m, w, h) };
+  });
+}
+function trChaikin(P){
+  const Q = []; for(let i = 0; i < P.length; i++){ const a = P[i], b = P[(i + 1) % P.length]; Q.push([a[0] * .75 + b[0] * .25, a[1] * .75 + b[1] * .25], [a[0] * .25 + b[0] * .75, a[1] * .25 + b[1] * .75]); }
+  return Q;
+}
+function trRdpClosed(Q, tol){
+  if(Q.length < 5) return Q; let far = 0, fd = -1;
+  for(let i = 1; i < Q.length; i++){ const d = (Q[i][0] - Q[0][0]) * (Q[i][0] - Q[0][0]) + (Q[i][1] - Q[0][1]) * (Q[i][1] - Q[0][1]); if(d > fd){ fd = d; far = i; } }
+  return rdp(Q.slice(0, far + 1), tol).slice(0, -1).concat(rdp(Q.slice(far).concat([Q[0]]), tol).slice(0, -1));
+}
+function trNodes(P, kx, ky){
+  const n = P.length;
+  return P.map((p, i) => {
+    const pr = P[(i - 1 + n) % n], nx = P[(i + 1) % n], v1 = [p[0] - pr[0], p[1] - pr[1]], v2 = [nx[0] - p[0], nx[1] - p[1]], l1 = Math.hypot(v1[0], v1[1]) || 1, l2 = Math.hypot(v2[0], v2[1]) || 1;
+    const nd = { x:p[0] * kx, y:p[1] * ky, i:null, o:null, sm:false };
+    if((v1[0] * v2[0] + v1[1] * v2[1]) / (l1 * l2) > .5){
+      const tx = nx[0] - pr[0], ty = nx[1] - pr[1], tl = Math.hypot(tx, ty) || 1, ho = Math.min(tl / 6, l2 / 3), hi = Math.min(tl / 6, l1 / 3);
+      nd.o = [tx / tl * ho * kx, ty / tl * ho * ky]; nd.i = [-tx / tl * hi * kx, -ty / tl * hi * ky]; nd.sm = true;
+    }
+    return nd;
+  });
+}
+// สร้างชิ้นงานเส้นโค้ง (ปรับความเรียบอัตโนมัติให้จำนวนจุดไม่มากเกินไป)
+function trKids(layers, kx, ky, det){
+  const L = layers.map(ly => ({ fill:ly.fill, loops:ly.loops.filter(o => o.area >= det.minA).sort((a, b) => b.area - a.area).slice(0, 300).map(o => ({ q:trChaikin(o.p) })) }));
+  let tol = det.tol, kids = [];
+  for(let tries = 0; tries < 14; tries++){
+    let total = 0, big = false;
+    kids = L.map(ly => { const ns = ly.loops.map(o => trNodes(trRdpClosed(o.q, tol), kx, ky)).filter(a => a.length >= 3); const c = ns.reduce((t, a) => t + a.length, 0); total += c; if(c > 1200) big = true;
+      return ns.length ? { t:"path", closed:true, fill:ly.fill, line:null, lw:0, nodes:ns[0], subs:ns.slice(1) } : null; }).filter(Boolean);
+    if(total <= 2400 && !big) break; tol *= 1.35;
+  }
+  return kids;
+}
+function trCount(kids){ return kids.reduce((t, k) => t + k.nodes.length + k.subs.reduce((u, a) => u + a.length, 0), 0); }
+// กล่องโต้ตอบ: ปรับจำนวนสี/รายละเอียด ดูตัวอย่างก่อนแปลง
+function traceDlg(it, cb){
+  const im = new Image();
+  im.onerror = () => toast("เปิดรูปนี้ไม่ได้");
+  im.onload = () => {
+    const w = el("div"); w.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:10px";
+    const bx = "width:230px;height:172px;border:1px solid #CBD5E1;border-radius:8px;background:repeating-conic-gradient(#E2E8F0 0 25%,#fff 0 50%) 0 0/16px 16px;display:flex;align-items:center;justify-content:center;overflow:hidden";
+    w.innerHTML = '<div style="background:#fff;border-radius:14px;padding:16px 18px;max-width:100%;font:600 15px Sarabun,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.3)"><div style="margin-bottom:8px;font-size:17px">✨ แปลงรูปเป็นเวกเตอร์</div>' +
+      '<div style="font-weight:400;font-size:13px;color:#475569;margin-bottom:8px">โปรแกรมจะลดจำนวนสีแล้วตามขอบแต่ละสี ให้เป็นเส้นโค้งที่ย่อ/ขยายได้ไม่แตก และแก้ไขรูปทรงต่อได้</div>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap"><div>ต้นฉบับ<div style="' + bx + '"><img id="tr-o" style="max-width:100%;max-height:100%"></div></div><div>ผลลัพธ์<div style="' + bx + '"><svg id="tr-s" style="max-width:100%;max-height:100%"></svg></div></div></div>' +
+      '<label style="display:flex;gap:8px;align-items:center;margin:8px 0 2px">จำนวนสี <input id="tr-k" type="range" min="2" max="16" value="8" style="flex:1"><b id="tr-kn" style="width:24px">8</b></label>' +
+      '<label style="display:flex;gap:8px;align-items:center;margin:2px 0">รายละเอียด <input id="tr-d" type="range" min="1" max="3" value="2" style="flex:1"><b id="tr-dn" style="width:70px">ปานกลาง</b></label>' +
+      '<label style="display:block;margin:4px 0;font-weight:400"><input id="tr-bg" type="checkbox"> ตัดสีพื้นหลังที่ติดขอบภาพออก</label>' +
+      '<label style="display:block;margin:4px 0;font-weight:400"><input id="tr-keep" type="checkbox"> เก็บรูปเดิมไว้ด้านล่างด้วย</label>' +
+      '<div id="tr-info" style="font-weight:400;font-size:13px;color:#475569;min-height:20px"></div>' +
+      '<div style="text-align:right;margin-top:8px"><button type="button" id="tr-c" style="padding:6px 14px">ยกเลิก</button> <button type="button" id="tr-ok" style="padding:6px 16px;background:#2563EB;color:#fff;border:0;border-radius:8px">แปลงเลย</button></div></div>';
+    document.body.append(w);
+    const g = (id) => w.querySelector("#" + id); g("tr-o").src = it.href;
+    let kids = [], timer = 0, first = true, busy = 0;
+    const run = () => {
+      const det = TR_DET[+g("tr-d").value], K = +g("tr-k").value;
+      g("tr-kn").textContent = K; g("tr-dn").textContent = det.name;
+      const s = Math.min(1, det.side / Math.max(it.w, it.h)), cw = Math.max(2, Math.round(it.w * s)), chh = Math.max(2, Math.round(it.h * s));
+      const cv = el("canvas"); cv.width = cw; cv.height = chh; const x = cv.getContext("2d", { willReadFrequently:true }); x.drawImage(im, 0, 0, cw, chh);
+      const qn = trQuant(x.getImageData(0, 0, cw, chh).data, cw, chh, K);
+      if(!qn){ g("tr-info").textContent = "ไม่พบภาพที่ใช้แปลงได้"; kids = []; g("tr-s").innerHTML = ""; return; }
+      if(first){ first = false; if(qn.clear === 0 && qn.bgShare >= .6) g("tr-bg").checked = true; }
+      const lab = g("tr-bg").checked ? trCut(qn.lab, cw, chh, qn.bgLab) : qn.lab;
+      const layers = trLayers(lab, cw, chh, qn.C);
+      kids = trKids(layers, it.w / cw, it.h / chh, det);
+      const sv = g("tr-s"); sv.setAttribute("viewBox", "0 0 " + it.w + " " + it.h); sv.innerHTML = kids.map(k => itemSvg(Object.assign({ m:[1, 0, 0, 1, 0, 0] }, k), false)).join("");
+      sv.setAttribute("width", Math.min(230, 172 * it.w / it.h)); sv.setAttribute("height", Math.min(172, 230 * it.h / it.w));
+      g("tr-info").textContent = kids.length ? "ได้ " + kids.length + " ชั้นสี · " + trCount(kids) + " จุดควบคุม" : "ไม่พบรูปทรง ลองเพิ่มจำนวนสีหรือปิด “ตัดสีพื้นหลัง”";
+    };
+    const later = (ms) => { g("tr-info").textContent = "กำลังคำนวณ…"; clearTimeout(timer); timer = setTimeout(run, ms); };
+    ["tr-k", "tr-d"].forEach(id => { g(id).oninput = () => { g("tr-kn").textContent = g("tr-k").value; g("tr-dn").textContent = TR_DET[+g("tr-d").value].name; later(220); }; });
+    g("tr-bg").onchange = () => later(10);
+    const done = (ok) => { clearTimeout(timer); window.removeEventListener("keydown", kd, true); w.remove(); if(ok && kids.length) cb(kids, g("tr-keep").checked); else if(ok) toast("ไม่มีรูปทรงให้แปลง"); };
+    const kd = (e) => { if(e.key === "Escape"){ e.stopPropagation(); e.preventDefault(); done(false); } };
+    window.addEventListener("keydown", kd, true);
+    g("tr-c").onclick = () => done(false); g("tr-ok").onclick = () => done(true);
+    setTimeout(run, 30);
+  };
+  im.src = it.href;
+}
+
 function openVectorPainter(onSave, name0, opts){
   opts = opts || {};
   const W = 480, H = 360, ov = el("div", "pnt-ov");
@@ -2140,6 +2318,7 @@ function openVectorPainter(onSave, name0, opts){
   ch.addBtn("rb-img", "p2fh", IC.flipH, "กลับซ้าย–ขวา"); ch.addBtn("rb-img", "p2fv", IC.flipV, "กลับบน–ล่าง");
   ch.addTool("rb-img", "center", IC.center, "ตั้งจุดหมุน (ลากกากบาท)");
   ch.addBtn("rb-img", "p2bm", "⇄ บิตแมป", "เปลี่ยนเป็นโหมดบิตแมป (วาดเป็นพิกเซล)", "txt");
+  ch.addBtn("rb-img", "p2trace", "✨ แปลงรูปเป็นเวกเตอร์", "แปลงรูปภาพ (พิกเซล) ที่นำเข้า ให้เป็นเส้นโค้งเวกเตอร์ที่แก้ไขรูปทรงได้", "txt");
   [["p2gr", "จัดกลุ่ม", "รวมชิ้นที่เลือกเป็นกลุ่ม (Ctrl+G)"], ["p2ug", "แยกกลุ่ม", "แยกกลุ่ม (Ctrl+Shift+G)"], ["p2o1", "⤒ หน้าสุด", "ย้ายไปหน้าสุด"], ["p2o2", "↑ หน้า", "เลื่อนมาข้างหน้า 1 ชั้น"], ["p2o3", "↓ หลัง", "เลื่อนไปข้างหลัง 1 ชั้น"], ["p2o4", "⤓ หลังสุด", "ย้ายไปหลังสุด"]].forEach(a => ch.addBtn("rb-arr", a[0], a[1], a[2], "txt"));
   SHAPES.forEach(a => ch.addTool("rb-shapes", a[0], shapeIcon(a[0]), a[1]));
   ch.onTool = (k) => { tool = k; selNode = -1; if(tool === "reshape" && sel.size > 1){ const f = [...sel][0]; sel.clear(); sel.add(f); } ch.markTool(k);
@@ -2149,12 +2328,13 @@ function openVectorPainter(onSave, name0, opts){
   ch.mi("file", "ใช้ชุดนี้ (บันทึก)", "", () => q(".ok").click()); ch.mi("file", "ยกเลิก", "", () => q(".cn").click());
   ch.mi("edit", "คัดลอก", "p2cp"); ch.mi("edit", "วาง", "p2ps"); ch.mi("edit", "ลบชิ้นที่เลือก", "p2dl");
   ch.mi("edit", "เลือกทั้งหมด", "p2sa", () => { sel = new Set(items.map(i => i.id)); ch.onTool("select"); render(); });
+  ch.mi("edit", "แปลงรูปภาพเป็นเวกเตอร์…", "", () => q("#p2trace").click());
   ch.mi("view", "ซูมเข้า", "", () => ch.setZoom(ch.zoom() * 1.25)); ch.mi("view", "ซูมออก", "", () => ch.setZoom(ch.zoom() / 1.25)); ch.mi("view", "ซูม 100%", "", () => ch.setZoom(1));
   q("#p2sz").min = 0; q("#p2sz").value = lw; q("#p2szn").textContent = lw;
   function sync(){
     q("#p2un").disabled = !undo.length; q("#p2re").disabled = !redo.length;
     const some = sel.size > 0, hasG = [...sel].some(id => { const it = byId(id); return it && it.t === "group"; });
-    q("#p2gr").disabled = sel.size < 2; q("#p2ug").disabled = !hasG;
+    q("#p2gr").disabled = sel.size < 2; q("#p2ug").disabled = !hasG; q("#p2trace").disabled = !items.some(i => i.t === "img");
     ["#p2o1", "#p2o2", "#p2o3", "#p2o4", "#p2fh", "#p2fv", "#p2cp", "#p2dl"].forEach(x => { q(x).disabled = !some; }); q("#p2ps").disabled = !clip;
   }
   const styleSnap = () => { const n = Date.now(); if(n - styleT > 900) snap(); styleT = n; };
@@ -2327,7 +2507,17 @@ function openVectorPainter(onSave, name0, opts){
     if(!(await askConfirm("แปลงเป็นบิตแมปแล้ว จะปรับรูปทรง จัดกลุ่ม หรือจัดชั้นภายหลังไม่ได้อีก ต้องการทำต่อหรือไม่?", { title:"แปลงเป็นบิตแมป", confirmText:"แปลงเลย" }))) return;
     rasterize(imgH(ex.url), (u, info) => { close(); openPainter(u, onSave, nm, { ctr: cx != null && info ? { x:240 + ((cx - ex.box.x) / ex.box.w - .5) * info.w * info.k, y:180 + ((cy - ex.box.y) / ex.box.h - .5) * info.h * info.k } : null }); });
   };
+  q("#p2trace").onclick = () => {
+    const tg = [...sel].map(byId).find(i => i && i.t === "img") || items.slice().reverse().find(i => i.t === "img");
+    if(!tg) return toast("ยังไม่มีรูปภาพให้แปลง — เลือก “เปิดรูปจากเครื่อง…” ในเมนูไฟล์ก่อน");
+    traceDlg(tg, (kids, keep) => {
+      snap(); const gp = mk({ t:"group", m:tg.m.slice(), kids:kids.map(k => mk(k)) }), at = items.indexOf(tg);
+      if(keep) items.splice(at + 1, 0, gp); else items[at] = gp;
+      sel = new Set([gp.id]); ch.onTool("select"); render(); toast("แปลงเป็นเวกเตอร์แล้ว — ดับเบิลคลิกเลือก “แยกกลุ่ม” แล้วใช้เครื่องมือ “ปรับรูปทรง” ได้");
+    });
+  };
   render();
+  if(opts.autoTrace && opts.img) setTimeout(() => q("#p2trace").click(), 60);
 }
 
 /* ---------- เริ่มต้น ---------- */
