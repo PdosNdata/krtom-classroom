@@ -114,6 +114,11 @@
   #bctx{ display:none; position:fixed; z-index:3000; background:#fff; border:1px solid #CBD5E1; border-radius:10px; box-shadow:0 8px 22px rgba(0,0,0,.25); padding:4px; min-width:130px; }
   #bctx button{ display:block; width:100%; text-align:left; background:none; border:none; border-radius:7px; padding:8px 12px; font:inherit; font-size:.9rem; cursor:pointer; color:#1F2430; }
   #bctx button:hover{ background:#EEF2FF; }
+  #cctx{ display:none; position:fixed; z-index:3000; background:#fff; border:1px solid #CBD5E1; border-radius:10px; box-shadow:0 8px 22px rgba(0,0,0,.25); padding:4px; min-width:200px; }
+  #cctx button{ display:block; width:100%; text-align:left; background:none; border:none; border-radius:7px; padding:8px 12px; font:inherit; font-size:.9rem; cursor:pointer; color:#1F2430; }
+  #cctx button small{ display:block; font-size:.72rem; color:#64748B; }
+  #cctx button:hover:not([disabled]){ background:#EEF2FF; } #cctx button[disabled]{ opacity:.4; cursor:not-allowed; }
+  #cctx hr{ border:none; border-top:1px solid #E2E8F0; margin:3px 2px; }
   #trashhint{ display:none; position:fixed; left:0; top:0; width:230px; bottom:0; z-index:1400; background:rgba(239,68,68,.12); border:3px dashed #EF4444; pointer-events:none; }
   body.dragging #trashhint{ display:block; }
 
@@ -1745,6 +1750,7 @@ function renderCostPane(){
     const card = el("div", "ccard" + (i === sp.cost % sp.costumes.length ? " on" : ""), '<div class="cth">' + costHtml(c) + '</div><div class="cn">ชุดที่ ' + (i + 1) + '</div><div class="ca"></div>');
     if(c.n) card.querySelector(".cn").textContent = "ชุดที่ " + (i + 1) + " · " + c.n;
     card.onclick = () => { sp.cost = i; sp.lastH = null; renderSprite(sp); renderCostPane(); };
+    card.oncontextmenu = (e) => { e.preventDefault(); costMenu(sp, i, e); };
     const act = card.lastChild, ab = (txt, ttl, fn, dis) => { const b = el("button", "", txt); b.type = "button"; b.title = ttl; b.disabled = !!dis; b.onclick = (e) => { e.stopPropagation(); fn(); }; act.append(b); };
     ab("✏️", "แก้ไข/วาดทับ", () => {
       const done = (nu, n, x) => { delete c.r; c.h = imgH(nu); c.n = n || undefined; c.v = c.ox = c.oy = undefined; Object.assign(c, x || {}); costChanged(sp); };
@@ -1756,6 +1762,56 @@ function renderCostPane(){
     g.append(card);
   });
   p.append(h, g);
+}
+/* คลิกขวาที่ชุดแต่งตัว: สร้างท่าเดิน/ท่าวิ่งจากรูปนี้ และจัดเรียงลำดับท่า */
+let CMENU = null;
+function costMenu(sp, i, e){
+  if(!CMENU){
+    CMENU = el("div"); CMENU.id = "cctx"; document.body.append(CMENU);
+    const hide = () => { CMENU.style.display = "none"; };
+    document.addEventListener("pointerdown", ev => { if(!ev.target.closest("#cctx")) hide(); }, true);
+    document.addEventListener("keydown", ev => { if(ev.key === "Escape") hide(); }, true);
+    window.addEventListener("scroll", hide, true); window.addEventListener("resize", hide);
+  }
+  const m = CMENU, n = sp.costumes.length; m.innerHTML = "";
+  const add = (txt, sub, fn, dis) => { const b = el("button"); b.type = "button"; b.innerHTML = txt + (sub ? "<small>" + sub + "</small>" : ""); b.disabled = !!dis; b.onclick = () => { m.style.display = "none"; fn(); }; m.append(b); };
+  add("🚶 สร้างท่าเดิน", "4 ท่า จากชุดที่ " + (i + 1), () => makeGait(sp, i, "walk"), n > 8);
+  add("🏃 สร้างท่าวิ่ง", "4 ท่า โน้มตัว กระโดดตัวลอย", () => makeGait(sp, i, "run"), n > 8);
+  m.append(el("hr"));
+  add("🔁 เรียงท่าเดินไป–กลับ", "1·2·3 → 1·2·3·2 ท่าวนต่อเนื่อง", () => {
+    if(n < 3) return toast("ต้องมีชุดแต่งตัวอย่างน้อย 3 ชุด");
+    if(n + n - 2 > 12) return toast("เรียงแล้วจะเกิน 12 ชุด ลองลบชุดที่ไม่ใช้ก่อน");
+    for(let k = n - 2; k >= 1; k--) sp.costumes.push(Object.assign({}, sp.costumes[k]));
+    costChanged(sp); renderCostPane(); toast("เรียงท่าเดินไป–กลับแล้ว — ใช้ “ชุดถัดไป” ในการทำซ้ำ ท่าจะวนต่อเนื่อง");
+  }, n < 3);
+  add("⇄ กลับลำดับชุดทั้งหมด", "", () => { sp.costumes.reverse(); sp.cost = n - 1 - (sp.cost % n); costChanged(sp); renderCostPane(); }, n < 2);
+  m.style.display = "block"; const w = m.offsetWidth, h = m.offsetHeight;
+  m.style.left = Math.max(4, Math.min(e.clientX, innerWidth - w - 4)) + "px"; m.style.top = Math.max(4, Math.min(e.clientY, innerHeight - h - 4)) + "px";
+}
+async function makeGait(sp, i, kind){
+  const c = sp.costumes[i], ci = await costumeImage(costHtml(c));
+  if(!ci) return toast("สร้างท่านี้จากชุดนี้ไม่ได้");
+  const k = Math.min(1, 240 / Math.max(ci.w, ci.h)), W = Math.max(8, Math.round(ci.w * k)), H = Math.max(8, Math.round(ci.h * k));
+  const base = el("canvas"); base.width = W; base.height = H; const bg = base.getContext("2d", { willReadFrequently:true }); bg.drawImage(ci.im, 0, 0, W, H);
+  const d = bg.getImageData(0, 0, W, H).data; let x0 = W, x1 = -1, y0 = H, y1 = -1;
+  for(let y = 0; y < H; y++) for(let x = 0; x < W; x++) if(d[(y * W + x) * 4 + 3] > 24){ if(x < x0) x0 = x; if(x > x1) x1 = x; if(y < y0) y0 = y; if(y > y1) y1 = y; }
+  if(x1 < 0) return toast("ไม่พบรูปในชุดนี้");
+  const bh = y1 - y0 + 1, hip = Math.round(y0 + bh * .52), mx = (x0 + x1 + 1) / 2, S = .9;
+  const P = kind === "run" ? { lift:.13, bob:.05, air:.07, lean:7 } : { lift:.07, bob:.02, air:0, lean:0 };
+  // ท่า: [ยกขาซ้าย, ตัวลอย/ตรง, ยกขาขวา, ตัวลอย/ตรง] (ขาซ้าย-ขวาตามที่เห็นบนจอ)
+  const F = [{ L:1, R:0, up:0 }, { L:kind === "run" ? .5 : 0, R:kind === "run" ? .5 : 0, up:kind === "run" ? P.air : P.bob }, { L:0, R:1, up:0 }, { L:kind === "run" ? .5 : 0, R:kind === "run" ? .5 : 0, up:kind === "run" ? P.air : P.bob }];
+  const label = kind === "run" ? "วิ่ง" : "เดิน", out = [];
+  F.forEach((f, q) => {
+    const cv = el("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d");
+    const place = () => { g.translate(mx, y1); g.scale(S, S); g.translate(-mx, -y1); g.translate(0, (H - 1 - y1) * 0); };
+    const leg = (xa, xb, amt) => { g.save(); place(); g.translate(0, -(amt * P.lift + f.up) * bh); g.drawImage(base, xa, hip, xb - xa, H - hip, xa, hip, xb - xa, H - hip); g.restore(); };
+    leg(0, Math.ceil(mx) + 1, f.L); leg(Math.floor(mx), W, f.R);
+    g.save(); place(); g.translate(mx, hip); g.rotate(P.lean * Math.PI / 180); g.translate(-mx, -hip); g.translate(0, -(f.up + (f.L || f.R ? 0 : 0)) * bh); g.drawImage(base, 0, 0, W, hip, 0, 0, W, hip); g.restore();
+    out.push(Object.assign({ h:imgH(cv.toDataURL("image/png")), n:label + " " + (q + 1) }, c.ox != null ? { ox:c.ox, oy:c.oy } : {}));
+  });
+  if(sp.costumes.length + 4 > 12) return toast("มีชุดแต่งตัวได้ไม่เกิน 12 ชุด ลบชุดที่ไม่ใช้ก่อน");
+  sp.costumes.splice(i + 1, 0, ...out); sp.cost = i + 1; costChanged(sp); renderCostPane();
+  toast("สร้างท่า" + label + " 4 ท่าแล้ว (ชุดที่ " + (i + 2) + "–" + (i + 5) + ") — ใช้ในการทำซ้ำ: ชุดถัดไป → รอ 0.15 วินาที · รูปใหม่จะเล็กลงเล็กน้อยเพื่อเว้นที่ให้ตัวกระโดด");
 }
 function fileToCostume(file, cb){
   const rd = new FileReader();
