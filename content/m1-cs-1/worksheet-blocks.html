@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานฝึก CODE BLOCKS — ม.1 วิทยาการคำนวณ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:20px; }
+  html,body{ margin:0; background:#F7F8FC; color:#1F2430; line-height:1.6; }
+  header{ background:linear-gradient(135deg,#2563EB,#7C3AED); color:#fff; padding:18px 20px; }
+  header h1{ margin:0; font-size:1.15rem; }
+  header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  main{ max-width:820px; margin:0 auto; padding:18px 16px 50px; }
+  .who{ display:flex; flex-wrap:wrap; gap:10px 24px; background:#fff; border:1px solid #E6E8F0; border-radius:14px; padding:12px 16px; font-size:.85rem; margin-bottom:16px; }
+  .who span{ flex:1 1 220px; border-bottom:1px dotted #94A3B8; }
+  .m{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:16px 18px; margin-bottom:16px; box-shadow:0 3px 8px rgba(0,0,0,.05); break-inside:avoid; }
+  .m h2{ margin:0 0 4px; font-size:1rem; display:flex; gap:8px; align-items:center; }
+  .m h2 b{ background:#2563EB; color:#fff; border-radius:999px; padding:0 12px; font-size:.82rem; }
+  .goal{ color:#475569; font-size:.84rem; margin:0 0 8px; }
+  .m ol{ margin:6px 0 8px; padding-left:1.3em; font-size:.88rem; }
+  .open{ display:inline-block; background:#2563EB; color:#fff; text-decoration:none; border-radius:999px; padding:5px 16px; font-size:.82rem; font-weight:700; margin:2px 0 8px; }
+  .q{ font-size:.88rem; margin:8px 0 2px; font-weight:600; }
+  .ln{ border-bottom:1px dotted #94A3B8; height:1.5em; }
+  .tag{ font-size:.74rem; background:#FEF3C7; color:#92400E; border-radius:999px; padding:1px 10px; font-weight:700; }
+  .tip{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px; padding:8px 12px; font-size:.82rem; margin-bottom:16px; }
+  @media print{
+    header{ background:#fff !important; color:#000; border-bottom:2px solid #000; }
+    .open,.tip{ display:none; }
+    .m{ box-shadow:none; }
+    body{ background:#fff; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🧱 ใบงานฝึก CODE BLOCKS — วิทยาการคำนวณ ม.1</h1>
+  <p>เปิดโปรแกรมตัวอย่าง → กดธงเขียว → สังเกตผล → แก้บล็อกตามโจทย์ → ตอบคำถาม</p>
+</header>
+<main>
+  <div class="who"><span>ชื่อ-สกุล:</span><span>ชั้น/เลขที่:</span><span>วันที่:</span></div>
+  <div class="tip">💡 กดปุ่ม "เปิดโปรแกรม" ของแต่ละภารกิจ โปรแกรมจะเปิดในแท็บใหม่พร้อมบล็อกที่ต้องใช้ แล้วกด 🟩 ธงเขียวเพื่อรัน — ใช้แท็บเล็ตได้ ติ๊ก "ปุ่มลูกศรบนจอ" เมื่อต้องใช้ปุ่มลูกศร</div>
+
+  <section class="m">
+    <h2><b>1</b> วาดดอกไม้ <span class="tag">ทำซ้ำซ้อน</span></h2>
+    <p class="goal">เป้าหมาย: เข้าใจการทำซ้ำซ้อนกัน (ทำซ้ำในทำซ้ำ)</p>
+    <a class="open" href="blocks.html?ex=flower&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดโปรแกรม</a>
+    <ol>
+      <li>กดธงเขียว สังเกตว่าดอกไม้ประกอบด้วยรูปอะไรซ้ำกัน</li>
+      <li>เปลี่ยนจำนวนที่ทำซ้ำด้านนอกจาก 12 เป็น 6 แล้วเปลี่ยน "หมุนขวา 30" ให้ดอกไม้ยังวนครบรอบ</li>
+    </ol>
+    <div class="q">ก) ทำซ้ำชั้นใน (ทำซ้ำ 4 ครั้ง) วาดรูปอะไร?</div><div class="ln"></div>
+    <div class="q">ข) ต้องหมุนขวากี่องศา เมื่อทำซ้ำด้านนอก 6 ครั้ง จึงจะวนครบรอบ (360°)? แสดงวิธีคิด</div><div class="ln"></div><div class="ln"></div>
+  </section>
+
+  <section class="m">
+    <h2><b>2</b> เกลียวสีรุ้ง <span class="tag">ตัวแปร</span></h2>
+    <p class="goal">เป้าหมาย: ใช้ตัวแปรที่ค่าเปลี่ยนไปทุกรอบของการทำซ้ำ</p>
+    <a class="open" href="blocks.html?ex=spiral&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดโปรแกรม</a>
+    <ol>
+      <li>กดธงเขียว ดูเกลียวที่เกิดขึ้น</li>
+      <li>แก้ "หมุนขวา 91" เป็น 120 และ 60 แล้วดูว่ารูปเปลี่ยนไปอย่างไร</li>
+    </ol>
+    <div class="q">ก) ตัวแปร len ทำหน้าที่อะไรในโปรแกรมนี้?</div><div class="ln"></div>
+    <div class="q">ข) ถ้าเปลี่ยน "เพิ่ม len ทีละ 3" เป็น 6 เกลียวจะเป็นอย่างไร?</div><div class="ln"></div>
+  </section>
+
+  <section class="m">
+    <h2><b>3</b> นับถอยหลังปล่อยจรวด <span class="tag">while / ตัวแปร</span></h2>
+    <p class="goal">เป้าหมาย: ใช้การวนซ้ำที่มีเงื่อนไข</p>
+    <a class="open" href="blocks.html?ex=countdown&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดโปรแกรม</a>
+    <ol>
+      <li>รันโปรแกรมและดูตัวเลขที่ตัวละครพูด</li>
+      <li>ปรับให้นับถอยหลังจาก 5 และนับทีละ 1 วินาทีครึ่ง (1.5 วินาที)</li>
+    </ol>
+    <div class="q">ก) โปรแกรมหยุดวนซ้ำเมื่อเงื่อนไขใดเป็นเท็จ?</div><div class="ln"></div>
+    <div class="q">ข) ถ้าลืมบล็อก "เปลี่ยน n ทีละ -1" จะเกิดอะไรขึ้น เพราะเหตุใด?</div><div class="ln"></div><div class="ln"></div>
+  </section>
+
+  <section class="m">
+    <h2><b>4</b> ตัดเกรด <span class="tag">เงื่อนไขซ้อน</span></h2>
+    <p class="goal">เป้าหมาย: ใช้ ถ้า…แล้ว…ไม่เช่นนั้น หลายชั้นเพื่อเลือกทางจากหลายกรณี</p>
+    <a class="open" href="blocks.html?ex=grade&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดโปรแกรม</a>
+    <ol>
+      <li>ทดสอบด้วยคะแนน 85, 72, 65 และ 40 แล้วบันทึกผล</li>
+      <li>เพิ่มเงื่อนไขให้ต่ำกว่า 50 คะแนนแสดง "เกรด 0"</li>
+    </ol>
+    <div class="q">ก) ผลลัพธ์ของคะแนน 85 = ______ , 72 = ______ , 65 = ______ , 40 = ______</div>
+    <div class="q">ข) ทำไมจึงตรวจ "มากกว่า 79" ก่อน "มากกว่า 69" ?</div><div class="ln"></div><div class="ln"></div>
+  </section>
+
+  <section class="m">
+    <h2><b>5</b> แบบฝึกสูตรคูณ <span class="tag">สุ่มเลข + รับค่า</span></h2>
+    <p class="goal">เป้าหมาย: สุ่มค่าด้วยตัวแปร รับคำตอบ และตรวจคำตอบ</p>
+    <a class="open" href="blocks.html?ex=mathquiz&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดโปรแกรม</a>
+    <ol>
+      <li>กดธงเขียวหลายครั้ง สังเกตโจทย์ที่เปลี่ยนไป</li>
+      <li>ปรับให้สุ่มเลข 1 ถึง 12 แทน 2 ถึง 9</li>
+    </ol>
+    <div class="q">ก) บล็อก "สุ่มเลข" ช่วยโปรแกรมอย่างไร?</div><div class="ln"></div>
+    <div class="q">ข) ออกแบบเอง: เปลี่ยนโจทย์เป็น "บวก" แล้วเขียนบล็อกที่ต้องแก้</div><div class="ln"></div><div class="ln"></div>
+  </section>
+
+  <section class="m">
+    <h2><b>6</b> เกมแมวรับดาว <span class="tag">เหตุการณ์ + ตัวละครหลายตัว</span></h2>
+    <p class="goal">เป้าหมาย: ควบคุมตัวละครด้วยปุ่มลูกศร และตรวจการชนกัน</p>
+    <a class="open" href="blocks.html?ex=game-catch&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดโปรแกรม</a>
+    <ol>
+      <li>กดธงเขียว แล้วกดลูกศรซ้าย–ขวาให้แมวรับดาว (บนแท็บเล็ตติ๊ก "ปุ่มลูกศรบนจอ")</li>
+      <li>ปรับให้ดาวตกเร็วขึ้น และให้แมวเดินเร็วขึ้น</li>
+    </ol>
+    <div class="q">ก) ตัวละครมีกี่ตัว และแต่ละตัวมีหน้าที่อะไร?</div><div class="ln"></div>
+    <div class="q">ข) คะแนนเพิ่มเมื่อไร? ชี้บล็อกที่ทำให้เกิดเหตุการณ์นั้น</div><div class="ln"></div>
+    <div class="q">ค) ท้าทาย: เพิ่มบล็อกให้เสียงดังเมื่อรับดาวได้ (เขียนบล็อกที่ใช้)</div><div class="ln"></div>
+  </section>
+
+  <section class="m">
+    <h2><b>7</b> ออกแบบโปรเจกต์ของตัวเอง <span class="tag">สร้างสรรค์</span></h2>
+    <p class="goal">เป้าหมาย: ใช้ภาพวาดเอง (กระดานวาดภาพ) และบล็อกที่เรียนมาสร้างงานใหม่</p>
+    <a class="open" href="blocks.html?ex=blank&back=worksheet-blocks.html" target="_blank" rel="noopener">▶ เปิดกระดานเปล่า</a>
+    <div class="q">ชื่อโปรเจกต์ / เรื่องราวที่จะทำ:</div><div class="ln"></div>
+    <div class="q">บล็อกหลักที่ใช้ (อย่างน้อย 5 บล็อก):</div><div class="ln"></div><div class="ln"></div>
+    <div class="q">สิ่งที่ยังไม่สำเร็จ / จะปรับปรุงอย่างไร:</div><div class="ln"></div>
+  </section>
+</main>
+</body>
+</html>

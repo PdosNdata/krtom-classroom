@@ -287,6 +287,25 @@
   .bggrid button.on{ border-color:#4F46E5; }
   .emogrid{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
   .emogrid button{ border:2px solid #E2E8F0; background:#fff; border-radius:12px; font-size:30px; padding:2px; cursor:pointer; }
+  #stagebox{ touch-action:none; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
+  .sprite{ touch-action:none; -webkit-user-select:none; user-select:none; }
+  #palette .blk{ touch-action:pan-y; }
+  .blk{ -webkit-touch-callout:none; }
+  #dpad{ display:none; position:absolute; left:6px; right:6px; bottom:6px; justify-content:space-between; align-items:flex-end; pointer-events:none; z-index:20; }
+  #stagebox.dp #dpad{ display:flex; }
+  #dpad .dg{ display:grid; grid-template-columns:repeat(3,42px); grid-template-rows:repeat(2,42px); gap:4px; pointer-events:auto; }
+  #dpad button{ width:42px; height:42px; border-radius:12px; border:2px solid rgba(31,36,48,.35); background:rgba(255,255,255,.78); font-size:1.1rem; padding:0; cursor:pointer; touch-action:none; user-select:none; pointer-events:auto; }
+  #dpad button.on{ background:#BFDBFE; border-color:#3B82F6; }
+  #dpad button.sp{ width:auto; padding:0 18px; font-size:.85rem; font-weight:700; }
+  #dpad .dg button[data-k="ลูกศรขึ้น"]{ grid-column:2; grid-row:1; }
+  #dpad .dg button[data-k="ลูกศรซ้าย"]{ grid-column:1; grid-row:2; }
+  #dpad .dg button[data-k="ลูกศรลง"]{ grid-column:2; grid-row:2; }
+  #dpad .dg button[data-k="ลูกศรขวา"]{ grid-column:3; grid-row:2; }
+  @media (pointer:coarse){
+    .p2-tools button{ width:42px; height:42px; }
+    .rb button, .p2-ov button{ min-height:36px; }
+    .blk{ padding-top:4px; padding-bottom:4px; }
+  }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -306,6 +325,14 @@
     <option value="stamp">ตราประทับ: วงสีรุ้ง</option>
     <option value="clone">โคลน: ดาวตกจากท้องฟ้า</option>
     <option value="multi">ตัวละครหลายตัว: แมววิ่งไปชนหมา</option>
+    <option value="" disabled>— โปรเจกต์สนุก (ใบงานฝึก) —</option>
+    <option value="game-catch">เกม: แมวรับดาว (ปุ่มลูกศร)</option>
+    <option value="paint-mouse">วาดรูปตามเมาส์/นิ้ว</option>
+    <option value="flower">วาดดอกไม้ด้วยการทำซ้ำซ้อน</option>
+    <option value="spiral">เกลียวสีรุ้ง</option>
+    <option value="countdown">นับถอยหลังปล่อยจรวด</option>
+    <option value="mathquiz">แบบฝึกสูตรคูณ (สุ่มโจทย์)</option>
+    <option value="grade">ตัดเกรด (เงื่อนไขซ้อน)</option>
     <option value="" disabled>— ตัวอย่างจากใบความรู้ —</option>
     <option value="ex-seq1">เรียงลำดับ 1: แปรงฟัน</option>
     <option value="ex-seq2">เรียงลำดับ 2: พื้นที่สี่เหลี่ยมผืนผ้า</option>
@@ -360,11 +387,14 @@
       <label class="opt">ความเร็ว
         <select id="speed"><option value="slow">ช้า (ดูทีละบล็อก)</option><option value="normal" selected>ปกติ</option><option value="fast">เร็ว</option></select>
       </label>
+      <label class="opt"><input type="checkbox" id="dpadon"> ปุ่มลูกศรบนจอ</label>
+      <a href="worksheet-blocks.html" target="_blank" rel="noopener" style="font-size:.82rem;font-weight:700;color:#2563EB;text-decoration:none;white-space:nowrap">📝 ใบงานฝึก</a>
     </div>
     <div id="stagebox">
       <canvas id="pen" width="480" height="360"></canvas>
       <div id="mon"></div>
       <div id="askbar"><div id="asktxt"></div><input id="askin" autocomplete="off"> <button id="askok">ตกลง</button></div>
+      <div id="dpad"><div class="dg"><button type="button" data-k="ลูกศรขึ้น" aria-label="ขึ้น">▲</button><button type="button" data-k="ลูกศรซ้าย" aria-label="ซ้าย">◀</button><button type="button" data-k="ลูกศรลง" aria-label="ลง">▼</button><button type="button" data-k="ลูกศรขวา" aria-label="ขวา">▶</button></div><button type="button" class="sp" data-k="เว้นวรรค">เว้นวรรค</button></div>
     </div>
     <div id="sprpane">
       <span style="font-weight:700">🎭 ตัวละคร</span>
@@ -789,6 +819,7 @@ document.addEventListener("pointerup", e => {
   if(!d.started){ if(!d.fromPal) runStack(d.blk); return; }   // คลิกเฉย ๆ = รันชุดนั้น
   endDrag(d, e);
 });
+document.addEventListener("pointercancel", () => { if(DR && !DR.started) DR = null; });
 function startDrag(e){
   const d = DR, b = d.blk; d.started = true;
   const r = b.getBoundingClientRect();
@@ -1175,12 +1206,13 @@ let T0 = performance.now(), MDOWN = false;
 function boxCtr(o){ const h = halfSz(o), c = o.costumes[o.cost % o.costumes.length], ox = c.ox != null ? c.ox : .5, oy = c.oy != null ? c.oy : .5; return [o.x + (.5 - ox) * 2 * h[0], o.y - (.5 - oy) * 2 * h[1], h[0], h[1]]; }   // จุดกึ่งกลางกรอบตัวละครบนเวที
 function halfSz(o = SP){ const r = o.el.getBoundingClientRect(), k = stage.getBoundingClientRect().width / 480 || 1; return [r.width / k / 2, r.height / k / 2]; }   // ครึ่งขนาดตัวละครในหน่วยเวที (ไม่ขึ้นกับตำแหน่ง)
 const KD = new Set();
-$("#stagebox").addEventListener("pointerdown", () => { MDOWN = true; });
+function setMouse(e){ S.cx = e.clientX; S.cy = e.clientY; const r = $("#stagebox").getBoundingClientRect(); S.mx = Math.round((e.clientX - r.left) / r.width * 480 - 240); S.my = Math.round(180 - (e.clientY - r.top) / r.height * 360); }
+$("#stagebox").addEventListener("pointerdown", (e) => { setMouse(e); MDOWN = true; });
 document.addEventListener("pointerup", () => { MDOWN = false; });
 document.addEventListener("keydown", e => { if(e.target.closest("input,select,textarea")) return; const n = KEYMAP[e.code] || (e.key.length === 1 ? e.key.toLowerCase() : ""); if(n) KD.add(n); });
 document.addEventListener("keyup", e => { const n = KEYMAP[e.code] || (e.key.length === 1 ? e.key.toLowerCase() : ""); if(n) KD.delete(n); });
 window.addEventListener("blur", () => { KD.clear(); MDOWN = false; });
-$("#stagebox").addEventListener("mousemove", (e) => { S.cx = e.clientX; S.cy = e.clientY; const r = $("#stagebox").getBoundingClientRect(); S.mx = Math.round((e.clientX - r.left) / r.width * 480 - 240); S.my = Math.round(180 - (e.clientY - r.top) / r.height * 360); });
+$("#stagebox").addEventListener("pointermove", setMouse);
 async function pace(c){
   chk(c); const m = spd();
   if(m === "slow") await sleep(420); else if(m === "normal") await sleep(45); else if(++cnt % 250 === 0) await sleep(0);
@@ -1347,6 +1379,18 @@ document.addEventListener("keydown", e => {
   const ls = hatEntries("keyspace").filter(en => (en.vals[0] || "เว้นวรรค") === name);
   if(ls.length){ e.preventDefault(); if(!e.repeat) launch(ls); }
 });
+function pressKey(name){ const ls = hatEntries("keyspace").filter(en => (en.vals[0] || "เว้นวรรค") === name); if(ls.length) launch(ls); }
+(function(){
+  const sb = $("#stagebox"), cb = $("#dpadon"); let on = false;
+  try{ const v = localStorage.getItem("krtomDpad"); on = v == null ? matchMedia("(pointer:coarse)").matches : v === "1"; }catch(_){}
+  cb.checked = on; sb.classList.toggle("dp", on);
+  cb.onchange = () => { sb.classList.toggle("dp", cb.checked); try{ localStorage.setItem("krtomDpad", cb.checked ? "1" : "0"); }catch(_){} };
+  sb.querySelectorAll("#dpad button").forEach(b => {
+    const k = b.dataset.k, up = () => { KD.delete(k); b.classList.remove("on"); };
+    b.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); try{ b.setPointerCapture(e.pointerId); }catch(_){} KD.add(k); b.classList.add("on"); pressKey(k); });
+    b.addEventListener("pointerup", up); b.addEventListener("pointercancel", up);
+  });
+})();
 $("#askok").onclick = () => { S.answer = $("#askin").value; if(askRes){ askRes(); askRes = null; } };
 $("#askin").addEventListener("keydown", e => { if(e.key === "Enter") $("#askok").click(); });
 $("#rot").onchange = () => SPRS.forEach(o => renderSprite(o));
@@ -1400,7 +1444,26 @@ Object.assign(SAMPLES, {
   "ws-zoo": { vars:["height"], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ส่วนสูงกี่เซนติเมตร"]), B("set", ["height", B("answer")]),
               B("ifelse", [B("gt", [V("height"), 120])], [[B("say", ["เสียค่าเข้าชม 20 บาท"])], [B("say", ["ไม่เสียค่าเข้าชม"])]])] }] }
 });
-const EXNAME2 = { "stamp":"วงตราประทับสีรุ้ง", "clone":"ดาวตกจากท้องฟ้า", "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
+Object.assign(SAMPLES, {
+  "game-catch": { vars:["คะแนน"], cur:0, sprites:[
+    { name:"แมว", preset:2, x0:0, y0:-135, scripts:[{ x:24, y:24, b:[B("flag"), B("forever", [], [[
+      B("if", [B("keydown", ["ลูกศรซ้าย"])], [[B("changex", [-8])]]),
+      B("if", [B("keydown", ["ลูกศรขวา"])], [[B("changex", [8])]])]])] }] },
+    { name:"ดาว", costumes:[{ h:"⭐" }], x0:0, y0:170, scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["คะแนน", 0]), B("goto", [B("rand", [-200, 200]), 170]), B("forever", [], [[
+      B("changey", [-7]),
+      B("if", [B("touchspr", ["แมว"])], [[B("change", ["คะแนน", 1]), B("say", [V("คะแนน")]), B("goto", [B("rand", [-200, 200]), 170])]]),
+      B("if", [B("lt", [B("ypos"), -165])], [[B("goto", [B("rand", [-200, 200]), 170])]])]])] }] }] },
+  "paint-mouse": { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("pensize", [6]), B("forever", [], [[B("goto", [B("mousex"), B("mousey")]), B("ifelse", [B("mousedown")], [[B("pendown")], [B("penup")]])]])] }] },
+  "flower": { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("pensize", [2]), B("pendown"), B("repeat", [12], [[B("repeat", [4], [[B("move", [60]), B("turnR", [90])]]), B("changepenp", ["สี", 8]), B("turnR", [30])]])] }] },
+  "spiral": { vars:["len"], scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["len", 5]), B("pensize", [3]), B("pendown"), B("repeat", [70], [[B("move", [V("len")]), B("turnR", [91]), B("changepenp", ["สี", 3]), B("change", ["len", 3])]])] }] },
+  "countdown": { vars:["n"], scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["n", 10]), B("while", [B("gt", [V("n"), 0])], [[B("say", [V("n")]), B("wait", [1]), B("change", ["n", -1])]]), B("say", ["ปล่อยจรวด 🚀"])] }] },
+  "mathquiz": { vars:["a", "b"], scripts:[{ x:24, y:24, b:[B("flag"), B("set", ["a", B("rand", [2, 9])]), B("set", ["b", B("rand", [2, 9])]),
+      B("ask", [B("join", [B("join", [B("join", [V("a"), " × "]), V("b")]), " = ?"])]),
+      B("ifelse", [B("eq", [B("answer"), B("mul", [V("a"), V("b")])])], [[B("say", ["เก่งมาก ถูกต้อง 🎉"])], [B("say", [B("join", ["ยังไม่ถูก คำตอบคือ ", B("mul", [V("a"), V("b")])])])]])] }] },
+  "grade": { vars:[], scripts:[{ x:24, y:24, b:[B("flag"), B("ask", ["ได้คะแนนเต็ม 100 กี่คะแนน"]),
+      B("ifelse", [B("gt", [B("answer"), 79])], [[B("say", ["เกรด 4"])], [B("ifelse", [B("gt", [B("answer"), 69])], [[B("say", ["เกรด 3"])], [B("ifelse", [B("gt", [B("answer"), 59])], [[B("say", ["เกรด 2"])], [B("say", ["เกรด 1 หรือต่ำกว่า"])]])]])]])] }] }
+});
+const EXNAME2 = { "game-catch":"เกมแมวรับดาว", "paint-mouse":"วาดรูปตามเมาส์/นิ้ว", "flower":"วาดดอกไม้", "spiral":"เกลียวสีรุ้ง", "countdown":"นับถอยหลังปล่อยจรวด", "mathquiz":"แบบฝึกสูตรคูณ", "grade":"ตัดเกรด", "stamp":"วงตราประทับสีรุ้ง", "clone":"ดาวตกจากท้องฟ้า", "multi":"แมววิ่งไปชนหมา", "blank":"กระดานเปล่า", "ws-egg":"ก่อนจะเป็น (ไข่) ดาว", "ws-cat":"แมวร้องเหมียว", "ws-zoo":"เข้าชมสวนสัตว์", "temp":"แปลงอุณหภูมิ", "square":"วาดสี่เหลี่ยมจัตุรัส", "triangle":"วาดสามเหลี่ยมด้านเท่า", "polygon":"รูปหลายเหลี่ยมด้วยตัวแปร", "evenodd":"เลขคู่หรือเลขคี่", "score":"ตรวจคะแนน" };
 const EXNAME = { "ex-seq1":"แปรงฟัน", "ex-seq2":"หาพื้นที่สี่เหลี่ยมผืนผ้า", "ex-sel1":"ตรวจผลสอบ", "ex-sel2":"เลขคู่หรือเลขคี่", "ex-loop1":"วาดสี่เหลี่ยมจัตุรัส", "ex-loop2":"หาผลรวม 1 ถึง 5" };
 $("#sample").onchange = async function(){
   const k = this.value; this.value = ""; if(!k) return;
@@ -1708,6 +1771,21 @@ function shapeIcon(k){
   if(k === "rrect") return svgi('<rect x="3" y="5" width="18" height="14" rx="4"/>');
   return svgi('<polygon points="' + SHAPE_PTS[k].map(q => (3 + q[0] * 18).toFixed(1) + "," + (3 + q[1] * 18).toFixed(1)).join(" ") + '"/>');
 }
+function numDlg(title, cb){
+  const w = el("div"); w.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center";
+  const iS = 'type="number" min="5" max="500" value="100" style="width:84px;font:inherit;padding:2px 6px"';
+  w.innerHTML = '<div style="background:#fff;border-radius:14px;padding:16px 20px;min-width:260px;font:600 15px Sarabun,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.3)"><div style="margin-bottom:8px">' + title + '</div>' +
+    '<label style="display:block;margin:6px 0">แนวนอน (%) <input id="nd1" ' + iS + '></label><label style="display:block;margin:6px 0">แนวตั้ง (%) <input id="nd2" ' + iS + '></label>' +
+    '<label style="display:block;margin:6px 0;font-weight:400"><input id="nd3" type="checkbox" checked> ล็อกสัดส่วน</label>' +
+    '<div style="text-align:right;margin-top:10px"><button type="button" id="ndc" style="padding:6px 14px">ยกเลิก</button> <button type="button" id="ndo" style="padding:6px 16px;background:#2563EB;color:#fff;border:0;border-radius:8px">ตกลง</button></div></div>';
+  document.body.append(w);
+  const a = w.querySelector("#nd1"), b = w.querySelector("#nd2"), l = w.querySelector("#nd3");
+  a.oninput = () => { if(l.checked) b.value = a.value; }; b.oninput = () => { if(l.checked) a.value = b.value; };
+  const done = (ok) => { const x = Math.max(5, Math.min(500, +a.value || 100)), y = Math.max(5, Math.min(500, +b.value || 100)); w.remove(); if(ok) cb(x / 100, y / 100); };
+  w.querySelector("#ndc").onclick = () => done(false); w.querySelector("#ndo").onclick = () => done(true);
+  w.addEventListener("keydown", e => { if(e.key === "Enter") done(true); });
+  a.focus(); a.select();
+}
 const PT_IC = {
   select:svgi('<rect x="4" y="5" width="16" height="14" stroke="#2563EB" stroke-dasharray="3 2.2"/>'),
   reshape:svgi('<path d="M12 3l8 9-8 9-8-9z" stroke="#2563EB"/><circle cx="12" cy="3" r="1.6" fill="#fff"/><circle cx="20" cy="12" r="1.6" fill="#fff"/><circle cx="12" cy="21" r="1.6" fill="#fff"/><circle cx="4" cy="12" r="1.6" fill="#fff"/>'),
@@ -1802,6 +1880,7 @@ function openPainter(src, onSave, name0, opts){
   ch.setName(name0);
   let tool = "brush", btype = "round", fill = "#9966FF", line = "#575E75", lw = 6, al = 100, sel = null, clip = null, drag = null, cpos = opts.ctr || null;
   const undo = [], redo = [], IC = PT_IC;
+  let cv = null;   // เส้นโค้งที่กำลังวาด {a,b,c1,c2,st}
   const pt = (e) => { const r = stack.getBoundingClientRect(); return { x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H }; };
   const ctr = el("div", "p2-ctr"); stack.append(ctr);
   function placeCtr(){ ctr.style.display = cpos ? "block" : "none"; if(cpos){ ctr.style.left = cpos.x / W * 100 + "%"; ctr.style.top = cpos.y / H * 100 + "%"; } }
@@ -1814,18 +1893,26 @@ function openPainter(src, onSave, name0, opts){
   function trimmed(){ commit(); const b = contentBox(2); if(!b) return null; const c = el("canvas"); c.width = b.x1 - b.x0 + 1; c.height = b.y1 - b.y0 + 1; c.getContext("2d").drawImage(base, b.x0, b.y0, c.width, c.height, 0, 0, c.width, c.height); return { c, x0:b.x0, y0:b.y0 }; }
   const snap = () => { undo.push(g.getImageData(0, 0, W, H)); if(undo.length > 30) undo.shift(); redo.length = 0; syncBtns(); };
   function drawSel(){ ovl.style.opacity = 1; o.clearRect(0, 0, W, H); if(!sel) return; o.drawImage(sel.c, sel.x, sel.y); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#0F6CBD"; o.lineWidth = 2; o.strokeRect(sel.x, sel.y, sel.w, sel.h); o.restore(); }
-  function commit(){ if(!sel) return; g.drawImage(sel.c, sel.x, sel.y); sel = null; o.clearRect(0, 0, W, H); syncBtns(); }
+  function drawCurve(x, c){
+    if(!line) return; x.lineCap = x.lineJoin = "round"; x.lineWidth = lw; x.strokeStyle = line; x.beginPath(); x.moveTo(c.a.x, c.a.y);
+    if(c.c1){ const k2 = c.c2 || c.c1; x.bezierCurveTo(c.c1.x, c.c1.y, k2.x, k2.y, c.b.x, c.b.y); } else x.lineTo(c.b.x, c.b.y); x.stroke();
+  }
+  function cvDraw(){ o.clearRect(0, 0, W, H); if(cv) drawCurve(o, cv); }
+  function finishCurve(){ if(!cv) return; const c = cv; cv = null; if(c.st >= 1){ g.globalAlpha = al / 100; drawCurve(g, c); g.globalAlpha = 1; } o.clearRect(0, 0, W, H); ovl.style.opacity = 1; }
+  function commit(){ finishCurve(); if(!sel) return; g.drawImage(sel.c, sel.x, sel.y); sel = null; o.clearRect(0, 0, W, H); syncBtns(); }
   function syncBtns(){ q("#p2un").disabled = !undo.length; q("#p2re").disabled = !redo.length; q("#p2dl").disabled = !sel; q("#p2cp").disabled = !sel; q("#p2ps").disabled = !clip; }
   // ---- เครื่องมือแบบ Paint ----
   ch.addTool("rb-sel", "select", IC.select, "เลือก (ลากเป็นกรอบ แล้วย้ายได้)", "เลือก");
   [["pencil", "ดินสอ"], ["fill", "เทสี"], ["text", "ข้อความ"], ["eraser", "ยางลบ"], ["pick", "ดูดสี (คลิกที่ภาพเพื่อเอาสีนั้น)"], ["zoom", "ซูม (คลิก = ขยาย, Shift+คลิก = ย่อ)"]].forEach(a => ch.addTool("rb-tools", a[0], IC[a[0]], a[1]));
   ch.addBtn("rb-img", "p2fh", IC.flipH, "กลับซ้าย–ขวา"); ch.addBtn("rb-img", "p2fv", IC.flipV, "กลับบน–ล่าง");
+  ch.addBtn("rb-img", "p2rs", svgi('<rect x="3" y="3" width="11" height="11"/><path d="M14 21h7v-7M21 21l-8-8"/>'), "ปรับขนาด (กำหนดเป็นเปอร์เซ็นต์)");
   ch.addTool("rb-img", "center", IC.center, "ตั้งจุดหมุน (ลากกากบาทไปจุดที่ต้องการให้เป็นศูนย์กลาง)");
   ch.addBtn("rb-img", "p2vec", "⇄ เวกเตอร์", "เปลี่ยนเป็นโหมดเวกเตอร์ (ปรับรูปทรงภายหลังได้)", "txt");
   ch.addTool("rb-brush", "brush", IC.brush, "แปรง", "แปรง");
   { const mn = el("div", "mn", '<button type="button" class="mnb" title="เลือกชนิดแปรง">▾</button><div class="mnl"></div>'); ch.g("rb-brush").append(mn);
     [["round", "พู่กัน"], ["spray", "สเปรย์"], ["marker", "ปากกาเน้นข้อความ"]].forEach(a => { const b = el("button", "", a[1]); b.type = "button"; b.onclick = () => { btype = a[0]; ch.onTool("brush"); }; mn.querySelector(".mnl").append(b); }); }
   SHAPES.forEach(a => ch.addTool("rb-shapes", a[0], shapeIcon(a[0]), a[1]));
+  ch.addTool("rb-shapes", "curve", svgi('<path d="M3 19C8 3 14 21 21 5"/>'), "เส้นโค้ง (ลากเส้นตรง แล้วลากอีก 1–2 ครั้งเพื่อดัดให้โค้ง)");
   ch.onTool = (k) => { commit(); tool = k; if(k === "center") ensureCtr(); placeCtr(); ch.markTool(k); ovl.style.opacity = 1;
     stack.style.cursor = k === "select" ? "default" : k === "text" ? "text" : k === "pick" ? "copy" : k === "zoom" ? "zoom-in" : "crosshair"; };
   ch.markTool(tool); stack.style.cursor = "crosshair";
@@ -1847,6 +1934,10 @@ function openPainter(src, onSave, name0, opts){
   q("#p2un").onclick = () => restore(undo, redo); q("#p2re").onclick = () => restore(redo, undo);
   const flip = (cv, h) => { const t = el("canvas"); t.width = cv.width; t.height = cv.height; const x = t.getContext("2d"); x.translate(h ? cv.width : 0, h ? 0 : cv.height); x.scale(h ? -1 : 1, h ? 1 : -1); x.drawImage(cv, 0, 0); return t; };
   const doFlip = (h) => { if(sel){ sel.c = flip(sel.c, h); drawSel(); } else { snap(); const t = flip(base, h); g.clearRect(0, 0, W, H); g.drawImage(t, 0, 0); } };
+  q("#p2rs").onclick = () => numDlg(sel ? "ปรับขนาดส่วนที่เลือก" : "ปรับขนาดทั้งภาพ", (kx, ky) => {
+    if(sel){ const c = el("canvas"); c.width = Math.max(1, Math.round(sel.w * kx)); c.height = Math.max(1, Math.round(sel.h * ky)); c.getContext("2d").drawImage(sel.c, 0, 0, c.width, c.height); sel.c = c; sel.w = c.width; sel.h = c.height; drawSel(); }
+    else { snap(); const t = el("canvas"); t.width = W; t.height = H; t.getContext("2d").drawImage(base, 0, 0); g.clearRect(0, 0, W, H); g.save(); g.translate(W / 2, H / 2); g.scale(kx, ky); g.drawImage(t, -W / 2, -H / 2); g.restore(); }
+  });
   q("#p2fh").onclick = () => doFlip(true); q("#p2fv").onclick = () => doFlip(false);
   q("#p2cp").onclick = () => { if(!sel) return; const c = el("canvas"); c.width = sel.w; c.height = sel.h; c.getContext("2d").drawImage(sel.c, 0, 0); clip = c; syncBtns(); toast("คัดลอกแล้ว เลือก แก้ไข → วาง ได้เลย"); };
   q("#p2ps").onclick = () => { if(!clip) return; commit(); snap(); const c = el("canvas"); c.width = clip.width; c.height = clip.height; c.getContext("2d").drawImage(clip, 0, 0); sel = { c, x:20, y:20, w:c.width, h:c.height }; ch.onTool("select"); drawSel(); syncBtns(); };
@@ -1902,6 +1993,10 @@ function openPainter(src, onSave, name0, opts){
       if(sel && p.x >= sel.x && p.x <= sel.x + sel.w && p.y >= sel.y && p.y <= sel.y + sel.h){ drag = { m:"move", ox:p.x - sel.x, oy:p.y - sel.y }; return; }
       commit(); drag = { m:"box", a:p, b:p }; return;
     }
+    if(tool === "curve"){
+      if(cv && cv.st >= 1){ drag = { m:"cb" }; if(cv.st === 1) cv.c1 = p; else cv.c2 = p; cvDraw(); return; }
+      snap(); ovl.style.opacity = al / 100; cv = { a:p, b:p, st:0 }; drag = { m:"cl" }; return;
+    }
     snap();
     if(tool === "brush" || tool === "pencil"){ ovl.style.opacity = strokeAlpha(); drag = { m:"stroke", last:p }; strokeSeg(p, { x:p.x + .01, y:p.y }); return; }
     if(tool === "eraser"){ drag = { m:"eraser", last:p }; eraseSeg(p, { x:p.x + .01, y:p.y }); return; }
@@ -1913,6 +2008,8 @@ function openPainter(src, onSave, name0, opts){
     if(drag.m === "stroke"){ strokeSeg(drag.last, p); drag.last = p; }
     else if(drag.m === "eraser"){ eraseSeg(drag.last, p); drag.last = p; }
     else if(drag.m === "shape"){ o.clearRect(0, 0, W, H); drag.b = constrainB(drag.k, drag.a, p, e.shiftKey); shape(o, drag.k, drag.a, drag.b); }
+    else if(drag.m === "cl"){ cv.b = constrainB("line", cv.a, p, e.shiftKey); cvDraw(); }
+    else if(drag.m === "cb"){ if(cv.st === 1) cv.c1 = p; else cv.c2 = p; cvDraw(); }
     else if(drag.m === "move"){ sel.x = p.x - drag.ox; sel.y = p.y - drag.oy; drawSel(); }
     else if(drag.m === "box"){ drag.b = p; o.clearRect(0, 0, W, H); o.save(); o.setLineDash([6, 4]); o.strokeStyle = "#0F6CBD"; o.lineWidth = 2; o.strokeRect(drag.a.x, drag.a.y, p.x - drag.a.x, p.y - drag.a.y); o.restore(); }
   });
@@ -1920,6 +2017,8 @@ function openPainter(src, onSave, name0, opts){
     if(!drag) return; const d = drag; drag = null;
     if(d.m === "stroke"){ g.globalAlpha = strokeAlpha(); g.drawImage(ovl, 0, 0); g.globalAlpha = 1; o.clearRect(0, 0, W, H); ovl.style.opacity = 1; }
     else if(d.m === "shape"){ g.globalAlpha = al / 100; shape(g, d.k, d.a, d.b); g.globalAlpha = 1; o.clearRect(0, 0, W, H); ovl.style.opacity = 1; }
+    else if(d.m === "cl"){ if(Math.hypot(cv.b.x - cv.a.x, cv.b.y - cv.a.y) < 3){ cv = null; o.clearRect(0, 0, W, H); } else { cv.st = 1; cvDraw(); } }
+    else if(d.m === "cb"){ cv.st++; if(cv.st >= 3) finishCurve(); else cvDraw(); }
     else if(d.m === "box"){
       o.clearRect(0, 0, W, H); const x = Math.max(0, Math.min(d.a.x, d.b.x)), y = Math.max(0, Math.min(d.a.y, d.b.y)), w = Math.min(W, Math.max(d.a.x, d.b.x)) - x, h = Math.min(H, Math.max(d.a.y, d.b.y)) - y;
       if(w > 3 && h > 3){ snap(); const c = el("canvas"); c.width = Math.round(w); c.height = Math.round(h); c.getContext("2d").drawImage(base, Math.round(x), Math.round(y), c.width, c.height, 0, 0, c.width, c.height);
