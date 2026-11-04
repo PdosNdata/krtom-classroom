@@ -111,6 +111,9 @@
   .inp.hot{ outline:3px solid #FDE047; border-radius:8px; }
   #ins{ position:fixed; height:6px; width:90px; background:#FDE047; border-radius:3px; box-shadow:0 0 0 2px #CA8A04; display:none; z-index:2000; pointer-events:none; }
   .dragbox{ position:fixed; z-index:1500; pointer-events:none; opacity:.95; }
+  #bctx{ display:none; position:fixed; z-index:3000; background:#fff; border:1px solid #CBD5E1; border-radius:10px; box-shadow:0 8px 22px rgba(0,0,0,.25); padding:4px; min-width:130px; }
+  #bctx button{ display:block; width:100%; text-align:left; background:none; border:none; border-radius:7px; padding:8px 12px; font:inherit; font-size:.9rem; cursor:pointer; color:#1F2430; }
+  #bctx button:hover{ background:#EEF2FF; }
   #trashhint{ display:none; position:fixed; left:0; top:0; width:230px; bottom:0; z-index:1400; background:rgba(239,68,68,.12); border:3px dashed #EF4444; pointer-events:none; }
   body.dragging #trashhint{ display:block; }
 
@@ -821,6 +824,41 @@ document.addEventListener("pointerup", e => {
   endDrag(d, e);
 });
 document.addEventListener("pointercancel", () => { if(DR && !DR.started) DR = null; });
+/* คลิกขวาที่บล็อก: ทำซ้ำ / ลบ (เหมือน Scratch) */
+(function(){
+  const menu = el("div"); menu.id = "bctx"; menu.innerHTML = '<button type="button" data-a="dup">📄 ทำซ้ำ</button><button type="button" data-a="del">🗑️ ลบ</button>'; document.body.append(menu);
+  let tgt = null;
+  const hide = () => { menu.style.display = "none"; tgt = null; };
+  document.addEventListener("contextmenu", e => {
+    const tg = e.target; if(!tg.closest) return;
+    if(tg.closest("#bctx")){ e.preventDefault(); return; }
+    const blk = tg.closest(".blk");
+    if(!blk || !blk.closest("#wsin") || tg.closest("input,select,textarea")){ hide(); return; }
+    e.preventDefault(); if(DR && DR.started) return;
+    tgt = blk; menu.style.display = "block";
+    const w = menu.offsetWidth, h = menu.offsetHeight;
+    menu.style.left = Math.max(4, Math.min(e.clientX, innerWidth - w - 4)) + "px"; menu.style.top = Math.max(4, Math.min(e.clientY, innerHeight - h - 4)) + "px";
+  });
+  document.addEventListener("pointerdown", e => { if(!e.target.closest("#bctx")) hide(); }, true);
+  document.addEventListener("keydown", e => { if(e.key === "Escape") hide(); }, true);
+  window.addEventListener("scroll", hide, true); window.addEventListener("resize", hide);
+  menu.addEventListener("click", e => {
+    const a = e.target.closest("button"); if(!a || !tgt) return; const b = tgt; hide();
+    if(!b.isConnected) return;
+    const sc = b.closest(".script");
+    if(a.dataset.a === "dup"){
+      // บล็อกนี้และบล็อกที่ต่อด้านล่างทั้งหมด (บล็อกวงรี/หกเหลี่ยมคัดลอกเฉพาะตัวมันเอง)
+      const list = []; if(isRep(b)) list.push(b); else for(let n = b; n; n = n.nextElementSibling) if(n.classList.contains("blk")) list.push(n);
+      const x = (parseInt(sc.style.left) || 0) + 32, y = (parseInt(sc.style.top) || 0) + 32, ns = newScript(x, y);
+      list.forEach(n => ns.append(bld(ser(n)))); hint(); save(); toast("ทำซ้ำบล็อกแล้ว — ลากไปวางตำแหน่งที่ต้องการ");
+    }else{
+      // ลบเฉพาะบล็อกนี้ (บล็อกด้านล่างเลื่อนขึ้นมาต่อ) — บล็อกครอบ (ทำซ้ำ/ถ้า) ลบพร้อมบล็อกข้างใน
+      const slot = b.parentElement; b.remove(); if(slot && slot.classList.contains("inp")) slot.classList.remove("has-rep");
+      if(sc && !sc.querySelector(":scope > .blk")) sc.remove();
+      hint(); save(); toast("ลบบล็อกแล้ว");
+    }
+  });
+})();
 function startDrag(e){
   const d = DR, b = d.blk; d.started = true;
   const r = b.getBoundingClientRect();
