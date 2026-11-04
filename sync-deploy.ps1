@@ -11,7 +11,7 @@ $dstRepo  = "D:\++ทำเว็บแอป\bkkschoolWeb"           # โป�
 $dstSub   = "public\krtom-classroom"                  # โฟลเดอร์ย่อยที่เก็บเว็บ CAI
 $siteUrl  = "https://www.bankhodonkhan.ac.th/krtom-classroom/"
 $exclDirs = @("dltv", "แผนงาน", ".git", ".claude", "node_modules")              # ไม่ส่งขึ้นเว็บ (PDF ลิขสิทธิ์ DLTV ฯลฯ)
-$exclFiles = @("*-old.mp3", "เฉลยปรนัย*", "student.xlsx", "~`$*", "Thumbs.db", ".DS_Store", ".gitignore", "sync-deploy.ps1", "เผยแพร่ขึ้นเว็บ.bat", ".last-sync")
+$exclFiles = @("*-old.mp3", "เฉลยปรนัย*", "*.bak*", "student.xlsx", "~`$*", "Thumbs.db", ".DS_Store", ".gitignore", "sync-deploy.ps1", "เผยแพร่ขึ้นเว็บ.bat", ".last-sync")
 $forbidden = "(^|/)dltv|แผนงาน|\\340\\271\\201|เฉลยปรนัย|-old\.mp3|\.docx|\.pdf"          # ถ้าเจอใน commit ให้หยุดทันที
 
 function Say($t, $c = "White") { Write-Host $t -ForegroundColor $c }
