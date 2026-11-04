@@ -55,10 +55,11 @@
   };
   const TESTS = ["quiz", "worksheet-31-7", "worksheet-32-9", "worksheet-3-9", "worksheet-41-6", "worksheet-21-5"];
   const DRAGS = ["worksheet-31-2", "worksheet-31-4", "worksheet-32-2", "worksheet-32-7", "worksheet-3-4", "worksheet-41-2", "worksheet-41-4", "worksheet-21-2", "worksheet-61-9", "worksheet-71-1", "worksheet-71-2", "worksheet-71-3", "worksheet-71-4", "worksheet-71-5", "worksheet-71-6"];
-  const kind = file === "knowledge" ? "know" : TESTS.includes(file) ? "test" : (DRAGS.includes(file) || /^worksheet-21-(7|8|9|10|11|12|13|14|16|18|20|21)$/.test(file)) ? "drag" : file === "worksheet" ? "list" : "text";
-  const cs = { know:["C1", "C2", "C5"], list:["C1", "C2", "C3", "C5"], text:["C1", "C2", "C3", "C5"], drag:["C2", "C5"], test:["C2", "C3"] }[kind];
-  const TR = { know:["ใฝ่เรียนรู้"], list:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน", "ซื่อสัตย์สุจริต"], text:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], drag:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], test:["ซื่อสัตย์สุจริต", "มีวินัย"] }[kind];
-  const what = { know:"ใบความรู้นี้", list:"ใบงานชุดนี้", text:"ใบงานนี้", drag:"ใบงานนี้", test:"แบบทดสอบนี้" }[kind] || "หน้านี้";
+  const GAMEF = /^(game|game-[a-z-]+|variable-slides|blocks|flowchart|pseudocode)$/.test(file);
+  const kind = GAMEF ? "game" : file === "knowledge" ? "know" : TESTS.includes(file) ? "test" : (DRAGS.includes(file) || /^worksheet-21-(7|8|9|10|11|12|13|14|16|18|20|21)$/.test(file)) ? "drag" : file === "worksheet" ? "list" : "text";
+  const cs = { know:["C1", "C2", "C5"], list:["C1", "C2", "C3", "C5"], text:["C1", "C2", "C3", "C5"], drag:["C2", "C5"], test:["C2", "C3"], game:["C2", "C3", "C5"] }[kind];
+  const TR = { know:["ใฝ่เรียนรู้"], list:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน", "ซื่อสัตย์สุจริต"], text:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], drag:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"], test:["ซื่อสัตย์สุจริต", "มีวินัย"], game:["ใฝ่เรียนรู้", "มุ่งมั่นในการทำงาน"] }[kind];
+  const what = { know:"ใบความรู้นี้", list:"ใบงานชุดนี้", text:"ใบงานนี้", drag:"ใบงานนี้", test:"แบบทดสอบนี้", game:(/^(blocks|flowchart|pseudocode)$/.test(file) ? "โปรแกรมนี้" : file === "variable-slides" ? "สไลด์นี้" : "เกมนี้") }[kind] || "หน้านี้";
   const esc = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const css = document.createElement("style");
   css.textContent = `
@@ -71,6 +72,7 @@
   .ui-box .ui-chip{ display:inline-block; border-radius:99px; padding:0 10px; font-weight:700; font-size:.78rem; }
   .ui-box .ui-c{ background:#BBF7D0; color:#14532D; } .ui-box .ui-t{ background:#FBCFE8; color:#831843; }
   .ui-box ul{ margin:2px 0 0; padding-left:20px; }
+  details.ui-fold{ font-family:"Sarabun","TH Sarabun New",sans-serif; font-size:.85rem; margin:6px 10px; flex:none; text-align:left; } details.ui-fold > summary{ cursor:pointer; font-weight:700; color:#4338CA; background:#EEF2FF; border:1px solid #C7D2FE; border-radius:999px; padding:3px 14px; display:inline-block; list-style:none; } details.ui-fold[open] > summary{ margin-bottom:6px; } details.ui-fold .ui-box{ margin:0; max-height:50vh; overflow:auto; }
   .ui-box .ui-std{ font-size:.78rem; color:#64748B; margin-top:4px; }
   @media print{ .ui-box{ box-shadow:none; } }`;
   document.head.appendChild(css);
@@ -87,6 +89,10 @@
       `<div class="ui-row"><span class="ui-lab">🌟 คุณลักษณะอันพึงประสงค์:</span>${ts.map(t => `<span class="ui-chip ui-t">${esc(t)}</span>`).join("")}</div>` +
       `<div class="ui-std">มาตรฐาน ${esc(STD)}</div>`;
     if(!compact){ const st = document.createElement("style"); st.textContent = ".obj-box{ display:none !important; }"; document.head.appendChild(st); }
+    if(GAMEF){   // เกม/เครื่องมือ: พับเก็บไว้ใต้หัวหน้า ไม่รบกวนหน้าจอเล่น
+      const dt = document.createElement("details"); dt.className = "ui-fold"; dt.innerHTML = `<summary>🎯 ตัวชี้วัด · จุดประสงค์ · สมรรถนะ · คุณลักษณะ ของ${esc(what.replace("นี้", ""))}</summary>`; dt.append(box);
+      const h = document.querySelector("header"); if(h && h.parentNode) h.parentNode.insertBefore(dt, h.nextSibling); else document.body.insertBefore(dt, document.body.firstChild); return;
+    }
     const main = document.querySelector("main");
     const anchor = document.querySelector("main .oc-box") || document.querySelector("main .card.intro, main .intro");
     if(anchor && anchor.parentNode) anchor.parentNode.insertBefore(box, anchor.nextSibling);
@@ -95,7 +101,7 @@
   }
   const U = UNITS[dir];
   if(U){
-    const idx = U.P[file === "worksheet" ? "list" : file]; if(!idx) return;
+    const idx = U.P[file === "worksheet" ? "list" : file] || (GAMEF ? U.O.map((_, i) => i + 1) : null); if(!idx) return;
     const ck = file === "worksheet" ? "list" : file;
     render([U.ind], idx.map(i => U.O[i - 1]), (U.MORE && U.MORE[file]) || [], false, U.CP && U.CPM && U.CPM[ck] ? U.CPM[ck].map(i => U.CP[i - 1]) : null, U.TR || null);
     return;
@@ -103,7 +109,7 @@
   // หน่วยอื่น ๆ: ดึงตัวชี้วัดจาก standards.js และจุดประสงค์จาก .obj-box ของใบความรู้หน่วยเดียวกัน
   const m = /^([a-z]\d)-([a-z]+)-(\d+)$/.exec(dir || ""); if(!m) return;
   const ukey = m[1] + "/" + m[2] + "/" + m[3];
-  if(file !== "knowledge" && file !== "quiz" && file !== "worksheet" && !/^worksheet-/.test(file)) return;
+  if(!GAMEF && file !== "knowledge" && file !== "quiz" && file !== "worksheet" && !/^worksheet-/.test(file)) return;
   const loadStd = () => new Promise(res => {
     if(typeof UNIT_STANDARDS !== "undefined") return res();
     const sc = document.createElement("script"); sc.src = "../../assets/js/standards.js?v=6"; sc.onload = () => res(); sc.onerror = () => res(); document.head.appendChild(sc);
@@ -114,7 +120,7 @@
   };
   loadStd().then(async () => {
     const st = typeof UNIT_STANDARDS !== "undefined" && UNIT_STANDARDS[ukey]; if(!st || !st.indicators || !st.indicators.length) return;
-    const compact = dir === "m1-cs-1";                // ม.1 หน่วย 2 มีกล่องจุดประสงค์/สมรรถนะอยู่แล้ว (outcomes.js) จึงเพิ่มเฉพาะตัวชี้วัดและคุณลักษณะ
+    const compact = dir === "m1-cs-1" && !!(window.KrtomOutcomes && KrtomOutcomes.PAGES[file]);                // ม.1 หน่วย 2 มีกล่องจุดประสงค์/สมรรถนะอยู่แล้ว (outcomes.js) จึงเพิ่มเฉพาะตัวชี้วัดและคุณลักษณะ
     const objs = compact ? [] : await getObjs();
     render(st.indicators.map(r => [r.code, r.text]), objs, [], compact);
   });
