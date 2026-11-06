@@ -1129,7 +1129,7 @@ function setBackdrop(n){ S.bg = BACKDROPS[n] ? n : "ขาว"; $("#stagebox").s
 function resetSprite(){
   clearClones(); T0 = performance.now(); setBackdrop(BG0); SND.vol = 100; SND.pitch = 0; SND.pan = 0; S.answer = "";
   VARS.forEach(v => S.vars[v] = 0); LISTS.forEach(l => LST[l] = []); Object.keys(HID).forEach(k => delete HID[k]);
-  SPRS.forEach(o => { o.rs = null; o.x = o.x0; o.y = o.y0; o.dir = 90; o.pen = false; o.color = "#EF4444"; o.penA = 0; o.size = 3; o.cost = 0; o.sz = 100; o.fx = {}; o.vis = true; o.bub.style.display = "none"; o.bub.className = ""; renderSprite(o); });
+  SPRS.forEach(o => { o.rs = null; o.x = o.x0; o.y = o.y0; o.dir = 90; o.pen = false; o.color = "#EF4444"; o.penA = 0; o.size = 3; o.cost = 0; o.sz = 100; o.fx = {}; o.vis = true; o.bub.style.display = "none"; o.bub.className = "bubble"; renderSprite(o); });
   SP = SPRS[CUR];
 }
 
@@ -1289,9 +1289,9 @@ const EXEC = {
   async point(j){ S.dir = num(val(j.a[0])); renderSprite(); },
   async changex(j){ drawTo(S.x + num(val(j.a[0])), S.y); renderSprite(); },
   async changey(j){ drawTo(S.x, S.y + num(val(j.a[0]))); renderSprite(); },
-  async say(j){ SP.bub.className = ""; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
-  async think(j){ SP.bub.className = "think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
-  async thinkfor(j, c){ SP.bub.className = "think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = S.vis ? "block" : "none"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
+  async say(j){ SP.bub.className = "bubble"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
+  async think(j){ SP.bub.className = "bubble think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = SP.bub.textContent && S.vis ? "block" : "none"; },
+  async thinkfor(j, c){ SP.bub.className = "bubble think"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = S.vis ? "block" : "none"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
   async setcost(j){ const n = parseInt(String(j.a[0]).replace(/\D/g, ""), 10) || 1; S.cost = (n - 1) % SP.costumes.length; renderSprite(); },
   async clone(j){
     if(CLONES.length >= MAXCLONES) return;
@@ -1309,7 +1309,7 @@ const EXEC = {
   async clearfx(){ S.fx = {}; renderSprite(); },
   async show(){ S.vis = true; renderSprite(); },
   async hide(){ S.vis = false; renderSprite(); },
-  async sayfor(j, c){ SP.bub.className = ""; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
+  async sayfor(j, c){ SP.bub.className = "bubble"; SP.bub.textContent = fmt(val(j.a[0])); SP.bub.style.display = "block"; await sleep(num(val(j.a[1])) * 1000); chk(c); SP.bub.style.display = "none"; },
   async costume(){ S.cost = (S.cost + 1) % SP.costumes.length; renderSprite(); },
   async backdrop(j){ const n = j.a[0] || "ขาว"; setBackdrop(n); fireHats("backdropis", n); },
   async broadcast(j){ fireHats("recv", j.a[0] || "ข้อความ 1"); },
