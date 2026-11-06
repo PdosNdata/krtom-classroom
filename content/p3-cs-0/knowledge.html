@@ -39,7 +39,9 @@
   .mcq input{ margin-right:8px; transform:scale(1.2); }
   svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
   .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
-  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
 
   :root{ font-size:28px; }
   main{ padding:24px 20px 60px; }
@@ -84,21 +86,21 @@
 <main>
   <div id="full-text">
   <div class="obj-box">
-    <h2>🎯 จุดประสงค์การเรียนรู้</h2>
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k-obj.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <ul>
       <li>อธิบายขั้นตอนการแก้ปัญหาเบื้องต้นและการแก้ปัญหาโดยใช้แนวคิดเชิงคำนวณได้ (K)</li>
-      <li>เขียนขั้นตอนการแก้ปัญหาในชีวิตประจำวันได้ (S)</li>
-      <li>ระบุข้อมูลและเงื่อนไขของปัญหา และใช้เหตุผลเชิงตรรกะแก้ปัญหาได้ (K, S)</li>
+      <li>เขียนขั้นตอนการแก้ปัญหาในชีวิตประจำวันได้ (P)</li>
+      <li>ระบุข้อมูลและเงื่อนไขของปัญหา และใช้เหตุผลเชิงตรรกะแก้ปัญหาได้ (K, P)</li>
       <li>อธิบายวิธีการแสดงอัลกอริทึมด้วยการเขียนบอกเล่า การวาดภาพ และการใช้สัญลักษณ์ได้ (K)</li>
-      <li>เขียนบอกเล่า วาดภาพ และเขียนผังงานแสดงอัลกอริทึมในการทำงานหรือการแก้ปัญหาได้ (S)</li>
-      <li>แก้ปัญหาหรือหาคำตอบโดยใช้แผนภาพต้นไม้ได้ (K, S)</li>
-      <li>ประยุกต์ใช้ขั้นตอนการแก้ปัญหาและการแสดงอัลกอริทึมกับสถานการณ์ที่กำหนดให้ได้ โดยคำนึงถึงความถูกต้อง (K, S, A)</li>
+      <li>เขียนบอกเล่า วาดภาพ และเขียนผังงานแสดงอัลกอริทึมในการทำงานหรือการแก้ปัญหาได้ (P)</li>
+      <li>แก้ปัญหาหรือหาคำตอบโดยใช้แผนภาพต้นไม้ได้ (K, P)</li>
+      <li>ประยุกต์ใช้ขั้นตอนการแก้ปัญหาและการแสดงอัลกอริทึมกับสถานการณ์ที่กำหนดให้ได้ โดยคำนึงถึงความถูกต้อง (K, P, A)</li>
       <li>เห็นประโยชน์ของการแสดงอัลกอริทึมในการทำงานหรือการแก้ปัญหา (A)</li>
     </ul>
   </div>
 
   <section class="topic">
-    <h2><span class="num">1</span> ปัญหาอยู่รอบตัวเรา</h2>
+    <h2><span class="num">1</span> ปัญหาอยู่รอบตัวเรา</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <p><b>ปัญหา</b> คือเรื่องที่ทำให้เราต้องหยุดคิดว่าจะทำอย่างไรดี เช่น หาดินสอไม่เจอ ไปโรงอาหารไม่ถูกทาง หรือห้องเรียนสกปรก เราแก้ปัญหาให้สำเร็จได้ด้วยการคิดทีละขั้น</p>
     <ol class="steps">
       <li><b>ทำความเข้าใจปัญหา</b> — ปัญหาคืออะไร เรารู้ข้อมูลอะไรบ้าง</li>
@@ -110,7 +112,7 @@
   </section>
 
   <section class="topic">
-    <h2><span class="num">2</span> ข้อมูลและเงื่อนไขของปัญหา</h2>
+    <h2><span class="num">2</span> ข้อมูลและเงื่อนไขของปัญหา</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <p><b>ข้อมูล</b> คือสิ่งที่เรารู้แล้วในปัญหา ส่วน <b>เงื่อนไข</b> คือข้อกำหนดที่ต้องทำตามหรือต้องระวัง เมื่อรู้ข้อมูลและเงื่อนไขแล้ว เราจึงใช้ <b>เหตุผล</b> หาคำตอบได้</p>
     <div class="scene">🧐 <b>ปัญหา:</b> ก้องกับใบเตยเอาของมาโรงเรียนคนละ 1 อย่าง คือ <b>สมุด</b> กับ <b>กระติกน้ำ</b> มีของหล่นอยู่ในห้อง ใครเป็นเจ้าของสมุด?<br>
     <b>ข้อมูล:</b> ① มีของ 2 อย่าง ② มีเจ้าของ 2 คน<br><b>เงื่อนไข:</b> ใบเตยไม่ได้เอากระติกน้ำมา</div>
@@ -120,7 +122,7 @@
   </section>
 
   <section class="topic">
-    <h2><span class="num">3</span> คิดอย่างเป็นระบบด้วยแนวคิดเชิงคำนวณ</h2>
+    <h2><span class="num">3</span> คิดอย่างเป็นระบบด้วยแนวคิดเชิงคำนวณ</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <p><b>แนวคิดเชิงคำนวณ</b> คือวิธีคิดแก้ปัญหาเป็นขั้นตอนอย่างมีเหตุผล ใช้ได้ทั้งตอนเล่นเกมและตอนทำงานบ้าน</p>
     <div class="concept-grid">
       <div class="concept-card"><span class="icon">🧩</span><div><h3>แยกย่อยปัญหา</h3><p>แบ่งงานใหญ่เป็นงานเล็ก ๆ เช่น ทำความสะอาดห้อง = กวาด + ถู + เช็ดกระดาน</p></div></div>
@@ -131,7 +133,7 @@
   </section>
 
   <section class="topic">
-    <h2><span class="num">4</span> อัลกอริทึม และการแสดงอัลกอริทึม</h2>
+    <h2><span class="num">4</span> อัลกอริทึม และการแสดงอัลกอริทึม</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k4.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <p><b>อัลกอริทึม</b> คือขั้นตอนการแก้ปัญหาที่เรียงลำดับชัดเจน ทำตามแล้วได้ผลลัพธ์เหมือนกันทุกครั้ง เราแสดงอัลกอริทึมได้ 3 แบบ</p>
     <div class="concept-grid">
       <div class="concept-card"><span class="icon">✍️</span><div><h3>เขียนบอกเล่า</h3><p>เขียนเป็นข้อความ ① ② ③ เช่น ล้างมือ: 1) เปิดน้ำ 2) ถูสบู่ 3) ล้างฟอง 4) เช็ดมือให้แห้ง</p></div></div>
@@ -149,7 +151,7 @@
   </section>
 
   <section class="topic">
-    <h2><span class="num">5</span> แผนภาพต้นไม้ แจกแจงทางเลือก</h2>
+    <h2><span class="num">5</span> แผนภาพต้นไม้ แจกแจงทางเลือก</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k5.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <p><b>แผนภาพต้นไม้ (Tree Diagram)</b> ใช้วาดแตกกิ่งก้านให้เห็นทางเลือก<b>ทุกแบบ</b> ที่เป็นไปได้ โดยเริ่มจากรากทางซ้าย แล้วแตกออกทีละชั้น</p>
     <div class="scene">🥪 ร้านแซนด์วิชให้เลือก <b>ขนมปัง 2 แบบ</b> (ขาว / โฮลวีท) และ <b>ไส้ 3 แบบ</b> (ไข่ / ทูน่า / ผัก) เลือกอย่างละ 1 อย่าง จะได้กี่เมนู?</div>
 <svg class="tree" viewBox="0 0 640 352" role="img" aria-label="แผนภาพต้นไม้ แซนด์วิช" xmlns="http://www.w3.org/2000/svg"><path d="M406.0 89.0 C433.0 89.0 433.0 31.0 460.0 31.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 89.0 C433.0 89.0 433.0 89.0 460.0 89.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 89.0 C433.0 89.0 433.0 147.0 460.0 147.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 263.0 C433.0 263.0 433.0 205.0 460.0 205.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 263.0 C433.0 263.0 433.0 263.0 460.0 263.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 263.0 C433.0 263.0 433.0 321.0 460.0 321.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M180.0 176.0 C207.0 176.0 207.0 89.0 234.0 89.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M180.0 176.0 C207.0 176.0 207.0 263.0 234.0 263.0" fill="none" stroke="#94A3B8" stroke-width="3"/><g><rect x="460.0" y="8.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="31.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ไข่</text></g><g><rect x="460.0" y="66.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ทูน่า</text></g><g><rect x="460.0" y="124.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="147.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ผัก</text></g><g><rect x="234.0" y="66.0" width="172" height="46" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="320.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ขนมปังขาว</text></g><g><rect x="460.0" y="182.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="205.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ไข่</text></g><g><rect x="460.0" y="240.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="263.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ทูน่า</text></g><g><rect x="460.0" y="298.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="321.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ผัก</text></g><g><rect x="234.0" y="240.0" width="172" height="46" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="320.0" y="263.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ขนมปังโฮลวีท</text></g><g><rect x="8.0" y="153.0" width="172" height="46" rx="14" fill="#fff" stroke="#2563EB" stroke-width="3"/><text x="94.0" y="176.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">เริ่ม</text></g></svg>
@@ -164,7 +166,7 @@
   </section>
 
   <section class="topic">
-    <h2><span class="num">6</span> ตัวอย่างปัญหา: เกมเรียงบล็อก</h2>
+    <h2><span class="num">6</span> ตัวอย่างปัญหา: เกมเรียงบล็อก</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k6.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <p>เกมที่เล่นกับบล็อกหรือบัตรภาพ (เช่น เตตริส เกมต่อบัตร) ฝึกคิดแก้ปัญหาได้ดี ลองเขียนเป็นขั้นตอนการเล่น</p>
     <ol class="steps">
       <li>ดูรูปร่างของบล็อกที่ตกลงมา และช่องว่างที่เหลืออยู่</li>
@@ -176,7 +178,7 @@
   </section>
 
   <div class="summary-box">
-    <h2>📝 สรุปสิ่งที่ได้เรียนรู้</h2>
+    <h2>📝 สรุปสิ่งที่ได้เรียนรู้</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k-sum.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
     <ul>
       <li>แก้ปัญหาเป็นขั้น: เข้าใจปัญหา → วางแผน → ลงมือทำ → ตรวจสอบ</li>
       <li>ระบุข้อมูลและเงื่อนไข แล้วใช้เหตุผลหาคำตอบ</li>
@@ -191,7 +193,8 @@
   </div>
 </main>
 
+<script src="../../assets/js/tts.js?v=2"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
-<script src="../../assets/js/unitinfo.js?v=7"></script>
+<script src="../../assets/js/unitinfo.js?v=8"></script>
 </body>
 </html>

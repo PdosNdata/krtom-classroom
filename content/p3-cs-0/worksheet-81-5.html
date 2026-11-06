@@ -39,7 +39,9 @@
   .mcq input{ margin-right:8px; transform:scale(1.2); }
   svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
   .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
-  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
 </head>
@@ -56,20 +58,20 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button type="button" class="tts-btn " data-audio-src="audio/ws5-intro.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p>
     <p style="font-weight:400">ฝึกแสดงอัลกอริทึมด้วยวิธีเขียนบอกเล่า วาดภาพ และใช้สัญลักษณ์ วาดภาพบนกระดาษได้ แล้วเขียนอธิบายภาพลงในใบงานนี้</p>
     <div class="example">💡 อัลกอริทึม = ขั้นตอนที่เรียงลำดับชัดเจน ทำตามแล้วได้ผลเหมือนกันทุกครั้ง</div>
   </div>
   <div class="card" id="form">
-    <div class="field"><label><span class="fn">1</span> เรียงขั้นตอน "แปรงฟัน" ให้ถูกต้อง</label><div class="hint">เลือกขั้นตอนใส่แต่ละลำดับ ห้ามซ้ำกัน</div>
+    <div class="field"><label><span class="fn">1</span> เรียงขั้นตอน "แปรงฟัน" ให้ถูกต้อง</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint">เลือกขั้นตอนใส่แต่ละลำดับ ห้ามซ้ำกัน</div>
 <div class="q" data-k="o0" style="margin:6px 0"><div class="t"><span class="no">1</span> ขั้นที่ 1 <select style="max-width:360px"><option value="">— เลือกขั้นตอน —</option><option value="0">ใส่ยาสีฟันบนแปรง</option><option value="1">ทำให้แปรงเปียกน้ำ</option><option value="2">แปรงฟันทุกซี่</option><option value="3">บ้วนปากให้สะอาด</option><option value="4">เก็บแปรงเข้าที่</option></select></div></div><div class="q" data-k="o1" style="margin:6px 0"><div class="t"><span class="no">2</span> ขั้นที่ 2 <select style="max-width:360px"><option value="">— เลือกขั้นตอน —</option><option value="0">ใส่ยาสีฟันบนแปรง</option><option value="1">ทำให้แปรงเปียกน้ำ</option><option value="2">แปรงฟันทุกซี่</option><option value="3">บ้วนปากให้สะอาด</option><option value="4">เก็บแปรงเข้าที่</option></select></div></div><div class="q" data-k="o2" style="margin:6px 0"><div class="t"><span class="no">3</span> ขั้นที่ 3 <select style="max-width:360px"><option value="">— เลือกขั้นตอน —</option><option value="0">ใส่ยาสีฟันบนแปรง</option><option value="1">ทำให้แปรงเปียกน้ำ</option><option value="2">แปรงฟันทุกซี่</option><option value="3">บ้วนปากให้สะอาด</option><option value="4">เก็บแปรงเข้าที่</option></select></div></div><div class="q" data-k="o3" style="margin:6px 0"><div class="t"><span class="no">4</span> ขั้นที่ 4 <select style="max-width:360px"><option value="">— เลือกขั้นตอน —</option><option value="0">ใส่ยาสีฟันบนแปรง</option><option value="1">ทำให้แปรงเปียกน้ำ</option><option value="2">แปรงฟันทุกซี่</option><option value="3">บ้วนปากให้สะอาด</option><option value="4">เก็บแปรงเข้าที่</option></select></div></div><div class="q" data-k="o4" style="margin:6px 0"><div class="t"><span class="no">5</span> ขั้นที่ 5 <select style="max-width:360px"><option value="">— เลือกขั้นตอน —</option><option value="0">ใส่ยาสีฟันบนแปรง</option><option value="1">ทำให้แปรงเปียกน้ำ</option><option value="2">แปรงฟันทุกซี่</option><option value="3">บ้วนปากให้สะอาด</option><option value="4">เก็บแปรงเข้าที่</option></select></div></div>    </div>
-    <div class="field"><label for="t1"><span class="fn">2</span> เขียนบอกเล่า: อธิบายขั้นตอน "เดินจากห้องเรียนไปโรงอาหาร" เป็นข้อ ๆ</label><div class="hint">ใช้ ① ② ③ หรือ 1) 2) 3) ตอบอย่างน้อย 3 ขั้นตอน</div>
+    <div class="field"><label for="t1"><span class="fn">2</span> เขียนบอกเล่า: อธิบายขั้นตอน "เดินจากห้องเรียนไปโรงอาหาร" เป็นข้อ ๆ</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint">ใช้ ① ② ③ หรือ 1) 2) 3) ตอบอย่างน้อย 3 ขั้นตอน</div>
       <textarea id="t1" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
-    <div class="field"><label for="t2"><span class="fn">3</span> วาดภาพ: วาด "ล้างมือ" 4 ช่องบนกระดาษ แล้วเขียนบอกว่าแต่ละช่องวาดอะไร</label><div class="hint">ช่อง 1 ... ช่อง 2 ... ช่อง 3 ... ช่อง 4 ...</div>
+    <div class="field"><label for="t2"><span class="fn">3</span> วาดภาพ: วาด "ล้างมือ" 4 ช่องบนกระดาษ แล้วเขียนบอกว่าแต่ละช่องวาดอะไร</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint">ช่อง 1 ... ช่อง 2 ... ช่อง 3 ... ช่อง 4 ...</div>
       <textarea id="t2" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
-    <div class="field"><label><span class="fn">4</span> สัญลักษณ์ผังงาน: จับคู่รูปร่างกับความหมาย</label><div class="hint">เลือกความหมายให้ตรงกับรูปร่าง</div>
+    <div class="field"><label><span class="fn">4</span> สัญลักษณ์ผังงาน: จับคู่รูปร่างกับความหมาย</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q4.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint">เลือกความหมายให้ตรงกับรูปร่าง</div>
 <div class="q" data-k="s0" style="margin:6px 0"><div class="t"><span class="no">1</span> วงรี หมายถึง <select style="max-width:300px"><option value="">— เลือก —</option><option value="0">เริ่มต้นหรือสิ้นสุด</option><option value="1">การทำงาน</option><option value="2">ตัดสินใจ (ใช่/ไม่ใช่)</option><option value="3">ทิศทางไปขั้นต่อไป</option></select></div></div><div class="q" data-k="s1" style="margin:6px 0"><div class="t"><span class="no">2</span> สี่เหลี่ยมผืนผ้า หมายถึง <select style="max-width:300px"><option value="">— เลือก —</option><option value="0">เริ่มต้นหรือสิ้นสุด</option><option value="1">การทำงาน</option><option value="2">ตัดสินใจ (ใช่/ไม่ใช่)</option><option value="3">ทิศทางไปขั้นต่อไป</option></select></div></div><div class="q" data-k="s2" style="margin:6px 0"><div class="t"><span class="no">3</span> ข้าวหลามตัด หมายถึง <select style="max-width:300px"><option value="">— เลือก —</option><option value="0">เริ่มต้นหรือสิ้นสุด</option><option value="1">การทำงาน</option><option value="2">ตัดสินใจ (ใช่/ไม่ใช่)</option><option value="3">ทิศทางไปขั้นต่อไป</option></select></div></div><div class="q" data-k="s3" style="margin:6px 0"><div class="t"><span class="no">4</span> ลูกศร หมายถึง <select style="max-width:300px"><option value="">— เลือก —</option><option value="0">เริ่มต้นหรือสิ้นสุด</option><option value="1">การทำงาน</option><option value="2">ตัดสินใจ (ใช่/ไม่ใช่)</option><option value="3">ทิศทางไปขั้นต่อไป</option></select></div></div>    </div>
-    <div class="field"><label for="t3"><span class="fn">5</span> การเขียนหรือวาดอัลกอริทึมช่วยเราได้อย่างไร</label><div class="hint">ตอบอย่างน้อย 1 ข้อ</div>
+    <div class="field"><label for="t3"><span class="fn">5</span> การเขียนหรือวาดอัลกอริทึมช่วยเราได้อย่างไร</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q5.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint">ตอบอย่างน้อย 1 ข้อ</div>
       <textarea id="t3" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
     <div class="meter"><i id="bar"></i></div>
     <div class="meter-t" id="meter-t">ตอบแล้ว 0/5 ข้อ</div>
@@ -113,9 +115,10 @@ document.getElementById("submit").onclick = async function(){
   }
 };
 </script>
+<script src="../../assets/js/tts.js?v=2"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>
 <script src="../../assets/js/linkify.js?v=2"></script>
-<script src="../../assets/js/unitinfo.js?v=7"></script>
+<script src="../../assets/js/unitinfo.js?v=8"></script>
 </body>
 </html>

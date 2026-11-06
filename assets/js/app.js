@@ -985,7 +985,7 @@ function unitOutcomesCard(key){
     ${std ? `<div class="uo-sub">📚 มาตรฐาน <b>${E(std.code)}</b> ${E(std.text)}</div>` : ""}
     <h4>📌 ตัวชี้วัด</h4>${o.indicators.map(r => `<div class="uo-ind"><b>${E(r.code)}</b> ${E(r.text)}<span class="uo-tag">${E(r.type)}</span></div>`).join("")}
     <h4>🎯 จุดประสงค์การเรียนรู้</h4><ul>${o.objectives.map(t => `<li>${E(t)}</li>`).join("")}</ul>
-    <div class="uo-sub">(K) ความรู้ · (S) ทักษะ · (A) เจตคติ</div>
+    <div class="uo-sub">(K) ความรู้ · (P) ทักษะกระบวนการ · (A) เจตคติ</div>
     <h4>🧠 สมรรถนะสำคัญของผู้เรียน</h4><ul>${o.competencies.map(c => `<li><b>${E(c.name)}</b><div class="uo-sub">${E(c.indicator)} · ${E(c.behavior)}</div></li>`).join("")}</ul>
     <h4>⭐ สมรรถนะประจำหน่วย</h4><div>${E(o.unitCompetency)}</div>
     <h4>🌟 คุณลักษณะอันพึงประสงค์</h4><div>${o.traits.map(t => `<span class="uo-chip">${E(t)}</span>`).join("")}</div>

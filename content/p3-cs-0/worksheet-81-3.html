@@ -39,7 +39,9 @@
   .mcq input{ margin-right:8px; transform:scale(1.2); }
   svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
   .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
-  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
 
   .sd{ display:inline-block; background:#fff; border:3px solid #7C3AED; border-radius:16px; padding:8px; margin:6px 0; }
   .gr{ display:flex; } .gc{ width:76px; height:76px; margin:3px; border-radius:12px; border:2px solid #C4B5FD; background:#F5F3FF; font-size:42px; line-height:1; display:flex; align-items:center; justify-content:center; padding:0; font-family:inherit; }
@@ -63,20 +65,20 @@
 
 <main>
   <div class="card intro">
-    <p>📌 คำชี้แจง</p>
+    <p>📌 คำชี้แจง <button type="button" class="tts-btn " data-audio-src="audio/ws3-intro.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p>
     <p style="font-weight:400">เติมภาพผลไม้ลงในช่องว่าง โดยมีเงื่อนไขว่า <b>ในแต่ละแถวนอนและแต่ละแถวตั้ง ต้องมีผลไม้ครบทั้ง 4 ชนิด และห้ามซ้ำกัน</b> แตะที่ช่องว่างเพื่อเปลี่ยนภาพ</div>
     <div class="example">🍎 🍌 🍇 🍓 &nbsp;— แตะช่องหลายครั้งเพื่อเลือกภาพ ช่องสีเหลืองคือโจทย์ที่กำหนดให้ เปลี่ยนไม่ได้</div>
   </div>
   <div class="card" id="form">
-    <div class="field"><label for="a0"><span class="fn">1</span> ปริศนาข้อที่ 1</label>
+    <div class="field"><label for="a0"><span class="fn">1</span> ปริศนาข้อที่ 1</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws3-q1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
       <div class="gridwrap"><div class="sd" id="sd0" data-g='[[null, null, null, 3], [2, 3, null, 1], [null, 0, null, 2], [3, 2, 1, null]]' data-sol='[[0, 1, 2, 3], [2, 3, 0, 1], [1, 0, 3, 2], [3, 2, 1, 0]]'><div class="gr"><button type="button" class="gc" data-r="0" data-c="0" aria-label="ช่องว่าง แถว 1 หลัก 1"></button><button type="button" class="gc" data-r="0" data-c="1" aria-label="ช่องว่าง แถว 1 หลัก 2"></button><button type="button" class="gc" data-r="0" data-c="2" aria-label="ช่องว่าง แถว 1 หลัก 3"></button><span class="gc given" data-r="0" data-c="3">🍓</span></div><div class="gr"><span class="gc given" data-r="1" data-c="0">🍇</span><span class="gc given" data-r="1" data-c="1">🍓</span><button type="button" class="gc" data-r="1" data-c="2" aria-label="ช่องว่าง แถว 2 หลัก 3"></button><span class="gc given" data-r="1" data-c="3">🍌</span></div><div class="gr"><button type="button" class="gc" data-r="2" data-c="0" aria-label="ช่องว่าง แถว 3 หลัก 1"></button><span class="gc given" data-r="2" data-c="1">🍎</span><button type="button" class="gc" data-r="2" data-c="2" aria-label="ช่องว่าง แถว 3 หลัก 3"></button><span class="gc given" data-r="2" data-c="3">🍇</span></div><div class="gr"><span class="gc given" data-r="3" data-c="0">🍓</span><span class="gc given" data-r="3" data-c="1">🍇</span><span class="gc given" data-r="3" data-c="2">🍌</span><button type="button" class="gc" data-r="3" data-c="3" aria-label="ช่องว่าง แถว 4 หลัก 4"></button></div></div></div>
       <div class="hint">คำตอบของนักเรียน (ระบบเติมให้เมื่อแตะช่อง)</div>
       <textarea id="a0" rows="2" readonly placeholder="ยังไม่ได้ตอบ"></textarea><div class="sdok" id="ok0"></div></div>
-    <div class="field"><label for="a1"><span class="fn">2</span> ปริศนาข้อที่ 2</label>
+    <div class="field"><label for="a1"><span class="fn">2</span> ปริศนาข้อที่ 2</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws3-q2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
       <div class="gridwrap"><div class="sd" id="sd1" data-g='[[0, 2, null, null], [3, 1, 0, null], [null, 0, 1, null], [null, null, null, null]]' data-sol='[[0, 2, 3, 1], [3, 1, 0, 2], [2, 0, 1, 3], [1, 3, 2, 0]]'><div class="gr"><span class="gc given" data-r="0" data-c="0">🍎</span><span class="gc given" data-r="0" data-c="1">🍇</span><button type="button" class="gc" data-r="0" data-c="2" aria-label="ช่องว่าง แถว 1 หลัก 3"></button><button type="button" class="gc" data-r="0" data-c="3" aria-label="ช่องว่าง แถว 1 หลัก 4"></button></div><div class="gr"><span class="gc given" data-r="1" data-c="0">🍓</span><span class="gc given" data-r="1" data-c="1">🍌</span><span class="gc given" data-r="1" data-c="2">🍎</span><button type="button" class="gc" data-r="1" data-c="3" aria-label="ช่องว่าง แถว 2 หลัก 4"></button></div><div class="gr"><button type="button" class="gc" data-r="2" data-c="0" aria-label="ช่องว่าง แถว 3 หลัก 1"></button><span class="gc given" data-r="2" data-c="1">🍎</span><span class="gc given" data-r="2" data-c="2">🍌</span><button type="button" class="gc" data-r="2" data-c="3" aria-label="ช่องว่าง แถว 3 หลัก 4"></button></div><div class="gr"><button type="button" class="gc" data-r="3" data-c="0" aria-label="ช่องว่าง แถว 4 หลัก 1"></button><button type="button" class="gc" data-r="3" data-c="1" aria-label="ช่องว่าง แถว 4 หลัก 2"></button><button type="button" class="gc" data-r="3" data-c="2" aria-label="ช่องว่าง แถว 4 หลัก 3"></button><button type="button" class="gc" data-r="3" data-c="3" aria-label="ช่องว่าง แถว 4 หลัก 4"></button></div></div></div>
       <div class="hint">คำตอบของนักเรียน (ระบบเติมให้เมื่อแตะช่อง)</div>
       <textarea id="a1" rows="2" readonly placeholder="ยังไม่ได้ตอบ"></textarea><div class="sdok" id="ok1"></div></div>
-    <div class="field"><label for="a2"><span class="fn">3</span> เล่าเหตุผล: เลือกช่องที่ยากที่สุด 1 ช่อง แล้วบอกว่านักเรียนรู้ได้อย่างไรว่าต้องเป็นภาพนั้น</label>
+    <div class="field"><label for="a2"><span class="fn">3</span> เล่าเหตุผล: เลือกช่องที่ยากที่สุด 1 ช่อง แล้วบอกว่านักเรียนรู้ได้อย่างไรว่าต้องเป็นภาพนั้น</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws3-q3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
       <div class="hint">บอกว่าดูแถวนอนและแถวตั้งอย่างไร</div>
       <textarea id="a2" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
     <div class="meter"><i id="bar"></i></div>
@@ -136,9 +138,10 @@ document.getElementById("submit").onclick = async function(){
   }
 };
 </script>
+<script src="../../assets/js/tts.js?v=2"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
 <script src="../../assets/js/submitwork.js?v=6"></script>
 <script src="../../assets/js/linkify.js?v=2"></script>
-<script src="../../assets/js/unitinfo.js?v=7"></script>
+<script src="../../assets/js/unitinfo.js?v=8"></script>
 </body>
 </html>
