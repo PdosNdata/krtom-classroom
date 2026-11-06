@@ -206,6 +206,9 @@ const READY_CONTENT = {
     ar: { href:"content/p2-cs-0/ar-game-nocamera.html", title:"เรียงคำสั่งพาหนูไปหาดาว" }
   },
   "p3/cs/0": {
+    knowledge: { href:"content/p3-cs-0/knowledge.html", title:"การแสดงขั้นตอนวิธีการแก้ปัญหา" },
+    worksheet: { href:"content/p3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.5 ข้อมูลและเงื่อนไข แผนภาพต้นไม้ และการแสดงอัลกอริทึม" },
+    quiz:      { href:"content/p3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
     game: {
       href:"content/p3-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
@@ -740,7 +743,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6, "p3/cs/0":5 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
@@ -961,6 +964,34 @@ function renderCartoonView(grade, subject, idx, unit){
   `;
 }
 
+// กล่อง "เป้าหมายการเรียนรู้ของหน่วย" (ตัวชี้วัด จุดประสงค์ สมรรถนะ คุณลักษณะ) — ข้อมูลจาก outcomes-p3.js (ป.3 ครบ 5 หน่วย)
+function unitOutcomesCard(key){
+  const o = typeof P3_OUTCOMES !== "undefined" && P3_OUTCOMES[key]; if(!o) return "";
+  if(!document.getElementById("uo-style")){
+    const st = document.createElement("style"); st.id = "uo-style";
+    st.textContent = `.uo-card{ background:linear-gradient(135deg,#EFF6FF,#F5F3FF); border:2px solid #C7D2FE; border-radius:18px; padding:8px 18px 12px; margin:0 0 16px; text-align:left; line-height:1.6; }
+      .uo-card > summary{ cursor:pointer; font-weight:800; color:#4338CA; padding:6px 0; }
+      .uo-card h4{ margin:10px 0 2px; color:#4338CA; font-size:1em; }
+      .uo-card ul{ margin:2px 0 0; padding-left:1.3em; } .uo-card li{ margin:2px 0; }
+      .uo-card .uo-ind{ background:#fff; border:1px solid #DDD6FE; border-radius:12px; padding:6px 12px; margin:4px 0; }
+      .uo-card .uo-tag{ font-size:.7em; background:#FEF3C7; color:#92400E; border-radius:999px; padding:0 10px; font-weight:700; margin-left:6px; }
+      .uo-card .uo-chip{ display:inline-block; background:#FBCFE8; color:#831843; border-radius:999px; padding:0 14px; font-weight:700; margin:2px 6px 2px 0; }
+      .uo-card .uo-sub{ color:#475569; font-size:.88em; }`;
+    document.head.appendChild(st);
+  }
+  const E = flowEsc, std = (typeof UNIT_STANDARDS !== "undefined" && UNIT_STANDARDS[key] && UNIT_STANDARDS[key].standard) || null;
+  return `<details class="uo-card" open>
+    <summary>🎯 เป้าหมายการเรียนรู้ของหน่วย: ตัวชี้วัด · จุดประสงค์ · สมรรถนะ · คุณลักษณะ</summary>
+    ${std ? `<div class="uo-sub">📚 มาตรฐาน <b>${E(std.code)}</b> ${E(std.text)}</div>` : ""}
+    <h4>📌 ตัวชี้วัด</h4>${o.indicators.map(r => `<div class="uo-ind"><b>${E(r.code)}</b> ${E(r.text)}<span class="uo-tag">${E(r.type)}</span></div>`).join("")}
+    <h4>🎯 จุดประสงค์การเรียนรู้</h4><ul>${o.objectives.map(t => `<li>${E(t)}</li>`).join("")}</ul>
+    <div class="uo-sub">(K) ความรู้ · (S) ทักษะ · (A) เจตคติ</div>
+    <h4>🧠 สมรรถนะสำคัญของผู้เรียน</h4><ul>${o.competencies.map(c => `<li><b>${E(c.name)}</b><div class="uo-sub">${E(c.indicator)} · ${E(c.behavior)}</div></li>`).join("")}</ul>
+    <h4>⭐ สมรรถนะประจำหน่วย</h4><div>${E(o.unitCompetency)}</div>
+    <h4>🌟 คุณลักษณะอันพึงประสงค์</h4><div>${o.traits.map(t => `<span class="uo-chip">${E(t)}</span>`).join("")}</div>
+    <div class="uo-sub" style="margin-top:8px">⏱ เวลาเรียน ${o.hours} ชั่วโมง</div>
+  </details>`;
+}
 function renderUnitDetail(grade, subject, idx, unit, activeTab){
   applyTextSize(grade.id);
   setBreadcrumb([
@@ -1017,6 +1048,7 @@ function renderUnitDetail(grade, subject, idx, unit, activeTab){
     <div class="page-title">หน่วยที่ ${idx+1}: ${unit.name}</div>
     <div class="page-subtitle">${subject.name} · ${grade.grade}</div>
     ${flow ? `<div class="cx-teacherbar" style="margin-top:0"><a class="cx-open" href="#/unit/${grade.id}/${subject.id}/${idx}/knowledge">← กลับหน้าขั้นตอนการเรียน</a></div>` : ""}
+    ${unitOutcomesCard(unitKey)}
     ${tabBtns ? `<div class="tabs">${tabBtns}</div>` : ""}
     ${panelHtml ? `<div class="tab-panel" id="tab-panel">${panelHtml}</div>` : ""}
     ${(extras.length || (extraOpts && extraOpts.pre)) ? `<div class="tab-panel extra-panel">${KrtomContent.renderItems(extras, extraOpts)}</div>` : (extraOpts ? `<div class="tab-panel"><p style="text-align:center;color:#666">ยังไม่มีเกมในหน่วยนี้</p></div>` : "")}

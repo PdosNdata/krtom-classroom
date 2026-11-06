@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.4: แผนภาพต้นไม้ — ป.3 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:28px; --c1:#60A5FA; --c2:#2563EB; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.65; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.8rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:760px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.82rem; color:#475569; }
+  .field{ margin-bottom:20px; }
+  .field > label,.q .t{ display:flex; align-items:flex-start; gap:10px; font-weight:800; font-size:1rem; }
+  .fn,.q .no{ min-width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
+  .hint{ color:#64748B; font-size:.78rem; margin:2px 0 6px 40px; }
+  textarea,select,input[type=number]{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; background:#fff; }
+  textarea{ resize:vertical; } input[type=number]{ width:140px; }
+  textarea:focus,select:focus,input:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.85rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 28px; font-weight:700; font-size:1rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); text-decoration:none; display:inline-block; }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  .mcq{ margin-bottom:22px; } .mcq .q{ font-weight:800; margin:0 0 8px; }
+  .mcq .choices label{ display:block; border:2px solid #E2E8F0; border-radius:14px; padding:9px 14px; margin:6px 0; cursor:pointer; background:#fff; }
+  .mcq .choices label:has(input:checked){ border-color:var(--c2); background:#EFF6FF; }
+  .mcq input{ margin-right:8px; transform:scale(1.2); }
+  svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
+  .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
+  @media print{ header a,.actions{ display:none; } textarea{ border:1px solid #999; } }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🌳 ใบงานที่ 1.4 แผนภาพต้นไม้</h1>
+    <p>แจกแจงทางเลือก · หาคำตอบด้วยแผนภาพต้นไม้ · ป.3 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง</p>
+    <p style="font-weight:400">ดูแผนภาพต้นไม้ นับปลายกิ่งทางขวามือ แล้วตอบคำถามเป็นตัวเลข ข้อสุดท้ายให้วาดแผนภาพหรือเขียนทุกแบบ</p>
+    <div class="example">💡 นับปลายกิ่งทุกกิ่งให้ครบ อย่าตกหล่น</div>
+  </div>
+  <div class="card" id="form">
+    <div class="scene">🥤 <b>ผลไม้ปั่น</b> เลือกแก้ว 2 ขนาด และผลไม้ 2 ชนิด</div>
+<svg class="tree" viewBox="0 0 640 236" role="img" aria-label="แผนภาพต้นไม้ ผลไม้ปั่น" xmlns="http://www.w3.org/2000/svg"><path d="M406.0 60.0 C433.0 60.0 433.0 31.0 460.0 31.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 60.0 C433.0 60.0 433.0 89.0 460.0 89.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 176.0 C433.0 176.0 433.0 147.0 460.0 147.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 176.0 C433.0 176.0 433.0 205.0 460.0 205.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M180.0 118.0 C207.0 118.0 207.0 60.0 234.0 60.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M180.0 118.0 C207.0 118.0 207.0 176.0 234.0 176.0" fill="none" stroke="#94A3B8" stroke-width="3"/><g><rect x="460.0" y="8.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="31.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">มะม่วง</text></g><g><rect x="460.0" y="66.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">สับปะรด</text></g><g><rect x="234.0" y="37.0" width="172" height="46" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="320.0" y="60.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">แก้วเล็ก</text></g><g><rect x="460.0" y="124.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="147.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">มะม่วง</text></g><g><rect x="460.0" y="182.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="205.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">สับปะรด</text></g><g><rect x="234.0" y="153.0" width="172" height="46" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="320.0" y="176.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">แก้วใหญ่</text></g><g><rect x="8.0" y="95.0" width="172" height="46" rx="14" fill="#fff" stroke="#2563EB" stroke-width="3"/><text x="94.0" y="118.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">เริ่ม</text></g></svg>
+    <div class="scene">🍦 <b>ไอศกรีม</b> เลือกภาชนะ 1 อย่าง และรส 1 อย่าง</div>
+<svg class="tree" viewBox="0 0 640 352" role="img" aria-label="แผนภาพต้นไม้ ไอศกรีม" xmlns="http://www.w3.org/2000/svg"><path d="M406.0 89.0 C433.0 89.0 433.0 31.0 460.0 31.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 89.0 C433.0 89.0 433.0 89.0 460.0 89.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 89.0 C433.0 89.0 433.0 147.0 460.0 147.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 263.0 C433.0 263.0 433.0 205.0 460.0 205.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 263.0 C433.0 263.0 433.0 263.0 460.0 263.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M406.0 263.0 C433.0 263.0 433.0 321.0 460.0 321.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M180.0 176.0 C207.0 176.0 207.0 89.0 234.0 89.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M180.0 176.0 C207.0 176.0 207.0 263.0 234.0 263.0" fill="none" stroke="#94A3B8" stroke-width="3"/><g><rect x="460.0" y="8.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="31.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">วนิลา</text></g><g><rect x="460.0" y="66.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ช็อกโกแลต</text></g><g><rect x="460.0" y="124.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="147.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">สตรอว์เบอร์รี</text></g><g><rect x="234.0" y="66.0" width="172" height="46" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="320.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">โคน</text></g><g><rect x="460.0" y="182.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="205.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">วนิลา</text></g><g><rect x="460.0" y="240.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="263.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ช็อกโกแลต</text></g><g><rect x="460.0" y="298.0" width="172" height="46" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="546.0" y="321.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">สตรอว์เบอร์รี</text></g><g><rect x="234.0" y="240.0" width="172" height="46" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="320.0" y="263.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ถ้วย</text></g><g><rect x="8.0" y="153.0" width="172" height="46" rx="14" fill="#fff" stroke="#2563EB" stroke-width="3"/><text x="94.0" y="176.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">เริ่ม</text></g></svg>
+    <div class="field q" data-k="a"><div class="t"><span class="no">1</span> จากแผนภาพ "ผลไม้ปั่น" มีเมนูทั้งหมดกี่แบบ</div><div class="hint"><input type="number" min="0" max="99" inputmode="numeric" aria-label="คำตอบข้อ 1"> แบบ</div></div>
+    <div class="field q" data-k="b"><div class="t"><span class="no">2</span> ไอศกรีมให้เลือกภาชนะ 2 แบบ (โคน/ถ้วย) และรส 3 แบบ มีเมนูทั้งหมดกี่แบบ</div><div class="hint"><input type="number" min="0" max="99" inputmode="numeric" aria-label="คำตอบข้อ 2"> แบบ</div></div>
+    <div class="field q" data-k="c"><div class="t"><span class="no">3</span> จากไอศกรีมข้างบน ถ้าเลือก "ถ้วย" จะเลือกรสได้กี่แบบ</div><div class="hint"><input type="number" min="0" max="99" inputmode="numeric" aria-label="คำตอบข้อ 3"> แบบ</div></div>
+    <div class="field q" data-k="d"><div class="t"><span class="no">4</span> เรียงลูกโป่ง 3 สี (แดง เหลือง ฟ้า) เป็นแถว ได้ทั้งหมดกี่แบบ</div><div class="hint"><input type="number" min="0" max="99" inputmode="numeric" aria-label="คำตอบข้อ 4"> แบบ</div></div>
+    <div class="field q" data-k="e"><div class="t"><span class="no">5</span> เรียงลูกโป่ง 3 สีเหมือนข้อ 4 แต่มีเงื่อนไข "สีแดงต้องอยู่หน้าสุด" ได้กี่แบบ</div><div class="hint"><input type="number" min="0" max="99" inputmode="numeric" aria-label="คำตอบข้อ 5"> แบบ</div></div>
+    <div class="field"><label for="f5"><span class="fn">6</span> เสื้อนักเรียนมี 2 สี (ขาว / ฟ้า) กางเกงมี 2 สี (ดำ / กรมท่า) เขียนชุดที่แต่งได้ทุกแบบ</label>
+      <div class="hint">เช่น เสื้อขาว + กางเกงดำ ... เขียนให้ครบทุกแบบ</div>
+      <textarea id="f5" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/6 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script>
+const N = 4, TOTAL = 6, ANS = [4, 6, 3, 6, 2];
+const ins = [...document.querySelectorAll(".q[data-k] input")], ta = document.getElementById("f5");
+const nAns = () => ins.filter(i => i.value !== "").length + (ta.value.trim().length >= 8 ? 1 : 0);
+function refresh(){ const n = nAns(); document.getElementById("bar").style.width = (n / TOTAL * 100) + "%"; document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ"; }
+[...ins, ta].forEach(e => e.addEventListener("input", refresh));
+function evaluate(){
+  if(nAns() < TOTAL) return { ready:false, msg:"กรุณาตอบให้ครบทุกข้อก่อนส่ง" };
+  const ok = ins.map((e, i) => +e.value === ANS[i]);
+  const four = /ขาว/.test(ta.value) && /ฟ้า/.test(ta.value) && /ดำ/.test(ta.value) && /กรม/.test(ta.value);
+  return { ready:true, score: ok.filter(Boolean).length + (four ? 1 : 0), total:TOTAL, items:{ ta:[{ ok:four }] } };
+}
+
+const U = { g:"p3", s:"cs", i:0 }, KEY = "krtomws:p3/cs/0:" + N, DONE = "krtomws-done:p3/cs/0:" + N;
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), r = evaluate();
+  if(!r.ready){ st.style.color = "#DC2626"; st.textContent = r.msg; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    window.__wsItems = r.items || {};
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", r.score, r.total);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/unitinfo.js?v=7"></script>
+</body>
+</html>
