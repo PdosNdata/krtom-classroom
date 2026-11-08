@@ -32,23 +32,27 @@
   .how{ color:#D1FAE5; font-size:.8rem; line-height:1.6; text-align:center; }
 </style>
 <link rel="stylesheet" href="../../assets/css/page-bg.css">
+<link rel="stylesheet" href="../../assets/css/gamepad.css?v=1">
 </head>
 <body>
 <header><h1>🏃 เกมกระโดด ค่าตัวแปร · วิ่ง กระโดด เก็บผลไม้ตามคำสั่ง</h1><button id="fs">⛶ เต็มจอ</button><a href="../../index.html">🏠 กลับหน้าหลัก</a><a id="backlink" href="../../index.html#/unit/m1/cs/1/game" title="ปิดเกม">✖</a></header>
 <div id="wrap">
   <div id="lv"></div>
+  <div id="gstage">
   <div id="game">
-    <canvas id="cv" width="960" height="540"></canvas>
+    <canvas id="cv"width="960" height="540"></canvas>
     <div id="hud"><div id="prog"></div><div id="side"><div id="hearts"></div><div id="vars"></div></div></div>
     <div id="msg"></div>
     <div class="ov" id="ov-start"><div class="big">🏃 เกมกระโดด ค่าตัวแปร</div><div class="sub">วิ่ง กระโดดข้ามหลุม เก็บผลไม้ให้ <b>ค่าตัวแปรตรงกับคำสั่ง</b> แล้ววิ่งไปที่ 🚩 ธงตะกร้าเพื่อตรวจ<br>ผลไม้เน่า 🤢 ทำให้ค่า <b>ลดลง 1</b></div><button id="go">▶ เริ่มเล่น</button></div>
     <div class="ov" id="ov-win"><div class="big" id="wt">ผ่านด่านแล้ว!</div><div class="st" id="wst">⭐⭐⭐</div><div class="sub" id="wsub"></div><div><button id="wnext">ด่านถัดไป ▶</button><button id="wagain">เล่นอีกครั้ง</button></div></div>
     <div class="ov" id="ov-lose" style="background:linear-gradient(135deg,rgba(127,29,29,.94),rgba(190,18,60,.94))"><div class="big">หัวใจหมดแล้ว 💔</div><div class="sub">ลองใหม่อีกครั้ง — ดูค่าตัวแปรและคำสั่งให้ดีก่อนวิ่งไปที่ธง</div><button id="lagain">↺ เล่นด่านนี้ใหม่</button></div>
   </div>
+  </div><!-- /gstage -->
   <div id="touch"><div class="g"><button id="bL">◀</button><button id="bR">▶</button></div><div class="g"><button id="bJ">⤒ กระโดด</button></div></div>
   <div class="how">⌨ ลูกศรซ้าย/ขวา (หรือ A/D) = วิ่ง · Space / ลูกศรขึ้น (หรือ W) = กระโดด (กดค้างกระโดดสูงขึ้น) · P = พัก · ผลไม้ที่ไม่ได้เก็บ ไม่นับ — เก็บให้ตรงกับคำสั่งแล้ววิ่งไปที่ธง 🚩</div>
 </div>
 <script src="../../assets/js/sfx.js?v=1"></script>
+<script src="../../assets/js/gamepad.js?v=1"></script>
 <script>
 "use strict";
 const $ = (s) => document.getElementById(s);
@@ -257,7 +261,8 @@ requestAnimationFrame(loop);
 
 /* ───── ปุ่ม/หน้าจอ ───── */
 $("go").onclick = () => start(L); $("wagain").onclick = () => start(L); $("wnext").onclick = () => start(L + 1); $("lagain").onclick = () => start(L);
-$("fs").onclick = () => { const g = $("game"); if(!document.fullscreenElement){ (g.requestFullscreen ? g.requestFullscreen() : Promise.reject()).catch(() => {}); } else document.exitFullscreen(); };
+$("fs").onclick = () => KrtomPad.toggleFs($("gstage"));
+KrtomPad.init({ wrap:"#game", mode:"lr", jump:true, stickJump:true, start:["#go"], toggleFs:() => KrtomPad.toggleFs($("gstage")) });
 $("backlink").addEventListener("click", (e) => { e.preventDefault(); window.close(); setTimeout(() => { location.href = "../../index.html#/unit/m1/cs/1/game"; }, 250); });
 world = buildWorld(0); P = { x:90, y:GY - 60, w:34, h:58, vx:0, vy:0, face:1, ground:true, coy:0, jumpHeld:false, anim:0 }; vals = { apple:0 }; state = "title"; $("ov-start").style.display = "flex"; drawLv(); renderHud();
 window.__vm = { start, update, get P(){ return P; }, get vals(){ return vals; }, get segIdx(){ return segIdx; }, get world(){ return world; }, get lives(){ return lives; }, keys, get state(){ return state; } };

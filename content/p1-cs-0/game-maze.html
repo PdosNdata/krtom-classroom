@@ -105,6 +105,7 @@
   .hbtn:active{ transform:translateY(.3cqw); }
   .backbtn{ position:absolute; left:1.6cqw; top:1.6cqw; padding:.3cqw 2cqw; font-size:2.2cqw; text-decoration:none; z-index:3; border-radius:999px; }
 </style>
+<link rel="stylesheet" href="../../assets/css/gamepad.css?v=1">
 </head>
 <body>
 
@@ -173,6 +174,7 @@
 
 <script src="../../assets/js/tts.js?v=2"></script>
 <script src="../../assets/js/sfx.js?v=1"></script>
+<script src="../../assets/js/gamepad.js?v=1"></script>
 <script>
 (function(){
   const W = 960, H = 540;
@@ -451,6 +453,8 @@
     window.addEventListener("keydown", (e) => { if((e.key === "f" || e.key === "F") && !e.ctrlKey && !e.metaKey) toggle(); else if(e.key === "Escape" && stage.classList.contains("pfs")) leave(); });
     label();
   })();
+  /* ปุ่มควบคุมแบบเกม ROV บนจอสัมผัส (จอยสติ๊ก 4 ทิศ + เต็มจอแนวนอนตอนกดเริ่ม) */
+  KrtomPad.init({ wrap:"#wrap", mode:"4dir", start:["#start-btn"], toggleFs:() => document.getElementById("fs-btn").click() });
 </script>
 </body>
 </html>
