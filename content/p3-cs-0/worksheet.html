@@ -68,7 +68,7 @@
 </header>
 
 <main>
-  <p class="lead">เลือกทำใบงานทั้ง 5 ใบ ✨ <button type="button" class="tts-btn mini" data-audio-src="audio/ws-list.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button><small>ใบ 1.2 ปรนัย · ใบ 1.3 แตะเติมภาพ · ใบ 1.4 นับทางเลือก · ใบอื่น ๆ เขียนตอบ</small></p>
+  <p class="lead">เลือกทำใบงานทั้ง 7 ใบ ✨ <button type="button" class="tts-btn mini" data-audio-src="audio/ws-list.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button><small>ใบ 1.2 ปรนัย · ใบ 1.3 แตะเติมภาพ · ใบ 1.4 นับทางเลือก · ใบ 1.6 และ 1.7 ตอบเป็นตัวเลข · ใบอื่น ๆ เขียนตอบ</small></p>
   <div class="stack">
     <a class="wsbtn" href="worksheet-81-1.html" style="--a:#60A5FA;--b:#1D4ED8">
       <span class="orb">🧭</span>
@@ -95,15 +95,25 @@
       <span class="wsbtn-text"><span class="kick">ใบงานที่ 1.5</span><span class="ttl">แสดงอัลกอริทึม 3 แบบ</span><span class="sub">เขียน · วาด · สัญลักษณ์</span></span>
       <span class="side"><span class="status" id="st-5">ยังไม่ได้ส่ง</span><span class="go">เริ่มทำ ➜</span></span>
     </a>
+    <a class="wsbtn" href="worksheet-81-6.html" style="--a:#FBBF24;--b:#B45309">
+      <span class="orb">🐷</span>
+      <span class="wsbtn-text"><span class="kick">ใบงานที่ 1.6</span><span class="ttl">กระปุกออมสิน</span><span class="sub">หาแบบรูปของจำนวน</span></span>
+      <span class="side"><span class="status" id="st-6">ยังไม่ได้ส่ง</span><span class="go">เริ่มทำ ➜</span></span>
+    </a>
+    <a class="wsbtn" href="worksheet-81-7.html" style="--a:#818CF8;--b:#4338CA">
+      <span class="orb">📚</span>
+      <span class="wsbtn-text"><span class="kick">ใบงานที่ 1.7</span><span class="ttl">หนังสือเรียงแถว</span><span class="sub">แผนภาพต้นไม้ · จัดชั้นหนังสือ</span></span>
+      <span class="side"><span class="status" id="st-7">ยังไม่ได้ส่ง</span><span class="go">เริ่มทำ ➜</span></span>
+    </a>
   </div>
   <p class="note">🖨️ พิมพ์ใบงานเป็นกระดาษได้ที่หน้าใบงานแต่ละใบ (กด Ctrl+P)</p>
 </main>
 
 <script>
-try{ for(let n = 1; n <= 5; n++){ if(localStorage.getItem("krtomws-done:p3/cs/0:" + n)){ const el = document.getElementById("st-" + n); if(el){ el.textContent = "✅ ส่งแล้ว"; el.classList.add("done"); } } } }catch(e){}
+try{ for(let n = 1; n <= 7; n++){ if(localStorage.getItem("krtomws-done:p3/cs/0:" + n)){ const el = document.getElementById("st-" + n); if(el){ el.textContent = "✅ ส่งแล้ว"; el.classList.add("done"); } } } }catch(e){}
 </script>
 <script src="../../assets/js/tts.js?v=2"></script>
 <script src="../../assets/js/flow.js?v=6"></script>
-<script src="../../assets/js/unitinfo.js?v=8"></script>
+<script src="../../assets/js/unitinfo.js?v=9"></script>
 </body>
 </html>

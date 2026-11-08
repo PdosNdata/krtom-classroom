@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.7: หนังสือเรียงแถว — ป.3 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:28px; --c1:#60A5FA; --c2:#2563EB; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.65; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.8rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:760px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.82rem; color:#475569; }
+  .field{ margin-bottom:20px; }
+  .field > label,.q .t{ display:flex; align-items:flex-start; gap:10px; font-weight:800; font-size:1rem; }
+  .fn,.q .no{ min-width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
+  .hint{ color:#64748B; font-size:.78rem; margin:2px 0 6px 40px; }
+  textarea,select,input[type=number]{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; background:#fff; }
+  textarea{ resize:vertical; } input[type=number]{ width:140px; }
+  textarea:focus,select:focus,input:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.85rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 28px; font-weight:700; font-size:1rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); text-decoration:none; display:inline-block; }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  .mcq{ margin-bottom:22px; } .mcq .q{ font-weight:800; margin:0 0 8px; }
+  .mcq .choices label{ display:block; border:2px solid #E2E8F0; border-radius:14px; padding:9px 14px; margin:6px 0; cursor:pointer; background:#fff; }
+  .mcq .choices label:has(input:checked){ border-color:var(--c2); background:#EFF6FF; }
+  .mcq input{ margin-right:8px; transform:scale(1.2); }
+  svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
+  .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
+
+  .tbl{ width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:.9rem; } .tbl th,.tbl td{ border:2px solid #E2E8F0; padding:8px 6px; text-align:center; } .tbl th{ background:#FEF3C7; } .tbl td b{ font-size:1.15rem; }
+  .legend{ color:#475569; font-size:.78rem; margin:-4px 0 10px; text-align:center; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>📚 ใบงานที่ 1.7 หนังสือเรียงแถว</h1>
+    <p>แผนภาพต้นไม้ · แจกแจงทุกแนวทาง · ป.3 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง <button type="button" class="tts-btn " data-audio-src="audio/ws7-intro.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p>
+    <p style="font-weight:400">ดูแผนภาพต้นไม้ที่แจกแจงวิธีจัดหนังสือลงชั้น แล้วตอบคำถามเป็นตัวเลข ข้อสุดท้ายให้เขียนแนวทางการจัดหนังสือ</p>
+    <div class="example">💡 นับปลายกิ่งทุกกิ่งให้ครบ แต่ละเส้นทางจากซ้ายไปขวาคือการจัดหนังสือ 1 แบบ</div>
+  </div>
+  <div class="card" id="form">
+    <div class="scene">📚 <b>ชั้นหนังสือ 4 ชั้น</b> มีหนังสือ 4 ประเภท คือ หนังสือเรียน นิทาน ท่องเที่ยว และการ์ตูน เงื่อนไข: <b>ชั้นที่ 1 (บนสุด)</b> ใส่หนังสือเรียนเท่านั้น ส่วนอีก 3 ชั้นที่เหลือให้จัดหนังสือ 3 ประเภทที่เหลือชั้นละ 1 ประเภท <button type="button" class="tts-btn mini" data-audio-src="audio/ws7-scene.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <div class="legend">อ่านจากซ้ายไปขวา: ชั้นที่ 1 → ชั้นที่ 2 → ชั้นที่ 3 → ชั้นที่ 4</div>
+<svg class="tree" viewBox="0 0 736 296" role="img" aria-label="แผนภาพต้นไม้ การจัดหนังสือลงชั้น" xmlns="http://www.w3.org/2000/svg"><path d="M538.0 28.0 C558.0 28.0 558.0 28.0 578.0 28.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M538.0 76.0 C558.0 76.0 558.0 76.0 578.0 76.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M348.0 52.0 C368.0 52.0 368.0 28.0 388.0 28.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M348.0 52.0 C368.0 52.0 368.0 76.0 388.0 76.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M538.0 124.0 C558.0 124.0 558.0 124.0 578.0 124.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M538.0 172.0 C558.0 172.0 558.0 172.0 578.0 172.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M348.0 148.0 C368.0 148.0 368.0 124.0 388.0 124.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M348.0 148.0 C368.0 148.0 368.0 172.0 388.0 172.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M538.0 220.0 C558.0 220.0 558.0 220.0 578.0 220.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M538.0 268.0 C558.0 268.0 558.0 268.0 578.0 268.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M348.0 244.0 C368.0 244.0 368.0 220.0 388.0 220.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M348.0 244.0 C368.0 244.0 368.0 268.0 388.0 268.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M158.0 148.0 C178.0 148.0 178.0 52.0 198.0 52.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M158.0 148.0 C178.0 148.0 178.0 148.0 198.0 148.0" fill="none" stroke="#94A3B8" stroke-width="3"/><path d="M158.0 148.0 C178.0 148.0 178.0 244.0 198.0 244.0" fill="none" stroke="#94A3B8" stroke-width="3"/><g><rect x="578.0" y="8.0" width="150" height="40" rx="14" fill="#fff" stroke="#EA580C" stroke-width="3"/><text x="653.0" y="28.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">การ์ตูน</text></g><g><rect x="388.0" y="8.0" width="150" height="40" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="463.0" y="28.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ท่องเที่ยว</text></g><g><rect x="578.0" y="56.0" width="150" height="40" rx="14" fill="#fff" stroke="#EA580C" stroke-width="3"/><text x="653.0" y="76.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ท่องเที่ยว</text></g><g><rect x="388.0" y="56.0" width="150" height="40" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="463.0" y="76.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">การ์ตูน</text></g><g><rect x="198.0" y="32.0" width="150" height="40" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="273.0" y="52.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">นิทาน</text></g><g><rect x="578.0" y="104.0" width="150" height="40" rx="14" fill="#fff" stroke="#EA580C" stroke-width="3"/><text x="653.0" y="124.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">การ์ตูน</text></g><g><rect x="388.0" y="104.0" width="150" height="40" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="463.0" y="124.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">นิทาน</text></g><g><rect x="578.0" y="152.0" width="150" height="40" rx="14" fill="#fff" stroke="#EA580C" stroke-width="3"/><text x="653.0" y="172.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">นิทาน</text></g><g><rect x="388.0" y="152.0" width="150" height="40" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="463.0" y="172.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">การ์ตูน</text></g><g><rect x="198.0" y="128.0" width="150" height="40" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="273.0" y="148.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ท่องเที่ยว</text></g><g><rect x="578.0" y="200.0" width="150" height="40" rx="14" fill="#fff" stroke="#EA580C" stroke-width="3"/><text x="653.0" y="220.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ท่องเที่ยว</text></g><g><rect x="388.0" y="200.0" width="150" height="40" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="463.0" y="220.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">นิทาน</text></g><g><rect x="578.0" y="248.0" width="150" height="40" rx="14" fill="#fff" stroke="#EA580C" stroke-width="3"/><text x="653.0" y="268.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">นิทาน</text></g><g><rect x="388.0" y="248.0" width="150" height="40" rx="14" fill="#fff" stroke="#DB2777" stroke-width="3"/><text x="463.0" y="268.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ท่องเที่ยว</text></g><g><rect x="198.0" y="224.0" width="150" height="40" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="3"/><text x="273.0" y="244.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">การ์ตูน</text></g><g><rect x="8.0" y="128.0" width="150" height="40" rx="14" fill="#fff" stroke="#2563EB" stroke-width="3"/><text x="83.0" y="148.0" text-anchor="middle" dominant-baseline="central" font-size="21" font-weight="700" fill="#1F2430" font-family="Sarabun,sans-serif">ชั้นที่ 1 หนังสือเรียน</text></g></svg>
+
+    <div class="field q" data-k="a"><div class="t"><span class="no">1</span> จากแผนภาพ จัดหนังสือ 3 ประเภทลงชั้นที่ 2–4 ได้ทั้งหมดกี่แบบ (นับปลายกิ่งทางขวามือ)</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws7-q1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 1"> แบบ</div></div>
+    <div class="field q" data-k="b"><div class="t"><span class="no">2</span> ถ้าชั้นที่ 2 วางหนังสือนิทาน จะจัดชั้นที่ 3 และ 4 ได้อีกกี่แบบ</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws7-q2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 2"> แบบ</div></div>
+    <div class="field q" data-k="c"><div class="t"><span class="no">3</span> ถ้าชั้นที่ 2 เป็นนิทาน และชั้นที่ 3 เป็นการ์ตูน ชั้นที่ 4 ต้องวางหนังสืออะไร (ตอบเป็นเลข: 1 = นิทาน, 2 = ท่องเที่ยว, 3 = การ์ตูน)</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws7-q3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 3"> </div></div>
+    <div class="field q" data-k="d"><div class="t"><span class="no">4</span> เพิ่มเงื่อนไขว่า "หนังสือการ์ตูนต้องอยู่ชั้นที่ 4" จะเหลือวิธีจัดกี่แบบ</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws7-q4.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 4"> แบบ</div></div>
+    <div class="field q" data-k="e"><div class="t"><span class="no">5</span> ถ้ามีหนังสือเหลือแค่ 2 ประเภท คือ นิทานกับท่องเที่ยว วางลงชั้นที่ 2 และ 3 ชั้นละ 1 ประเภท จะจัดได้กี่แบบ</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws7-q5.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 5"> แบบ</div></div>
+    <div class="field"><label for="f9"><span class="fn">6</span> เขียนแนวทางการจัดหนังสือที่เป็นไปได้ทั้งหมด (เขียนทีละแบบ เรียงจากชั้นที่ 2 ไปชั้นที่ 4)</label>
+      <div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws7-q6.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+      <div class="hint">เช่น แบบที่ 1 ชั้น 2 นิทาน ชั้น 3 ท่องเที่ยว ชั้น 4 การ์ตูน ... เขียนให้ครบ</div>
+      <textarea id="f9" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/6 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script>
+const N = 7, TOTAL = 6, ANS = [6, 2, 2, 2, 2];
+const ins = [...document.querySelectorAll(".q[data-k] input")], ta = document.getElementById("f9");
+const taOk = () => { const v = ta.value; return /นิทาน/.test(v) && /ท่อง/.test(v) && /การ์ตูน/.test(v) && v.trim().length >= 40; };
+const nAns = () => ins.filter(i => i.value !== "").length + (ta.value.trim().length >= 10 ? 1 : 0);
+function refresh(){ const n = nAns(); document.getElementById("bar").style.width = (n / TOTAL * 100) + "%"; document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ"; }
+[...ins, ta].forEach(e => e.addEventListener("input", refresh));
+function evaluate(){
+  if(nAns() < TOTAL) return { ready:false, msg:"กรุณาตอบให้ครบทุกข้อก่อนส่ง" };
+  const ok = ins.map((e, i) => +e.value === ANS[i]);
+  return { ready:true, score: ok.filter(Boolean).length + (taOk() ? 1 : 0), total:TOTAL, items:{ ta:[{ ok:taOk() }] } };
+}
+
+const U = { g:"p3", s:"cs", i:0 }, KEY = "krtomws:p3/cs/0:" + N, DONE = "krtomws-done:p3/cs/0:" + N;
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), r = evaluate();
+  if(!r.ready){ st.style.color = "#DC2626"; st.textContent = r.msg; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    window.__wsItems = r.items || {};
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", r.score, r.total);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/unitinfo.js?v=9"></script>
+</body>
+</html>

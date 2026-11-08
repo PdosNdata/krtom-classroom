@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 1.6: กระปุกออมสิน — ป.3 หน่วย 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:28px; --c1:#60A5FA; --c2:#2563EB; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.65; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.8rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:760px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.82rem; color:#475569; }
+  .field{ margin-bottom:20px; }
+  .field > label,.q .t{ display:flex; align-items:flex-start; gap:10px; font-weight:800; font-size:1rem; }
+  .fn,.q .no{ min-width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
+  .hint{ color:#64748B; font-size:.78rem; margin:2px 0 6px 40px; }
+  textarea,select,input[type=number]{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; background:#fff; }
+  textarea{ resize:vertical; } input[type=number]{ width:140px; }
+  textarea:focus,select:focus,input:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.85rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 28px; font-weight:700; font-size:1rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); text-decoration:none; display:inline-block; }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  .mcq{ margin-bottom:22px; } .mcq .q{ font-weight:800; margin:0 0 8px; }
+  .mcq .choices label{ display:block; border:2px solid #E2E8F0; border-radius:14px; padding:9px 14px; margin:6px 0; cursor:pointer; background:#fff; }
+  .mcq .choices label:has(input:checked){ border-color:var(--c2); background:#EFF6FF; }
+  .mcq input{ margin-right:8px; transform:scale(1.2); }
+  svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
+  .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
+
+  .tbl{ width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:.9rem; } .tbl th,.tbl td{ border:2px solid #E2E8F0; padding:8px 6px; text-align:center; } .tbl th{ background:#FEF3C7; } .tbl td b{ font-size:1.15rem; }
+  .legend{ color:#475569; font-size:.78rem; margin:-4px 0 10px; text-align:center; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🐷 ใบงานที่ 1.6 กระปุกออมสิน</h1>
+    <p>หาแบบรูป · ใช้ข้อมูลหาคำตอบ · ป.3 หน่วยที่ 1</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง <button type="button" class="tts-btn " data-audio-src="audio/ws6-intro.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p>
+    <p style="font-weight:400">อ่านข้อมูลในตาราง เปรียบเทียบเงินที่เพิ่มขึ้นในแต่ละวัน แล้วตอบคำถามเป็นตัวเลข</p>
+    <div class="example">💡 เคล็ดลับ: หาว่าแต่ละวันเงินเพิ่มขึ้นเท่าไร (เอาเงินวันนี้ ลบเงินวันก่อน) แล้วดูว่าวันไหนไม่เหมือนวันอื่น</div>
+  </div>
+  <div class="card" id="form">
+    <div class="scene">🐷 <b>กระปุกออมสินของเบส</b> เบสหยอดเงินลงกระปุกทุกวัน วันละเท่า ๆ กัน แต่มีอยู่ <b>1 วัน</b> ที่หยอดน้อยกว่าปกติ ตารางนี้บอก <b>เงินรวมในกระปุก</b> หลังหยอดเงินของแต่ละวัน <button type="button" class="tts-btn mini" data-audio-src="audio/ws6-scene.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <table class="tbl"><tr><th>วันที่ 1</th><th>วันที่ 2</th><th>วันที่ 3</th><th>วันที่ 4</th><th>วันที่ 5</th></tr><tr><td><b>20</b><br>บาท</td><td><b>40</b><br>บาท</td><td><b>50</b><br>บาท</td><td><b>70</b><br>บาท</td><td><b>90</b><br>บาท</td></tr></table>
+
+    <div class="field q" data-k="a"><div class="t"><span class="no">1</span> วันที่ 1 เบสหยอดเงินลงกระปุกกี่บาท</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws6-q1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 1"> บาท</div></div>
+    <div class="field q" data-k="b"><div class="t"><span class="no">2</span> จากวันที่ 1 ไปวันที่ 2 เงินรวมในกระปุกเพิ่มขึ้นกี่บาท (นี่คือจำนวนที่เบสหยอด <b>ตามปกติ</b>)</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws6-q2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 2"> บาท</div></div>
+    <div class="field q" data-k="c"><div class="t"><span class="no">3</span> เงินรวมเพิ่มขึ้น <b>น้อยกว่าปกติ</b> ในวันที่เท่าไร (ตอบเป็นตัวเลข)</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws6-q3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 3"> วันที่</div></div>
+    <div class="field q" data-k="d"><div class="t"><span class="no">4</span> ในวันนั้น เบสหยอดเงินลงกระปุกกี่บาท</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws6-q4.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 4"> บาท</div></div>
+    <div class="field q" data-k="e"><div class="t"><span class="no">5</span> ถ้าวันที่ 6 เบสหยอดเงินตามปกติ เงินรวมในกระปุกจะเป็นกี่บาท</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws6-q5.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 5"> บาท</div></div>
+    <div class="field"><label for="f9"><span class="fn">6</span> เขียนอธิบายวิธีที่นักเรียนใช้หาว่าเบสหยอดเงินน้อยกว่าปกติในวันไหน</label>
+      <div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws6-q6.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+      <div class="hint">เช่น ดูเงินที่เพิ่มขึ้นแต่ละวัน แล้วเปรียบเทียบกัน ... (อย่างน้อย 1 ประโยค)</div>
+      <textarea id="f9" rows="4" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/6 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script>
+const N = 6, TOTAL = 6, ANS = [20, 20, 3, 10, 110];
+const ins = [...document.querySelectorAll(".q[data-k] input")], ta = document.getElementById("f9");
+const taOk = () => { const v = ta.value; return v.trim().length >= 10; };
+const nAns = () => ins.filter(i => i.value !== "").length + (ta.value.trim().length >= 10 ? 1 : 0);
+function refresh(){ const n = nAns(); document.getElementById("bar").style.width = (n / TOTAL * 100) + "%"; document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL + " ข้อ"; }
+[...ins, ta].forEach(e => e.addEventListener("input", refresh));
+function evaluate(){
+  if(nAns() < TOTAL) return { ready:false, msg:"กรุณาตอบให้ครบทุกข้อก่อนส่ง" };
+  const ok = ins.map((e, i) => +e.value === ANS[i]);
+  return { ready:true, score: ok.filter(Boolean).length + (taOk() ? 1 : 0), total:TOTAL, items:{ ta:[{ ok:taOk() }] } };
+}
+
+const U = { g:"p3", s:"cs", i:0 }, KEY = "krtomws:p3/cs/0:" + N, DONE = "krtomws-done:p3/cs/0:" + N;
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), r = evaluate();
+  if(!r.ready){ st.style.color = "#DC2626"; st.textContent = r.msg; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    window.__wsItems = r.items || {};
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", r.score, r.total);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/unitinfo.js?v=9"></script>
+</body>
+</html>

@@ -144,7 +144,7 @@ const READY_CONTENT = {
     ],
     worksheet: { href:"content/p1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 อุปกรณ์เทคโนโลยี" },
     paint:     { href:"content/p1-cs-0/paint.html", title:"ฝึกใช้โปรแกรมกราฟิก (Paint จำลอง)" },
-    quiz:      { href:"content/p1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game: {
       href:"content/p1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
@@ -164,7 +164,7 @@ const READY_CONTENT = {
   "p1/cs/1": {
     knowledge: { href:"content/p1-cs-1/knowledge.html", title:"การแก้ปัญหาอย่างเป็นขั้นตอน" },
     worksheet: { href:"content/p1-cs-1/worksheet.html", title:"ใบงานที่ 2.1 เรียงลำดับขั้นตอนการล้างมือ" },
-    quiz:      { href:"content/p1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p1-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p1-cs-1/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
         { key:"brush-p1-1", href:"content/p1-cs-1/game-brush.html", label:"🪥 เกมเรียงลำดับขั้นตอนแปรงฟัน" },
@@ -173,7 +173,7 @@ const READY_CONTENT = {
   "p1/cs/2": {
     knowledge: { href:"content/p1-cs-2/knowledge.html", title:"การเขียนโปรแกรมเบื้องต้น" },
     worksheet: { href:"content/p1-cs-2/worksheet.html", title:"ใบงานที่ 3.1 การเขียนโปรแกรมโดยใช้บัตรคำสั่ง" },
-    quiz:      { href:"content/p1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[ { key:"cmaze-p1-2", href:"content/p1-cs-2/game-cmaze.html", label:"🧭 เกมเขาวงกต เขียนคำสั่งพาเดิน" } ] },
     ar: { href:"content/p1-cs-2/ar-game-nocamera.html", title:"เขียนโปรแกรมพาแมวไปหาปลา" }
@@ -181,21 +181,21 @@ const READY_CONTENT = {
   "p1/cs/3": {
     knowledge: { href:"content/p1-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศ" },
     worksheet: { href:"content/p1-cs-3/worksheet.html", title:"ใบงานที่ 4.1 การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
-    quiz:      { href:"content/p1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p1-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" },
     ar: { href:"content/p1-cs-3/ar-game-nocamera.html", title:"จัดหมวดหมู่ ทำถูก/ทำไม่ถูก" }
   },
   "p1/cs/4": {
     knowledge: { href:"content/p1-cs-4/knowledge.html", title:"การเปรียบเทียบ" },
     worksheet: { href:"content/p1-cs-4/worksheet.html", title:"ใบงานที่ 5.1 เปรียบเทียบความเหมือนและความแตกต่าง" },
-    quiz:      { href:"content/p1-cs-4/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p1-cs-4/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p1-cs-4/game.html", title:"เกมพลิกไพ่ความจำ" },
     ar: { href:"content/p1-cs-4/ar-game-nocamera.html", title:"เลือกให้เหมาะสม" }
   },
   "p2/cs/0": {
     knowledge: { href:"content/p2-cs-0/knowledge.html", title:"การแก้ปัญหา: เรียงลำดับขั้นตอนและคิดอย่างเป็นระบบ" },
     worksheet: { href:"content/p2-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.7 เรียงลำดับขั้นตอน ค้นหาและคิดอย่างเป็นระบบ" },
-    quiz:      { href:"content/p2-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p2-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game: {
       href:"content/p2-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
@@ -207,8 +207,8 @@ const READY_CONTENT = {
   },
   "p3/cs/0": {
     knowledge: { href:"content/p3-cs-0/knowledge.html", title:"การแสดงขั้นตอนวิธีการแก้ปัญหา" },
-    worksheet: { href:"content/p3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.5 ข้อมูลและเงื่อนไข แผนภาพต้นไม้ และการแสดงอัลกอริทึม" },
-    quiz:      { href:"content/p3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    worksheet: { href:"content/p3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.7 ข้อมูลและเงื่อนไข แผนภาพต้นไม้ และการแสดงอัลกอริทึม" },
+    quiz:      { href:"content/p3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game: {
       href:"content/p3-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
@@ -237,7 +237,7 @@ const READY_CONTENT = {
   "m1/cs/0": {
     knowledge: { href:"content/m1-cs-0/knowledge.html", title:"การออกแบบและการเขียนอัลกอริทึม" },
     worksheet: { href:"content/m1-cs-0/worksheet.html", title:"ใบงานที่ 1.1 แนวคิดเชิงนามธรรมและรูปแบบการเขียนอัลกอริทึม" },
-    quiz:      { href:"content/m1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/m1-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/m1-cs-0/game.html", title:"เกมพลิกไพ่ความจำ", hideMain:true }   // หน่วยนี้ใช้เกมที่ครูเพิ่มเอง ไม่แสดงปุ่มเกมพลิกไพ่สำเร็จรูป
   },
   "m1/cs/1": {
@@ -255,45 +255,45 @@ const READY_CONTENT = {
   "m1/cs/2": {
     knowledge: { href:"content/m1-cs-2/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
     worksheet: { href:"content/m1-cs-2/worksheet.html", title:"ใบงานที่ 3.1–3.9 การจัดการข้อมูลและสารสนเทศ" },
-    quiz:      { href:"content/m1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/m1-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/m1-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "m2/cs/0": {
     knowledge: { href:"content/m2-cs-0/knowledge.html", title:"แก้ปัญหาด้วยแนวคิดเชิงคำนวณ" },
-    worksheet: { href:"content/m2-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.5 องค์ประกอบและการประยุกต์ใช้แนวคิดเชิงคำนวณ" },
-    quiz:      { href:"content/m2-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
+    worksheet: { href:"content/m2-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.7 องค์ประกอบและการประยุกต์ใช้แนวคิดเชิงคำนวณ" },
+    quiz:      { href:"content/m2-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" }
   },
   "p4/cs/0": {
     knowledge: { href:"content/p4-cs-0/knowledge.html", title:"ขั้นตอนวิธีการแก้ปัญหา" },
     worksheet: { href:"content/p4-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.6 เหตุผลเชิงตรรกะ อัลกอริทึม และผังงาน" },
-    quiz:      { href:"content/p4-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
+    quiz:      { href:"content/p4-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" }
   },
   "m3/cs/0": {
     knowledge: { href:"content/m3-cs-0/knowledge.html", title:"การจัดการข้อมูลและสารสนเทศ" },
     worksheet: { href:"content/m3-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.8 การรวบรวม ประมวลผล และใช้ซอฟต์แวร์จัดการข้อมูล" },
-    quiz:      { href:"content/m3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
+    quiz:      { href:"content/m3-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" }
   },
   "m3/cs/1": {
     knowledge: { href:"content/m3-cs-1/knowledge.html", title:"ความน่าเชื่อถือของข้อมูล" },
     worksheet: { href:"content/m3-cs-1/worksheet.html", title:"ใบงานที่ 2.1–2.10 สืบค้น ประเมินความน่าเชื่อถือ และรู้เท่าทันสื่อ" },
-    quiz:      { href:"content/m3-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" }
+    quiz:      { href:"content/m3-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" }
   },
   "m1/cs/3": {
     knowledge: { href:"content/m1-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
     worksheet: { href:"content/m1-cs-3/worksheet.html", title:"ใบงานที่ 4.1 ภัยคุกคามและสัญญาอนุญาตครีเอทีฟคอมมอนส์" },
-    quiz:      { href:"content/m1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/m1-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/m1-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "m1/prog/0": {
     knowledge: { href:"content/m1-prog-0/knowledge.html", title:"การออกแบบและเขียนอัลกอริทึม" },
     worksheet: { href:"content/m1-prog-0/worksheet.html", title:"ใบงานที่ 1.1 สัญลักษณ์ผังงาน" },
-    quiz:      { href:"content/m1-prog-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/m1-prog-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/m1-prog-0/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p5/cs/0": {
     knowledge: { href:"content/p5-cs-0/knowledge.html", title:"เหตุผลเชิงตรรกะกับการแก้ปัญหา" },
     worksheet: { href:"content/p5-cs-0/worksheet.html", title:"ใบงานที่ 1.1 เหตุผลเชิงตรรกะ" },
-    quiz:      { href:"content/p5-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p5-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game: {
       href:"content/p5-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
@@ -304,25 +304,25 @@ const READY_CONTENT = {
   "p5/cs/1": {
     knowledge: { href:"content/p5-cs-1/knowledge.html", title:"เหตุผลเชิงตรรกะกับการเขียนโปรแกรม" },
     worksheet: { href:"content/p5-cs-1/worksheet.html", title:"ใบงานที่ 2.1 เงื่อนไขในโปรแกรม" },
-    quiz:      { href:"content/p5-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p5-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p5-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p5/cs/2": {
     knowledge: { href:"content/p5-cs-2/knowledge.html", title:"ข้อมูลและสารสนเทศ" },
     worksheet: { href:"content/p5-cs-2/worksheet.html", title:"ใบงานที่ 3.1 ขั้นตอนการจัดการข้อมูล" },
-    quiz:      { href:"content/p5-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p5-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p5-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p5/cs/3": {
     knowledge: { href:"content/p5-cs-3/knowledge.html", title:"การใช้อินเทอร์เน็ตอย่างปลอดภัย" },
     worksheet: { href:"content/p5-cs-3/worksheet.html", title:"ใบงานที่ 4.1 วิธีป้องกันตนเองทางออนไลน์" },
-    quiz:      { href:"content/p5-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p5-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p5-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p6/cs/0": {
     knowledge: { href:"content/p6-cs-0/knowledge.html", title:"การแก้ปัญหา: เหตุผลเชิงตรรกะ รหัสลำลอง และผังงาน" },
     worksheet: { href:"content/p6-cs-0/worksheet.html", title:"ใบงานที่ 1.1–1.9 เหตุผลเชิงตรรกะ รหัสลำลอง และผังงาน" },
-    quiz:      { href:"content/p6-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p6-cs-0/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game: {
       href:"content/p6-cs-0/game.html", title:"เกมพลิกไพ่ความจำ",
       extraLinks:[
@@ -340,19 +340,19 @@ const READY_CONTENT = {
   "p6/cs/1": {
     knowledge: { href:"content/p6-cs-1/knowledge.html", title:"การออกแบบและเขียนโปรแกรมอย่างง่าย" },
     worksheet: { href:"content/p6-cs-1/worksheet.html", title:"ใบงานที่ 2.1 โครงสร้างการควบคุมโปรแกรม" },
-    quiz:      { href:"content/p6-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p6-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p6-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p6/cs/2": {
     knowledge: { href:"content/p6-cs-2/knowledge.html", title:"การใช้อินเทอร์เน็ตค้นหาข้อมูล" },
     worksheet: { href:"content/p6-cs-2/worksheet.html", title:"ใบงานที่ 3.1 การค้นหาและประเมินข้อมูล" },
-    quiz:      { href:"content/p6-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p6-cs-2/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p6-cs-2/game.html", title:"เกมพลิกไพ่ความจำ" }
   },
   "p6/cs/3": {
     knowledge: { href:"content/p6-cs-3/knowledge.html", title:"การใช้เทคโนโลยีสารสนเทศอย่างปลอดภัย" },
     worksheet: { href:"content/p6-cs-3/worksheet.html", title:"ใบงานที่ 4.1 ภัยคุกคามและการป้องกันตนเอง" },
-    quiz:      { href:"content/p6-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 10 ข้อ" },
+    quiz:      { href:"content/p6-cs-3/quiz.html", title:"แบบทดสอบท้ายหน่วย 16 ข้อ" },
     game:      { href:"content/p6-cs-3/game.html", title:"เกมพลิกไพ่ความจำ" }
   }
 };
@@ -743,7 +743,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6, "p3/cs/0":5 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6, "p3/cs/0":7 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },
