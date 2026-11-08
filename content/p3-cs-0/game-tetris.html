@@ -142,6 +142,6 @@ if(!restore(window.openai?.widgetState?.privateContent))makeRound();window.addEv
 function frame(now){if(!root.isConnected)return;if(running&&!paused){progress+=Math.min(now-last,100)/(settings[level].seconds*1000);position();if(progress>=1){lives--;let c=choices.find(c=>c.value===target);q('.message').textContent=`หมดเวลา! คำตอบคือ ${c.a} ${c.op} ${c.b} = ${target}`;if(!lives){update();finish(false);}else{makeRound();save();}}}last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);
 })();
 </script>
-<script src="../../assets/js/unitinfo.js?v=9"></script>
+<script src="../../assets/js/unitinfo.js?v=10"></script>
 </body>
 </html>

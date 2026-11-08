@@ -216,6 +216,12 @@ const READY_CONTENT = {
       ]
     }
   },
+  "p3/cs/1": {
+    knowledge: { href:"content/p3-cs-1/knowledge.html", title:"การเขียนโปรแกรม" },
+    worksheet: { href:"content/p3-cs-1/worksheet.html", title:"ใบงานที่ 2.1–2.5 โปรแกรมแบบมีเงื่อนไข แบบวนซ้ำ และตรวจหาข้อผิดพลาด" },
+    quiz:      { href:"content/p3-cs-1/quiz.html", title:"แบบทดสอบท้ายหน่วย 15 ข้อ" },
+    game:      { href:"content/p3-cs-1/game.html", title:"เกมพลิกไพ่ความจำ" }
+  },
   "m2/design/0": {
     quiz: { href:"content/m2-design-0/quiz.html", title:"แบบทดสอบหน่วยที่ 1", last:true }
   },
@@ -743,7 +749,7 @@ function renderUnitList(grade, subject){
 /* ---------------- เรียนตามลำดับขั้นตอน (ไม่ให้ข้าม) ----------------
    1 จุดประสงค์ -> 2 ก่อนเรียน -> 3 ใบความรู้ -> 4 ใบงาน -> 5 หลังเรียน -> (ปลดล็อก) เกม/AR
    ใช้กับหน่วยที่มีใบความรู้+ใบงาน+แบบทดสอบครบ  ตรรกะบันทึก/ตรวจอยู่ใน assets/js/flow.js */
-const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6, "p3/cs/0":7 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
+const WS_PER_UNIT = { "m1/cs/0":15, "m1/cs/1":13, "m1/cs/2":9, "m3/cs/0":8, "m3/cs/1":10, "p4/cs/0":6, "m2/cs/0":22, "p6/cs/0":9, "p2/cs/0":6, "p3/cs/0":7, "p3/cs/1":5 };   // จำนวนใบงานรายใบของแต่ละหน่วย (ม.1 วิทยาการคำนวณ)
 const FLOW_STEPS = [
   { key:"objectives", emoji:"🎯", label:"จุดประสงค์การเรียนรู้" },
   { key:"pretest",    emoji:"📝", label:"แบบทดสอบก่อนเรียน" },

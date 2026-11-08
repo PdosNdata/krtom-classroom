@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบงานที่ 2.5: แบบฝึกหัด ทาสีรั้ว — ป.3 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:28px; --c1:#60A5FA; --c2:#2563EB; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.65; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.8rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:760px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.82rem; color:#475569; }
+  .field{ margin-bottom:20px; }
+  .field > label,.q .t{ display:flex; align-items:flex-start; gap:10px; font-weight:800; font-size:1rem; }
+  .fn,.q .no{ min-width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
+  .hint{ color:#64748B; font-size:.78rem; margin:2px 0 6px 40px; }
+  textarea,select,input[type=number]{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; background:#fff; }
+  textarea{ resize:vertical; } input[type=number]{ width:140px; }
+  textarea:focus,select:focus,input:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.85rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 28px; font-weight:700; font-size:1rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); text-decoration:none; display:inline-block; }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  .mcq{ margin-bottom:22px; } .mcq .q{ font-weight:800; margin:0 0 8px; }
+  .mcq .choices label{ display:block; border:2px solid #E2E8F0; border-radius:14px; padding:9px 14px; margin:6px 0; cursor:pointer; background:#fff; }
+  .mcq .choices label:has(input:checked){ border-color:var(--c2); background:#EFF6FF; }
+  .mcq input{ margin-right:8px; transform:scale(1.2); }
+  svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
+  .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
+
+  .prog{ background:#0F172A; border-radius:18px; padding:12px 14px; color:#E2E8F0; font-size:.82rem; margin:10px 0 14px; }
+  .prog .ln{ display:flex; align-items:center; gap:8px; margin:6px 0; flex-wrap:wrap; }
+  .prog .no{ background:#334155; border-radius:8px; min-width:36px; text-align:center; font-weight:800; padding:1px 6px; color:#93C5FD; }
+  .cmd{ background:#DBEAFE; color:#1E3A8A; border:3px solid #3B82F6; border-radius:12px; padding:1px 12px; font-weight:700; }
+  .blank{ background:#fff; color:#64748B; border:3px dashed #94A3B8; border-radius:12px; padding:1px 14px; min-width:110px; text-align:center; font-weight:700; }
+  .env{ background:#FEF3C7; border:3px solid #F59E0B; border-radius:14px; padding:6px 10px; margin:6px 0; color:#78350F; }
+  .env > .ec{ font-weight:800; margin-bottom:4px; } .env .env{ background:#FFEDD5; margin-left:10px; }
+  .loop{ background:#DCFCE7; border:3px solid #16A34A; border-radius:14px; padding:6px 10px; margin:6px 0; color:#14532D; } .loop > .ec{ font-weight:800; margin-bottom:4px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 12px; } .chips .cmd{ font-size:.78rem; }
+  .strip{ display:flex; gap:6px; margin:10px 0 14px; flex-wrap:wrap; } .strip .cell{ width:62px; height:62px; border:3px solid #CBD5E1; border-radius:12px; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:1.6rem; line-height:1; } .strip .cell small{ font-size:.6rem; color:#64748B; margin-top:2px; font-weight:700; }
+  .strip .cell.me{ background:#EFF6FF; border-color:#3B82F6; }
+  .slotrow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:6px 0 6px 40px; } .slotrow .sl{ font-weight:700; font-size:.82rem; min-width:150px; } .slotrow select{ flex:1; min-width:190px; }
+  .tbl{ width:100%; border-collapse:collapse; margin:8px 0 14px; font-size:.82rem; } .tbl th,.tbl td{ border:2px solid #CBD5E1; padding:6px 8px; text-align:center; } .tbl th{ background:#EEF2FF; } .tbl td{ background:#fff; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+<script src="../../assets/js/draft.js?v=1"></script>
+
+<header>
+  <div>
+    <h1>🎨 ใบงานที่ 2.5 แบบฝึกหัด ทาสีรั้ว</h1>
+    <p>วนซ้ำและตรวจหาข้อผิดพลาดของโปรแกรม · ป.3 หน่วยที่ 2</p>
+  </div>
+  <a href="worksheet.html">← กลับไปเลือกใบงาน</a>
+</header>
+
+<main>
+  <div class="card intro">
+    <p>📌 คำชี้แจง <button type="button" class="tts-btn " data-audio-src="audio/ws5-intro.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p>
+    <p style="font-weight:400">ดูรั้วสองแบบ แล้วตอบคำถามเรื่องการวนซ้ำและการตรวจหาข้อผิดพลาดในโปรแกรมทาสีรั้ว</p>
+    <div class="example">💡 เคล็ดลับ: หาแบบรูปที่ซ้ำกันก่อน แล้วนับว่าซ้ำกี่รอบจึงครบทั้งรั้ว</div>
+  </div>
+  <div class="card" id="form">
+    <div class="scene">🎨 <b>หุ่นยนต์ทาสีรั้วสนามเด็กเล่น</b> ทาจากซ้ายไปขวา ก่อนทาสีต้อง <b>ทำความสะอาดผิวไม้</b> แล้วจึง <b>ทาสีรองพื้น</b> เสมอ <button type="button" class="tts-btn mini" data-audio-src="audio/ws5-scene.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p style="font-weight:800;margin:4px 0">รั้วแบบที่ 1</p>
+    <div class="strip"><div class="cell" style="background:#FDE047"><small style="color:#111">แผ่น 1</small></div><div class="cell" style="background:#FB923C"><small style="color:#111">แผ่น 2</small></div><div class="cell" style="background:#FDE047"><small style="color:#111">แผ่น 3</small></div><div class="cell" style="background:#FB923C"><small style="color:#111">แผ่น 4</small></div><div class="cell" style="background:#FDE047"><small style="color:#111">แผ่น 5</small></div><div class="cell" style="background:#FB923C"><small style="color:#111">แผ่น 6</small></div></div>
+    <p style="font-weight:800;margin:4px 0">รั้วแบบที่ 2</p>
+    <div class="strip"><div class="cell" style="background:#EF4444"><small style="color:#111">แผ่น 1</small></div><div class="cell" style="background:#22C55E"><small style="color:#111">แผ่น 2</small></div><div class="cell" style="background:#22C55E"><small style="color:#111">แผ่น 3</small></div><div class="cell" style="background:#EF4444"><small style="color:#111">แผ่น 4</small></div><div class="cell" style="background:#22C55E"><small style="color:#111">แผ่น 5</small></div><div class="cell" style="background:#22C55E"><small style="color:#111">แผ่น 6</small></div></div>
+    <p style="font-weight:800;margin:6px 0 2px">โปรแกรมที่มีข้อผิดพลาด (ใช้ตอบข้อ 3 และ 4)</p>
+    <div class="prog"><div class="ln"><span class="no">1</span><span class="cmd">ทาสีรองพื้น</span></div><div class="ln"><span class="no">2</span><span class="cmd">ทำความสะอาดผิวไม้</span></div><div class="ln"><span class="no">3</span><div class="loop"><div class="ec">🔁 ทำซ้ำ 4 รอบ</div><div class="ln"><span class="no"></span><span class="cmd">ทาสีเหลือง</span></div><div class="ln"><span class="no"></span><span class="cmd">ทาสีส้ม</span></div></div></div></div>
+
+    <div class="it field" data-t="sel"><div class="t" style="display:flex;gap:10px;font-weight:800"><span class="fn">1</span> <span>เรียงลำดับ 2 คำสั่งแรกของโปรแกรมทาสีรั้วให้ถูกต้อง</span></div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+      <div class="q slotrow" data-k="s1_0"><span class="no" style="display:none">1</span><span class="t sl">คำสั่งที่ 1</span><select data-ok="0"><option value="">— เลือก —</option><option value="0">ทำความสะอาดผิวไม้</option><option value="1">ทาสีรองพื้น</option><option value="2">ทาสีเหลือง</option><option value="3">ทาสีส้ม</option></select></div>
+      <div class="q slotrow" data-k="s1_1"><span class="no" style="display:none">1</span><span class="t sl">คำสั่งที่ 2</span><select data-ok="1"><option value="">— เลือก —</option><option value="0">ทำความสะอาดผิวไม้</option><option value="1">ทาสีรองพื้น</option><option value="2">ทาสีเหลือง</option><option value="3">ทาสีส้ม</option></select></div>
+    </div>
+    <div class="it field q" data-t="num" data-k="n2" data-ans="3"><div class="t"><span class="no">2</span> รั้วแบบที่ 1 ทาสี "เหลือง, ส้ม" ซ้ำกี่รอบ จึงครบ 6 แผ่น</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 2"> รอบ</div></div>
+    <div class="it mcq" data-t="mc" data-ok="0"><p class="q">3) โปรแกรมที่มีข้อผิดพลาด มีข้อผิดพลาดเรื่องลำดับคำสั่งอย่างไร <button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p><div class="choices"><label><input type="radio" name="m3" value="0"> ก. ต้องทำความสะอาดผิวไม้ก่อนทาสีรองพื้น</label><label><input type="radio" name="m3" value="1"> ข. ต้องทาสีส้มก่อนสีเหลือง</label><label><input type="radio" name="m3" value="2"> ค. ต้องทาสีรองพื้นหลังทาสีเหลือง</label><label><input type="radio" name="m3" value="3"> ง. ไม่มีข้อผิดพลาด</label></div></div>
+    <div class="it mcq" data-t="mc" data-ok="0"><p class="q">4) โปรแกรมเดียวกันตั้งค่า "ทำซ้ำ 4 รอบ" สำหรับรั้ว 6 แผ่น จะเกิดอะไรขึ้น <button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q4.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p><div class="choices"><label><input type="radio" name="m4" value="0"> ก. ทาสีเกินไป 2 แผ่น (ควรทำซ้ำ 3 รอบ)</label><label><input type="radio" name="m4" value="1"> ข. ทาสีขาดไป 2 แผ่น</label><label><input type="radio" name="m4" value="2"> ค. ทาสีพอดี 6 แผ่น</label><label><input type="radio" name="m4" value="3"> ง. ไม่ทาสีเลย</label></div></div>
+    <div class="it field q" data-t="num" data-k="n5" data-ans="2"><div class="t"><span class="no">5</span> รั้วแบบที่ 2 มีแบบรูปซ้ำ "แดง เขียว เขียว" ต้องทำซ้ำกี่รอบ จึงครบ 6 แผ่น</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q5.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 5"> รอบ</div></div>
+    <div class="it field q" data-t="num" data-k="n6" data-ans="3"><div class="t"><span class="no">6</span> ในกรอบทำซ้ำของรั้วแบบที่ 2 ต้องมีบัตรสีกี่ใบ (แดง เขียว เขียว)</div><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q6.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint"><input type="number" min="0" max="999" inputmode="numeric" aria-label="คำตอบข้อ 6"> ใบ</div></div>
+    <div class="it field" data-t="text"><label for="t7"><span class="fn">7</span> เมื่อโปรแกรมทำงานไม่ตรงที่ต้องการ นักเรียนมีวิธีตรวจหาข้อผิดพลาดและแก้ไขอย่างไร</label><div class="qtts"><button type="button" class="tts-btn mini" data-audio-src="audio/ws5-q7.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div><div class="hint">เช่น ตรวจทีละคำสั่ง ดูลำดับ ดูจำนวนรอบ แล้วแก้ ... (อย่างน้อย 1 ประโยค)</div><textarea id="t7" rows="3" placeholder="พิมพ์คำตอบที่นี่..."></textarea></div>
+    <div class="meter"><i id="bar"></i></div>
+    <div class="meter-t" id="meter-t">ตอบแล้ว 0/7 ข้อ</div>
+    <div class="actions">
+      <button class="btn" id="submit">📤 ส่งใบงาน</button>
+      <button class="btn ghost" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+    <div id="status"></div>
+  </div>
+</main>
+
+<script>
+const N = 5, TOTAL_Q = 7;
+
+const its = [...document.querySelectorAll(".it")];
+const answered = (it) => { const t = it.dataset.t;
+  if(t === "mc") return !!it.querySelector("input:checked");
+  if(t === "num") return it.querySelector("input").value !== "";
+  if(t === "sel") return [...it.querySelectorAll("select")].every(s => s.value !== "");
+  return it.querySelector("textarea").value.trim().length >= 10; };
+const flags = (it) => { const t = it.dataset.t;
+  if(t === "mc") return [+it.querySelector("input:checked").value === +it.dataset.ok];
+  if(t === "num") return [+it.querySelector("input").value === +it.dataset.ans];
+  if(t === "sel") return [...it.querySelectorAll("select")].map(s => +s.value === +s.dataset.ok);
+  return [true]; };
+const nAns = () => its.filter(answered).length;
+function refresh(){ const n = nAns(); document.getElementById("bar").style.width = (n / TOTAL_Q * 100) + "%"; document.getElementById("meter-t").textContent = "ตอบแล้ว " + n + "/" + TOTAL_Q + " ข้อ"; }
+its.forEach(e => { e.addEventListener("input", refresh); e.addEventListener("change", refresh); });
+function evaluate(){
+  if(nAns() < TOTAL_Q) return { ready:false, msg:"กรุณาตอบให้ครบทุกข้อก่อนส่ง (ข้อเขียนอย่างน้อย 10 ตัวอักษร)" };
+  const mcq = [], ta = [];
+  its.forEach(it => { const f = flags(it); if(it.dataset.t === "text") ta.push({ ok:true }); else f.forEach(ok => mcq.push({ ok })); });
+  const all = its.flatMap(flags);
+  return { ready:true, score: all.filter(Boolean).length, total: all.length, items:{ ta } };
+}
+
+const U = { g:"p3", s:"cs", i:1 }, KEY = "krtomws:p3/cs/1:" + N, DONE = "krtomws-done:p3/cs/1:" + N;
+document.getElementById("submit").onclick = async function(){
+  const st = document.getElementById("status"), r = evaluate();
+  if(!r.ready){ st.style.color = "#DC2626"; st.textContent = r.msg; return; }
+  this.disabled = true; st.style.color = "#64748B"; st.textContent = "กำลังส่ง...";
+  try{
+    window.__wsItems = r.items || {};
+    if(window.KrtomFlow) await KrtomFlow.submit(U, "worksheet", r.score, r.total);
+    try{ localStorage.setItem(DONE, "1"); }catch(e){}
+    st.style.color = "#059669";
+    st.innerHTML = '✅ ส่งใบงานแล้ว — ครูจะตรวจและแจ้งผลให้ <div style="margin-top:12px"><a class="btn" href="worksheet.html">กลับไปเลือกใบงาน →</a></div>';
+  }catch(e){
+    this.disabled = false; st.style.color = "#DC2626";
+    st.textContent = (window.KrtomFlow ? KrtomFlow.errText(e) : "ส่งไม่สำเร็จ");
+  }
+};
+</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/submitwork.js?v=6"></script>
+<script src="../../assets/js/linkify.js?v=2"></script>
+<script src="../../assets/js/unitinfo.js?v=10"></script>
+</body>
+</html>

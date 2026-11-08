@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบความรู้: การเขียนโปรแกรม — ป.3 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:28px; --c1:#60A5FA; --c2:#2563EB; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.65; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.8rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:760px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.82rem; color:#475569; }
+  .field{ margin-bottom:20px; }
+  .field > label,.q .t{ display:flex; align-items:flex-start; gap:10px; font-weight:800; font-size:1rem; }
+  .fn,.q .no{ min-width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
+  .hint{ color:#64748B; font-size:.78rem; margin:2px 0 6px 40px; }
+  textarea,select,input[type=number]{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; background:#fff; }
+  textarea{ resize:vertical; } input[type=number]{ width:140px; }
+  textarea:focus,select:focus,input:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.85rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 28px; font-weight:700; font-size:1rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); text-decoration:none; display:inline-block; }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  .mcq{ margin-bottom:22px; } .mcq .q{ font-weight:800; margin:0 0 8px; }
+  .mcq .choices label{ display:block; border:2px solid #E2E8F0; border-radius:14px; padding:9px 14px; margin:6px 0; cursor:pointer; background:#fff; }
+  .mcq .choices label:has(input:checked){ border-color:var(--c2); background:#EFF6FF; }
+  .mcq input{ margin-right:8px; transform:scale(1.2); }
+  svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
+  .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
+
+  :root{ font-size:28px; }
+  main{ padding:24px 20px 60px; }
+  .obj-box{ background:#EFF6FF; border:1px solid #BFDBFE; border-radius:16px; padding:18px 20px; margin-bottom:28px; }
+  .obj-box h2{ margin:0 0 10px; font-size:1rem; color:#1D4ED8; } .obj-box ul{ margin:0; padding-left:20px; font-size:.85rem; } .obj-box li{ margin-bottom:4px; }
+  section.topic{ margin-bottom:34px; }
+  section.topic > h2{ display:flex; align-items:center; gap:10px; font-size:1.1rem; background:linear-gradient(135deg,#8B5CF6,#EC4899); color:#fff; padding:10px 18px; border-radius:14px; margin-bottom:14px; }
+  section.topic > h2 .num{ background:rgba(255,255,255,.3); min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.9rem; flex:none; }
+  section.topic p{ margin:0 0 10px; font-size:.95rem; }
+  .concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin:12px 0; }
+  .concept-card{ background:#fff; border:1px solid #E6E8F0; border-radius:16px; padding:14px; display:flex; gap:12px; align-items:flex-start; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+  .concept-card .icon{ flex:none; width:48px; font-size:2rem; text-align:center; } .concept-card h3{ margin:0 0 4px; font-size:.95rem; } .concept-card p{ margin:0; font-size:.8rem; color:#555; }
+  .info-box{ background:#F0FBF6; border:1px solid #A7F3D0; border-radius:14px; padding:14px 16px; margin:14px 0; font-size:.85rem; } .info-box b{ color:#047857; }
+  .fun-fact{ background:#FFF9E5; border:2px dashed #F59E0B; border-radius:14px; padding:14px 16px; margin:14px 0; font-size:.88rem; } .fun-fact b{ color:#B45309; }
+  ol.steps{ counter-reset:step; list-style:none; margin:10px 0; padding:0; }
+  ol.steps li{ counter-increment:step; position:relative; padding:10px 10px 10px 48px; margin-bottom:8px; background:#fff; border:1px solid #E6E8F0; border-radius:12px; font-size:.88rem; }
+  ol.steps li::before{ content:counter(step); position:absolute; left:10px; top:50%; transform:translateY(-50%); width:28px; height:28px; border-radius:50%; background:#3B82F6; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; }
+  table.tb{ border-collapse:collapse; width:100%; font-size:.82rem; margin:8px 0; } table.tb th,table.tb td{ border:2px solid #CBD5E1; padding:6px 10px; text-align:center; } table.tb th{ background:#EEF2FF; }
+  .flow{ display:flex; flex-direction:column; align-items:center; gap:4px; margin:10px 0; font-size:.85rem; font-weight:700; }
+  .flow .oval{ background:#FDE68A; border:3px solid #D97706; border-radius:999px; padding:4px 26px; }
+  .flow .box{ background:#DBEAFE; border:3px solid #2563EB; border-radius:6px; padding:4px 22px; }
+  .flow .dia{ background:#FCE7F3; border:3px solid #DB2777; padding:6px 22px; transform:skewX(-8deg); border-radius:4px; }
+  .flow .ar{ color:#64748B; line-height:1; }
+  .summary-box{ background:linear-gradient(135deg,#F0FBF6,#EFF6FF); border:1px solid #BFDBFE; border-radius:18px; padding:18px 22px; margin-top:30px; }
+  .summary-box h2{ margin:0 0 8px; font-size:1.05rem; } .summary-box ul{ margin:0; padding-left:20px; font-size:.88rem; }
+  .nav-row{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:30px; }
+  .nav-row a{ background:#3B82F6; color:#fff; text-decoration:none; padding:12px 26px; border-radius:999px; font-weight:700; font-size:.95rem; }
+  .cap{ text-align:center; font-size:.78rem; color:#64748B; margin:0 0 8px; }
+
+  .prog{ background:#0F172A; border-radius:18px; padding:12px 14px; color:#E2E8F0; font-size:.82rem; margin:10px 0 14px; }
+  .prog .ln{ display:flex; align-items:center; gap:8px; margin:6px 0; flex-wrap:wrap; }
+  .prog .no{ background:#334155; border-radius:8px; min-width:36px; text-align:center; font-weight:800; padding:1px 6px; color:#93C5FD; }
+  .cmd{ background:#DBEAFE; color:#1E3A8A; border:3px solid #3B82F6; border-radius:12px; padding:1px 12px; font-weight:700; }
+  .blank{ background:#fff; color:#64748B; border:3px dashed #94A3B8; border-radius:12px; padding:1px 14px; min-width:110px; text-align:center; font-weight:700; }
+  .env{ background:#FEF3C7; border:3px solid #F59E0B; border-radius:14px; padding:6px 10px; margin:6px 0; color:#78350F; }
+  .env > .ec{ font-weight:800; margin-bottom:4px; } .env .env{ background:#FFEDD5; margin-left:10px; }
+  .loop{ background:#DCFCE7; border:3px solid #16A34A; border-radius:14px; padding:6px 10px; margin:6px 0; color:#14532D; } .loop > .ec{ font-weight:800; margin-bottom:4px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 12px; } .chips .cmd{ font-size:.78rem; }
+  .strip{ display:flex; gap:6px; margin:10px 0 14px; flex-wrap:wrap; } .strip .cell{ width:62px; height:62px; border:3px solid #CBD5E1; border-radius:12px; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:1.6rem; line-height:1; } .strip .cell small{ font-size:.6rem; color:#64748B; margin-top:2px; font-weight:700; }
+  .strip .cell.me{ background:#EFF6FF; border-color:#3B82F6; }
+  .slotrow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:6px 0 6px 40px; } .slotrow .sl{ font-weight:700; font-size:.82rem; min-width:150px; } .slotrow select{ flex:1; min-width:190px; }
+  .tbl{ width:100%; border-collapse:collapse; margin:8px 0 14px; font-size:.82rem; } .tbl th,.tbl td{ border:2px solid #CBD5E1; padding:6px 8px; text-align:center; } .tbl th{ background:#EEF2FF; } .tbl td{ background:#fff; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>📘 ใบความรู้ หน่วยที่ 2</h1>
+    <p>การเขียนโปรแกรม · ป.3 · วิทยาการคำนวณ</p>
+  </div>
+  <a href="../../index.html#/unit/p3/cs/1/knowledge">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="full-text">
+  <div class="obj-box">
+    <h2>🎯 จุดประสงค์การเรียนรู้</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k-obj.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <ul>
+      <li>บอกเงื่อนไขของสถานการณ์ที่กำหนดให้ได้ และบอกความหมายของบัตรคำสั่งที่ใช้เขียนโปรแกรมได้ (K)</li>
+      <li>เขียนโปรแกรมแบบมีเงื่อนไขโดยใช้บัตรคำสั่งและซองเงื่อนไขได้ (P)</li>
+      <li>เขียนโปรแกรมแบบมีเงื่อนไขซ้อนเงื่อนไขได้ (P)</li>
+      <li>ตรวจสอบการทำงานของบัตรคำสั่งตามลำดับเหตุการณ์ และทำนายผลลัพธ์ของโปรแกรมได้ (P)</li>
+      <li>อธิบายการทำงานของโปรแกรมแบบวนซ้ำได้ (K)</li>
+      <li>เขียนโปรแกรมที่มีการทำงานแบบวนซ้ำโดยใช้บัตรคำสั่งได้ (P)</li>
+      <li>ตรวจหาและแก้ไขข้อผิดพลาดของโปรแกรมได้ (P)</li>
+      <li>มีจิตสำนึกที่ดีในการรักษาความสะอาดในโรงเรียน (A)</li>
+    </ul>
+  </div>
+
+  <section class="topic">
+    <h2><span class="num">1</span> โปรแกรมคือชุดคำสั่ง</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k1.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p><b>โปรแกรม</b> คือชุดคำสั่งที่เรียงลำดับไว้ให้หุ่นยนต์หรือคอมพิวเตอร์ทำตามทีละคำสั่ง เราฝึกเขียนโปรแกรมด้วย <b>บัตรคำสั่ง</b> แต่ละใบคือ 1 คำสั่ง วางเรียงจากบนลงล่าง หุ่นยนต์จะทำตามลำดับ</p>
+    <div class="scene">🤖 <b>ตัวอย่าง:</b> โปรแกรมให้หุ่นยนต์รดน้ำต้นไม้</div>
+<div class="prog"><div class="ln"><span class="no">1</span><span class="cmd">เติมน้ำใส่บัวรดน้ำ</span></div><div class="ln"><span class="no">2</span><span class="cmd">เดินไปที่ต้นไม้</span></div><div class="ln"><span class="no">3</span><span class="cmd">รดน้ำต้นไม้</span></div></div>
+    <div class="info-box">⚠️ <b>ลำดับสำคัญ:</b> ถ้าสลับคำสั่งที่ 2 กับ 3 หุ่นยนต์จะรดน้ำก่อนเดินไปถึงต้นไม้ งานจึงไม่สำเร็จ</div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">2</span> โปรแกรมแบบมีเงื่อนไข</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k2.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p><b>เงื่อนไข</b> คือสิ่งที่ต้องตรวจก่อนว่า <b>จริง</b> หรือ <b>เท็จ</b> เราใส่เงื่อนไขไว้ใน <b>ซองเงื่อนไข</b> เขียนว่า "ถ้า … ให้ทำตามคำสั่งในซอง" ถ้าเงื่อนไขเป็นจริงจึงเปิดซองทำคำสั่งข้างใน ถ้าเป็นเท็จให้ข้ามซองไปคำสั่งถัดไป</p>
+<div class="prog"><div class="ln"><span class="no">1</span><span class="cmd">หยิบกระเป๋านักเรียน</span></div><div class="ln"><span class="no">2</span><div class="env"><div class="ec">✉️ ถ้าฝนตก <span style="font-weight:400">ให้ทำตามคำสั่งในซอง</span></div><div class="ln"><span class="no">2.1</span><span class="cmd">หยิบร่ม</span></div></div></div><div class="ln"><span class="no">3</span><span class="cmd">เดินไปโรงเรียน</span></div></div>
+    <table class="tbl"><tr><th>วันนี้</th><th>หุ่นยนต์ทำคำสั่ง</th></tr><tr><td>ฝนตก (เงื่อนไขจริง)</td><td>1 → 2.1 → 3</td></tr><tr><td>ฝนไม่ตก (เงื่อนไขเท็จ)</td><td>1 → 3</td></tr></table>
+    <div class="info-box">📌 <b>จำไว้:</b> คำสั่งแบบมีเงื่อนไขช่วยสร้างทางเลือกในการทำงาน โปรแกรมเดียวกันอาจทำงานต่างกันในแต่ละวัน</div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">3</span> เงื่อนไขซ้อนเงื่อนไข</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k3.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p>บางครั้งต้องตรวจเงื่อนไขต่อกันหลายชั้น เราวางซอง <b>ซ้อนในซอง</b> ได้ หุ่นยนต์จะตรวจซองนอกก่อน ถ้าซองนอกเป็นจริงและเปิดซองแล้ว จึงตรวจซองในต่อ</p>
+<div class="prog"><div class="ln"><span class="no">1</span><span class="cmd">หยิบกระเป๋านักเรียน</span></div><div class="ln"><span class="no">2</span><div class="env"><div class="ec">✉️ ถ้าฝนตก <span style="font-weight:400">ให้ทำตามคำสั่งในซอง</span></div><div class="ln"><span class="no">2.1</span><span class="cmd">หยิบร่ม</span></div><div class="ln"><span class="no">2.2</span><div class="env"><div class="ec">✉️ ถ้าลมแรง <span style="font-weight:400">ให้ทำตามคำสั่งในซอง</span></div><div class="ln"><span class="no">2.2.1</span><span class="cmd">ใส่เสื้อกันฝนเพิ่ม</span></div></div></div></div></div><div class="ln"><span class="no">3</span><span class="cmd">เดินไปโรงเรียน</span></div></div>
+    <table class="tbl"><tr><th>วันนี้</th><th>หุ่นยนต์ทำคำสั่ง</th></tr><tr><td>ฝนไม่ตก</td><td>1 → 3</td></tr><tr><td>ฝนตก แต่ลมไม่แรง</td><td>1 → 2.1 → 3</td></tr><tr><td>ฝนตก และลมแรง</td><td>1 → 2.1 → 2.2.1 → 3</td></tr></table>
+    <div class="fun-fact">🌟 <b>ตำแหน่งของซองสำคัญ:</b> ซอง "ถ้าลมแรง" อยู่ในซอง "ถ้าฝนตก" ดังนั้นถ้าฝนไม่ตก ซองนี้จะไม่ถูกตรวจเลย แม้ลมจะแรงก็ตาม</div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">4</span> ทำนายผลลัพธ์และตรวจหาข้อผิดพลาด</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k4.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p><b>ทำนายผลลัพธ์</b> คือบอกล่วงหน้าว่าโปรแกรมจะทำงานอย่างไรและได้ผลอะไร โดยอ่านตามลำดับทีละคำสั่ง ถ้าเจอซองเงื่อนไข ให้ถามตัวเองก่อนว่าเงื่อนไขจริงหรือเท็จ</p>
+    <ol class="steps">
+      <li>อ่านคำสั่งทีละบรรทัด จากบนลงล่าง</li>
+      <li>เจอซองเงื่อนไข: ตรวจว่าจริงหรือเท็จ จริงให้เปิดซอง เท็จให้ข้าม</li>
+      <li>จดว่าคำสั่งใดบ้างที่ได้ทำ แล้วดูผลลัพธ์</li>
+      <li>ถ้าผลไม่ตรงที่ต้องการ ให้ตรวจทีละคำสั่งเพื่อหา <b>ข้อผิดพลาด</b> แล้วแก้ไข</li>
+    </ol>
+    <div class="info-box">🐞 <b>ข้อผิดพลาดที่พบบ่อย:</b> เรียงคำสั่งผิดลำดับ · ขาดคำสั่ง · มีคำสั่งเกิน · วางซองเงื่อนไขผิดตำแหน่ง</div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">5</span> โปรแกรมแบบวนซ้ำ</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k5.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p>งานที่ต้องทำซ้ำ ๆ เราไม่ต้องวางบัตรเดิมหลายใบ ใช้บัตร <b>ทำซ้ำ</b> ครอบคำสั่งไว้ แล้วบอกจำนวนรอบ โปรแกรมจะสั้นลงและผิดพลาดน้อยลง</p>
+    <div class="scene">🧹 หุ่นยนต์เก็บขยะเริ่มที่ช่อง 0 เดินผ่านช่องไหนที่มีขยะ จะเก็บขยะในช่องนั้นอัตโนมัติ ต้องการให้เดินไปถึงช่อง 4</div>
+<div class="strip"><div class="cell me">🤖<small>ช่อง 0</small></div><div class="cell">🍃<small>ช่อง 1</small></div><div class="cell">🥤<small>ช่อง 2</small></div><div class="cell"><small>ช่อง 3</small></div><div class="cell">🍌<small>ช่อง 4</small></div><div class="cell">🥫<small>ช่อง 5</small></div></div>
+    <p class="cap">แบบที่ 1 ไม่ใช้วนซ้ำ ต้องวางบัตร "เดินหน้า 1 ช่อง" 4 ใบ</p>
+<div class="prog"><div class="ln"><span class="no">1</span><span class="cmd">เดินหน้า 1 ช่อง</span></div><div class="ln"><span class="no">2</span><span class="cmd">เดินหน้า 1 ช่อง</span></div><div class="ln"><span class="no">3</span><span class="cmd">เดินหน้า 1 ช่อง</span></div><div class="ln"><span class="no">4</span><span class="cmd">เดินหน้า 1 ช่อง</span></div></div>
+    <p class="cap">แบบที่ 2 ใช้วนซ้ำ ทำซ้ำ 4 รอบ ได้ผลเหมือนกัน แต่สั้นกว่า</p>
+<div class="prog"><div class="ln"><span class="no">1</span><div class="loop"><div class="ec">🔁 ทำซ้ำ 4 รอบ</div><div class="ln"><span class="no"></span><span class="cmd">เดินหน้า 1 ช่อง</span></div></div></div></div>
+    <div class="info-box">📌 หุ่นยนต์เดินผ่านช่อง 1, 2, 3, 4 เก็บได้ <b>ใบไม้ แก้วน้ำ และเปลือกกล้วย</b> (ช่อง 3 ว่าง) รวม 3 ชิ้น</div>
+  </section>
+
+  <section class="topic">
+    <h2><span class="num">6</span> แก้ข้อผิดพลาดและรักษาความสะอาด</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k6.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <p>โปรแกรมเก็บขยะช่วยให้โรงเรียนสะอาด แต่ถ้าโปรแกรมผิด หุ่นยนต์อาจเก็บขยะไม่ครบ ให้ตรวจทีละคำสั่ง</p>
+    <div class="scene">🐞 <b>ตัวอย่างข้อผิดพลาด:</b> ขยะอยู่ตั้งแต่ช่อง 1 ถึงช่อง 6 แต่โปรแกรมเขียนว่า "ทำซ้ำ 4 รอบ" หุ่นยนต์จะเดินถึงช่อง 4 เท่านั้น ขยะช่อง 5 และ 6 ยังเหลืออยู่</div>
+    <ol class="steps">
+      <li>ดูผลลัพธ์ที่ได้ว่าไม่ตรงที่ต้องการอย่างไร (ขยะเหลือ)</li>
+      <li>ตรวจทีละคำสั่ง หาจุดที่ผิด (จำนวนรอบน้อยเกินไป)</li>
+      <li>แก้ไข เปลี่ยนเป็น "ทำซ้ำ 6 รอบ" แล้วทดสอบใหม่</li>
+    </ol>
+    <div class="fun-fact">🌱 <b>นักเรียนที่ดี</b> ช่วยกันรักษาความสะอาดโรงเรียน ทิ้งขยะลงถังเสมอ แล้วโรงเรียนของเราจะน่าอยู่</div>
+  </section>
+
+  <div class="summary-box">
+    <h2>📝 สรุปสิ่งที่ได้เรียนรู้</h2><div class="ttsrow"><button type="button" class="tts-btn " data-audio-src="audio/k-sum.mp3"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></div>
+    <ul>
+      <li>โปรแกรมคือชุดคำสั่งที่เรียงลำดับ หุ่นยนต์ทำตามทีละคำสั่ง</li>
+      <li>ซองเงื่อนไข: เงื่อนไขจริงเปิดซองทำ เงื่อนไขเท็จข้ามไป</li>
+      <li>เงื่อนไขซ้อนเงื่อนไข ตรวจซองนอกก่อนแล้วจึงตรวจซองใน</li>
+      <li>ทำนายผลลัพธ์โดยอ่านทีละคำสั่ง ตรวจหาและแก้ข้อผิดพลาด</li>
+      <li>วนซ้ำทำให้โปรแกรมสั้นลงและผิดพลาดน้อยลง</li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="nav-row">
+    <a href="../../index.html#/unit/p3/cs/1/worksheet">ไปทำใบงานต่อ →</a>
+  </div>
+</main>
+
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/unitinfo.js?v=10"></script>
+</body>
+</html>

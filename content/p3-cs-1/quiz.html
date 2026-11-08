@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบ: การเขียนโปรแกรม — ป.3 หน่วย 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/css/tts.css">
+<style>
+  :root{ font-family:"Sarabun","TH Sarabun New",system-ui,sans-serif; font-size:28px; --c1:#60A5FA; --c2:#2563EB; }
+  html,body{ margin:0; padding:0; background:#F7F8FC; color:#1F2430; line-height:1.65; }
+  header{ background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; padding:18px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  header h1{ margin:0; font-size:1.25rem; } header p{ margin:4px 0 0; font-size:.8rem; opacity:.92; }
+  header a{ color:#fff; background:rgba(255,255,255,.22); padding:8px 16px; border-radius:999px; font-size:.8rem; text-decoration:none; white-space:nowrap; }
+  main{ max-width:760px; margin:0 auto; padding:22px 18px 70px; }
+  .card{ background:#fff; border:1px solid #E6E8F0; border-radius:20px; padding:20px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .intro{ border-left:6px solid var(--c2); } .intro p{ margin:0 0 8px; font-weight:600; }
+  .example{ background:#F8FAFC; border-radius:12px; padding:10px 14px; font-size:.82rem; color:#475569; }
+  .field{ margin-bottom:20px; }
+  .field > label,.q .t{ display:flex; align-items:flex-start; gap:10px; font-weight:800; font-size:1rem; }
+  .fn,.q .no{ min-width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; flex:none; }
+  .hint{ color:#64748B; font-size:.78rem; margin:2px 0 6px 40px; }
+  textarea,select,input[type=number]{ width:100%; box-sizing:border-box; border:2px solid #E2E8F0; border-radius:14px; padding:10px 12px; font:inherit; background:#fff; }
+  textarea{ resize:vertical; } input[type=number]{ width:140px; }
+  textarea:focus,select:focus,input:focus{ outline:none; border-color:var(--c2); box-shadow:0 0 0 4px rgba(37,99,235,.08); }
+  .meter{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin:4px 0 6px; }
+  .meter i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .meter-t{ text-align:center; font-weight:700; font-size:.85rem; color:#475569; }
+  .actions{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px; }
+  .btn{ border:none; border-radius:999px; padding:12px 28px; font-weight:700; font-size:1rem; font-family:inherit; cursor:pointer; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); box-shadow:0 5px 0 rgba(0,0,0,.2), 0 10px 18px rgba(0,0,0,.15); text-decoration:none; display:inline-block; }
+  .btn:active{ transform:translateY(4px); box-shadow:0 1px 0 rgba(0,0,0,.2); }
+  .btn.ghost{ background:#fff; color:#475569; border:2px solid #CBD5E1; box-shadow:none; }
+  #status{ text-align:center; margin-top:14px; font-weight:700; min-height:1.5em; }
+  .mcq{ margin-bottom:22px; } .mcq .q{ font-weight:800; margin:0 0 8px; }
+  .mcq .choices label{ display:block; border:2px solid #E2E8F0; border-radius:14px; padding:9px 14px; margin:6px 0; cursor:pointer; background:#fff; }
+  .mcq .choices label:has(input:checked){ border-color:var(--c2); background:#EFF6FF; }
+  .mcq input{ margin-right:8px; transform:scale(1.2); }
+  svg.tree{ width:100%; max-width:640px; height:auto; display:block; margin:8px auto; }
+  .scene{ background:#FFFBEB; border:2px dashed #F59E0B; border-radius:16px; padding:10px 14px; margin:8px 0 10px; font-size:.9rem; }
+  .qtts{ margin:2px 0 6px 40px; } .tts-btn.mini{ padding:3px 12px; font-size:.7rem; margin-left:6px; }
+  .ttsrow{ margin:0 0 10px; }
+  @media print{ header a,.actions,.tts-btn{ display:none; } textarea{ border:1px solid #999; } }
+
+  #progress{ text-align:center; font-weight:700; margin:10px 0; } #progress-bar{ height:10px; background:#E5E7EB; border-radius:99px; overflow:hidden; margin-top:4px; }
+  #progress-fill{ height:100%; width:0; background:linear-gradient(90deg,var(--c1),var(--c2)); transition:width .25s; }
+  .mcq .choices label.correct{ border-color:#10B981; background:#ECFDF5; } .mcq .choices label.wrong{ border-color:#EF4444; background:#FEF2F2; }
+  #submit-btn{ display:block; margin:20px auto; border:none; border-radius:999px; padding:12px 32px; font:700 1rem Sarabun,sans-serif; color:#fff; background:linear-gradient(135deg,var(--c1),var(--c2)); cursor:pointer; }
+  #result-card{ display:none; text-align:center; background:#fff; border:2px solid #C7D2FE; border-radius:20px; padding:20px; margin-top:20px; } #result-card.show{ display:block; }
+  #result-card .big-score{ font-size:2rem; font-weight:800; } #result-card button{ margin-top:12px; border:none; border-radius:999px; padding:10px 24px; background:#6366F1; color:#fff; font:700 .95rem Sarabun,sans-serif; cursor:pointer; }
+</style>
+<link rel="stylesheet" href="../../assets/css/page-bg.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>✅ แบบทดสอบ</h1>
+    <p>การเขียนโปรแกรม · ป.3 หน่วยที่ 2 · ปรนัย 4 ตัวเลือก 15 ข้อ</p>
+  </div>
+  <a href="../../index.html#/unit/p3/cs/1/quiz">← กลับหน้าหน่วย</a>
+</header>
+
+<main>
+  <div id="progress">ตอบแล้ว <span id="answered-count">0</span>/15 ข้อ<div id="progress-bar"><div id="progress-fill"></div></div></div>
+  <form id="quiz-form"></form>
+  <button id="submit-btn" onclick="submitQuiz()">📤 ส่งคำตอบ</button>
+  <div id="result-card">
+    <div style="font-size:2.4rem">🎉</div>
+    <div class="big-score" id="score-text">0/15</div>
+    <div class="msg" id="score-msg"></div>
+    <button onclick="location.reload()">🔄 ทำใหม่อีกครั้ง</button>
+  </div>
+</main>
+
+<script>
+function shuffleArray(arr){ const a = [...arr]; for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function shuffleChoices(q){ const idx = shuffleArray(q.choices.map((_, i) => i)); return { q:q.q, choices: idx.map(i => q.choices[i]), correct: idx.indexOf(q.correct), audio:q.audio }; }
+const RAW_QUESTIONS = [{"q": "\"โปรแกรม\" หมายถึงข้อใด", "choices": ["ชุดคำสั่งที่เรียงลำดับให้หุ่นยนต์หรือคอมพิวเตอร์ทำตาม", "ภาพวาดที่สวยงาม", "ข้อมูลของนักเรียน", "เกมทุกชนิด"], "correct": 0, "audio": "quiz-q1"}, {"q": "ซองเงื่อนไข \"ถ้าฝนตก ให้ทำตามคำสั่งในซอง\" เมื่อฝนไม่ตก หุ่นยนต์ทำอย่างไร", "choices": ["เปิดซองแล้วทำคำสั่งในซอง", "ข้ามซองไปทำคำสั่งถัดไป", "หยุดทำงานทั้งหมด", "ทำคำสั่งในซองซ้ำสองรอบ"], "correct": 1, "audio": "quiz-q2"}, {"q": "ในประโยค \"ถ้าดินแห้ง ให้รดน้ำ\" ข้อใดคือ <b>เงื่อนไข</b>", "choices": ["ดินแห้ง", "รดน้ำ", "ให้", "ดิน"], "correct": 0, "audio": "quiz-q3"}, {"q": "โปรแกรม: 1 หยิบกระเป๋า · ซอง \"ถ้าฝนตก\" → 2.1 หยิบร่ม · 3 ออกจากบ้าน วันนี้ <b>ฝนตก</b> หุ่นยนต์ทำกี่คำสั่ง", "choices": ["2 คำสั่ง", "3 คำสั่ง", "4 คำสั่ง", "5 คำสั่ง"], "correct": 1, "audio": "quiz-q4"}, {"q": "โปรแกรมเดียวกับข้อก่อน วันนี้ <b>ฝนไม่ตก</b> หุ่นยนต์ทำกี่คำสั่ง", "choices": ["2 คำสั่ง", "3 คำสั่ง", "4 คำสั่ง", "1 คำสั่ง"], "correct": 0, "audio": "quiz-q5"}, {"q": "ซองนอก \"ถ้าฝนตก\" → หยิบร่ม และมีซองใน \"ถ้าลมแรง\" → ใส่เสื้อกันฝน วันนี้ฝนตกแต่ลมไม่แรง หุ่นยนต์ทำคำสั่งใดในซองนอก", "choices": ["หยิบร่มอย่างเดียว", "ใส่เสื้อกันฝนอย่างเดียว", "หยิบร่มและใส่เสื้อกันฝน", "ไม่ทำคำสั่งในซองเลย"], "correct": 0, "audio": "quiz-q6"}, {"q": "ในโปรแกรมเงื่อนไขซ้อนเงื่อนไข ซองใน (ถ้าลมแรง) จะถูกตรวจเมื่อใด", "choices": ["เมื่อเงื่อนไขของซองนอกเป็นจริง", "ก่อนซองนอกเสมอ", "เมื่อเงื่อนไขของซองนอกเป็นเท็จ", "ไม่ถูกตรวจเลย"], "correct": 0, "audio": "quiz-q7"}, {"q": "หุ่นยนต์คัดไข่: ถ้าไข่หนักมากกว่า 70 กรัม ใส่แผงใหญ่ ไม่เช่นนั้นใส่แผงเล็ก ไข่หนัก 70 กรัมพอดี ใส่แผงใด", "choices": ["แผงใหญ่", "แผงเล็ก", "ทั้งสองแผง", "ไม่ใส่แผงใด"], "correct": 1, "audio": "quiz-q8"}, {"q": "\"ทำนายผลลัพธ์ของโปรแกรม\" หมายถึงข้อใด", "choices": ["บอกล่วงหน้าว่าโปรแกรมจะทำงานอย่างไรและได้ผลอะไร", "ลบโปรแกรมทิ้ง", "คัดลอกโปรแกรมของเพื่อน", "ตกแต่งบัตรคำสั่ง"], "correct": 0, "audio": "quiz-q9"}, {"q": "โปรแกรม \"ทำซ้ำ 5 รอบ: เดินหน้า 1 ช่อง\" หุ่นยนต์เดินไปทั้งหมดกี่ช่อง", "choices": ["1 ช่อง", "4 ช่อง", "5 ช่อง", "10 ช่อง"], "correct": 2, "audio": "quiz-q10"}, {"q": "ข้อใดคือประโยชน์ของโปรแกรมแบบวนซ้ำ", "choices": ["ทำให้โปรแกรมสั้นลงและลดความผิดพลาด", "ทำให้หุ่นยนต์ทำงานช้าลง", "ทำให้ต้องใช้บัตรคำสั่งมากขึ้น", "ทำให้โปรแกรมซับซ้อนโดยไม่จำเป็น"], "correct": 0, "audio": "quiz-q11"}, {"q": "\"ทำซ้ำ 3 รอบ: ทาสีแดง, ทาสีเขียว\" หุ่นยนต์ทาสีรั้วได้กี่แผ่น (แต่ละคำสั่งทา 1 แผ่น)", "choices": ["3 แผ่น", "5 แผ่น", "6 แผ่น", "9 แผ่น"], "correct": 2, "audio": "quiz-q12"}, {"q": "ขยะอยู่ 6 ช่องติดกัน แต่โปรแกรมเขียนว่า \"ทำซ้ำ 4 รอบ\" ข้อผิดพลาดคือข้อใด", "choices": ["จำนวนรอบน้อยเกินไป ควรเป็น 6 รอบ", "จำนวนรอบมากเกินไป", "ไม่มีข้อผิดพลาด", "ควรเปลี่ยนเป็นซองเงื่อนไข"], "correct": 0, "audio": "quiz-q13"}, {"q": "เมื่อโปรแกรมทำงานไม่ตรงที่ต้องการ ควรทำอย่างไร", "choices": ["ตรวจการทำงานทีละคำสั่งเพื่อหาข้อผิดพลาดแล้วแก้ไข", "ลบโปรแกรมทั้งหมดโดยไม่ดู", "ปล่อยไว้แบบเดิม", "ให้เพื่อนทำแทนทั้งหมด"], "correct": 0, "audio": "quiz-q14"}, {"q": "โปรแกรมหุ่นยนต์เก็บขยะช่วยเรื่องใดในโรงเรียน", "choices": ["รักษาความสะอาด", "เพิ่มจำนวนขยะ", "ทำให้เสียงดัง", "ลดจำนวนนักเรียน"], "correct": 0, "audio": "quiz-q15"}];
+const QUESTIONS = shuffleArray(RAW_QUESTIONS.map(shuffleChoices));
+const form = document.getElementById("quiz-form");
+QUESTIONS.forEach((item, i) => {
+  const div = document.createElement("div"); div.className = "mcq"; div.dataset.correct = item.correct;
+  const letters = ["ก.", "ข.", "ค.", "ง."];
+  div.innerHTML = `<div id="quiz-content-${i}"><p class="q">${i + 1}. ${item.q} <button type="button" class="tts-btn mini" data-audio-src="audio/${item.audio}.mp3" onclick="playAudio(this.dataset.audioSrc, this)"><span class="tts-icon">🔊</span> <span class="tts-label">ฟัง</span></button></p><div class="choices">${item.choices.map((c, ci) => `<label><input type="radio" name="q${i}" value="${ci}" onchange="updateProgress()"> ${letters[ci]} ${c}</label>`).join("")}</div></div>`;
+  form.appendChild(div);
+});
+function updateProgress(){ const a = document.querySelectorAll(".mcq input:checked").length; document.getElementById("answered-count").textContent = a; document.getElementById("progress-fill").style.width = (a / QUESTIONS.length * 100) + "%"; }
+function submitQuiz(){
+  let score = 0;
+  document.querySelectorAll(".mcq").forEach(q => {
+    const correct = parseInt(q.dataset.correct, 10), chosen = q.querySelector("input:checked");
+    q.querySelectorAll("label").forEach(l => l.classList.remove("correct", "wrong"));
+    const cl = q.querySelectorAll("label")[correct];
+    if(chosen){ if(parseInt(chosen.value, 10) === correct){ chosen.closest("label").classList.add("correct"); score++; } else { chosen.closest("label").classList.add("wrong"); cl.classList.add("correct"); } }
+    else cl.classList.add("correct");
+  });
+  const pct = Math.round(score / QUESTIONS.length * 100);
+  const msg = pct === 100 ? "🌟 ยอดเยี่ยมมาก! ตอบถูกครบทุกข้อ" : pct >= 80 ? "👏 เก่งมาก! เข้าใจเนื้อหาดีมาก" : pct >= 60 ? "😊 ทำได้ดี! ลองทบทวนใบความรู้อีกครั้งนะ" : "💪 ลองกลับไปอ่านใบความรู้แล้วทำใหม่อีกครั้งนะ";
+  document.getElementById("score-text").textContent = `${score}/${QUESTIONS.length}`;
+  document.getElementById("score-msg").textContent = msg + ` (${pct}%)`;
+  document.getElementById("result-card").classList.add("show");
+  document.getElementById("result-card").scrollIntoView({ behavior:"smooth" });
+}
+</script>
+<script src="../../assets/js/tts.js?v=2"></script>
+<script src="../../assets/js/flow.js?v=6"></script>
+<script src="../../assets/js/unitinfo.js?v=10"></script>
+</body>
+</html>
